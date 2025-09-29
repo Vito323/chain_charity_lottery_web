@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import '../blog-sidebar/style.css'
 const SidebarWrap = () => {
   return (
     <div className="col col-lg-4 col-12">
