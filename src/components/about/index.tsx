@@ -1,10 +1,11 @@
 import "./style.css";
 import VideoModal from "../modal-video";
+import Link from "next/link";
 
 const About = () => {
-//   const ClickHandler = () => {
-//     window.scrollTo(10, 0);
-//   };
+  //   const ClickHandler = () => {
+  //     window.scrollTo(10, 0);
+  //   };
   return (
     <div className="wpo-about-area section-padding">
       <div className="container">
@@ -28,11 +29,13 @@ const About = () => {
                 chunks as necessary,{" "}
               </p>
               <div className="btns">
-                <a href="/donate" className="theme-btn" 
-                // onClick={ClickHandler}
+                <Link
+                  href="/donate"
+                  className="theme-btn"
+                  // onClick={ClickHandler}
                 >
                   Donate Now
-                </a>
+                </Link>
                 <ul>
                   <li className="video-holder">
                     <VideoModal />

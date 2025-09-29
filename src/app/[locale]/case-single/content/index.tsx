@@ -1,10 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { TabContent, TabPane, Nav, NavItem, NavLink } from "react-bootstrap";
+import { TabPane, Nav, NavItem, NavLink } from "react-bootstrap";
 import classnames from "classnames";
 import Link from "next/link";
 import "./style.css";
 import SidebarWrap from "@/components/sidebar-wrap";
+import TabContent from "../tab-content";
 
 const CaseSingle = () => {
   // const SubmitHandler = (e) =>{
@@ -26,7 +27,9 @@ const CaseSingle = () => {
               <div className="wpo-case-details-img">
                 <img src={"images/event-details.jpg"} alt="" />
               </div>
-              <div className="wpo-case-details-tab">
+              <TabContent></TabContent>
+              {/* <div className="wpo-case-details-tab">
+                
                 <Nav variant="tabs">
                   <NavItem>
                     <NavLink
@@ -540,7 +543,7 @@ const CaseSingle = () => {
                     </div>
                   </TabPane>
                 </TabContent>
-              </div>
+              </div> */}
             </div>
           </div>
           <SidebarWrap />

@@ -8,6 +8,7 @@ import PageTitle from "@/components/page-title";
 import Scrollbar from "@/components/scrollbar";
 import OurTeam from "@/components/team";
 import VedioCta from "@/components/vediocta";
+import OurHistory from "./history";
 
 const AboutPage = () => {
   return (
@@ -20,6 +21,7 @@ const AboutPage = () => {
       <CaseSlide />
       <CounterSection />
       <OurTeam />
+      <OurHistory></OurHistory>
       <Footer />
       <Scrollbar />
     </>

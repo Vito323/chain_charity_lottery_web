@@ -1,3 +1,4 @@
+"use client";
 import { connectorsForWallets, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { metaMaskWallet } from '@rainbow-me/rainbowkit/wallets';
 import {
