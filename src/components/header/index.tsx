@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import "./style.scss";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import Image from "next/image";
 import HeaderTopBar from "../header-top-bar";
 import MobileMenu from "../mobile-menu";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const ROUTE_MAP = [
   {
@@ -89,7 +90,11 @@ const Header = () => {
                 <ul>
                   {ROUTE_MAP.map((item, _i) => (
                     <li key={_i}>
-                      <Link className={`${item.path === pathname ? 'active' : ''}`} href={item.path} title="">
+                      <Link
+                        className={`${item.path === pathname ? "active" : ""}`}
+                        href={item.path}
+                        title=""
+                      >
                         {item.label}
                       </Link>
                       {item.children && (
@@ -105,61 +110,6 @@ const Header = () => {
                       )}
                     </li>
                   ))}
-                  {/* <li>
-                    <Link className="active" href="/" title="">
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/about" title="">
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/case" title="">
-                      Causes
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/event" title="">
-                      Event
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/home" title="">
-                      Pages
-                    </Link>
-                    <ul>
-                      <li>
-                        <Link href="/about" title="">
-                          About
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/donate" title="">
-                          Donate
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/volunteer" title="">
-                          Volunteer
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/404" title="">
-                          Error 404
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link href="/news">News</Link>
-                  </li>
-                  <li>
-                    <Link href="/contact" title="">
-                      Contact
-                    </Link>
-                  </li> */}
                 </ul>
               </nav>
             </div>
@@ -226,7 +176,6 @@ const Header = () => {
               <MobileMenu />
             </div>
           </div>
-
           <div className="clearfix"></div>
         </div>
       </div>

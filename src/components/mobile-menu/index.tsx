@@ -153,8 +153,6 @@ const MobileMenu = () => {
     setIsOpen(id === isOpen ? 0 : id);
   };
 
-  console.log(isOpen, 'isOpen')
-
   return (
     <div>
       <div className={`mobileMenu ${isMenuShow ? "show" : ""}`}>

@@ -11,8 +11,10 @@
   "dependencies": {
     "bootstrap": "^5.3.8",
     "classnames": "^2.5.1",
+    "i18next": "^25.5.2",
     "lodash": "^4.17.21",
     "next": "15.5.4",
+    "next-intl": "^4.3.9",
     "react": "19.1.0",
     "react-anchor-link-smooth-scroll": "^1.0.12",
     "react-bootstrap": "^2.10.10",
