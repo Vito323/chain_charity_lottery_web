@@ -5,6 +5,8 @@ import "./globals.css";
 import "@/styles/flaticon.css";
 import "@/styles/font-awesome.min.css";
 import "@/styles/themify-icons.css";
+import '@rainbow-me/rainbowkit/styles.css';
+import { Providers } from "./providers";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,7 +36,7 @@ export default async function RootLayout({ children, params }: Props) {
       >
         <div className="App" id="scrool">
           <NextIntlClientProvider locale={locale}>
-            {children}
+            <Providers>{children}</Providers>
           </NextIntlClientProvider>
         </div>
       </body>

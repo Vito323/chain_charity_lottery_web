@@ -7,16 +7,17 @@
 .header-style-3 .topbar {
   border-bottom: 1px solid #dfe2e6;
   background: #fff;
-  .toggle-btn{
+  .toggle-btn {
     display: flex;
     align-items: center;
     background-color: unset;
     border: none;
-    &:hover{
-        color: #08cc7f; 
+    &:hover {
+      color: #08cc7f;
     }
   }
-  .dropdown-item:focus, .dropdown-item:hover{
+  .dropdown-item:focus,
+  .dropdown-item:hover {
     color: #08cc7f;
     background-color: unset;
   }
@@ -81,7 +82,7 @@
   padding: 20px 20px;
   color: #fff;
   line-height: 1em;
-//   border-right: 1px solid rgba(255, 255, 255, 0.1);
+  //   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .wpo-header-style-2 .topbar .contact-info ul li a {
@@ -99,7 +100,7 @@
 
 .header-style-3 .topbar ul li {
   color: #666;
-//   border-right: 1px solid #dfe2e6;
+  //   border-right: 1px solid #dfe2e6;
 }
 
 .wpo-header-style-2 .topbar ul li:first-child,
@@ -160,7 +161,7 @@
 .wpo-header-style-2 .topbar .theme-btn,
 .header-style-3 .topbar .theme-btn {
   padding: 12px 20px;
-//   margin-top: 9px;
+  //   margin-top: 9px;
   font-size: 14px;
   font-weight: 600;
   color: #fff !important;
@@ -205,18 +206,26 @@
   list-style: none;
 }
 
-.contact-info, .contact-intro{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    height: 100%;
+.contact-info,
+.contact-intro {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
 }
 
-.contact-intro{
-    justify-content: flex-start;
-    gap: 10px;
-    span{
-        text-transform: uppercase;
-    }
+.contact-intro {
+  justify-content: flex-start;
+  gap: 10px;
+  span {
+    text-transform: uppercase;
+  }
+}
+
+.contact-info {
+  button {
+    border-radius: 5px;
+    background-color: #08cc7f;
+  }
 }

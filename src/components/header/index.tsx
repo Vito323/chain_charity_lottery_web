@@ -65,7 +65,7 @@ const Header = () => {
       <div className="container">
         <div className="header-content">
           <div className="row">
-            <div className="col-lg-3 col-md-4 col-sm-4 col-4">
+            <div className="col-lg-3 col-12">
               <div className="logo">
                 <Link href="/" title="">
                   <div className="logo-container">
@@ -80,7 +80,6 @@ const Header = () => {
                       <p className="logo-desc">ChainCharity Lottery</p>
                     </div>
                   </div>
-
                   {/* <img src={Logo} alt="" /> */}
                 </Link>
               </div>

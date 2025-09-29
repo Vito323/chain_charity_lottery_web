@@ -7,6 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { LNG_LIST } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import { useParams, usePathname } from "next/navigation";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 const HeaderTopBar = () => {
   const router = useRouter();
   const pathName = usePathname();
@@ -72,9 +73,10 @@ const HeaderTopBar = () => {
           </div>
           <div className="col col-6">
             <div className="contact-info">
-              <Link className="theme-btn" href="/donate">
+                <ConnectButton label="Connect wallet"></ConnectButton>
+              {/* <Link className="theme-btn" href="/donate">
                 Donate Now
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>
