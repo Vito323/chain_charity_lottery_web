@@ -1,5 +1,6 @@
 import React from 'react'
 import './style.css'
+import Link from 'next/link';
 
 const PageTitle = (props: {pagesub?: string; pageTitle?: string}) => {
     return(
@@ -10,7 +11,7 @@ const PageTitle = (props: {pagesub?: string; pageTitle?: string}) => {
                         <div className="wpo-breadcumb-wrap">
                             <h2>{props.pageTitle}</h2>
                             <ul>
-                                <li><a href="/home">Home</a></li>
+                                <li><Link href="/">Home</Link></li>
                                 <li><span>{props.pagesub}</span></li>
                             </ul>
                         </div>

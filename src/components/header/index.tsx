@@ -1,23 +1,85 @@
+'use client'
 import React from "react";
-// import HeaderTopbar from '../HeaderTopbar'
-// import MobileMenu from '../../components/MobileMenu'
 import "./style.scss";
 import Link from "next/link";
 import Image from "next/image";
 import HeaderTopBar from "../header-top-bar";
 import MobileMenu from "../mobile-menu";
+import { usePathname } from "next/navigation";
+
+const ROUTE_MAP = [
+  {
+    label: "Home",
+    path: "/",
+  },
+  {
+    label: "About",
+    path: "/about",
+  },
+  {
+    label: "Causes",
+    path: "/case",
+  },
+  {
+    label: "Event",
+    path: "/event",
+  },
+  {
+    label: "Pages",
+    path: "#",
+    children: [
+      {
+        label: "About",
+        path: "/about",
+      },
+      {
+        label: "Donate",
+        path: "/donate",
+      },
+      {
+        label: "Volunteer",
+        path: "/volunteer",
+      },
+      {
+        label: "Error 404",
+        path: "/404",
+      },
+    ],
+  },
+  {
+    label: "News",
+    path: "/news",
+  },
+  {
+    label: "Contact",
+    path: "/contact",
+  },
+];
 
 const Header = () => {
+  const pathname = usePathname();
   return (
     <div className="middle-header header-style-3">
-      <HeaderTopBar/>
+      <HeaderTopBar />
       <div className="container">
         <div className="header-content">
           <div className="row">
             <div className="col-lg-3 col-md-4 col-sm-4 col-4">
               <div className="logo">
-                <Link href="/home" title="">
-                  <Image src={'/images/logo.png'} width={180} height={50} alt=""></Image>
+                <Link href="/" title="">
+                  <div className="logo-container">
+                    <Image
+                      src={"/images/blog/admin-2.jpg"}
+                      width={50}
+                      height={50}
+                      alt=""
+                    ></Image>
+                    <div>
+                      <h4 className="logo-name">ChainCharity Lottery</h4>
+                      <p className="logo-desc">ChainCharity Lottery</p>
+                    </div>
+                  </div>
+
                   {/* <img src={Logo} alt="" /> */}
                 </Link>
               </div>
@@ -25,23 +87,28 @@ const Header = () => {
             <div className="col-lg-8 d-lg-block d-none">
               <nav>
                 <ul>
-                  <li>
-                    <Link className="active" href="/home" title="">
+                  {ROUTE_MAP.map((item, _i) => (
+                    <li key={_i}>
+                      <Link className={`${item.path === pathname ? 'active' : ''}`} href={item.path} title="">
+                        {item.label}
+                      </Link>
+                      {item.children && (
+                        <ul>
+                          {item.children.map((pie, _ii) => (
+                            <li key={`${_i}_${_ii}`}>
+                              <Link href={pie.path} title="">
+                                {pie.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                  {/* <li>
+                    <Link className="active" href="/" title="">
                       Home
                     </Link>
-                    <ul>
-                      <li>
-                        <Link className="active" href="/home">
-                          Home style 1
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/home2">Home style 2</Link>
-                      </li>
-                      <li>
-                        <Link href="/home3">Home style 3</Link>
-                      </li>
-                    </ul>
                   </li>
                   <li>
                     <Link href="/about" title="">
@@ -52,35 +119,11 @@ const Header = () => {
                     <Link href="/case" title="">
                       Causes
                     </Link>
-                    <ul>
-                      <li>
-                        <Link href="/case" title="">
-                          Causes
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/case-single" title="">
-                          Causes Single
-                        </Link>
-                      </li>
-                    </ul>
                   </li>
                   <li>
                     <Link href="/event" title="">
                       Event
                     </Link>
-                    <ul>
-                      <li>
-                        <Link href="/event" title="">
-                          Event
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/event-details" title="">
-                          Event Single
-                        </Link>
-                      </li>
-                    </ul>
                   </li>
                   <li>
                     <Link href="/home" title="">
@@ -110,52 +153,18 @@ const Header = () => {
                     </ul>
                   </li>
                   <li>
-                    <Link href="/blog">Blog</Link>
-                    <ul>
-                      <li>
-                        <Link href="/blog">Blog</Link>
-                      </li>
-                      <li>
-                        <Link href="/blog-left">Blog Left sidebar</Link>
-                      </li>
-                      <li>
-                        <Link href="/blog-fullwidth">Blog full width</Link>
-                      </li>
-                      <li>
-                        <i className="fa fa-angle-right"></i>
-                        <Link href="/blog-details" title="">
-                          Blog Details
-                        </Link>
-                        <ul>
-                          <li>
-                            <Link href="/blog-details" title="">
-                              Blog single
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/blog-details-left" title="">
-                              Blog single Left sidebar
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="/blog-details-fullwidth" title="">
-                              Blog single full width
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
+                    <Link href="/news">News</Link>
                   </li>
                   <li>
                     <Link href="/contact" title="">
                       Contact
                     </Link>
-                  </li>
+                  </li> */}
                 </ul>
               </nav>
             </div>
             <div className="col-lg-1 col-md-6 col-sm-6 col-6">
-              <div className="contact">
+              {/* <div className="contact">
                 <div className="cart-search-contact">
                   <div className="header-search-form-wrapper">
                     <button className="search-toggle-btn">
@@ -178,7 +187,6 @@ const Header = () => {
                   </div>
                   <div className="mini-cart">
                     <button className="cart-toggle-btn">
-                      {" "}
                       <i className="fi flaticon-shopping-bag"></i>{" "}
                       <span className="cart-count">02</span>
                     </button>
@@ -186,10 +194,6 @@ const Header = () => {
                       <div className="mini-cart-items">
                         <div className="mini-cart-item clearfix">
                           <div className="mini-cart-item-image">
-                            <Link href="/home">
-                            {/* <Image src={'/images/shop/mini-cart/img-1.jpg'} alt=""></Image> */}
-                              {/* <img src={min1} alt="" /> */}
-                            </Link>
                           </div>
                           <div className="mini-cart-item-des">
                             <Link href="/home">Hoodi with zipper</Link>
@@ -199,10 +203,6 @@ const Header = () => {
                         </div>
                         <div className="mini-cart-item clearfix">
                           <div className="mini-cart-item-image">
-                            <Link href="/home">
-                              {/* <Image src={'/images/shop/mini-cart/img-2.jpg'} alt=""></Image> */}
-                              {/* <img src={min2} alt="" /> */}
-                            </Link>
                           </div>
                           <div className="mini-cart-item-des">
                             <Link href="/home">Ninja T-shirt</Link>
@@ -220,7 +220,7 @@ const Header = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="col-md-2 col-sm-2 col-2">
               <MobileMenu />

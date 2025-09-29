@@ -12,7 +12,7 @@ const BlogList = () => {
             <div className="wpo-wpo-blog-content">
               <div className="post format-standard-image">
                 <div className="entry-media">
-                  <img src={"/images/blog/img-1.jpg"} alt="" />
+                  <img src={"/images/blog/img-4.jpg"} alt="" />
                 </div>
                 <ul className="entry-meta">
                   <li>
@@ -40,8 +40,9 @@ const BlogList = () => {
                   It is a long established fact that a reader will be distracted
                   by the readable content of a page when looking at its layout.
                   The point of using Lorem Ipsum is that it has a more-or-less
-                  normal distribution of letters, as opposed href using &apos;Content
-                  here, content here&apos;, making it look like readable English.{" "}
+                  normal distribution of letters, as opposed href using
+                  &apos;Content here, content here&apos;, making it look like
+                  readable English.{" "}
                 </p>
                 <Link href="/blog-details" className="read-more">
                   Read More...
@@ -57,7 +58,7 @@ const BlogList = () => {
                 <ul className="entry-meta">
                   <li>
                     <Link href="/blog-details">
-                      <img src={"/images/blog/img-4.jpg"} alt="" /> By Admin
+                      <img src={"/images/blog/admin.jpg"} alt="" /> By Admin
                     </Link>
                   </li>
                   <li>
@@ -80,8 +81,9 @@ const BlogList = () => {
                   It is a long established fact that a reader will be distracted
                   by the readable content of a page when looking at its layout.
                   The point of using Lorem Ipsum is that it has a more-or-less
-                  normal distribution of letters, as opposed href using &apos;Content
-                  here, content here&apos;, making it look like readable English.{" "}
+                  normal distribution of letters, as opposed href using
+                  &apos;Content here, content here&apos;, making it look like
+                  readable English.{" "}
                 </p>
                 <Link href="/blog-details" className="read-more">
                   Read More...
@@ -94,7 +96,7 @@ const BlogList = () => {
                 <ul className="entry-meta">
                   <li>
                     <Link href="/blog-details">
-                      <img src={"/images/blog/img-4.jpg"} alt="" /> By Admin
+                      <img src={"/images/blog/admin.jpg"} alt="" /> By Admin
                     </Link>
                   </li>
                   <li>
@@ -117,8 +119,9 @@ const BlogList = () => {
                   It is a long established fact that a reader will be distracted
                   by the readable content of a page when looking at its layout.
                   The point of using Lorem Ipsum is that it has a more-or-less
-                  normal distribution of letters, as opposed href using &apos;Content
-                  here, content here&apos;, making it look like readable English.{" "}
+                  normal distribution of letters, as opposed href using
+                  &apos;Content here, content here&apos;, making it look like
+                  readable English.{" "}
                 </p>
                 <Link href="/blog-details" className="read-more">
                   Read More...
@@ -129,7 +132,7 @@ const BlogList = () => {
                 <ul className="entry-meta">
                   <li>
                     <Link href="/blog-details">
-                      <img src={"/images/blog/img-4.jpg"} alt="" /> By Admin
+                      <img src={"/images/blog/admin.jpg"} alt="" /> By Admin
                     </Link>
                   </li>
                   <li>
@@ -152,8 +155,9 @@ const BlogList = () => {
                   It is a long established fact that a reader will be distracted
                   by the readable content of a page when looking at its layout.
                   The point of using Lorem Ipsum is that it has a more-or-less
-                  normal distribution of letters, as opposed href using &apos;Content
-                  here, content here&apos;, making it look like readable English.{" "}
+                  normal distribution of letters, as opposed href using
+                  &apos;Content here, content here&apos;, making it look like
+                  readable English.{" "}
                 </p>
               </div>
               <div className="pagination-wrapper pagination-wrapper-left">

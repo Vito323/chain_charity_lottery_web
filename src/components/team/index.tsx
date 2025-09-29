@@ -4,10 +4,9 @@ const OurTeam = () => {
     <section className="our-speakers speakers-home-two">
       <div
         className="bg-img"
-        // style="background-image: url(assets/img/bg-team-home-2.svg);"
       ></div>
-      <span className="title-position title-position-left">Speakers</span>
-      <span className="title-position title-position-right">Experts</span>
+      {/* <span className="title-position title-position-left">Speakers</span>
+      <span className="title-position title-position-right">Experts</span> */}
       <div className="container">
         <h2 className="title-line">Our Speakers</h2>
         <p className="slogan">
