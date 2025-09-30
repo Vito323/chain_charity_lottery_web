@@ -30,7 +30,7 @@ const Footer = () =>{
                         </div>
                     </div>
                     <div className="col col-lg-3 col-md-6 col-sm-12 col-12">
-                        <div className="widget link-widget resource-widget">
+                        {/* <div className="widget link-widget resource-widget">
                             <div className="widget-title">
                                 <h3>Top News</h3>
                             </div>
@@ -52,7 +52,7 @@ const Footer = () =>{
                                     <span>12 Nov, 2020</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="col col-lg-2 col-md-6 col-sm-12 col-12">
                         <div className="widget link-widget">
