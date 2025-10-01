@@ -1,10 +1,8 @@
-import Link from "next/link";
 import "./style.scss";
 import Image from "next/image";
 import { Dropdown } from "react-bootstrap";
 import { useTransition } from "react";
 import { useRouter } from "@/i18n/navigation";
-import { LNG_LIST } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import { useParams, usePathname } from "next/navigation";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -13,10 +11,7 @@ const HeaderTopBar = () => {
   const pathName = usePathname();
   const params = useParams();
   const [, startTransition] = useTransition();
-
   const currentLocale = useLocale();
-
-//   console.log(currentLocale, "ll");
 
   const changeLng = (lng: string) => {
     startTransition(() => {

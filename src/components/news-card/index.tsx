@@ -29,7 +29,7 @@ const NewsCard = ({
       <div className="wpo-event-item">
         <div className="wpo-event-img">
           <div className="card-cover-container">
-            <img src={cover} alt="" />
+            <img src={cover} alt="" className="cover"/>
           </div>
           <ThumbText
             className={
