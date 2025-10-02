@@ -17,7 +17,7 @@ const OurHistory = () => {
   });
   return (
     <section className="our-history s-title-bg">
-      <span className="title-bg">Our History</span>
+      {/* <span className="title-bg">Our History</span> */}
       <div className="container">
         <div className="row">
           <div className="col-12 col-sm-6">
