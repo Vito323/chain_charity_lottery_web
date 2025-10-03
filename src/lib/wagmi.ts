@@ -2,22 +2,15 @@
 import { connectorsForWallets, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { metaMaskWallet } from '@rainbow-me/rainbowkit/wallets';
 import {
-  arbitrum,
-  base,
   mainnet,
-  optimism,
   polygon,
-  sepolia,
 } from 'wagmi/chains';
 import { createConfig, http } from 'wagmi';
 
 const appName = 'Hawaiian';
 const projectId = 'YOUR_PROJECT_ID';
 
-const chains =  
-  process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
-    ? ([mainnet, polygon, optimism, arbitrum, base, sepolia] as const)
-    : ([mainnet, polygon, optimism, arbitrum, base] as const);
+const chains = [mainnet, polygon] as const;
 
 const { wallets } = getDefaultWallets();
 

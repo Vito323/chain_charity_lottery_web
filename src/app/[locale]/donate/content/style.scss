@@ -1,236 +1,649 @@
-.wpo-donations-amount,
-.wpo-donations-details,
-.wpo-doanation-payment {
-  padding: 30px;
-  border: 1px solid #ebebeb;
-  margin-bottom: 40px;
-}
-
-.wpo-donations-amount h2,
-.wpo-donations-details h2,
-.wpo-doanation-payment h2 {
-  font-size: 18px;
-  font-size: 1.125rem;
-  font-weight: 600;
-  position: relative;
-  text-transform: capitalize;
-  margin-bottom: 30px;
-  margin-top: 0;
-}
-
-.wpo-donations-amount input,
-.wpo-donations-details input,
-.wpo-donations-details textarea {
-  background: transparent;
-  width: 100%;
-  height: 50px;
-  border: 0;
-  border: 1px solid #ebebeb;
-  padding-left: 15px;
-  border-radius: 0;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
-  color: #525252;
-  border-radius: 5px;
-}
-
-.wpo-donations-details textarea {
-  height: 135px;
-}
-
-.wpo-donations-amount input:focus,
-.wpo-donations-details input:focus,
-.wpo-donations-details textarea:focus {
-  border-color: #08cc7f;
-}
-
-.payment-name ul li input {
-  margin-right: 0;
-  position: absolute;
-  z-index: -1;
-  opacity: 0;
-}
-
-.wpo-payment-select ul {
-  list-style: none;
-}
-
-.payment-name ul {
+/* 加密货币捐赠表单样式 */
+.wpo-donation-page-area {
+  background: #f7fbfe;
+  min-height: 100vh;
   display: flex;
-  margin-top: 30px;
+  align-items: center;
 }
 
-.wpo-payment-area form {
-  overflow: unset !important;
-}
-
-.payment-name ul li {
-  width: 100px;
-  height: 60px;
-  text-align: center;
-  line-height: 60px;
-}
-
-.payment-name ul {
-  list-style: none;
-}
-
-.payment-name ul li input {
-  margin-right: 0;
-}
-
-.payment-name ul li {
-  margin-right: 15px;
-}
-
-.wpo-payment-area h2 {
-  padding-bottom: 40px;
-  margin-bottom: 0;
-}
-
-.wpo-payment-select ul {
-  display: flex;
-}
-
-.wpo-payment-select ul li {
-  margin-right: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #5B5B5B;
-}
-
-.wpo-payment-select label {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.wpo-payment-area h2 {
-  font-size: 20px;
-  color: #878787;
-  font-weight: 700;
-}
-
-.wpo-payment-area h2 span {
-  font-size: 30px;
-  color: #ff493c;
-}
-
-.wpo-payment-area {
-  width: 100%;
-}
-
-.payment-name ul li input {
-  margin-right: 0;
-  position: absolute;
-  z-index: -1;
-}
-
-.payment-name ul li input:checked~label {
-  background: #a8edd2;
-}
-
-.payment-name label {
-  width: 100%;
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-
-.payment-name .visa label {
-  border: 1px solid #0057A0;
-}
-
-.payment-name .mas label {
-  border: 1px solid #CC0000;
-}
-
-.payment-name .ski label {
-  border: 1px solid #691A5F;
-}
-
-.payment-name .pay label {
-  border: 1px solid #019CDE;
-}
-
-.payment-name.active {
-  display: block;
-}
-
-.wpo-payment-option.active .payment-name {
-  display: none !important;
-}
-
-.wpo-payment-area .form-style input {
-  width: 100%;
-  margin-bottom: 15px;
-  padding-left: 20px;
-  height: 40px;
+.crypto-donation-form {
   background: #fff;
-  border-radius: 2px;
-  border: none;
-  border: 1px solid #ebebeb;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.wpo-payment-area .form-style input:focus {
-  border: 1px solid #08cc7f;
-}
-
-.wpo-payment-area .contact-form {
-  margin-top: 40px;
-}
-
-#Donations .theme-btn {
-  border: none;
-  outline: none;
-  border-radius: 40px;
-  box-shadow: none;
-}
-
-#Donations .submit-area {
+.form-header {
   text-align: center;
-}
-
-@media(max-width: 992px) {
-  .wpo-event-details-wrap {
-      margin-bottom: 30px;
+  margin-bottom: 30px;
+  
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d4277;
+    margin: 0;
+    font-family: "Rubik", sans-serif;
   }
 }
 
-@media(max-width: 590px) {
-  .wpo-case-details-text .wpo-case-content h2 {
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 钱包连接区域 */
+.wallet-connect-section {
+  .wallet-connect-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+
+    .wallet-icon {
       font-size: 18px;
+      color: #6c757d;
+    }
+
+    .wallet-text {
+      font-size: 14px;
+      color: #6c757d;
+      font-weight: 500;
+    }
   }
 
-  .wpo-case-details-tab .nav li a {
-      margin-bottom: 20px;
-  }
+  .chain-info {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
 
-  .wpo-case-details-tab .nav li:last-child a {
-      margin-bottom: 0;
-  }
-
-  .wpo-case-details-text .wpo-case-text-top {
-      padding: 8px;
-  }
-
-  .wpo-payment-select ul {
+    .chain-indicator {
       display: flex;
-      flex-wrap: wrap;
-  }
+      align-items: center;
+      gap: 8px;
 
-  .wpo-doanation-payment {
-      padding: 20px 10px;
-  }
+      .chain-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
 
+      .chain-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d4277;
+      }
+
+      .chain-id {
+        font-size: 12px;
+        color: #6c757d;
+        margin-left: auto;
+      }
+    }
+  }
 }
 
-.wpo-donate-header h2 {
-  margin-bottom: 50px;
-  text-align: center;
-  font-size: 36px;
-  font-weight: 500;
-  margin-top: 0;
+.token-selection-section {
+  position: relative;
+  .token-input-container {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    gap: 20px;
+  
+    .token-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      // min-width: 120px;
+      white-space: nowrap;
+      &.disabled {
+        cursor: not-allowed;
+      }
+
+      .selected-token-display {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+
+        .selected-token-icon {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+
+      .token-label {
+        font-size: 14px;
+        color: #2d4277;
+        font-weight: 600;
+      }
+
+      .dropdown-icon {
+        font-size: 12px;
+        color: #6c757d;
+        transition: transform 0.3s ease;
+      }
+    }
+    
+    .amount-input-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      
+      .amount-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #2d4277;
+        font-weight: 600;
+        background: transparent;
+        
+        &::placeholder {
+          color: #6c757d;
+        }
+        
+        &:disabled {
+          color: #6c757d;
+          cursor: not-allowed;
+        }
+      }
+    }
+    .usd-value-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      // min-width: 80px;
+      gap: 2px;
+
+      .usd-value {
+        font-size: 14px;
+        color: #6c757d;
+        font-weight: 500;
+      }
+      .token-price {
+        font-size: 11px;
+        color: #8b9dc3;
+        font-weight: 400;
+      }
+    }
+  }
+  
+  .token-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 4px;
+    overflow: hidden;
+    .token-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    
+      
+      .token-icon {
+        font-size: 16px;
+        color: #08cc7f;
+        width: 20px;
+        text-align: center;
+      }
+      
+      .token-symbol {
+        font-size: 14px;
+        color: #2d4277;
+        font-weight: 600;
+        min-width: 40px;
+      }
+      
+      .token-name {
+        font-size: 12px;
+        color: #6c757d;
+        flex: 1;
+      }
+    }
+  }
 }
 
-input[type=checkbox], input[type=radio]{
-  margin-right: 5px;
+/* 总捐赠显示 */
+.total-donation-section {
+  .total-donation-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    
+    .total-label {
+      font-size: 14px;
+      color: #2d4277;
+      font-weight: 600;
+    }
+    
+    .total-value {
+      font-size: 16px;
+      color: #6c757d;
+      font-weight: 600;
+    }
+  }
+}
+
+/* 连接钱包按钮 */
+.connect-wallet-section {
+  margin-top: 10px;
+  
+  .connect-wallet-btn {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #08cc7f, #06a066);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Rubik", sans-serif;
+    
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #06a066, #048a5a);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(8, 204, 127, 0.3);
+    }
+    
+    &:disabled {
+      background: #e9ecef;
+      color: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .crypto-donation-form {
+    padding: 30px 20px;
+    margin: 20px;
+  }
+  
+  .form-header h2 {
+    font-size: 20px;
+  }
+  
+  .token-selection-section {
+    .token-input-container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      
+      .token-selector {
+        min-width: auto;
+        justify-content: space-between;
+      }
+      
+      .amount-input-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        
+        .usd-value {
+          text-align: left;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .crypto-donation-form {
+    padding: 25px 15px;
+    margin: 15px;
+  }
+  
+  .form-header h2 {
+    font-size: 18px;
+  }
+  
+  .wallet-connect-section,
+  .token-selection-section,
+  .total-donation-section {
+    .wallet-connect-field,
+    .token-input-container,
+    .total-donation-field {
+      padding: 12px 16px;
+    }
+  }
+  
+  .connect-wallet-section {
+    .connect-wallet-btn {
+      padding: 14px 20px;
+      font-size: 14px;
+    }
+  }
+}
+
+/* 与现有网站样式保持一致 */
+.wpo-donation-page-area {
+  font-family: "Open Sans", sans-serif;
+}
+
+.form-header h2,
+.token-label,
+.total-label {
+  font-family: "Rubik", sans-serif;
+}
+
+/* 动画效果 */
+.crypto-donation-form {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 焦点状态 */
+.amount-input:focus {
+  outline: none;
+}
+
+.token-selector:focus {
+  outline: 2px solid #08cc7f;
+  outline-offset: 2px;
+}
+
+/* 悬停效果 */
+// .wallet-connect-field:hover,
+// .token-selector:hover {
+//   transform: translateY(-1px);
+//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+// }
+
+/* 代币选择Modal样式 */
+.token-select-modal {
+  .modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+  }
+
+  .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 20px 24px;
+    
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d4277;
+      font-family: "Rubik", sans-serif;
+    }
+
+    .btn-close {
+      border: none;
+      font-size: 20px;
+      color: #6c757d;
+      opacity: 1;
+      &:hover {
+        color: #2d4277;
+      }
+      &:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 0 24px 20px 24px;
+  }
+
+  .modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 16px 24px;
+    background: #f8f9fa;
+    border-radius: 0 0 16px 16px;
+  }
+}
+
+/* 搜索区域 */
+.token-search-section {
+  margin-bottom: 16px;
+
+  .token-search-input {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #2d4277;
+    margin-top: 20px;
+    &:focus {
+      border-color: #08cc7f;
+      box-shadow: 0 0 0 0.2rem rgba(8, 204, 127, 0.25);
+    }
+
+    &::placeholder {
+      color: #6c757d;
+    }
+  }
+}
+
+/* 隐藏零余额选项 */
+.hide-zero-balance-section {
+  margin-bottom: 16px;
+
+  .hide-zero-checkbox {
+    .form-check-input {
+      border-color: #e9ecef;
+      
+      &:checked {
+        background-color: #08cc7f;
+        border-color: #08cc7f;
+      }
+    }
+
+    .form-check-label {
+      font-size: 14px;
+      color: #2d4277;
+      font-weight: 500;
+    }
+  }
+}
+
+/* 代币列表 */
+.token-list-section {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 16px;
+
+  .token-list-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid #f8f9fa;
+    &.disabled {
+      cursor: not-allowed;
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+    &:hover {
+      background: #f8f9fa;
+    }
+
+    .token-icon-container {
+      position: relative;
+      margin-right: 12px;
+
+      .token-list-icon {
+        font-size: 24px;
+        color: #08cc7f;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-radius: 50%;
+      }
+
+      .token-list-icon-img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #f8f9fa;
+      }
+
+      .givbacks-indicator {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 16px;
+        height: 16px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #fff;
+
+        .givbacks-icon {
+          font-size: 8px;
+          color: #8b5cf6;
+        }
+      }
+    }
+
+    .token-info {
+      flex: 1;
+      margin-right: 12px;
+
+      .token-symbol {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d4277;
+        margin-bottom: 2px;
+      }
+
+      .token-name {
+        font-size: 12px;
+        color: #6c757d;
+      }
+    }
+
+    .token-balance {
+      font-size: 14px;
+      color: #2d4277;
+      font-weight: 500;
+    }
+  }
+}
+
+/* Modal底部信息 */
+.token-modal-footer {
+  .givbacks-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #2d4277;
+    font-weight: 500;
+
+    .givbacks-icon {
+      font-size: 16px;
+      color: #8b5cf6;
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 576px) {
+  .token-select-modal {
+    .modal-dialog {
+      margin: 1rem;
+      max-width: calc(100% - 2rem);
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .token-list-section {
+      max-height: 250px;
+    }
+
+    .token-list-item {
+      padding: 10px 12px;
+
+      .token-icon-container {
+        .token-list-icon {
+          font-size: 20px;
+          width: 28px;
+          height: 28px;
+        }
+      }
+
+      .token-info {
+        .token-symbol {
+          font-size: 13px;
+        }
+
+        .token-name {
+          font-size: 11px;
+        }
+      }
+
+      .token-balance {
+        font-size: 13px;
+      }
+    }
+  }
 }

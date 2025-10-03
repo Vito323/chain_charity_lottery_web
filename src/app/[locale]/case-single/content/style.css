@@ -4,6 +4,73 @@
   margin-top: 40px;
 }
 
+.wpo-case-details-wrap{
+  .tab-wrap{
+    margin-top: 50px;
+  }
+}
+
+/* 案例页面英雄区域布局 */
+.case-hero-layout {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 50px;
+  align-items: flex-start;
+}
+
+.case-swiper-container {
+  flex: 2;
+  min-width: 0; /* 防止 flex 子项溢出 */
+}
+
+.case-fundraising-container {
+  flex: 1;
+  min-width: 300px;
+  position: sticky;
+  top: 20px;
+}
+
+/* 响应式布局 */
+@media (max-width: 1200px) {
+  .case-hero-layout {
+    gap: 30px;
+  }
+  
+  .case-fundraising-container {
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 992px) {
+  .case-hero-layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .case-swiper-container {
+    flex: none;
+  }
+  
+  .case-fundraising-container {
+    flex: none;
+    min-width: auto;
+    position: static;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .case-hero-layout {
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .case-fundraising-container {
+    max-width: 100%;
+  }
+}
+
 .wpo-case-details-tab .nav .nav-item a {
   display: block;
   width: 160px;
