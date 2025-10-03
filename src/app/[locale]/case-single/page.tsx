@@ -11,7 +11,7 @@ const CaseSinglePage =() => {
   return(
       <>
           <Header/>
-          <PageTitle pageTitle={'Single Causes'} pagesub={'Ensure Education for every poor children'}/> 
+          <PageTitle pageTitle={'Single Causes'} pagePrev="Causes" pagesub={'Causes Name'}/> 
           <CaseSingle />
           <Footer/>
           <Scrollbar/>

@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
-import "./style.css";
+import "./style.scss";
 import TabContent from "../tab-content";
 import Covers from "../cover";
 import Fundraising from "../fundraising";
+import { useRouter } from "next/navigation";
 
 const CaseSingle = () => {
-
+  const router = useRouter();
   return (
     <div className="wpo-case-details-area section-padding">
       <div className="container">
@@ -22,7 +23,9 @@ const CaseSingle = () => {
                   <Fundraising 
                     totalRaised="$425,323.75"
                     contributors={3635}
-                    onDonate={() => console.log('Donate clicked')}
+                    onDonate={() => {
+                      router.push("/donate");
+                    }}
                     onShare={() => console.log('Share clicked')}
                     onBookmark={() => console.log('Bookmark clicked')}
                   />

@@ -20,7 +20,7 @@ const TabUpdates = () => {
       id: 1,
       date: {
         day: "5",
-        month: "5月",
+        month: "May",
         year: "2023"
       },
       title: "Building QF",
@@ -35,7 +35,7 @@ const TabUpdates = () => {
       id: 2,
       date: {
         day: "24",
-        month: "1月",
+        month: "Jan",
         year: "2023"
       },
       title: "Investigating QF with Gitcoin!",

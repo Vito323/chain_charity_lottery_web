@@ -4,8 +4,8 @@
   margin-top: 40px;
 }
 
-.wpo-case-details-wrap{
-  .tab-wrap{
+.wpo-case-details-wrap {
+  .tab-wrap {
     margin-top: 50px;
   }
 }
@@ -15,7 +15,6 @@
   display: flex;
   gap: 40px;
   margin-bottom: 50px;
-  align-items: flex-start;
 }
 
 .case-swiper-container {
@@ -28,6 +27,8 @@
   min-width: 300px;
   position: sticky;
   top: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 响应式布局 */
@@ -35,7 +36,7 @@
   .case-hero-layout {
     gap: 30px;
   }
-  
+
   .case-fundraising-container {
     min-width: 280px;
   }
@@ -46,13 +47,12 @@
     flex-direction: column;
     gap: 30px;
   }
-  
+
   .case-swiper-container {
     flex: none;
   }
-  
+
   .case-fundraising-container {
-    flex: none;
     min-width: auto;
     position: static;
     max-width: 500px;
@@ -65,7 +65,7 @@
     gap: 20px;
     margin-bottom: 30px;
   }
-  
+
   .case-fundraising-container {
     max-width: 100%;
   }
@@ -113,8 +113,12 @@
   border: 1px solid #ebebeb;
 }
 
-.wpo-case-details-text .wpo-case-text-top p {
-  margin-bottom: 30px;
+.wpo-case-details-text {
+  .wpo-case-text-top {
+    p {
+      margin-bottom: 30px;
+    }
+  }
 }
 
 .wpo-case-details-tab .event-b-text {

@@ -7,11 +7,13 @@ import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useChainInfo } from "@/hooks/useChainInfo";
 import { useDonationForm } from "@/hooks/useDonationForm";
+import { useAccount } from "wagmi";
 
 const Content = () => {
   // 使用自定义hooks
   const { tokenPrices, calculateUSDValue } = useTokenPrices();
   const { tokenBalances, isConnected } = useTokenBalances();
+  const {address} = useAccount();
   const { currentChain } = useChainInfo();
   const {
     formState,
@@ -100,7 +102,7 @@ const Content = () => {
                     <i className="fa fa-wallet wallet-icon"></i>
                     <span className="wallet-text">
                       {isConnected
-                        ? `Wallet Connected - ${currentChain.name}`
+                        ? `${address}`
                         : "Please connect your wallet"}
                     </span>
                   </div>
@@ -270,12 +272,12 @@ const Content = () => {
             ))}
           </div>
         </Modal.Body>
-        <Modal.Footer className="token-modal-footer">
+        {/* <Modal.Footer className="token-modal-footer">
           <div className="givbacks-info">
             <i className="fa fa-hand-paper givbacks-icon"></i>
             <span>GIVbacks eligible tokens</span>
           </div>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
     </div>
   );

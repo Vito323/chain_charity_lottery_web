@@ -60,11 +60,11 @@ const Covers = () => {
         onSwiper={(swiper) => {
           console.log(swiper);
           // 强制更新 Swiper 尺寸
-          setTimeout(() => {
-            swiper.updateSize();
-            swiper.updateSlides();
-            swiper.updateProgress();
-          }, 100);
+          // setTimeout(() => {
+          //   swiper.updateSize();
+          //   swiper.updateSlides();
+          //   swiper.updateProgress();
+          // }, 100);
         }}
       >
         {images.map((image, index) => (
