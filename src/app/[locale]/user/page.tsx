@@ -10,7 +10,7 @@ const UserPage = () => {
   return (
     <>
         <Header />
-        {/* <PageTitle pageTitle={"User Center"} pagesub={"User Center"} /> */}
+        <PageTitle pageTitle={"User Center"} pagesub={"User Center"} />
         <UserCenter />
         <Footer />
         <Scrollbar />
