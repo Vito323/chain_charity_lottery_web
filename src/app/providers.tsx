@@ -20,23 +20,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <RainbowKitProvider
           locale={currentLocale as Locale}
           theme={lightTheme({ accentColor: '#08cc7f', accentColorForeground: '#ffffff' })}
-          accountDetails={{
-            // 默认有 copy & disconnect，这里可以加新的
-            additionalActions: [
-              {
-                label: '在 Etherscan 查看',
-                onClick: (address) => {
-                  window.open(`https://etherscan.io/address/${address}`, '_blank');
-                },
-              },
-              {
-                label: '我的自定义功能',
-                onClick: (address) => {
-                  console.log('执行自定义操作，当前地址:', address);
-                },
-              },
-            ],
-          }}
         >
           {children}
         </RainbowKitProvider>
