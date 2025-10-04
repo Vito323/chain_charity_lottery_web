@@ -317,6 +317,10 @@ img {
   display: inline-block;
   transition: all .3s;
   border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 991px) {
@@ -327,7 +331,7 @@ img {
   .theme-btn-s3 {
       font-size: 14px;
       font-size: 0.875rem;
-      padding: 10px 25px;
+      /* padding: 10px 25px; */
   }
 }
 
@@ -381,7 +385,7 @@ img {
   .theme-btn-s3 {
       font-size: 14px;
       font-size: 0.875rem;
-      padding: 10px 25px;
+      /* padding: 10px 25px; */
   }
 }
 
@@ -394,7 +398,7 @@ img {
   .theme-btn-s4 {
       font-size: 14px;
       font-size: 0.875rem;
-      padding: 10px 25px;
+      /* padding: 10px 25px; */
   }
 }
 

@@ -13,60 +13,60 @@ const menus = [
 
   {
     id: 2,
-    title: "About",
-    link: "/about",
-  },
+    title: "Projects",
+    link: "/project",
+  }
 
-  {
-    id: 3,
-    title: "Causes",
-    link: "/case",
-  },
-  {
-    id: 4,
-    title: "Event",
-    link: "/event",
-  },
-  {
-    id: 7,
-    title: "Pages",
-    link: "/",
-    submenu: [
-      {
-        id: 71,
-        title: "About",
-        link: "/about",
-      },
-      {
-        id: 75,
-        title: "Donate",
-        link: "/donate",
-      },
-      {
-        id: 76,
-        title: "Volunteer",
-        link: "/volunteer",
-      },
+  // {
+  //   id: 3,
+  //   title: "Causes",
+  //   link: "/case",
+  // },
+  // {
+  //   id: 4,
+  //   title: "Event",
+  //   link: "/event",
+  // },
+  // {
+  //   id: 7,
+  //   title: "Pages",
+  //   link: "/",
+  //   submenu: [
+  //     {
+  //       id: 71,
+  //       title: "About",
+  //       link: "/about",
+  //     },
+  //     {
+  //       id: 75,
+  //       title: "Donate",
+  //       link: "/donate",
+  //     },
+  //     {
+  //       id: 76,
+  //       title: "Volunteer",
+  //       link: "/volunteer",
+  //     },
 
-      {
-        id: 79,
-        title: "Error 404",
-        link: "/404",
-      },
-    ],
-  },
+  //     {
+  //       id: 79,
+  //       title: "Error 404",
+  //       link: "/404",
+  //     },
+  //   ],
+  // },
 
-  {
-    id: 5,
-    title: "News",
-    link: "/news",
-  },
-  {
-    id: 88,
-    title: "Contact",
-    link: "/contact",
-  },
-];
+  // {
+  //   id: 5,
+  //   title: "News",
+  //   link: "/news",
+  // },
+  // {
+  //   id: 88,
+  //   title: "Contact",
+  //   link: "/contact",
+  // },
+] as {id: number; title: string; link: string; submenu?: {id: number; title: string; link: string;}[];}[];
 
 const MobileMenu = () => {
   const [isMenuShow, setIsMenuShow] = React.useState(false);

@@ -55,7 +55,7 @@ const ROUTE_MAP = [
   //   label: "Contact",
   //   path: "/contact",
   // },
-];
+] as {label: string; path: string; children?: {label: string; path: string;}[];}[];
 
 const Header = () => {
   const pathname = usePathname();
@@ -85,7 +85,7 @@ const Header = () => {
                 </Link>
               </div>
             </div>
-            <div className="col-lg-8 d-lg-block d-none">
+            <div className="col-lg-9 d-lg-block d-none">
               <nav>
                 <ul>
                   {ROUTE_MAP.map((item, _i) => (
@@ -97,7 +97,7 @@ const Header = () => {
                       >
                         {item.label}
                       </Link>
-                      {item.children && (
+                      {item?.children && (
                         <ul>
                           {item.children.map((pie, _ii) => (
                             <li key={`${_i}_${_ii}`}>
@@ -113,8 +113,8 @@ const Header = () => {
                 </ul>
               </nav>
             </div>
-            <div className="col-lg-1 col-md-6 col-sm-6 col-6">
-              {/* <div className="contact">
+            {/* <div className="col-lg-1 col-md-6 col-sm-6 col-6">
+             <div className="contact">
                 <div className="cart-search-contact">
                   <div className="header-search-form-wrapper">
                     <button className="search-toggle-btn">
@@ -170,8 +170,8 @@ const Header = () => {
                     </div>
                   </div>
                 </div>
-              </div> */}
-            </div>
+              </div>
+            </div> */}
             <div className="col-md-2 col-sm-2 col-2">
               <MobileMenu />
             </div>

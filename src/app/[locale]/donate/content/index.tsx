@@ -5,16 +5,17 @@ import Image from "next/image";
 import "./style.scss";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
-import { useChainInfo } from "@/hooks/useChainInfo";
 import { useDonationForm } from "@/hooks/useDonationForm";
 import { useAccount } from "wagmi";
 
-const Content = () => {
-  // 使用自定义hooks
+interface ContentProps {
+  uid: string;
+}
+
+const Content = ({ uid }: ContentProps) => {
   const { tokenPrices, calculateUSDValue } = useTokenPrices();
   const { tokenBalances, isConnected } = useTokenBalances();
   const {address} = useAccount();
-  const { currentChain } = useChainInfo();
   const {
     formState,
     handleTokenSelect,
@@ -104,6 +105,12 @@ const Content = () => {
                       {isConnected
                         ? `${address}`
                         : "Please connect your wallet"}
+                    </span>
+                  </div>
+                  <div className="project-id-field">
+                    <i className="fa fa-tag project-icon"></i>
+                    <span className="project-text">
+                      Current Project ID: {uid}
                     </span>
                   </div>
                 </div>

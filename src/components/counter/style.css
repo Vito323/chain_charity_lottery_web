@@ -123,3 +123,30 @@
 .wpo-counter-style-2 .wpo-counter-grids .grid:before {
     background: #ebebeb;
 }
+
+
+@media(max-width: 590px) {
+    .custom-grid {
+        width: 100%;
+        float: none;
+    }
+
+    .wpo-counter-area .wpo-counter-grids .grid,
+    .wpo-counter-style-2 .wpo-counter-grids .grid {
+        width: 45%;
+    }
+
+    .wpo-counter-area .wpo-counter-grids .grid:before,
+    .wpo-counter-style-2 .wpo-counter-grids .grid:before {
+        display: none;
+    }
+
+    .wpo-cta-area,
+    .wpo-cta-area-2 {
+        padding: 70px 5px;
+    }
+
+    .wpo-cta-text h2 {
+        font-size: 33px;
+    }
+}

@@ -101,6 +101,9 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  .theme-btn{
+    display: inline-block;
+  }
 }
 
 /* 主要捐赠按钮 */

@@ -41,8 +41,14 @@
     margin-top: 20px;
 }
 
-.wpo-cta-text .theme-btn {
-    margin-right: 15px;
+.wpo-cta-text {
+    .theme-btn {
+        margin-right: 15px;
+        display: inline-block;
+    }
+    .theme-btn-s2{
+        display: inline-block;
+    }
 }
 
 @media(max-width: 992px) {

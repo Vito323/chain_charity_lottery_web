@@ -28,11 +28,12 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
   raised,
   contributors,
   lastUpdated,
+  id
 }) => {
   const router = useRouter();
 
   const handleCardClick = () => {
-    router.push("/case-single");
+    router.push(`/case-single/${id}`);
   };
 
   const handleButtonClick = (e: React.MouseEvent) => {
@@ -92,7 +93,7 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
 
         <div className="card-actions">
           <Link
-            href="/donate"
+            href={`/donate/${id}`}
             className="donate-btn"
             onClick={handleButtonClick}
           >

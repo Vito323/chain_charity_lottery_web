@@ -2,9 +2,7 @@ import "./style.scss";
 const OurTeam = () => {
   return (
     <section className="our-speakers speakers-home-two">
-      <div
-        className="bg-img"
-      ></div>
+      <div className="bg-img"></div>
       {/* <span className="title-position title-position-left">Speakers</span>
       <span className="title-position title-position-right">Experts</span> */}
       <div className="container">
@@ -27,7 +25,7 @@ const OurTeam = () => {
               <h3>A</h3>
               <div className="prof">CEO, IT Metrix</div>
               <p>Team Member Introduction</p>
-              <ul className="soc-link">
+              {/* <ul className="soc-link">
                 <li>
                   <a target="_blank" href="#">
                     <i className="fab fa-facebook-f"></i>
@@ -51,7 +49,7 @@ const OurTeam = () => {
                     <i className="fab fa-twitter"></i>
                   </a>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           </div>
           <div className="speaker-item">
@@ -79,10 +77,7 @@ const OurTeam = () => {
                   </a>
                 </li>
                 <li>
-                  <a
-                    target="_blank"
-                    href="#"
-                  >
+                  <a target="_blank" href="#">
                     <i className="fab fa-linkedin-in"></i>
                   </a>
                 </li>
@@ -119,10 +114,7 @@ const OurTeam = () => {
                   </a>
                 </li>
                 <li>
-                  <a
-                    target="_blank"
-                    href="#"
-                  >
+                  <a target="_blank" href="#">
                     <i className="fab fa-linkedin-in"></i>
                   </a>
                 </li>
@@ -159,10 +151,7 @@ const OurTeam = () => {
                   </a>
                 </li>
                 <li>
-                  <a
-                    target="_blank"
-                    href="#"
-                  >
+                  <a target="_blank" href="#">
                     <i className="fab fa-linkedin-in"></i>
                   </a>
                 </li>

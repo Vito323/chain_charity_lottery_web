@@ -240,6 +240,8 @@
 .wpo-site-footer .contact-ft ul li,
 .wpo-site-footer-2 .contact-ft ul li {
     padding-bottom: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .wpo-site-footer .contact-ft,

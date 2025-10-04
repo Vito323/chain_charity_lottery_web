@@ -6,8 +6,16 @@ import Covers from "../cover";
 import Fundraising from "../fundraising";
 import { useRouter } from "next/navigation";
 
-const CaseSingle = () => {
+interface CaseSingleProps {
+  uid: string;
+}
+
+const CaseSingle = ({ uid }: CaseSingleProps) => {
   const router = useRouter();
+  
+  // 使用 uid 参数获取项目数据
+  console.log('Project UID:', uid);
+  
   return (
     <div className="wpo-case-details-area section-padding">
       <div className="container">
@@ -24,7 +32,7 @@ const CaseSingle = () => {
                     totalRaised="$425,323.75"
                     contributors={3635}
                     onDonate={() => {
-                      router.push("/donate");
+                      router.push(`/donate/${uid}`);
                     }}
                     onShare={() => console.log('Share clicked')}
                     onBookmark={() => console.log('Bookmark clicked')}
