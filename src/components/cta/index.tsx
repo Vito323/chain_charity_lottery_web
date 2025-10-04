@@ -13,10 +13,10 @@ const CtaSection = (props: {ctaclass?: string}) => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="wpo-cta-text">
-                            <h2>You Can Help The Poor With Us</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse </p>
+                            <h2>Join us to act together</h2>
+                            <p>Changing the world isn't a solitary task. Every donation, share, and act of volunteering is a powerful show of support for the helpless. Join us and turn compassion into collective action!</p>
                             <div className="btns">
-                                <Link onClick={ClickHandler} href="/donate" className="theme-btn">Donate Now</Link>
+                                <Link onClick={ClickHandler} href="/project" className="theme-btn">Donate Now</Link>
                                 <Link onClick={ClickHandler} href="/home" className="theme-btn-s2">Join Us Now</Link>
                             </div>
                         </div>

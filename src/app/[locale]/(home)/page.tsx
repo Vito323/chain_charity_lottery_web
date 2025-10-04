@@ -19,13 +19,13 @@ export default function Home() {
       <Hero />
       <Mission />
       <About />
-      <CaseSlide />
+      {/* <CaseSlide /> */}
       <CounterSection />
-      <OurTeam></OurTeam>
-      <WorldSection />
-      <EventSection />
+      <OurTeam />
+      {/* <WorldSection /> */}
+      {/* <EventSection /> */}
       <CtaSection />
-      <BlogSection />
+      {/* <BlogSection /> */}
       <Footer />
       <Scrollbar />
     </>

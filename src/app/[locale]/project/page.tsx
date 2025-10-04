@@ -9,7 +9,7 @@ const CausesPage = () => {
   return (
     <>
       <Header />
-      <PageTitle pageTitle={"Our Causes"} pagesub={"Causes"} />
+      <PageTitle pageTitle={"Our Projects"} pagesub={"Projects"} />
       <Mission subclass={"section-padding"} />
       <Casesection />
       <Footer />

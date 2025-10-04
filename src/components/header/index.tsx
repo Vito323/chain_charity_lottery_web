@@ -18,43 +18,43 @@ const ROUTE_MAP = [
     path: "/about",
   },
   {
-    label: "Causes",
-    path: "/case",
+    label: "Projects",
+    path: "/project",
   },
-  {
-    label: "Event",
-    path: "/event",
-  },
-  {
-    label: "Pages",
-    path: "#",
-    children: [
-      {
-        label: "About",
-        path: "/about",
-      },
-      {
-        label: "Donate",
-        path: "/donate",
-      },
-      {
-        label: "Volunteer",
-        path: "/volunteer",
-      },
-      {
-        label: "Error 404",
-        path: "/404",
-      },
-    ],
-  },
-  {
-    label: "News",
-    path: "/news",
-  },
-  {
-    label: "Contact",
-    path: "/contact",
-  },
+  // {
+  //   label: "Event",
+  //   path: "/event",
+  // },
+  // {
+  //   label: "Pages",
+  //   path: "#",
+  //   children: [
+  //     {
+  //       label: "About",
+  //       path: "/about",
+  //     },
+  //     {
+  //       label: "Donate",
+  //       path: "/donate",
+  //     },
+  //     {
+  //       label: "Volunteer",
+  //       path: "/volunteer",
+  //     },
+  //     {
+  //       label: "Error 404",
+  //       path: "/404",
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "News",
+  //   path: "/news",
+  // },
+  // {
+  //   label: "Contact",
+  //   path: "/contact",
+  // },
 ];
 
 const Header = () => {

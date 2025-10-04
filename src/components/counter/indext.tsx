@@ -16,7 +16,7 @@ const CounterSection = (props: {countclass?: string}) => {
                             </div>
                             <div className="grid">
                                 <div>
-                                    <h2><span className="odometer" data-count="80">80</span>+</h2>
+                                    <h2><span className="odometer" data-count="635k">635k</span></h2>
                                 </div>
                                 <p>Fund Raised</p>
                             </div>

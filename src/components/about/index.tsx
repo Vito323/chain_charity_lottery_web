@@ -17,20 +17,14 @@ const About = () => {
                 <h2>We Are In A Mission To Help The Helpless</h2>
               </div>
               <p>
-                There are many variations of passages of Lorem Ipsum available,
-                but the majority have suffered alteration in some form, by
-                injected humour, or randomised words which don&apos;t look even
-                slightly believable. If you are going to use a passage of Lorem
-                Ipsum, you need to be sure there.
+              Every life deserves a chance, and every person deserves dignity. Our mission is built on a simple, yet profound principle: to be the reliable bridge between urgent need and effective action. We stand in the gap, committing our resources, time, and heart to the most vulnerable communities—from providing essential medical care and educational support to delivering immediate disaster relief.
               </p>
               <p>
-                Thing embarrassing hidden in the middle of text. All the Lorem
-                Ipsum generators on the Internet tend to repeat predefined
-                chunks as necessary,{" "}
+              The scale of global challenges is vast, but so is the power of collective generosity. We can't do this alone. By joining our mission, whether through donation, volunteering, or spreading the word, you become an indispensable force in this change.{" "}
               </p>
               <div className="btns">
                 <Link
-                  href="/donate"
+                  href="/project"
                   className="theme-btn"
                   // onClick={ClickHandler}
                 >

@@ -60,11 +60,12 @@ const Footer = () =>{
                                 <h3>Useful Links</h3>
                             </div>
                             <ul>
+                                <li><Link onClick={ClickHandler} href="/">Home</Link></li>
                                 <li><Link onClick={ClickHandler} href="/about">About Us</Link></li>
-                                <li><Link onClick={ClickHandler} href="/case">Our Causes</Link></li>
-                                <li><Link onClick={ClickHandler} href="/case">Our Mission</Link></li>
-                                <li><Link onClick={ClickHandler} href="/contact">Contact Us</Link></li>
-                                <li><Link onClick={ClickHandler} href="/event">Our Event</Link></li>
+                                <li><Link onClick={ClickHandler} href="/project">Our Project</Link></li>
+                                {/* <li><Link onClick={ClickHandler} href="/case">Our Mission</Link></li> */}
+                                {/* <li><Link onClick={ClickHandler} href="/contact">Contact Us</Link></li> */}
+                                {/* <li><Link onClick={ClickHandler} href="/event">Our Event</Link></li> */}
                             </ul>
                         </div>
                     </div>

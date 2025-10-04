@@ -8,7 +8,7 @@ const OurTeam = () => {
       {/* <span className="title-position title-position-left">Speakers</span>
       <span className="title-position title-position-right">Experts</span> */}
       <div className="container">
-        <h2 className="title-line">Our Speakers</h2>
+        <h2 className="title-line">Our Team</h2>
         <p className="slogan">
           They possess the secret knowledge and interesting experience of
           creating a digital product.
@@ -24,34 +24,30 @@ const OurTeam = () => {
               />
             </div>
             <div className="speaker-item-content">
-              <h3>Anthony Watson</h3>
+              <h3>A</h3>
               <div className="prof">CEO, IT Metrix</div>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam.
-              </p>
+              <p>Team Member Introduction</p>
               <ul className="soc-link">
                 <li>
-                  <a target="_blank" href="https://www.facebook.com/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-facebook-f"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://www.behance.net/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-behance"></i>
                   </a>
                 </li>
                 <li>
                   <a
                     target="_blank"
-                    href="https://www.linkedin.com/company/rovadex-com"
+                    href="#"
                   >
                     <i className="fab fa-linkedin-in"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://twitter.com/RovadexStudio">
+                  <a target="_blank" href="#">
                     <i className="fab fa-twitter"></i>
                   </a>
                 </li>
@@ -68,34 +64,30 @@ const OurTeam = () => {
               />
             </div>
             <div className="speaker-item-content">
-              <h3>Marybeth Hoover</h3>
+              <h3>B</h3>
               <div className="prof">CEO, IT Metrix</div>
-              <p>
-                Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                cupidatat non proident, sunt in culpa
-              </p>
+              <p>Team Member Introduction</p>
               <ul className="soc-link">
                 <li>
-                  <a target="_blank" href="https://www.facebook.com/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-facebook-f"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://www.behance.net/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-behance"></i>
                   </a>
                 </li>
                 <li>
                   <a
                     target="_blank"
-                    href="https://www.linkedin.com/company/rovadex-com"
+                    href="#"
                   >
                     <i className="fab fa-linkedin-in"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://twitter.com/RovadexStudio">
+                  <a target="_blank" href="#">
                     <i className="fab fa-twitter"></i>
                   </a>
                 </li>
@@ -112,34 +104,30 @@ const OurTeam = () => {
               />
             </div>
             <div className="speaker-item-content">
-              <h3>Stewart Collins</h3>
+              <h3>C</h3>
               <div className="prof">CEO, IT Metrix</div>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam.
-              </p>
+              <p>Team Member Introduction</p>
               <ul className="soc-link">
                 <li>
-                  <a target="_blank" href="https://www.facebook.com/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-facebook-f"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://www.behance.net/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-behance"></i>
                   </a>
                 </li>
                 <li>
                   <a
                     target="_blank"
-                    href="https://www.linkedin.com/company/rovadex-com"
+                    href="#"
                   >
                     <i className="fab fa-linkedin-in"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://twitter.com/RovadexStudio">
+                  <a target="_blank" href="#">
                     <i className="fab fa-twitter"></i>
                   </a>
                 </li>
@@ -156,78 +144,30 @@ const OurTeam = () => {
               />
             </div>
             <div className="speaker-item-content">
-              <h3>Theodora Reed</h3>
+              <h3>D</h3>
               <div className="prof">CEO, IT Metrix</div>
-              <p>
-                Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                cupidatat non proident, sunt in culpa
-              </p>
+              <p>Team Member Introduction</p>
               <ul className="soc-link">
                 <li>
-                  <a target="_blank" href="https://www.facebook.com/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-facebook-f"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://www.behance.net/rovadex">
+                  <a target="_blank" href="#">
                     <i className="fab fa-behance"></i>
                   </a>
                 </li>
                 <li>
                   <a
                     target="_blank"
-                    href="https://www.linkedin.com/company/rovadex-com"
+                    href="#"
                   >
                     <i className="fab fa-linkedin-in"></i>
                   </a>
                 </li>
                 <li>
-                  <a target="_blank" href="https://twitter.com/RovadexStudio">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="speaker-item">
-            <div className="speaker-item-img">
-              <img
-                className="lazy"
-                src="/images/speaker-3.jpg"
-                data-src="/images/speaker-3.jpg"
-                alt="img"
-              />
-            </div>
-            <div className="speaker-item-content">
-              <h3>Ronald Stanley</h3>
-              <div className="prof">CEO, IT Metrix</div>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam.
-              </p>
-              <ul className="soc-link">
-                <li>
-                  <a target="_blank" href="https://www.facebook.com/rovadex">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                </li>
-                <li>
-                  <a target="_blank" href="https://www.behance.net/rovadex">
-                    <i className="fab fa-behance"></i>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    target="_blank"
-                    href="https://www.linkedin.com/company/rovadex-com"
-                  >
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                </li>
-                <li>
-                  <a target="_blank" href="https://twitter.com/RovadexStudio">
+                  <a target="_blank" href="#">
                     <i className="fab fa-twitter"></i>
                   </a>
                 </li>

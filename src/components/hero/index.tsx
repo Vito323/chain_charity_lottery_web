@@ -13,23 +13,23 @@ const Hero = () => {
               <div className="col col-lg-6 slide-caption">
                 <div className="slide-title">
                   <h2>
-                    Let’s be Kind for <span>Children</span>
+                    Connecting the world with <span>Kindness</span>
                   </h2>
                 </div>
                 <div className="slide-subtitle">
-                  <p>High Quality Charity Theme in Envato Market.</p>
-                  <p>You Can Satisfied Yourself By Helping.</p>
+                  <p>Protecting our home with action.</p>
+                  {/* <p>You Can Satisfied Yourself By Helping.</p> */}
                 </div>
                 <div className="btns">
-                  <Link href="/donate" className="theme-btn">
-                    Donate Now
+                  <Link href="/project" className="theme-btn">
+                  View project
                   </Link>
-                  <ul>
+                  {/* <ul>
                     <li className="video-holder">
                       <VideoModal />
                     </li>
                     <li className="video-text">Watch Our Video</li>
-                  </ul>
+                  </ul> */}
                 </div>
               </div>
             </div>

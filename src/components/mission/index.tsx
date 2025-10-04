@@ -16,34 +16,12 @@ const Mission = (props: { subclass?: string }) => {
                     <div className="row">
                         <div className="col-lg-3 col-md-6 col-sm-12 col-12 custom-grid">
                             <div className="wpo-mission-item">
-                                <div className="wpo-mission-icon-5">
-                                    <img src={"/images/mission/icon1.png"} alt=""/>
-                                </div>
-                                <div className="wpo-mission-content">
-                                    <h2>Clean Water</h2>
-                                    <p>Lorem ipsum dolor amet cosectetur adipiscing, sed do eiusmod.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-3 col-md-6 col-sm-12 col-12 custom-grid">
-                            <div className="wpo-mission-item">
-                                <div className="wpo-mission-icon-6">
-                                    <img src={"/images/mission/icon2.png"} alt=""/>
-                                </div>
-                                <div className="wpo-mission-content">
-                                    <h2>Healthy Food</h2>
-                                    <p>Lorem ipsum dolor amet cosectetur adipiscing, sed do eiusmod.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-3 col-md-6 col-sm-12 col-12 custom-grid">
-                            <div className="wpo-mission-item">
                                 <div className="wpo-mission-icon-7">
                                     <img src={"/images/mission/icon3.png"} alt=""/>
                                 </div>
                                 <div className="wpo-mission-content">
-                                    <h2>Pure Education</h2>
-                                    <p>Lorem ipsum dolor amet cosectetur adipiscing, sed do eiusmod.</p>
+                                    <h2>Educational support</h2>
+                                    <p>Provide essential resources to underprivileged students. makes their dreams a reality.</p>
                                 </div>
                             </div>
                         </div>
@@ -53,8 +31,30 @@ const Mission = (props: { subclass?: string }) => {
                                     <img src={"/images/mission/icon4.png"} alt=""/>
                                 </div>
                                 <div className="wpo-mission-content">
-                                    <h2>Medical Facilities</h2>
-                                    <p>Lorem ipsum dolor amet cosectetur adipiscing, sed do eiusmod.</p>
+                                    <h2>Medical assistance</h2>
+                                    <p>Provide timely aid and health security to communities and individuals lacking medical resources. Let compassion be the best medicine.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-3 col-md-6 col-sm-12 col-12 custom-grid">
+                            <div className="wpo-mission-item">
+                                <div className="wpo-mission-icon-5">
+                                    <img src={"/images/mission/icon1.png"} alt=""/>
+                                </div>
+                                <div className="wpo-mission-content">
+                                    <h2>Environmental Protection</h2>
+                                    <p>Join our initiatives, from planting trees to cleaning water sources, to secure the green future we depend on.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-3 col-md-6 col-sm-12 col-12 custom-grid">
+                            <div className="wpo-mission-item">
+                                <div className="wpo-mission-icon-6">
+                                    <img src={"/images/mission/icon2.png"} alt=""/>
+                                </div>
+                                <div className="wpo-mission-content">
+                                    <h2>Disaster relief</h2>
+                                    <p>When disaster strikes, we move fast to provide critical relief like food, shelter, and medical care to help victims rebuild their lives.</p>
                                 </div>
                             </div>
                         </div>
