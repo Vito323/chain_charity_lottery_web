@@ -7,9 +7,3 @@ export const subscribeEmail = async (email: string) =>
   });
 
 
-
-  export const queryCategories = async () =>
-    action({
-      url: `/project/categories`,
-      method: "GET",
-    });

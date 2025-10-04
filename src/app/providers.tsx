@@ -1,5 +1,5 @@
 'use client';
-import type React from 'react';
+import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 import { Locale, RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
@@ -8,10 +8,24 @@ import { useLocale } from 'next-intl';
 import { polygon } from 'wagmi/chains';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { CategoryData, queryCategories } from '@/service/project';
+import useGlobalStore from '@/store';
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const currentLocale = useLocale();
+  const setCategories = useGlobalStore((state) => state.setCategories);
+
+  const getCategories = async () => {
+    const response = await queryCategories();
+    if(response){
+      setCategories(response as unknown as CategoryData[]);
+    }
+  }
+
+  React.useEffect(() => {
+    getCategories();
+  }, []);
 
 
   return (

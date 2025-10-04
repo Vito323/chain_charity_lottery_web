@@ -5,6 +5,7 @@ import TabContent from "../tab-content";
 import Covers from "../cover";
 import Fundraising from "../fundraising";
 import { useRouter } from "next/navigation";
+import { projectDetail, ProjectDetailData } from "@/service/project";
 
 interface CaseSingleProps {
   uid: string;
@@ -12,9 +13,24 @@ interface CaseSingleProps {
 
 const CaseSingle = ({ uid }: CaseSingleProps) => {
   const router = useRouter();
+
+  const [detail, setDetail] = React.useState<ProjectDetailData | null>(null);
   
   // 使用 uid 参数获取项目数据
   console.log('Project UID:', uid);
+
+
+
+  const getDetail = async () => {
+    const response = await projectDetail(uid);
+    if(response){
+      setDetail(response as unknown as ProjectDetailData);
+    }
+  }
+
+  React.useEffect(() => {
+    getDetail();
+  }, []);
   
   return (
     <div className="wpo-case-details-area section-padding">
@@ -29,8 +45,8 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                 </div>
                 <div className="case-fundraising-container">
                   <Fundraising 
-                    totalRaised="$425,323.75"
-                    contributors={3635}
+                    totalRaised="$0.00"
+                    contributors={0}
                     onDonate={() => {
                       router.push(`/donate/${uid}`);
                     }}
@@ -39,7 +55,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   />
                 </div>
               </div>
-              <TabContent></TabContent>
+              <TabContent title={detail?.name || ''} content={detail?.content || ''} tracks={detail?.tracks || []}></TabContent>
             </div>
           </div>
           {/* <SidebarWrap /> */}

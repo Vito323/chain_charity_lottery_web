@@ -35,11 +35,20 @@
   display: flex;
   border-bottom: 1px solid #dfdfdf;
   margin-bottom: 25px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 .tab-nav .item {
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: #151515;
   margin-right: 64px;
   padding-bottom: 12px;
@@ -47,6 +56,8 @@
   -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
   cursor: pointer;
+  flex-shrink: 0;
+  min-width: fit-content;
 }
 .tab-nav .item:last-child {
   margin-right: 0;
@@ -69,4 +80,68 @@
 }
 .tab-nav .item.active:before {
   width: 100%;
+}
+
+// 滑动指示器（桌面端隐藏）
+.swipe-indicator {
+  display: none;
+}
+
+// 移动端滑动样式
+@media (max-width: 768px) {
+  .tab-wrap {
+    overflow: hidden;
+  }
+  
+  .tabs-content {
+    touch-action: pan-x;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  .tab {
+    -webkit-transform: translateY(0px) translateX(0px);
+    transform: translateY(0px) translateX(0px);
+  }
+  
+  .tab.visible-content {
+    -webkit-transform: translateY(0px) translateX(0px);
+    transform: translateY(0px) translateX(0px);
+  }
+  
+  // 移动端标签项样式调整
+  .tab-nav .item {
+    margin-right: 32px;
+    font-size: 14px;
+  }
+  
+  // 滑动指示器（移动端显示）
+  .swipe-indicator {
+    display: flex !important;
+    justify-content: center;
+    margin-top: 20px;
+    padding-bottom: 10px;
+  }
+  
+  .swipe-indicator-track {
+    position: relative;
+    width: 40px;
+    height: 4px;
+    background: rgba(44, 207, 187, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  
+  .swipe-indicator-dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 8px;
+    height: 4px;
+    background: #2ccfbb;
+    border-radius: 2px;
+    transition: transform 0.3s ease;
+  }
 }

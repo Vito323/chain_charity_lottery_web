@@ -171,7 +171,7 @@ const CustomConnectButton = () => {
                       setShowDropdown(false);
                     }}
                   >
-                    Sign out
+                    Disconnect
                   </button>
                 </div>
               </div>

@@ -1,10 +1,9 @@
-"use client";
 import React from "react";
-import Link from "next/link";
 import { TabPanel, Tabs } from "@/components/tab";
 import TabAbout from "./tab-about";
 import TabUpdates from "./tab-updates";
 import DonationList from "./donation-list";
+import { TracksData } from "@/service/project";
 
 const TABS = [
   {
@@ -18,18 +17,18 @@ const TABS = [
   },
 ];
 
-const TabContent = () => {
+const TabContent = ({title, content, tracks}: {title: string, content: string, tracks: TracksData[]}) => {
   const [activeTab, setActiveTab] = React.useState(0);
   return (
     <Tabs tabBar={TABS} activeTab={activeTab} onTabChange={setActiveTab}>
       <TabPanel active={activeTab === 0}>
-        <TabAbout />
+        <TabAbout markdownContent={content} title={title} />
       </TabPanel>
       <TabPanel active={activeTab === 1}>
-      <DonationList />
+        <DonationList />
       </TabPanel>
       <TabPanel active={activeTab === 2}>
-      <TabUpdates />
+        <TabUpdates datas={tracks} />
       </TabPanel>
     </Tabs>
   );
