@@ -7,6 +7,8 @@ import "@/styles/font-awesome.min.css";
 import "@/styles/themify-icons.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { Providers } from "./providers";
+import { getLocale } from 'next-intl/server';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,11 +26,10 @@ export const metadata: Metadata = {
 
 type Props = {
   children: React.ReactNode;
-  params: { locale: string };
 };
 
-export default async function RootLayout({ children, params }: Props) {
-  const { locale } = await params;
+export default async function RootLayout({ children }: Props) {
+  const locale = await getLocale();
   return (
     <html lang={locale}>
       <body

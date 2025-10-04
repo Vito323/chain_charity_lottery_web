@@ -20,7 +20,7 @@ const About = () => {
               Every life deserves a chance, and every person deserves dignity. Our mission is built on a simple, yet profound principle: to be the reliable bridge between urgent need and effective action. We stand in the gap, committing our resources, time, and heart to the most vulnerable communities—from providing essential medical care and educational support to delivering immediate disaster relief.
               </p>
               <p>
-              The scale of global challenges is vast, but so is the power of collective generosity. We can't do this alone. By joining our mission, whether through donation, volunteering, or spreading the word, you become an indispensable force in this change.{" "}
+              The scale of global challenges is vast, but so is the power of collective generosity. We can&apos;t do this alone. By joining our mission, whether through donation, volunteering, or spreading the word, you become an indispensable force in this change.{" "}
               </p>
               <div className="btns">
                 <Link

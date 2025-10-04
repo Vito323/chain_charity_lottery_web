@@ -5,14 +5,14 @@ import Scrollbar from "@/components/scrollbar";
 import Content from "../content";
 
 interface DonatePageProps {
-  params: {
+  params: Promise<{
     uid: string;
     locale: string;
-  };
+  }>;
 }
 
-const DonatePage = ({ params }: DonatePageProps) => {
-  const { uid } = params;
+const DonatePage = async ({ params }: DonatePageProps) => {
+  const { uid } = await params;
   
   return (
     <>

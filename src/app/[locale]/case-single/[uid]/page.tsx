@@ -6,14 +6,14 @@ import CaseSingle from "../content";
 import TabContent from "../tab-content";
 
 interface CaseSinglePageProps {
-  params: {
+  params: Promise<{
     uid: string;
     locale: string;
-  };
+  }>;
 }
 
-const CaseSinglePage = ({ params }: CaseSinglePageProps) => {
-  const { uid, locale } = params;
+const CaseSinglePage = async ({ params }: CaseSinglePageProps) => {
+  const { uid, locale } = await params;
   
   return (
     <>
