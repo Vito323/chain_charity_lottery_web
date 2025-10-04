@@ -16,11 +16,6 @@ const CaseSinglePage = async ({ params }: CaseSinglePageProps) => {
   return (
     <>
       <Header />
-      <PageTitle
-        pageTitle={"Our Project"}
-        pagePrev="Project"
-        pagesub={`Project ${uid}`}
-      />
       <CaseSingle uid={uid} />
       <Footer />
       <Scrollbar />

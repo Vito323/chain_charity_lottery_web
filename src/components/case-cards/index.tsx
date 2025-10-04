@@ -37,12 +37,12 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
     <div className="fundraising-card" onClick={handleCardClick}>
       <div className="card-image-container">
         <Image
-          src={'/images/case/img-1.png'}
-          // src={image[0]}
+          src={image[0]}
           alt={name}
           className="card-image"
           width={400}
           height={250}
+          unoptimized
           style={{ objectFit: "cover" }}
         />
         <div className="card-overlay-icons">

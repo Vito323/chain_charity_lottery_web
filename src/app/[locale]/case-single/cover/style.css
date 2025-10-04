@@ -1,12 +1,4 @@
 /* Swiper 容器样式 */
-.swiper-container {
-  position: relative;
-  width: 100%;
-  height: 60vh; /* 设置一个合适的高度 */
-  min-height: 400px; /* 设置最小高度 */
-  overflow: hidden;
-  box-sizing: border-box;
-}
 
 /* 重置 Swiper 的默认样式 */
 .swiper-container * {
@@ -83,7 +75,7 @@
   background: transparent;
   width: 55px;
   height: 55px;
-  z-index: 10;
+  z-index: 1000; /* 提高 z-index 确保按钮在最上层 */
   border: 1px solid #00a7d5;
   color: #00a7d5;
   border-radius: 50%;
@@ -94,6 +86,15 @@
   font-size: 18px;
   transition: all 0.5s ease;
   outline: none;
+  /* 确保按钮可以点击 */
+  pointer-events: auto;
+  /* 防止按钮被其他元素遮挡 */
+  isolation: isolate;
+  /* 确保按钮可以接收点击事件 */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .swiper-button-prev-custom:hover,
@@ -143,11 +144,49 @@
   right: 25px;
 }
 
-/* 移动端响应式 */
+.swiper-button-prev-custom.swiper-button-disabled,
+.swiper-button-next-custom.swiper-button-disabled {
+  opacity: 0.35;
+  cursor: auto;
+  pointer-events: none;
+}
+
+
+.swiper-container {
+  position: relative;
+  width: 100%;
+  height: 60vh; /* 设置一个合适的高度 */
+  min-height: 400px; /* 设置最小高度 */
+  max-height: 512; /* 设置最大高度 */
+  overflow: hidden;
+  box-sizing: border-box;
+  /* 确保容器可以包含绝对定位的按钮 */
+  contain: layout;
+}
+
+
 @media (max-width: 991px) {
   .swiper-button-prev-custom,
   .swiper-button-next-custom {
     display: none !important;
+  }
+}
+
+/* 确保按钮在桌面端始终可见且可点击 */
+@media (min-width: 992px) {
+  .swiper-button-prev-custom,
+  .swiper-button-next-custom {
+    display: flex !important;
+    opacity: 0;
+    transition: opacity 0.3s ease, left 0.3s ease, right 0.3s ease;
+    /* 确保按钮在悬停时能正确显示 */
+    visibility: visible;
+  }
+  
+  .swiper-container:hover .swiper-button-prev-custom,
+  .swiper-container:hover .swiper-button-next-custom {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -179,6 +218,7 @@
     padding: 0;
     height: 50vh; /* 移动端使用较小的高度 */
     min-height: 300px; /* 移动端最小高度 */
+    max-height: 400px; /* 移动端最大高度 */
   }
 }
 
@@ -187,6 +227,7 @@
   .swiper-container {
     height: 40vh; /* 小屏幕使用更小的高度 */
     min-height: 250px; /* 小屏幕最小高度 */
+    max-height: 350px; /* 小屏幕最大高度 */
   }
 }
 

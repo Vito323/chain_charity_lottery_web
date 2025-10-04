@@ -1,30 +1,42 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
-// Import Swiper styles
+import { useRef, useEffect } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
-// import 'swiper/css/scrollbar';
-// Import custom styles
 import './style.css';
 
-const Covers = () => {
-  // 图片数据
-  const images = [
-    {
-      src: '/images/case/img-1.png',
-      alt: 'Case Study 1'
-    },
-    {
-      src: '/images/case/img-2.png',
-      alt: 'Case Study 2'
-    },
-    {
-      src: '/images/case/img-3.png',
-      alt: 'Case Study 3'
+const Covers = ({ images }: { images: string[] }) => {
+  const swiperRef = useRef<SwiperType | null>(null);
+  
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (swiperRef.current) {
+        swiperRef.current.update();
+        if (swiperRef.current.navigation) {
+          swiperRef.current.navigation.init();
+          swiperRef.current.navigation.update();
+        }
+      }
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [images]);
+
+  // 添加手动点击处理函数作为备用方案
+  const handlePrevClick = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
     }
-  ];
+  };
+
+  const handleNextClick = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  };
 
   return (
     <div className="swiper-container">
@@ -58,23 +70,20 @@ const Covers = () => {
         }}
         onSlideChange={() => console.log('slide change')}
         onSwiper={(swiper) => {
+          swiperRef.current = swiper;
           console.log(swiper);
-          // 强制更新 Swiper 尺寸
-          // setTimeout(() => {
-          //   swiper.updateSize();
-          //   swiper.updateSlides();
-          //   swiper.updateProgress();
-          // }, 100);
         }}
+        onNavigationNext={() => console.log('next navigation')}
+        onNavigationPrev={() => console.log('prev navigation')}
       >
         {images.map((image, index) => (
           <SwiperSlide key={index}>
             <div className="swiper-slide-content">
               <Image
-                src={image.src}
-                alt={image.alt}
+                src={image}
+                alt={'thumbnail'}
                 width={800}
-                height={600}
+                height={354}
                 className="swiper-image"
                 style={{
                   width: '100%',
@@ -82,6 +91,7 @@ const Covers = () => {
                   objectFit: 'cover'
                 }}
                 priority={index === 0}
+                unoptimized
               />
             </div>
           </SwiperSlide>
@@ -89,10 +99,18 @@ const Covers = () => {
       </Swiper>
       {images.length > 1 && (
         <>
-          <button className="swiper-button-prev-custom slick-arrow slick-prev">
+          <button 
+            className="swiper-button-prev-custom slick-arrow slick-prev"
+            onClick={handlePrevClick}
+            type="button"
+          >
             <i className="ti-angle-left"></i>
           </button>
-          <button className="swiper-button-next-custom slick-arrow slick-next">
+          <button 
+            className="swiper-button-next-custom slick-arrow slick-next"
+            onClick={handleNextClick}
+            type="button"
+          >
             <i className="ti-angle-right"></i>
           </button>
         </>

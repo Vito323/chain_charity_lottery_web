@@ -11,16 +11,32 @@ const TABS = [
   },
   {
     label: "Donations",
+    badge: 0,
   },
   {
     label: "Updates",
+    badge: 0,
   },
 ];
 
 const TabContent = ({title, content, tracks}: {title: string, content: string, tracks: TracksData[]}) => {
   const [activeTab, setActiveTab] = React.useState(0);
+
+  const targetTabs = React.useMemo(() => {
+    return TABS.map((item) => {
+      if(item.label === "Updates") {
+        return {
+          ...item,
+          badge: tracks.length,
+        }
+      }
+      return item;
+    })
+  }, [tracks])
+
+
   return (
-    <Tabs tabBar={TABS} activeTab={activeTab} onTabChange={setActiveTab}>
+    <Tabs tabBar={targetTabs} activeTab={activeTab} onTabChange={setActiveTab}>
       <TabPanel active={activeTab === 0}>
         <TabAbout markdownContent={content} title={title} />
       </TabPanel>

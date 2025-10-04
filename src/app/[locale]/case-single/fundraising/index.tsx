@@ -8,8 +8,8 @@ interface FundraisingProps {
 }
 
 const Fundraising: React.FC<FundraisingProps> = ({
-  totalRaised = "$425,323.75",
-  contributors = 3635,
+  totalRaised = "$0.00",
+  contributors = 0,
   onDonate,
 }) => {
   return (

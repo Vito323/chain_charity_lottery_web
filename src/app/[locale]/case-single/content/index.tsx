@@ -6,6 +6,7 @@ import Covers from "../cover";
 import Fundraising from "../fundraising";
 import { useRouter } from "next/navigation";
 import { projectDetail, ProjectDetailData } from "@/service/project";
+import PageTitle from "@/components/page-title";
 
 interface CaseSingleProps {
   uid: string;
@@ -15,15 +16,13 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
   const router = useRouter();
 
   const [detail, setDetail] = React.useState<ProjectDetailData | null>(null);
-  
+
   // 使用 uid 参数获取项目数据
-  console.log('Project UID:', uid);
-
-
+  console.log("Project UID:", uid);
 
   const getDetail = React.useCallback(async () => {
     const response = await projectDetail(uid);
-    if(response){
+    if (response) {
       setDetail(response as unknown as ProjectDetailData);
     }
   }, [uid]);
@@ -31,35 +30,46 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
   React.useEffect(() => {
     getDetail();
   }, [getDetail]);
-  
+
   return (
-    <div className="wpo-case-details-area section-padding">
-      <div className="container">
-        <div className="row">
-          <div className="col col-12">
-            <div className="wpo-case-details-wrap">
-              {/* 图片轮播和筹款组件并排布局 */}
-              <div className="case-hero-layout">
-                <div className="case-swiper-container">
-                  <Covers></Covers>
+    <>
+      <PageTitle
+        pageTitle={"Our Project"}
+        pagePrev="Project"
+        pagesub={detail?.name || "--"}
+      />
+      <div className="wpo-case-details-area section-padding">
+        <div className="container">
+          <div className="row">
+            <div className="col col-12">
+              <div className="wpo-case-details-wrap">
+                {/* 图片轮播和筹款组件并排布局 */}
+                <div className="case-hero-layout">
+                  <div className="case-swiper-container">
+                    <Covers images={detail?.image || []}></Covers>
+                  </div>
+                  <div className="case-fundraising-container">
+                    <Fundraising
+                      totalRaised="$0.00"
+                      contributors={0}
+                      onDonate={() => {
+                        router.push(`/donate/${uid}`);
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="case-fundraising-container">
-                  <Fundraising 
-                    totalRaised="$0.00"
-                    contributors={0}
-                    onDonate={() => {
-                      router.push(`/donate/${uid}`);
-                    }}
-                  />
-                </div>
+                <TabContent
+                  title={detail?.name || ""}
+                  content={detail?.content || ""}
+                  tracks={detail?.tracks || []}
+                ></TabContent>
               </div>
-              <TabContent title={detail?.name || ''} content={detail?.content || ''} tracks={detail?.tracks || []}></TabContent>
             </div>
+            {/* <SidebarWrap /> */}
           </div>
-          {/* <SidebarWrap /> */}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

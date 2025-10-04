@@ -17,9 +17,9 @@ const TabAbout = ({ markdownContent = '', title = '' }: TabAboutProps) => {
             <div className="progress-section">
               <div className="process">
                 <div className="progress">
-                  <div className="progress-bar">
+                  <div className="progress-bar" style={{width: '0%'}}>
                     <div className="progress-value">
-                      <span>65.5</span>%
+                      <span>0</span>%
                     </div>
                   </div>
                 </div>
@@ -27,13 +27,13 @@ const TabAbout = ({ markdownContent = '', title = '' }: TabAboutProps) => {
             </div>
             <ul>
               <li>
-                <span>Raised:</span> $7,000.00
+                <span>Raised:</span> $0.00
               </li>
               <li>
-                <span>Goal:</span> $8,000.00
+                <span>Goal:</span> $0.00
               </li>
               <li>
-                <span>Donar:</span> 380
+                <span>Donar:</span> 0
               </li>
             </ul>
             <div className="case-bb-text">
