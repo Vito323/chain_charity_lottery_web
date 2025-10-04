@@ -3,17 +3,15 @@ import Header from "@/components/header";
 import PageTitle from "@/components/page-title";
 import Scrollbar from "@/components/scrollbar";
 import CaseSingle from "../content";
-import TabContent from "../tab-content";
 
 interface CaseSinglePageProps {
   params: Promise<{
     uid: string;
-    locale: string;
   }>;
 }
 
 const CaseSinglePage = async ({ params }: CaseSinglePageProps) => {
-  const { uid, locale } = await params;
+  const { uid } = await params;
   
   return (
     <>

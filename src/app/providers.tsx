@@ -16,16 +16,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const currentLocale = useLocale();
   const setCategories = useGlobalStore((state) => state.setCategories);
 
-  const getCategories = async () => {
+  const getCategories = React.useCallback(async () => {
     const response = await queryCategories();
     if(response){
       setCategories(response as unknown as CategoryData[]);
     }
-  }
+  }, [setCategories]);
 
   React.useEffect(() => {
     getCategories();
-  }, []);
+  }, [getCategories]);
 
 
   return (
