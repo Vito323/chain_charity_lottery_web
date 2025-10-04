@@ -1,7 +1,5 @@
 import "./style.scss";
-import Image from "next/image";
 import Link from "next/link";
-import VideoModal from "../modal-video";
 
 const Hero = () => {
   return (

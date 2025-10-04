@@ -38,6 +38,7 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
       <div className="card-image-container">
         <Image
           src={'/images/case/img-1.png'}
+          // src={image[0]}
           alt={name}
           className="card-image"
           width={400}

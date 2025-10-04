@@ -21,16 +21,16 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
 
 
 
-  const getDetail = async () => {
+  const getDetail = React.useCallback(async () => {
     const response = await projectDetail(uid);
     if(response){
       setDetail(response as unknown as ProjectDetailData);
     }
-  }
+  }, [uid]);
 
   React.useEffect(() => {
     getDetail();
-  }, []);
+  }, [getDetail]);
   
   return (
     <div className="wpo-case-details-area section-padding">
@@ -50,8 +50,6 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                     onDonate={() => {
                       router.push(`/donate/${uid}`);
                     }}
-                    onShare={() => console.log('Share clicked')}
-                    onBookmark={() => console.log('Bookmark clicked')}
                   />
                 </div>
               </div>

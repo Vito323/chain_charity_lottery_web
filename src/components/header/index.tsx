@@ -6,7 +6,6 @@ import Image from "next/image";
 import HeaderTopBar from "../header-top-bar";
 import MobileMenu from "../mobile-menu";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
 
 const ROUTE_MAP = [
   {

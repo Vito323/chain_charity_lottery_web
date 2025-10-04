@@ -5,16 +5,12 @@ interface FundraisingProps {
   totalRaised?: string;
   contributors?: number;
   onDonate?: () => void;
-  onShare?: () => void;
-  onBookmark?: () => void;
 }
 
 const Fundraising: React.FC<FundraisingProps> = ({
   totalRaised = "$425,323.75",
   contributors = 3635,
   onDonate,
-  onShare,
-  onBookmark,
 }) => {
   return (
     <div className="fundraising-card">

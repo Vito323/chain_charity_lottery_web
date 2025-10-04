@@ -1,5 +1,4 @@
 import Header from "@/components/header"
-import PageTitle from "@/components/page-title"
 import Footer from "@/components/footer"
 import Scrollbar from "@/components/scrollbar"
 import UserCenter from "./content"

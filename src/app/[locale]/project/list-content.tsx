@@ -13,11 +13,8 @@ interface ListContentProps {
 const ListContent = ({activeTab, index, categoryId}: ListContentProps) => {
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState<ProjectData[]>([]);
-  React.useEffect(() => {
-    getList();
-  }, []);
 
-  const getList = async() => { 
+  const getList = React.useCallback(async() => { 
     setLoading(true);
     try{
     const response = await queryProjects(categoryId);
@@ -29,7 +26,11 @@ const ListContent = ({activeTab, index, categoryId}: ListContentProps) => {
     }finally{
       setLoading(false);
     }
-  }
+  }, [categoryId]);
+
+  React.useEffect(() => {
+    getList();
+  }, [getList]);
 
 
   return (
