@@ -80,7 +80,7 @@ const CaseSlide = () => {
                           <div className="progress">
                             <div className="progress-bar">
                               <div className="progress-value">
-                                <span>65.5</span>%
+                                <span>0</span>%
                               </div>
                             </div>
                           </div>

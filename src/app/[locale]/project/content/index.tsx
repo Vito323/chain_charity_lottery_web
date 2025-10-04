@@ -2,10 +2,23 @@
 import { Tabs } from "@/components/tab";
 import React from "react";
 import useGlobalStore from "@/store";
+import { useFundPoolManager } from "@/hooks/useFundPoolManager";
 import ListContent from "../list-content";
 import "./style.css";
 
 const Casesection = () => {
+  const {
+    isLoading,
+    error,
+    contractAddress,
+    // 只读函数
+    getVersion,
+    getOwner,
+    getDonationCount,
+    getProject,
+    getProjectFundStats,
+  } = useFundPoolManager();
+
   const categories = useGlobalStore((state) => state.categories);
   const [activeTab, setActiveTab] = React.useState(0);
 

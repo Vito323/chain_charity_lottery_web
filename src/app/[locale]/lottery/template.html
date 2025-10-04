@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link
+      as="style"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800"
+      onload="this.rel='stylesheet'"
+      rel="stylesheet"
+    />
+    <title>Stitch Design</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#138aec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101a22",
+            },
+            fontFamily: {
+              display: ["Manrope"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div
+      class="relative flex min-h-screen w-full flex-col bg-background-light font-display text-gray-800 dark:bg-background-dark dark:text-gray-200"
+    >
+      <header
+        class="sticky top-0 z-10 flex w-full items-center justify-between border-b border-gray-200/80 bg-background-light/80 px-10 py-3 backdrop-blur-sm dark:border-gray-800/80 dark:bg-background-dark/80"
+      >
+        <div class="flex items-center gap-3">
+          <div class="rounded-lg bg-primary p-2 text-white">
+            <svg
+              class="lucide lucide-gem"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M6 3h12l4 6-10 13L2 9z"></path>
+              <path d="M12 22V9"></path>
+              <path d="m3.29 9 8.71 13 8.71-13"></path>
+              <path d="M2 9h20"></path>
+            </svg>
+          </div>
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">
+            Charity Lottery
+          </h2>
+        </div>
+        <div class="flex items-center gap-8">
+          <nav class="hidden items-center gap-8 md:flex">
+            <a
+              class="text-sm font-medium text-gray-600 transition-colors hover:text-primary dark:text-gray-300"
+              href="#"
+              >Home</a
+            >
+            <a
+              class="text-sm font-medium text-gray-600 transition-colors hover:text-primary dark:text-gray-300"
+              href="#"
+              >Tickets</a
+            >
+            <a
+              class="text-sm font-medium text-gray-600 transition-colors hover:text-primary dark:text-gray-300"
+              href="#"
+              >Results</a
+            >
+            <a
+              class="text-sm font-medium text-gray-600 transition-colors hover:text-primary dark:text-gray-300"
+              href="#"
+              >About</a
+            >
+          </nav>
+          <button
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30"
+          >
+            <span class="material-symbols-outlined"> help </span>
+          </button>
+          <div
+            class="aspect-square size-10 rounded-full bg-cover bg-center bg-no-repeat"
+            style="
+              background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCcuG-p1esqIXoPJYM9DM7BJlmMbNy3YJPSXpRSjGidr2LfwjuG17MWvzolbkCZczVpPl4RFN0GJ4aeiW6ElNyydG1LElyCrRHmzXn7ceHA6re2kKZNODmCxhrO_u7QfaoOonC6UjjdooYrlRP6qEmLLqzg5MyUayvHwaGBVTsfDRGV2x-N9yrOM_dbwg3JH-eR-NsdsqOVN229yTsvUNUUwsWnI6s1CTDAv36ehlO927h-ILIYAcl7Z6gqeS0a8THEv7ioKYoZs74');
+            "
+          ></div>
+        </div>
+      </header>
+      <main class="container mx-auto flex-1 px-4 py-12 sm:px-6 lg:px-8">
+        <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
+          <div
+            class="w-full rounded-xl bg-background-light p-8 shadow-sm dark:bg-background-dark/50"
+          >
+            <h2
+              class="text-2xl font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400"
+            >
+              Next Draw In
+            </h2>
+            <div class="my-8 grid grid-cols-4 gap-4">
+              <div class="flex flex-col items-center">
+                <div
+                  class="flex h-24 w-24 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20"
+                >
+                  <p class="text-5xl font-bold">2</p>
+                </div>
+                <p
+                  class="mt-2 text-sm font-medium text-gray-600 dark:text-gray-300"
+                >
+                  Days
+                </p>
+              </div>
+              <div class="flex flex-col items-center">
+                <div
+                  class="flex h-24 w-24 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20"
+                >
+                  <p class="text-5xl font-bold">14</p>
+                </div>
+                <p
+                  class="mt-2 text-sm font-medium text-gray-600 dark:text-gray-300"
+                >
+                  Hours
+                </p>
+              </div>
+              <div class="flex flex-col items-center">
+                <div
+                  class="flex h-24 w-24 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20"
+                >
+                  <p class="text-5xl font-bold">32</p>
+                </div>
+                <p
+                  class="mt-2 text-sm font-medium text-gray-600 dark:text-gray-300"
+                >
+                  Minutes
+                </p>
+              </div>
+              <div class="flex flex-col items-center">
+                <div
+                  class="flex h-24 w-24 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20"
+                >
+                  <p class="text-5xl font-bold">17</p>
+                </div>
+                <p
+                  class="mt-2 text-sm font-medium text-gray-600 dark:text-gray-300"
+                >
+                  Seconds
+                </p>
+              </div>
+            </div>
+            <div class="mt-12">
+              <h1
+                class="text-2xl font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400"
+              >
+                Current Jackpot
+              </h1>
+              <p
+                class="mt-4 text-7xl font-extrabold text-gray-900 dark:text-white"
+              >
+                $1,234,567
+              </p>
+            </div>
+          </div>
+          <div class="mt-16 w-full">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">
+              Your NFT Tickets
+            </h2>
+            <div
+              class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              <div
+                class="overflow-hidden rounded-xl border border-gray-200/80 bg-background-light shadow-sm transition-shadow hover:shadow-lg dark:border-gray-800/80 dark:bg-background-dark/50"
+              >
+                <div
+                  class="aspect-square w-full bg-cover bg-center"
+                  style="
+                    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCjB3n9EJu4numZpJlPxp-PZjKTH1M5DnPfK6suWzS9c4QZLyXPRWLuInKlFdhDq0-Rwi4zvvXTgJNeqBMFmdl4JKi-4umA7x1c33esRPI2a6RvTxY_0M3wECJsdpQFyZ4AIEr2rgtXw1Ccocph6Ua9muVKsuSboz1TeKxfi9XXQyqUHzi64xsT60HWdH1bBNYIDapqh5JZZqIY6bAvebCviiVBHLdUtKx_M3fa3bDZVqhKs98Ki2WrOExfQiZnAFMwJv10Y8fZMpQ');
+                  "
+                ></div>
+                <div class="p-4 text-left">
+                  <p class="font-bold text-gray-900 dark:text-white">
+                    Ticket #12345
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Purchased on 2024-01-15
+                  </p>
+                </div>
+              </div>
+              <div
+                class="overflow-hidden rounded-xl border border-gray-200/80 bg-background-light shadow-sm transition-shadow hover:shadow-lg dark:border-gray-800/80 dark:bg-background-dark/50"
+              >
+                <div
+                  class="aspect-square w-full bg-cover bg-center"
+                  style="
+                    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDLX8j6IX6R3aXqBo_o4F8StrzbW_1XfQyBdCTjVaODll0L0cOWSFfUMYf16vGgf9-fTRjDhU0IjB_Fy9iZh0DJwsUQcA0C5Fmf__p4TUyaZEcq5cT9EVt393lLLp0xsm7XFXEakhpEilYZUBPtTyPGJXdVw5cCcGYHEBgdPfcBZbRqGU9V5MgGMeQHcvvxNKtw3H9b7cvns7oMOdE2qGZdBBNQ37E3sMjccKqRwps16JRocpPWZmWnk83i8aMLvn8u8j7WOEhY48g');
+                  "
+                ></div>
+                <div class="p-4 text-left">
+                  <p class="font-bold text-gray-900 dark:text-white">
+                    Ticket #67890
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Purchased on 2024-01-20
+                  </p>
+                </div>
+              </div>
+              <div
+                class="overflow-hidden rounded-xl border border-gray-200/80 bg-background-light shadow-sm transition-shadow hover:shadow-lg dark:border-gray-800/80 dark:bg-background-dark/50"
+              >
+                <div
+                  class="aspect-square w-full bg-cover bg-center"
+                  style="
+                    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1Phek6OpzXL8v6ywpxYI_WVna9jfxw7t35OGPaqwW_ivYZ6F5TD2_XiH6AaNYjXPgFYC3XdwEXUN0IwzZYn7Ee9QcAmTVaEVdFXd6-FZZ4d_2Bal4Ku3vxhYyWy2A4T3f3nmTeqXHcFGdyRd1v2-WJVT-ASqpaE-Ute4WC1NxLBsny8fFDV8ddWg_NlTTopCIMasQJwXDf6oLR9fHcZ528gviF9rNe2ivWS8llAbLZ5zrXSSFs_aoP9TlsJI86gDxl1khda1vKBw');
+                  "
+                ></div>
+                <div class="p-4 text-left">
+                  <p class="font-bold text-gray-900 dark:text-white">
+                    Ticket #11223
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Purchased on 2024-01-25
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
