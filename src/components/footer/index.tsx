@@ -2,6 +2,7 @@
 import Newsletter from '../newsletter'
 import './style.css'
 import Link from 'next/link'
+import Image from "next/image";
 
 const Footer = () =>{
 
@@ -18,14 +19,20 @@ const Footer = () =>{
                     <div className="col col-lg-3 col-md-6 col-sm-12 col-12">
                         <div className="widget about-widget">
                             <div className="logo widget-title">
-                                <img src={'/images/logo-2.png'} alt=""/>
+                            <Image
+                                src={"https://placehold.co/150x150"}
+                                width={50}
+                                height={50}
+                                unoptimized
+                                alt=""
+                            />
                             </div>
-                            <p>Build and Earn with your online store with lots of cool and exclusive wpo-features </p>
+                            <p>Connecting the world with kindness, protecting our home with action.</p>
                             <ul>
-                                <li><Link onClick={ClickHandler} href="/home"><i className="ti-facebook"></i></Link></li>
-                                <li><Link onClick={ClickHandler} href="/home"><i className="ti-twitter-alt"></i></Link></li>
-                                <li><Link onClick={ClickHandler} href="/home"><i className="ti-instagram"></i></Link></li>
-                                <li><Link onClick={ClickHandler} href="/home"><i className="ti-google"></i></Link></li>
+                                <li><Link onClick={ClickHandler} href="/"><i className="ti-facebook"></i></Link></li>
+                                <li><Link onClick={ClickHandler} href="/"><i className="ti-twitter-alt"></i></Link></li>
+                                <li><Link onClick={ClickHandler} href="/"><i className="ti-instagram"></i></Link></li>
+                                <li><Link onClick={ClickHandler} href="/"><i className="ti-google"></i></Link></li>
                             </ul>
                         </div>
                     </div>
@@ -61,7 +68,7 @@ const Footer = () =>{
                             </div>
                             <ul>
                                 <li><Link onClick={ClickHandler} href="/">Home</Link></li>
-                                <li><Link onClick={ClickHandler} href="/about">About Us</Link></li>
+                                {/* <li><Link onClick={ClickHandler} href="/about">About Us</Link></li> */}
                                 <li><Link onClick={ClickHandler} href="/project">Our Project</Link></li>
                                 {/* <li><Link onClick={ClickHandler} href="/case">Our Mission</Link></li> */}
                                 {/* <li><Link onClick={ClickHandler} href="/contact">Contact Us</Link></li> */}
@@ -72,14 +79,14 @@ const Footer = () =>{
                     <div className="col col-lg-3 offset-lg-1 col-md-6 col-sm-12 col-12">
                         <div className="widget market-widget wpo-service-link-widget">
                             <div className="widget-title">
-                                <h3>Contact </h3>
+                                <h3>Contact Us</h3>
                             </div>
-                            <p>online store with lots of cool and exclusive wpo-features</p>
+                            {/* <p>Connecting the world with kindness, protecting our home with action.</p> */}
                             <div className="contact-ft">
                                 <ul>
-                                    <li><i className="fi flaticon-pin"></i>28 Street, New York City, USA</li>
-                                    <li><i className="fi flaticon-call"></i>+000123456789</li>
-                                    <li><i className="fi flaticon-envelope"></i>nasarna@gmail.com</li>
+                                    <li><i className="fi flaticon-pin"></i>1 Street, 2 City, Singapore</li>
+                                    <li><i className="fi flaticon-call"></i>+1234567890</li>
+                                    <li><i className="fi flaticon-envelope"></i>support@chaincharity.com</li>
                                 </ul>
                             </div>
                         </div>

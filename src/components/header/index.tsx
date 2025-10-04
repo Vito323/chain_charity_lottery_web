@@ -13,10 +13,10 @@ const ROUTE_MAP = [
     label: "Home",
     path: "/",
   },
-  {
-    label: "About",
-    path: "/about",
-  },
+  // {
+  //   label: "About",
+  //   path: "/about",
+  // },
   {
     label: "Projects",
     path: "/project",
@@ -70,14 +70,15 @@ const Header = () => {
                 <Link href="/" title="">
                   <div className="logo-container">
                     <Image
-                      src={"/images/blog/admin-2.jpg"}
+                      src={"https://placehold.co/150x150"}
                       width={50}
                       height={50}
+                      unoptimized
                       alt=""
-                    ></Image>
+                    />
                     <div>
-                      <h4 className="logo-name">ChainCharity Lottery</h4>
-                      <p className="logo-desc">ChainCharity Lottery</p>
+                      <h4 className="logo-name">ChainCharity</h4>
+                      <p className="logo-desc">Lottery</p>
                     </div>
                   </div>
                   {/* <img src={Logo} alt="" /> */}
