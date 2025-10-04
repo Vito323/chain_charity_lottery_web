@@ -1,4 +1,5 @@
 import "./style.scss";
+import Image from "next/image";
 const OurTeam = () => {
   return (
     <section className="our-speakers speakers-home-two">
@@ -14,11 +15,13 @@ const OurTeam = () => {
         <div className="our-speakers-cover">
           <div className="speaker-item">
             <div className="speaker-item-img">
-              <img
+              <Image
                 className="lazy"
                 src="/images/speaker-3.jpg"
-                data-src="/images/speaker-3.jpg"
-                alt="img"
+                alt="Team Member A"
+                width={300}
+                height={300}
+                priority
               />
             </div>
             <div className="speaker-item-content">
@@ -54,11 +57,12 @@ const OurTeam = () => {
           </div>
           <div className="speaker-item">
             <div className="speaker-item-img">
-              <img
+              <Image
                 className="lazy"
                 src="/images/speaker-3.jpg"
-                data-src="/images/speaker-3.jpg"
-                alt="img"
+                alt="Team Member B"
+                width={300}
+                height={300}
               />
             </div>
             <div className="speaker-item-content">
@@ -91,11 +95,12 @@ const OurTeam = () => {
           </div>
           <div className="speaker-item">
             <div className="speaker-item-img">
-              <img
+              <Image
                 className="lazy"
                 src="/images/speaker-3.jpg"
-                data-src="/images/speaker-3.jpg"
-                alt="img"
+                alt="Team Member C"
+                width={300}
+                height={300}
               />
             </div>
             <div className="speaker-item-content">
@@ -128,11 +133,12 @@ const OurTeam = () => {
           </div>
           <div className="speaker-item">
             <div className="speaker-item-img">
-              <img
+              <Image
                 className="lazy"
                 src="/images/speaker-3.jpg"
-                data-src="/images/speaker-3.jpg"
-                alt="img"
+                alt="Team Member D"
+                width={300}
+                height={300}
               />
             </div>
             <div className="speaker-item-content">

@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://api.rhinecat.io/api/:path*',
+      },
+    ];
+  },
 };
  
 const withNextIntl = createNextIntlPlugin();

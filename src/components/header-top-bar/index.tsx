@@ -6,7 +6,6 @@ import { useRouter } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { useParams, usePathname } from "next/navigation";
 import CustomConnectButton from "@/components/custom-connect-button";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 const HeaderTopBar = () => {
   const router = useRouter();
   const pathName = usePathname();

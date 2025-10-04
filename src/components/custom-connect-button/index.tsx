@@ -46,7 +46,6 @@ const CustomConnectButton = () => {
       {({
         account,
         chain,
-        openAccountModal,
         openChainModal,
         openConnectModal,
         authenticationStatus,

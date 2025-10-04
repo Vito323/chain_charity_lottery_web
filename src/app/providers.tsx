@@ -1,13 +1,13 @@
 'use client';
-
 import type React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 import { Locale, RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { config } from '@/lib/wagmi';
 import { useLocale } from 'next-intl';
-import { mainnet, polygon } from 'wagmi/chains';
-
+import { polygon } from 'wagmi/chains';
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -23,6 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           theme={lightTheme({ accentColor: '#08cc7f', accentColorForeground: '#ffffff' })}
         >
           {children}
+          <ToastContainer></ToastContainer>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

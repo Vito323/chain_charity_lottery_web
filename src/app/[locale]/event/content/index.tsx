@@ -1,6 +1,4 @@
-import Link from "next/link";
 import "@/components/event/style.css";
-import ThumbText from "@/components/thumb-text";
 import NewsCard, { NewsCardProps } from "@/components/news-card";
 
 const MOCK_DATAS = [
