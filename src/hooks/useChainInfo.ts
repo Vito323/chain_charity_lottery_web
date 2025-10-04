@@ -1,3 +1,4 @@
+'use client';
 import { useChainId } from 'wagmi';
 import { mainnet, polygon } from 'wagmi/chains';
 

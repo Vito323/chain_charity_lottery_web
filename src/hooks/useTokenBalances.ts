@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { useAccount, useBalance, useReadContract, useChainId } from 'wagmi';
 import { mainnet, polygon } from 'wagmi/chains';

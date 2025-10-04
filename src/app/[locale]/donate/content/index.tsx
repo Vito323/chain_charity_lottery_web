@@ -100,7 +100,7 @@ const Content = ({ uid }: ContentProps) => {
                 {/* 钱包连接区域 */}
                 <div className="wallet-connect-section">
                   <div className="wallet-connect-field">
-                    <i className="fa fa-wallet wallet-icon"></i>
+                    {/* <i className="fa fa-wallet wallet-icon"></i> */}
                     <span className="wallet-text">
                       {isConnected
                         ? `${address}`
