@@ -25,14 +25,14 @@ const UserContent = () => {
   return (
     <div className="wpo-case-area-2 section-padding">
       <div className="container">
-        <div className="row">
+        {/* <div className="row">
           <div className="col-12">
             <div className="wpo-section-title">
               <span>User Center</span>
               <h2>NFT</h2>        
             </div>
           </div>
-        </div>
+        </div> */}
         
         <div className="row">
           <div className="col-12">
