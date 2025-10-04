@@ -5,17 +5,19 @@ import Scrollbar from "@/components/scrollbar";
 import CaseSingle from "./content";
 import TabContent from "./tab-content";
 
-
-
-const CaseSinglePage =() => {
-  return(
-      <>
-          <Header/>
-          <PageTitle pageTitle={'Single Causes'} pagePrev="Causes" pagesub={'Causes Name'}/> 
-          <CaseSingle />
-          <Footer/>
-          <Scrollbar/>
-      </>
-  )
+const CaseSinglePage = () => {
+  return (
+    <>
+      <Header />
+      <PageTitle
+        pageTitle={"Our Project"}
+        pagePrev="Project"
+        pagesub={"Project Name"}
+      />
+      <CaseSingle />
+      <Footer />
+      <Scrollbar />
+    </>
+  );
 };
 export default CaseSinglePage;

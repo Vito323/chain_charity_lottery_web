@@ -10,7 +10,6 @@ const CausesPage = () => {
     <>
       <Header />
       <PageTitle pageTitle={"Our Projects"} pagesub={"Projects"} />
-      <Mission subclass={"section-padding"} />
       <Casesection />
       <Footer />
       <Scrollbar />
