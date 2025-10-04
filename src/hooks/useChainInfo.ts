@@ -1,6 +1,6 @@
 'use client';
 import { useChainId } from 'wagmi';
-import { mainnet, polygon } from 'wagmi/chains';
+import { mainnet, polygon, polygonAmoy } from 'wagmi/chains';
 
 interface ChainInfo {
   name: string;
@@ -29,6 +29,22 @@ export const useChainInfo = () => {
         id: polygon.id
       };
     }
+    if (chainId === polygonAmoy.id) {
+      return { 
+        name: "Polygon Amoy", 
+        symbol: "MATIC", 
+        color: "#8247E5",
+        id: polygonAmoy.id
+      };
+    }
+    if (chainId === 31337) {
+      return { 
+        name: "LocalNet", 
+        symbol: "ETH", 
+        color: "#627EEA",
+        id: 31337
+      };
+    }
     return { 
       name: "Unknown", 
       symbol: "UNKNOWN", 
@@ -44,6 +60,8 @@ export const useChainInfo = () => {
     currentChain,
     isMainnet: chainId === mainnet.id,
     isPolygon: chainId === polygon.id,
-    isSupported: chainId === mainnet.id || chainId === polygon.id
+    isPolygonAmoy: chainId === polygonAmoy.id,
+    isLocalhost: chainId === 31337,
+    isSupported: chainId === mainnet.id || chainId === polygon.id || chainId === polygonAmoy.id || chainId === 31337
   };
 };

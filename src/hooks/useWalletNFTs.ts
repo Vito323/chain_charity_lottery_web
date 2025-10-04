@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount, useChainId } from 'wagmi';
-import { mainnet, polygon } from 'wagmi/chains';
+import { mainnet, polygon, polygonAmoy } from 'wagmi/chains';
 
 // NFT接口定义
 export interface WalletNFT {
@@ -38,6 +38,8 @@ interface UseWalletNFTsReturn {
 const ALCHEMY_API_KEYS = {
   [mainnet.id]: process.env.NEXT_PUBLIC_ALCHEMY_MAINNET_KEY || 'demo',
   [polygon.id]: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_KEY || 'demo',
+  [polygonAmoy.id]: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_KEY || 'demo',
+  [31337]: '',
 };
 
 // 获取Alchemy API URL
@@ -49,6 +51,10 @@ const getAlchemyUrl = (chainId: number) => {
       return `https://eth-mainnet.g.alchemy.com/nft/v3/${apiKey}`;
     case polygon.id:
       return `https://polygon-mainnet.g.alchemy.com/nft/v3/${apiKey}`;
+    case polygonAmoy.id:
+      return `https://polygon-amoy.g.alchemy.com/nft/v3/${apiKey}`;
+    case 31337:
+      return null;
     default:
       return `https://eth-mainnet.g.alchemy.com/nft/v3/${apiKey}`;
   }
@@ -62,6 +68,12 @@ const fetchWalletNFTs = async (
   pageSize: number = 20
 ): Promise<{ nfts: WalletNFT[]; pageKey?: string; totalCount: number }> => {
   const baseUrl = getAlchemyUrl(chainId);
+  
+  // 本地网络不支持Alchemy NFT API
+  if (!baseUrl) {
+    return { nfts: [], totalCount: 0 };
+  }
+  
   const url = new URL(`${baseUrl}/getNFTsForOwner`);
   
   url.searchParams.append('owner', address);

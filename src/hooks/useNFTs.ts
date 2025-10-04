@@ -1,3 +1,4 @@
+// mock 
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { NFT } from '../app/[locale]/user/nft-list';

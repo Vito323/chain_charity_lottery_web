@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useAccount, useBalance, useReadContract, useChainId } from 'wagmi';
-import { mainnet, polygon } from 'wagmi/chains';
+import { mainnet, polygon, polygonAmoy } from 'wagmi/chains';
 
 // 代币合约地址配置
 const TOKEN_ADDRESSES = {
@@ -22,6 +22,24 @@ const TOKEN_ADDRESSES = {
     LINK: "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39",
     UNI: "0xb33EaAd8d922B1083446DC23f610c2567fB5180f",
     WBTC: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+  },
+  [polygonAmoy.id]: {
+    USDC: "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
+    USDT: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
+    DAI: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
+    AAVE: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
+    LINK: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
+    UNI: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
+    WBTC: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
+  },
+  [31337]: {
+    USDC: "0x0000000000000000000000000000000000000000",
+    USDT: "0x0000000000000000000000000000000000000000",
+    DAI: "0x0000000000000000000000000000000000000000",
+    AAVE: "0x0000000000000000000000000000000000000000",
+    LINK: "0x0000000000000000000000000000000000000000",
+    UNI: "0x0000000000000000000000000000000000000000",
+    WBTC: "0x0000000000000000000000000000000000000000",
   },
 };
 
