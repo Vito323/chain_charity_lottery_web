@@ -120,8 +120,8 @@ const LotteryContent: React.FC = () => {
   };
 
   // 格式化ETH金额
-  const formatETH = (amount: number): string => {
-    return amount.toFixed(4);
+  const formatDollar = (amount: number): string => {
+    return amount.toFixed(6);
   };
 
   return (
@@ -158,7 +158,7 @@ const LotteryContent: React.FC = () => {
           <div className="jackpot-section">
             <h1 className="jackpot-title">Current Jackpot</h1>
             <p className="jackpot-amount">
-              {isConnected ? `${formatETH(lotteryConfig.prizePool)} ETH` : "Connect Wallet"}
+              {isConnected ? `$${formatDollar(lotteryConfig.prizePool)}` : "Connect Wallet"}
             </p>
           </div>
         </div>
