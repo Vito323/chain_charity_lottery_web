@@ -25,8 +25,15 @@ const Fundraising: React.FC<FundraisingProps> = ({
           </div>
         </div>
 
+        <div className="fundraising-info">
+          <div className="fundraising-info-item">
+            <div className="fundraising-info-item-label">ID</div>
+            <div className="fundraising-info-item-value">{contributors.toLocaleString()}</div>
+          </div>
+        </div>
+
         {/* 政策信息部分 */}
-        <div className="fundraising-policy">
+        {/* <div className="fundraising-policy">
           <div className="policy-headline">
             100% goes to the project always.
           </div>
@@ -36,7 +43,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
           <a href="#" className="policy-link">
             Learn about our zero-fee policy <i className="ti-angle-right"></i>
           </a>
-        </div>
+        </div> */}
       </div>
 
       {/* 操作按钮部分 */}

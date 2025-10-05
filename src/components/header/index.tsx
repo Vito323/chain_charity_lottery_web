@@ -20,6 +20,10 @@ const ROUTE_MAP = [
     label: "Projects",
     path: "/project",
   },
+  {
+    label: "Lottery",
+    path: "/lottery",
+  },
   // {
   //   label: "Event",
   //   path: "/event",
