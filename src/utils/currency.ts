@@ -6,25 +6,25 @@
  * 格式化美金金额，添加千分位逗号
  * @param amount 金额（数字或字符串）
  * @param currency 货币符号，默认为 '$'
- * @param decimals 小数位数，默认为 0
+ * @param decimals 小数位数，默认为 2
  * @returns 格式化后的货币字符串
  * 
  * @example
- * formatCurrency(1234567) // "$1,234,567"
+ * formatCurrency(1234567) // "$1,234,567.00"
  * formatCurrency(1234567.89, '$', 2) // "$1,234,567.89"
- * formatCurrency("1500000") // "$1,500,000"
+ * formatCurrency("1500000") // "$1,500,000.00"
  */
 export function formatCurrency(
   amount: number | string,
   currency: string = '$',
-  decimals: number = 0
+  decimals: number = 2
 ): string {
   // 转换为数字
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
   
   // 检查是否为有效数字
   if (isNaN(numAmount)) {
-    return `${currency}0`;
+    return `${currency}0.00`;
   }
   
   // 使用 Intl.NumberFormat 进行格式化

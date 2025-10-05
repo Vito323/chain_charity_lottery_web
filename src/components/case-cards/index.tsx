@@ -108,7 +108,7 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
 
         <div className="card-actions">
           <Link
-            href={`/donate/${id}`}
+            href={`/donate/${id}/${name}`}
             className="donate-btn"
             onClick={handleButtonClick}
           >

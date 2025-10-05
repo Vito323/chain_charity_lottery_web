@@ -4,6 +4,8 @@ import { useAccount } from "wagmi";
 import { useFundPoolManager } from "@/hooks/useFundPoolManager";
 import { useWalletNFTs } from "@/hooks/useWalletNFTs";
 import "./style.css";
+import { formatCurrency } from "@/utils/currency";
+import { getLotteryConfig, LotteryConfig } from "@/service/lottery";
 
 interface CountdownTime {
   days: number;
@@ -12,11 +14,6 @@ interface CountdownTime {
   seconds: number;
 }
 
-interface LotteryConfig {
-  drawTime: string; // ISO string format
-  prizePool: number; // ETH amount
-  isActive: boolean;
-}
 
 const LotteryContent: React.FC = () => {
   const { isConnected } = useAccount();
@@ -32,9 +29,9 @@ const LotteryContent: React.FC = () => {
 
   // 彩票配置状态
   const [lotteryConfig, setLotteryConfig] = useState<LotteryConfig>({
-    drawTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 默认7天后开奖
-    prizePool: 0,
-    isActive: true,
+    nextDrawTime: 0, // 默认7天后开奖
+    total: "0.00",
+    nextDrawTimestring: ''
   });
 
   // 倒计时状态
@@ -51,9 +48,8 @@ const LotteryContent: React.FC = () => {
   // 计算倒计时
   const calculateCountdown = useCallback(() => {
     const now = new Date().getTime();
-    const drawTime = new Date(lotteryConfig.drawTime).getTime();
+    const drawTime = lotteryConfig.nextDrawTime * 1000;
     const difference = drawTime - now;
-
     if (difference <= 0) {
       setIsDrawComplete(true);
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
@@ -67,7 +63,7 @@ const LotteryContent: React.FC = () => {
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
     return { days, hours, minutes, seconds };
-  }, [lotteryConfig.drawTime]);
+  }, [lotteryConfig.nextDrawTime]);
 
   // 更新倒计时
   useEffect(() => {
@@ -79,23 +75,23 @@ const LotteryContent: React.FC = () => {
   }, [calculateCountdown]);
 
   // 获取奖池金额
-  useEffect(() => {
-    const fetchPrizePool = async () => {
-      try {
-        const totalLotteryFunds = await getTotalLotteryFunds();
-        setLotteryConfig((prev) => ({
-          ...prev,
-          prizePool: totalLotteryFunds,
-        }));
-      } catch (error) {
-        console.error("获取奖池金额失败:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchPrizePool = async () => {
+  //     try {
+  //       const totalLotteryFunds = await getTotalLotteryFunds();
+  //       setLotteryConfig((prev) => ({
+  //         ...prev,
+  //         prizePool: totalLotteryFunds,
+  //       }));
+  //     } catch (error) {
+  //       console.error("获取奖池金额失败:", error);
+  //     }
+  //   };
 
-    if (isConnected) {
-      fetchPrizePool();
-    }
-  }, [getTotalLotteryFunds, isConnected]);
+  //   if (isConnected) {
+  //     fetchPrizePool();
+  //   }
+  // }, [getTotalLotteryFunds, isConnected]);
 
   // 配置开奖时间（暂时未使用）
   // const handleDrawTimeChange = (newTime: string) => {
@@ -119,10 +115,17 @@ const LotteryContent: React.FC = () => {
     return value.toString().padStart(2, "0");
   };
 
-  // 格式化ETH金额
-  const formatDollar = (amount: number): string => {
-    return amount.toFixed(6);
+
+  const queryLotteryConfig = async () => {
+    const res = await getLotteryConfig();
+    if(res.success){
+      setLotteryConfig(res.data);
+    }
   };
+
+  useEffect(() => {
+    queryLotteryConfig();
+  }, []);
 
   return (
     <div className="lottery-page">
@@ -158,7 +161,7 @@ const LotteryContent: React.FC = () => {
           <div className="jackpot-section">
             <h1 className="jackpot-title">Current Jackpot</h1>
             <p className="jackpot-amount">
-              {isConnected ? `$${formatDollar(lotteryConfig.prizePool)}` : "Connect Wallet"}
+              {isConnected ? formatCurrency(lotteryConfig.total) : "PleaseConnect Wallet"}
             </p>
           </div>
         </div>

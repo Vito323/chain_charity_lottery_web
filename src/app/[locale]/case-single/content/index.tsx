@@ -53,7 +53,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
     <>
       <PageTitle
         pageTitle={"Our Project"}
-        pagePrev="Project"
+        pagePrevs={[{label: "Project", href: `/project`}]}
         pagesub={detail?.name || "--"}
       />
       <div className="wpo-case-details-area section-padding">
@@ -72,7 +72,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                       contributors={0}
                       projectId={uid}
                       onDonate={() => {
-                        router.push(`/donate/${uid}`);
+                        router.push(`/donate/${uid}/${detail?.name || ''}`);
                       }}
                     />
                   </div>

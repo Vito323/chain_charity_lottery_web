@@ -10,9 +10,10 @@ import { useAccount } from "wagmi";
 
 interface ContentProps {
   uid: string;
+  name: string;
 }
 
-const Content = ({ uid }: ContentProps) => {
+const Content = ({ uid, name }: ContentProps) => {
   const { tokenPrices, calculateUSDValue } = useTokenPrices();
   const { tokenBalances, isConnected } = useTokenBalances();
   const {address} = useAccount();
@@ -86,6 +87,10 @@ const Content = ({ uid }: ContentProps) => {
     return matchesSearch && hasBalance;
   });
 
+  const formatStr = (str: string) => {
+    return `${str.slice(0, 6)}...${str.slice(-4)}`;
+  };
+
   return (
     <div className="wpo-donation-page-area section-padding">
       <div className="container">
@@ -108,9 +113,9 @@ const Content = ({ uid }: ContentProps) => {
                     </span>
                   </div>
                   <div className="project-id-field">
-                    <i className="fa fa-tag project-icon"></i>
                     <span className="project-text">
-                      Current Project ID: {uid}
+                      Project: {decodeURIComponent(name)} <br></br>
+                      ID: {(uid)}
                     </span>
                   </div>
                 </div>

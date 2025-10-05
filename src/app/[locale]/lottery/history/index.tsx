@@ -19,35 +19,35 @@ interface LotteryHistoryItem {
 const defaultHistoryData: LotteryHistoryItem[] = [
   {
     id: '1',
-    drawDate: '2024-02-10',
+    drawDate: '2025-10-03',
     txHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
     winningDNA: '05 12 23 31 45 50',
     prizeAmount: formatCurrency(1050200)
   },
   {
     id: '2',
-    drawDate: '2024-02-03',
+    drawDate: '2025-09-29',
     txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
     winningDNA: '11 19 28 33 41 49',
     prizeAmount: formatCurrency(980500)
   },
   {
     id: '3',
-    drawDate: '2024-01-27',
+    drawDate: '2025-09-24',
     txHash: '0x567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234',
     winningDNA: '02 08 15 29 38 44',
     prizeAmount: formatCurrency(1530000)
   },
   {
     id: '4',
-    drawDate: '2024-01-20',
+    drawDate: '2025-09-22',
     txHash: '0xdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abc',
     winningDNA: '07 14 21 35 42 48',
     prizeAmount: formatCurrency(2100000)
   },
   {
     id: '5',
-    drawDate: '2024-01-13',
+    drawDate: '2025-09-18',
     txHash: '0x7890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
     winningDNA: '03 16 24 37 43 46',
     prizeAmount: formatCurrency(850750)

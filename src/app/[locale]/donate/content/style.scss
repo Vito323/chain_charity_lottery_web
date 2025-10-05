@@ -82,6 +82,9 @@
       font-size: 13px;
       color: #2d4277;
       font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -391,7 +394,9 @@
       
       .project-text {
         font-size: 12px;
-        word-break: break-word;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
