@@ -37,6 +37,7 @@ export interface ModalSelectProps {
   tokenList: { address: string }[];
   handleTokenSelect: (token: DonationTokenInfo) => void;
   propTokenListLoading?: boolean;
+  onRefreshBalances?: (refreshFn: () => Promise<void>) => void;
 }
 
 const ModalSelect = ({
@@ -47,6 +48,7 @@ const ModalSelect = ({
   searchTerm: propSearchTerm,
   hideZeroBalance: propHideZeroBalance,
   propTokenListLoading,
+  onRefreshBalances,
 }: ModalSelectProps) => {
   const [searchTerm, setSearchTerm] = React.useState(propSearchTerm);
   const [hideZeroBalance, setHideZeroBalance] =
@@ -57,7 +59,7 @@ const ModalSelect = ({
 
 
   // 获取原生代币余额
-  const { data: nativeBalance } = useBalance({
+  const { data: nativeBalance, refetch: refetchNativeBalance } = useBalance({
     address,
     chainId,
   });
@@ -73,8 +75,29 @@ const ModalSelect = ({
 
   const { 
     data: erc20TokenInfos, 
-    isLoading: erc20TokensLoading 
+    isLoading: erc20TokensLoading,
+    refetch: refetchERC20Balances
   } = useTokenInfoList(erc20TokenAddresses);
+
+  // 刷新所有余额的函数
+  const refreshAllBalances = React.useCallback(async () => {
+    try {
+      await Promise.all([
+        refetchNativeBalance(),
+        refetchERC20Balances()
+      ]);
+    } catch (error) {
+      console.error('Failed to refresh balances:', error);
+    }
+  }, [refetchNativeBalance, refetchERC20Balances]);
+
+  // 暴露刷新函数给父组件
+  React.useEffect(() => {
+    if (onRefreshBalances) {
+      // 将刷新函数传递给父组件
+      onRefreshBalances(refreshAllBalances);
+    }
+  }, [onRefreshBalances, refreshAllBalances]);
 
   // 构建完整的代币列表 - 使用 useMemo 避免无限循环
   const allTokens = React.useMemo(() => {
@@ -217,7 +240,10 @@ const ModalSelect = ({
               <TokenListItem
                 key={token.address || token.symbol}
                 token={token}
-                handleTokenSelect={handleTokenSelect}
+                handleTokenSelect={(t) => {
+                  handleTokenSelect(t);
+                  changeModalState(false);
+                }}
               />
             ))
           )}

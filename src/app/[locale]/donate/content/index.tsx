@@ -20,13 +20,16 @@ interface ContentProps {
 const Content = ({ uid, name }: ContentProps) => {
   const chainId = useChainId();
   const [showTokenModal, setShowTokenModal] = React.useState(false);
-  const { donateToken } = useFundPoolManager();
+  const { donateToken, donate, isLoading: donationLoading } = useFundPoolManager();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { tokenPrices, calculateUSDValue } = useTokenPrices();
   const [tokenListLoading, setTokenListLoading] = React.useState(false);
   const [whiteTokenList, setWhiteTokenList] = React.useState<string[]>([]);
   const { address } = useAccount();
+  const [isProcessing, setIsProcessing] = React.useState(false);
+  const [donationSuccess, setDonationSuccess] = React.useState(false);
+  const [refreshBalancesFn, setRefreshBalancesFn] = React.useState<(() => Promise<void>) | null>(null);
 
   // 使用新的token列表hook
 
@@ -69,24 +72,75 @@ const Content = ({ uid, name }: ContentProps) => {
     getWhiteTokenList();
   }, []);
 
+  // 成功状态自动重置
+  React.useEffect(() => {
+    if (donationSuccess) {
+      const timer = setTimeout(() => {
+        setDonationSuccess(false);
+      }, 3000); // 3秒后重置成功状态
+      return () => clearTimeout(timer);
+    }
+  }, [donationSuccess]);
+
   const handleConnectWallet = async () => {
     if (isConnected) {
-      // 处理捐赠逻辑
-      try {
-        if (selectedToken) {
-          const result = await donateToken(uid, selectedToken.address!, amount);
-          if (result) {
-            toast.success("Donation successful");
-          } else {
-            toast.error("Donation failed");
-          }
-        }
-      } catch (error) {
-        console.error("Donation failed:", error);
-        toast.error("Donation failed");
+      // 验证输入
+      if (!selectedToken) {
+        toast.error("Please select a token");
+        return;
+      }
+      
+      if (!amount || parseFloat(amount) <= 0) {
+        toast.error("Please enter a valid amount");
+        return;
       }
 
-      console.log("Processing donation...");
+      // 处理捐赠逻辑
+      try {
+        setIsProcessing(true);
+        setDonationSuccess(false);
+        
+        const result = selectedToken.isNative 
+          ? (await donate(uid, amount)) 
+          : (await donateToken(uid, selectedToken.address!, amount));
+          
+        if (result) {
+          setDonationSuccess(true);
+          toast.success("Donation successful! Thank you for your support.");
+          // 重置表单
+          handleAmountChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
+          // 刷新余额
+          if (refreshBalancesFn) {
+            try {
+              console.log("Refreshing balances after successful donation...");
+              await refreshBalancesFn();
+              console.log("Balances refreshed successfully");
+            } catch (error) {
+              console.error("Failed to refresh balances:", error);
+            }
+          } else {
+            console.warn("Refresh balances function not available");
+          }
+        } else {
+          toast.error("Donation failed. Please try again.");
+        }
+      } catch (error: any) {
+        console.error("Donation failed:", error);
+        
+        // 根据错误类型显示不同的错误信息
+        let errorMessage = "Donation failed. Please try again.";
+        if (error.message?.includes("user rejected")) {
+          errorMessage = "Transaction was cancelled by user";
+        } else if (error.message?.includes("insufficient funds")) {
+          errorMessage = "Insufficient balance for this transaction";
+        } else if (error.message?.includes("gas")) {
+          errorMessage = "Transaction failed due to gas issues";
+        }
+        
+        toast.error(errorMessage);
+      } finally {
+        setIsProcessing(false);
+      }
     } else {
       openConnectModal?.();
     }
@@ -159,12 +213,19 @@ const Content = ({ uid, name }: ContentProps) => {
                     <div className="amount-input-container">
                       <input
                         type="number"
-                        className="amount-input"
+                        className={`amount-input ${amount && parseFloat(amount) <= 0 ? 'error' : ''}`}
                         placeholder="0"
                         value={amount}
                         onChange={handleAmountChange}
-                        disabled={!isConnected || !selectedToken}
+                        disabled={!isConnected || !selectedToken || isProcessing}
+                        min="0"
+                        step="0.000001"
                       />
+                      {amount && parseFloat(amount) <= 0 && (
+                        <div className="input-error-message">
+                          Please enter a valid amount
+                        </div>
+                      )}
                     </div>
                     <div className="usd-value-container">
                       {
@@ -194,11 +255,25 @@ const Content = ({ uid, name }: ContentProps) => {
                 {/* 连接钱包按钮 */}
                 <div className="connect-wallet-section">
                   <button
-                    className="connect-wallet-btn"
+                    className={`connect-wallet-btn ${isProcessing ? 'processing' : ''} ${donationSuccess ? 'success' : ''}`}
                     onClick={handleConnectWallet}
-                    disabled={isConnected ? !selectedToken || !amount : false}
+                    disabled={isProcessing || donationLoading || (isConnected && (!selectedToken || !amount || parseFloat(amount) <= 0))}
                   >
-                    {isConnected ? "Donate Now" : "Connect Wallet"}
+                    {isProcessing || donationLoading ? (
+                      <>
+                        <i className="fa fa-spinner fa-spin"></i>
+                        Processing...
+                      </>
+                    ) : donationSuccess ? (
+                      <>
+                        <i className="fa fa-check"></i>
+                        Donation Successful!
+                      </>
+                    ) : isConnected ? (
+                      "Donate Now"
+                    ) : (
+                      "Connect Wallet"
+                    )}
                   </button>
                 </div>
               </div>
@@ -215,6 +290,7 @@ const Content = ({ uid, name }: ContentProps) => {
         hideZeroBalance={hideZeroBalance}
         tokenList={targetTokenList}
         propTokenListLoading={tokenListLoading}
+        onRefreshBalances={setRefreshBalancesFn}
       ></ModalSelect>
     </div>
   );

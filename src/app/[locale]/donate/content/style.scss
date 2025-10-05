@@ -176,6 +176,7 @@
       align-items: center;
       gap: 12px;
       flex: 1;
+      position: relative;
       
       .amount-input {
         flex: 1;
@@ -194,6 +195,23 @@
           color: #6c757d;
           cursor: not-allowed;
         }
+        
+        &.error {
+          color: #dc3545;
+        }
+      }
+      
+      .input-error-message {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 4px;
+        font-size: 12px;
+        color: #dc3545;
+        font-weight: 500;
+        text-align: left;
+        z-index: 10;
       }
     }
     .usd-value-container {
@@ -315,6 +333,29 @@
       transform: none;
       box-shadow: none;
     }
+    
+    // 处理中状态
+    &.processing {
+      background: linear-gradient(135deg, #ffc107, #ff8f00);
+      color: #fff;
+      cursor: not-allowed;
+      
+      i {
+        margin-right: 8px;
+      }
+    }
+    
+    // 成功状态
+    &.success {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: #fff;
+      cursor: default;
+      animation: successPulse 0.6s ease;
+      
+      i {
+        margin-right: 8px;
+      }
+    }
   }
 }
 
@@ -431,6 +472,21 @@
 /* 动画效果 */
 .crypto-donation-form {
   animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
 }
 
 @keyframes fadeInUp {

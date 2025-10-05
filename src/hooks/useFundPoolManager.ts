@@ -516,34 +516,27 @@ export const useFundPoolManager = () => {
     [getSigner, handleError]
   );
 
-  // ETH捐赠
-  const donate = useCallback(
-    async (token: string, projectId: string, amount: string): Promise<string> => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const contractWithSigner = await getSigner();
+// ETH捐赠
+const donate = useCallback(
+  async (projectId: string, amount: string): Promise<string> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const contractWithSigner = await getSigner();
 
-        if (token === "ETH") {
-          const tx = await (contractWithSigner as any).donateDefaultToken(projectId, {
-            value: ethers.parseEther(amount),
-          });
-          await tx.wait();
-          setIsLoading(false);
-          return tx.hash;
-        } else {
-          const tx = await (contractWithSigner as any).donateToken(projectId, token, ethers.parseUnits(amount, 18));
-          await tx.wait();
-          setIsLoading(false);
-          return tx.hash;
-        }
-      } catch (e: unknown) {
-        handleError(e, "Donation failed");
-        throw e;
-      }
-    },
-    [getSigner, handleError]
-  );
+      const tx = await (contractWithSigner as any).donateDefaultToken(projectId, {
+        value: ethers.parseEther(amount),
+      });
+      await tx.wait();
+      setIsLoading(false);
+      return tx.hash;
+    } catch (e: unknown) {
+      handleError(e, "Donation failed");
+      throw e;
+    }
+  },
+  [getSigner, handleError]
+);
 
   // 代币捐赠
   const donateToken = useCallback(
