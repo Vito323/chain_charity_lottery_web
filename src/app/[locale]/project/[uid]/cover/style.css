@@ -271,3 +271,164 @@
     height: 100% !important;
   }
 }
+
+/* 加载状态样式 */
+.image-skeleton {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.skeleton-shimmer {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 1;
+}
+
+/* 空状态样式 */
+.empty-state {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.empty-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-subtitle {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 图片加载状态样式 */
+.image-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top: 3px solid #00a7d5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 图片加载完成后的样式 */
+.swiper-image.loaded {
+  opacity: 1 !important;
+}
+
+.swiper-image.loading {
+  opacity: 0 !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .empty-icon {
+    font-size: 36px;
+  }
+  
+  .empty-text {
+    font-size: 16px;
+  }
+  
+  .empty-subtitle {
+    font-size: 13px;
+  }
+  
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .loading-text {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .empty-state {
+    padding: 30px 15px;
+  }
+  
+  .empty-icon {
+    font-size: 32px;
+  }
+  
+  .empty-text {
+    font-size: 15px;
+  }
+  
+  .empty-subtitle {
+    font-size: 12px;
+  }
+}

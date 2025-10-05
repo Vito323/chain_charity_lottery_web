@@ -25,13 +25,21 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
   const [detail, setDetail] = React.useState<ProjectDetailData | null>(null);
   const [currentProjectInfo, setCurrentProjectFundInfo] =
     React.useState<ProjectChainInfo | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
   // 使用 uid 参数获取项目数据
   console.log("Project UID:", uid);
 
   const getDetail = React.useCallback(async () => {
-    const response = await projectDetail(uid);
-    if (response.ok) {
-      setDetail(response.data);
+    try {
+      setIsLoading(true);
+      const response = await projectDetail(uid);
+      if (response.ok) {
+        setDetail(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch project details:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, [uid]);
 
@@ -68,7 +76,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                 {/* 图片轮播和筹款组件并排布局 */}
                 <div className="case-hero-layout">
                   <div className="case-swiper-container">
-                    <Covers images={detail?.image || []}></Covers>
+                    <Covers images={detail?.image || []} isLoading={isLoading}></Covers>
                   </div>
                   <div className="case-fundraising-container">
                     <Fundraising
