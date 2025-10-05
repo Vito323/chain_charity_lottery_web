@@ -17,7 +17,7 @@ const CtaSection = (props: {ctaclass?: string}) => {
                             <p>Changing the world isn&apos;t a solitary task. Every donation, share, and act of volunteering is a powerful show of support for the helpless. Join us and turn compassion into collective action!</p>
                             <div className="btns">
                                 <Link onClick={ClickHandler} href="/project" className="theme-btn">Donate Now</Link>
-                                <Link onClick={ClickHandler} href="/home" className="theme-btn-s2">Join Us Now</Link>
+                                <Link onClick={ClickHandler} href="/" className="theme-btn-s2">Join Us Now</Link>
                             </div>
                         </div>
                     </div>
