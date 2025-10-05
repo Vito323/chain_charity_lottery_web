@@ -1,9 +1,10 @@
 import React from "react";
 import "./style.css";
 import { ProjectFundStats } from "@/hooks/useFundPoolManager";
+import { formatCurrency } from "@/utils/currency";
 
 interface FundraisingProps {
-  totalRaised?: string;
+  totalRaised?: number;
   contributors?: number;
   onDonate?: () => void;
   projectFundStats?: ProjectFundStats;
@@ -11,18 +12,18 @@ interface FundraisingProps {
 }
 
 const Fundraising: React.FC<FundraisingProps> = ({
-  totalRaised = "$0.00",
+  totalRaised = 0,
   contributors = 0,
   projectId = '',
   onDonate,
 }) => {
   return (
-    <div className="fundraising-card">
+    <div className="project-fundraising-card">
       {/* 筹款摘要部分 */}
       <div>
         <div className="fundraising-summary">
           <div className="fundraising-label">Total amount raised</div>
-          <div className="fundraising-amount">{totalRaised}</div>
+          <div className="fundraising-amount">{formatCurrency(totalRaised)}</div>
           <div className="fundraising-contributors">
             Raised from <strong>{contributors.toLocaleString()}</strong>{" "}
             contributors
@@ -30,9 +31,9 @@ const Fundraising: React.FC<FundraisingProps> = ({
         </div>
 
         <div className="fundraising-info">
-          <div className="fundraising-info-item">
-            <div className="fundraising-info-item-label">ID</div>
-            <div className="fundraising-info-item-value">{projectId}</div>
+          <div className="project-id-tag">
+            ID:
+            {projectId}
           </div>
         </div>
 

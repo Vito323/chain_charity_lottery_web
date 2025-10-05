@@ -444,6 +444,15 @@
   }
 }
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* 焦点状态 */
 .amount-input:focus {
   outline: none;
@@ -563,6 +572,115 @@
   border: 1px solid #e9ecef;
   border-radius: 8px;
   margin-bottom: 16px;
+
+  /* 加载状态样式 */
+  .loading-tokens {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+    min-height: 200px;
+
+    .loading-icon {
+      margin-bottom: 16px;
+      
+      i {
+        font-size: 32px;
+        color: #08cc7f;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .loading-content {
+      h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d4277;
+        margin: 0 0 8px 0;
+        font-family: "Rubik", sans-serif;
+      }
+
+      p {
+        font-size: 14px;
+        color: #6c757d;
+        margin: 0;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  /* 空状态样式 */
+  .no-tokens {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+    min-height: 200px;
+
+    .no-tokens-icon {
+      margin-bottom: 16px;
+      
+      i {
+        font-size: 32px;
+        color: #6c757d;
+        opacity: 0.7;
+      }
+    }
+
+    .no-tokens-content {
+      h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d4277;
+        margin: 0 0 8px 0;
+        font-family: "Rubik", sans-serif;
+      }
+
+      p {
+        font-size: 14px;
+        color: #6c757d;
+        margin: 0 0 16px 0;
+        line-height: 1.5;
+      }
+
+      .clear-search-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: #08cc7f;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        i {
+          font-size: 12px;
+        }
+
+        &:hover {
+          background: #06a066;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(8, 204, 127, 0.3);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
 
   .token-list-item {
     display: flex;
@@ -684,6 +802,39 @@
 
     .token-list-section {
       max-height: 250px;
+
+      .loading-tokens,
+      .no-tokens {
+        padding: 30px 15px;
+        min-height: 150px;
+
+        .loading-icon,
+        .no-tokens-icon {
+          margin-bottom: 12px;
+          
+          i {
+            font-size: 24px;
+          }
+        }
+
+        .loading-content,
+        .no-tokens-content {
+          h4 {
+            font-size: 14px;
+            margin-bottom: 6px;
+          }
+
+          p {
+            font-size: 12px;
+            margin-bottom: 12px;
+          }
+
+          .clear-search-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+          }
+        }
+      }
     }
 
     .token-list-item {

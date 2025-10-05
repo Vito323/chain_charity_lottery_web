@@ -4,16 +4,31 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime'
+import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/navigation";
 import "./style.css";
 import { ProjectData } from "@/service/project";
-import { ProjectFundStats, useFundPoolManager } from "@/hooks/useFundPoolManager";
-import logger from "@/utils/logger";
-dayjs.extend(relativeTime)
+import {
+  useFundPoolManager,
+} from "@/hooks/useFundPoolManager";
+import { useAccount, useChainId } from "wagmi";
+import { formatCurrency } from "@/utils/currency";
+dayjs.extend(relativeTime);
 interface FundraisingCardProps extends ProjectData {
   raised?: string;
   contributors?: number;
+}
+
+export interface ProjectChainInfo {
+  id: string;
+  owner: string;
+  beneficiary: string;
+  isActive: boolean;
+  version: number;
+  createdAt: number;
+  totalDonated: number;
+  withdrawableAmount: number;
+  withdrawnAmount: number;
 }
 
 const FundraisingCard: React.FC<FundraisingCardProps> = ({
@@ -21,37 +36,40 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
   createdAt,
   description,
   image,
-  raised,
-  contributors,
-  id
+  id,
 }) => {
   const router = useRouter();
-  const {getProjectFundStats} = useFundPoolManager();
+
+  const { isConnected } = useAccount();
+  const chainId = useChainId();
+  const { getProject } = useFundPoolManager();
   const handleCardClick = () => {
-    router.push(`/case-single/${id}`);
+    router.push(`/project/${id}`);
   };
 
-  const [currentProjectFundStats, setCurrentProjectFundStats] = React.useState<ProjectFundStats | null>(null);
+  const [currentProjectInfo, setCurrentProjectFundInfo] =
+    React.useState<ProjectChainInfo | null>(null);
 
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
-
-  const queryProjectFundStats = async () => {
+  const queryProjectFundStats = React.useCallback(async () => {
     try {
-      const res = await getProjectFundStats(id);
-      setCurrentProjectFundStats(res);
+      const res = await getProject(id);
+      if (res) {
+        setCurrentProjectFundInfo(res);
+      }
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [getProject, id]);
 
   React.useEffect(() => {
-    queryProjectFundStats();
-  }, []);
-
-  console.log(currentProjectFundStats);
+    if (isConnected) {
+      queryProjectFundStats();
+    }
+  }, [isConnected, queryProjectFundStats, chainId]);
 
 
   return (
@@ -78,7 +96,9 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
 
       <div className="card-content">
         <div className="card-update-time">
-          <span className="update-label">Last Updated: {dayjs(createdAt).fromNow()}</span>
+          <span className="update-label">
+            Last Updated: {dayjs(createdAt).fromNow()}
+          </span>
         </div>
 
         <h3 className="card-title">{name}</h3>
@@ -95,9 +115,9 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
           </div>
           <div className="funding-details">
             <div className="contributors-info">
-              Raised from <strong>{contributors || 0}</strong> contributors
+              Raised from <strong>{currentProjectInfo?.totalDonated || 0}</strong> contributors
             </div>
-            <div className="raised-amount">{raised || '$0'}</div>
+            <div className="raised-amount">{formatCurrency(currentProjectInfo?.withdrawableAmount || 0)}</div>
           </div>
         </div>
 

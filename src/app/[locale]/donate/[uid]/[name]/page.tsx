@@ -20,7 +20,7 @@ const DonatePage = async ({ params }: DonatePageProps) => {
       <Header />
       <PageTitle pageTitle={"Donate Now"} pagePrevs={[
         {label: "Project", href: `/project`},
-        {label: name, href: `/case-single/${uid}`}
+        {label: name, href: `/project/${uid}`}
       ]} pagesub={'Donate Now'} />
       <Content uid={uid} name={name} />
       <Footer />

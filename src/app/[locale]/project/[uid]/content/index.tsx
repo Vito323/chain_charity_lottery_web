@@ -7,7 +7,11 @@ import Fundraising from "../fundraising";
 import { useRouter } from "next/navigation";
 import { projectDetail, ProjectDetailData } from "@/service/project";
 import PageTitle from "@/components/page-title";
-import { ProjectFundStats, useFundPoolManager } from "@/hooks/useFundPoolManager";
+import {
+  useFundPoolManager,
+} from "@/hooks/useFundPoolManager";
+import { ProjectChainInfo } from "@/components/case-cards";
+import { useAccount, useChainId } from "wagmi";
 
 interface CaseSingleProps {
   uid: string;
@@ -15,10 +19,12 @@ interface CaseSingleProps {
 
 const CaseSingle = ({ uid }: CaseSingleProps) => {
   const router = useRouter();
-  const { getProjectFundStats } = useFundPoolManager();
-  const [currentProjectFundStats, setCurrentProjectFundStats] = React.useState<ProjectFundStats | null>(null);
+  const { getProject } = useFundPoolManager();
+  const { isConnected } = useAccount();
+  const chainId = useChainId();
   const [detail, setDetail] = React.useState<ProjectDetailData | null>(null);
-
+  const [currentProjectInfo, setCurrentProjectFundInfo] =
+    React.useState<ProjectChainInfo | null>(null);
   // 使用 uid 参数获取项目数据
   console.log("Project UID:", uid);
 
@@ -34,26 +40,24 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
   }, [getDetail]);
 
   const queryProjectFundStats = React.useCallback(async () => {
-    const response = await getProjectFundStats(uid);
-    console.log(response, 'response');
+    const response = await getProject(uid);
+    console.log(response, "response112");
     if (response) {
-      setCurrentProjectFundStats(response);
+      setCurrentProjectFundInfo(response);
     }
-  }, [getProjectFundStats, uid]);
-
+  }, [getProject, uid]);
 
   React.useEffect(() => {
-    if(uid) {
-    queryProjectFundStats();
+    if (uid && isConnected) {
+      queryProjectFundStats();
     }
-  }, [queryProjectFundStats, uid]);
-
+  }, [queryProjectFundStats, uid, isConnected, chainId]);
 
   return (
     <>
       <PageTitle
         pageTitle={"Our Project"}
-        pagePrevs={[{label: "Project", href: `/project`}]}
+        pagePrevs={[{ label: "Project", href: `/project` }]}
         pagesub={detail?.name || "--"}
       />
       <div className="wpo-case-details-area section-padding">
@@ -68,11 +72,11 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   </div>
                   <div className="case-fundraising-container">
                     <Fundraising
-                      totalRaised="$0.00"
-                      contributors={0}
+                      totalRaised={currentProjectInfo?.withdrawableAmount || 0}
+                      contributors={currentProjectInfo?.totalDonated || 0}
                       projectId={uid}
                       onDonate={() => {
-                        router.push(`/donate/${uid}/${detail?.name || ''}`);
+                        router.push(`/donate/${uid}/${detail?.name || ""}`);
                       }}
                     />
                   </div>
@@ -81,6 +85,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   title={detail?.name || ""}
                   content={detail?.content || ""}
                   tracks={detail?.tracks || []}
+                  currentProjectInfo={currentProjectInfo}
                 ></TabContent>
               </div>
             </div>

@@ -2,7 +2,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import PageTitle from "@/components/page-title";
 import Scrollbar from "@/components/scrollbar";
-import CaseSingle from "../content";
+import CaseSingle from "./content";
 
 interface CaseSinglePageProps {
   params: Promise<{

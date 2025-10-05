@@ -1,6 +1,6 @@
-
-import React, { useState } from 'react';
-import './style.css';
+import React, { useState } from "react";
+import "./style.css";
+import { ProjectChainInfo } from "@/components/case-cards";
 
 interface Donation {
   id: number;
@@ -23,33 +23,43 @@ interface NetworkAddress {
   color: string;
 }
 
-const DonationList = () => {
-  const [sortField, setSortField] = useState<string>('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+const DonationList = ({
+  currentProjectInfo,
+}: {
+  currentProjectInfo: ProjectChainInfo | null;
+}) => {
+  const [sortField, setSortField] = useState<string>("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
   const donations: Donation[] = [];
 
   const networkAddresses: NetworkAddress[] = [
-    { name: "Ethereum", address: "0x22C7e194DaC75b0532FfBA5b66f8D23D5044D99A", icon: "fa-ethereum", color: "#627EEA" },
     // { name: "Optimism", address: "0xabcd...efgh", icon: "fa-circle", color: "#FF0420" },
     // { name: "Arbitrum", address: "0x9876...5432", icon: "fa-shield", color: "#2D374B" },
     // { name: "Celo", address: "0x1111...2222", icon: "fa-circle", color: "#35D07F" },
-    { name: "Polygon", address: "0x22C7e194DaC75b0532FfBA5b66f8D23D5044D99A", icon: "fa-circle", color: "#8247E5" },
+    {
+      name: "Polygon",
+      address: currentProjectInfo?.beneficiary || "",
+      icon: "fa-circle",
+      color: "#8247E5",
+    },
     // { name: "Base", address: "0x5555...6666", icon: "fa-circle", color: "#0052FF" }
   ];
 
+  console.log(currentProjectInfo, "currentProjectInfo");
+
   const handleSort = (field: string) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
-      setSortDirection('desc');
+      setSortDirection("desc");
     }
   };
 
   const getSortIcon = (field: string) => {
-    if (sortField !== field) return 'fa-sort';
-    return sortDirection === 'asc' ? 'fa-sort-up' : 'fa-sort-down';
+    if (sortField !== field) return "fa-sort";
+    return sortDirection === "asc" ? "fa-sort-up" : "fa-sort-down";
   };
 
   return (
@@ -68,39 +78,42 @@ const DonationList = () => {
                   </select>
                 </div>
               </div> */}
-              
+
               <div className="table-responsive donation-table-wrapper">
                 <table className="table donation-table">
                   <thead>
                     <tr>
-                      <th onClick={() => handleSort('donatedAt')}>
-                        Donated at <i className={`fa ${getSortIcon('donatedAt')}`}></i>
+                      <th onClick={() => handleSort("donatedAt")}>
+                        Donated at{" "}
+                        <i className={`fa ${getSortIcon("donatedAt")}`}></i>
                       </th>
-                      <th onClick={() => handleSort('donor')}>
-                        Donor <i className={`fa ${getSortIcon('donor')}`}></i>
+                      <th onClick={() => handleSort("donor")}>
+                        Donor <i className={`fa ${getSortIcon("donor")}`}></i>
                       </th>
-                      <th onClick={() => handleSort('network')}>
-                        Network <i className={`fa ${getSortIcon('network')}`}></i>
+                      <th onClick={() => handleSort("network")}>
+                        Network{" "}
+                        <i className={`fa ${getSortIcon("network")}`}></i>
                       </th>
-                      <th onClick={() => handleSort('amount')}>
-                        Amount <i className={`fa ${getSortIcon('amount')}`}></i>
+                      <th onClick={() => handleSort("amount")}>
+                        Amount <i className={`fa ${getSortIcon("amount")}`}></i>
                       </th>
-                      <th onClick={() => handleSort('usdValue')}>
-                        USD Value <i className={`fa ${getSortIcon('usdValue')}`}></i>
+                      <th onClick={() => handleSort("usdValue")}>
+                        USD Value{" "}
+                        <i className={`fa ${getSortIcon("usdValue")}`}></i>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {donations.map((donation) => (
-                      <tr 
-                        key={donation.id} 
-                        className={donation.isHighlighted ? 'highlighted' : ''}
+                      <tr
+                        key={donation.id}
+                        className={donation.isHighlighted ? "highlighted" : ""}
                       >
                         <td>{donation.donatedAt}</td>
                         <td>{donation.donor}</td>
                         <td>
                           <div className="network-cell">
-                            <i 
+                            <i
                               className={`fa ${donation.network.icon} network-icon`}
                               style={{ color: donation.network.color }}
                             ></i>
@@ -110,7 +123,9 @@ const DonationList = () => {
                         <td>
                           <div className="amount-cell">
                             {donation.amount}
-                            <span className="external-link"><i className="fa fa-external-link"></i></span>
+                            <span className="external-link">
+                              <i className="fa fa-external-link"></i>
+                            </span>
                           </div>
                         </td>
                         <td>{donation.usdValue}</td>
@@ -119,7 +134,7 @@ const DonationList = () => {
                   </tbody>
                 </table>
               </div>
-              
+
               <div className="pagination">
                 <button className="pagination-btn">Prev</button>
                 <div className="pagination-numbers">
@@ -140,12 +155,12 @@ const DonationList = () => {
                 <h3 className="sidebar-title">All time donations received</h3>
                 <h2 className="sidebar-main-title">Be the first to give!</h2>
                 <h4 className="sidebar-subtitle">Project recipient address</h4>
-                
+
                 <div className="address-list">
                   {networkAddresses.map((network, index) => (
                     <div key={index} className="address-item">
                       <div className="address-info">
-                        <i 
+                        <i
                           className={`fa ${network.icon} address-icon`}
                           style={{ color: network.color }}
                         ></i>

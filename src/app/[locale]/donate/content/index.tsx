@@ -1,12 +1,14 @@
 "use client";
 import React from "react";
-import { Modal, Form } from "react-bootstrap";
-import Image from "next/image";
 import "./style.scss";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useDonationForm } from "@/hooks/useDonationForm";
-import { useAccount } from "wagmi";
+import { useTokenList } from "@/hooks/useTokenList";
+import { useAccount, useBalance, useChainId } from "wagmi";
+import { queryWhiteTokenList } from "@/service/contract";
+import { useFundPoolManager } from "@/hooks/useFundPoolManager";
+import ModalSelect from "../modal-select";
 
 interface ContentProps {
   uid: string;
@@ -14,82 +16,78 @@ interface ContentProps {
 }
 
 const Content = ({ uid, name }: ContentProps) => {
+  const chainId = useChainId();
+  const [showTokenModal, setShowTokenModal] = React.useState(false);
+  const { getAllowedTokens } = useFundPoolManager();
   const { tokenPrices, calculateUSDValue } = useTokenPrices();
   const { tokenBalances, isConnected } = useTokenBalances();
-  const {address} = useAccount();
+  const [whiteTokenList, setWhiteTokenList] = React.useState<string[]>([]);
+  const [allowedTokens, setAllowedTokens] = React.useState<string[]>([]);
+  const { address } = useAccount();
+
+  const result = useBalance({
+    address,
+    chainId,
+  });
+
+  console.log(result, "result123");
+
+  // 使用新的token列表hook
+  const { loading: tokenListLoading } = useTokenList(
+    whiteTokenList,
+    allowedTokens,
+    tokenBalances
+  );
   const {
     formState,
     handleTokenSelect,
     handleAmountChange,
     handleConnectWallet,
-    updateFormState
   } = useDonationForm();
 
   // 解构formState
-  const { selectedToken, amount, showTokenModal, searchTerm, hideZeroBalance } = formState;
+  const { selectedToken, amount, searchTerm, hideZeroBalance } = formState;
 
-  const tokens = [
-    {
-      symbol: "ETH",
-      name: "Ethereum",
-      icon:  "fa-ethereum",
-      balance: tokenBalances.ETH || "0.0000",
-    },
-    {
-      symbol: "USDC",
-      name: "USD Coin",
-      icon:   "fa-circle",
-      balance: tokenBalances.USDC || "0.0000",
-    },
-    {
-      symbol: "USDT",
-      name: "Tether",
-      icon:  "fa-circle",
-      balance: tokenBalances.USDT || "0.0000",
-    },
-    {
-      symbol: "DAI",
-      name: "Dai Stablecoin",
-      icon:  "fa-circle",
-      balance: tokenBalances.DAI || "0.0000",
-    },
-    {
-      symbol: "AAVE",
-      name: "Aave",
-      icon:  "fa-circle",
-      balance: tokenBalances.AAVE || "0.0000",
-    },
-    {
-      symbol: "LINK",
-      name: "ChainLink Token",
-      icon:  "fa-circle",
-      balance: tokenBalances.LINK || "0.0000",
-    },
-    {
-      symbol: "UNI",
-      name: "Uniswap",
-      icon:  "fa-circle",
-      balance: tokenBalances.UNI || "0.0000",
-    },
-    {
-      symbol: "WBTC",
-      name: "Wrapped Bitcoin",
-      icon:  "fa-circle",
-      balance: tokenBalances.WBTC || "0.0000",
-    },
-  ];
+  // 代币列表现在通过ModalSelect组件处理
 
-  const filteredTokens = tokens.filter((token) => {
-    const matchesSearch =
-      token.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      token.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const hasBalance = !hideZeroBalance || parseFloat(token.balance) > 0;
-    return matchesSearch && hasBalance;
-  });
-
-  const formatStr = (str: string) => {
-    return `${str.slice(0, 6)}...${str.slice(-4)}`;
+  const getWhiteTokenList = async () => {
+    try {
+      const response = await queryWhiteTokenList();
+      console.log(response, "白名单token地址列表");
+      setWhiteTokenList(response.data || []);
+    } catch (error) {
+      console.error("获取白名单token列表失败:", error);
+    }
   };
+
+  const queryAllowedTokens = React.useCallback(async () => {
+    try {
+      const response = await getAllowedTokens();
+      setAllowedTokens(response || []);
+    } catch (error) {
+      console.error("获取允许的token列表失败:", error);
+    }
+  }, [getAllowedTokens]);
+
+  React.useEffect(() => {
+    if (isConnected && chainId) {
+      queryAllowedTokens();
+    }
+  }, [isConnected, chainId, queryAllowedTokens]);
+
+  const targetTokenList = React.useMemo(() => {
+    const res = allowedTokens.filter((token) => whiteTokenList.includes(token));
+    if (res.length > 0) {
+      return res.map(item => ({address: item}));
+    }
+    return [];
+  }, [allowedTokens, whiteTokenList]);
+
+  React.useEffect(() => {
+    getWhiteTokenList();
+  }, []);
+
+  console.log(targetTokenList, "targetTokenList");
 
   return (
     <div className="wpo-donation-page-area section-padding">
@@ -115,7 +113,7 @@ const Content = ({ uid, name }: ContentProps) => {
                   <div className="project-id-field">
                     <span className="project-text">
                       Project: {decodeURIComponent(name)} <br></br>
-                      ID: {(uid)}
+                      ID: {uid}
                     </span>
                   </div>
                 </div>
@@ -131,7 +129,7 @@ const Content = ({ uid, name }: ContentProps) => {
                       }
                       onClick={() => {
                         if (isConnected) {
-                          updateFormState({ showTokenModal: true });
+                          setShowTokenModal(true);
                         }
                       }}
                     >
@@ -189,7 +187,7 @@ const Content = ({ uid, name }: ContentProps) => {
                   <button
                     className="connect-wallet-btn"
                     onClick={handleConnectWallet}
-                    disabled={isConnected ? (!selectedToken || !amount) : false}
+                    disabled={isConnected ? !selectedToken || !amount : false}
                   >
                     {isConnected ? "Donate Now" : "Connect Wallet"}
                   </button>
@@ -200,97 +198,15 @@ const Content = ({ uid, name }: ContentProps) => {
         </div>
       </div>
 
-      {/* 代币选择Modal */}
-      <Modal
-        show={showTokenModal}
-        onHide={() => updateFormState({ showTokenModal: false })}
-        centered
-        className="token-select-modal"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Select a Token</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* 搜索框 */}
-          <div className="token-search-section">
-            <Form.Control
-              type="text"
-              placeholder="Search name or paste an address"
-              value={searchTerm}
-              onChange={(e) => updateFormState({ searchTerm: e.target.value })}
-              className="token-search-input"
-            />
-          </div>
-
-          {/* 隐藏零余额选项 */}
-          <div className="hide-zero-balance-section">
-            <Form.Check
-              type="checkbox"
-              label="Hide 0 balance tokens"
-              checked={hideZeroBalance}
-              onChange={(e) => updateFormState({ hideZeroBalance: e.target.checked })}
-              className="hide-zero-checkbox"
-            />
-          </div>
-
-          {/* 代币列表 */}
-          <div className="token-list-section">
-            {filteredTokens.map((token) => (
-              <div
-                key={token.symbol}
-                className={`token-list-item ${parseFloat(token.balance) === 0 ? "disabled" : ""}`}
-                onClick={() => {
-                  if (parseFloat(token.balance) > 0) {
-                    handleTokenSelect(token.symbol);
-                  }
-                }}
-              >
-                <div className="token-icon-container">
-                  {token.icon.startsWith("http") ? (
-                    <Image
-                      src={token.icon}
-                      alt={token.symbol}
-                      width={32}
-                      height={32}
-                      className="token-list-icon-img"
-                      onError={(e) => {
-                        // 如果图片加载失败，回退到Font Awesome图标
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = "none";
-                        const fallbackIcon =
-                          target.nextElementSibling as HTMLElement;
-                        if (fallbackIcon) {
-                          fallbackIcon.style.display = "flex";
-                        }
-                      }}
-                    />
-                  ) : null}
-                  <i
-                    className={`fa ${token.icon} token-list-icon`}
-                    style={{
-                      display: token.icon.startsWith("http") ? "none" : "flex",
-                    }}
-                  ></i>
-                  <div className="givbacks-indicator">
-                    <i className="fa fa-hand-paper givbacks-icon"></i>
-                  </div>
-                </div>
-                <div className="token-info">
-                  <div className="token-symbol">{token.symbol}</div>
-                  <div className="token-name">{token.name}</div>
-                </div>
-                <div className="token-balance">{token.balance}</div>
-              </div>
-            ))}
-          </div>
-        </Modal.Body>
-        {/* <Modal.Footer className="token-modal-footer">
-          <div className="givbacks-info">
-            <i className="fa fa-hand-paper givbacks-icon"></i>
-            <span>GIVbacks eligible tokens</span>
-          </div>
-        </Modal.Footer> */}
-      </Modal>
+      <ModalSelect
+        showTokenModal={showTokenModal}
+        changeModalState={setShowTokenModal}
+        handleTokenSelect={handleTokenSelect}
+        searchTerm={searchTerm}
+        hideZeroBalance={hideZeroBalance}
+        tokenListLoading={tokenListLoading}
+        tokenList={targetTokenList}
+      ></ModalSelect>
     </div>
   );
 };
