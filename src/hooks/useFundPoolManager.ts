@@ -36,7 +36,7 @@ interface BalanceBreakdown {
   totalAvailableProjectFunds: number;
 }
 
-interface ProjectFundStats {
+export interface ProjectFundStats {
   totalDonated: number;
   withdrawableAmount: number;
   withdrawnAmount: number;

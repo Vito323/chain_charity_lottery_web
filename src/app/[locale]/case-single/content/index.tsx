@@ -7,6 +7,7 @@ import Fundraising from "../fundraising";
 import { useRouter } from "next/navigation";
 import { projectDetail, ProjectDetailData } from "@/service/project";
 import PageTitle from "@/components/page-title";
+import { ProjectFundStats, useFundPoolManager } from "@/hooks/useFundPoolManager";
 
 interface CaseSingleProps {
   uid: string;
@@ -14,7 +15,8 @@ interface CaseSingleProps {
 
 const CaseSingle = ({ uid }: CaseSingleProps) => {
   const router = useRouter();
-
+  const { getProjectFundStats } = useFundPoolManager();
+  const [currentProjectFundStats, setCurrentProjectFundStats] = React.useState<ProjectFundStats | null>(null);
   const [detail, setDetail] = React.useState<ProjectDetailData | null>(null);
 
   // 使用 uid 参数获取项目数据
@@ -30,6 +32,22 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
   React.useEffect(() => {
     getDetail();
   }, [getDetail]);
+
+  const queryProjectFundStats = React.useCallback(async () => {
+    const response = await getProjectFundStats(uid);
+    console.log(response, 'response');
+    if (response) {
+      setCurrentProjectFundStats(response);
+    }
+  }, [getProjectFundStats, uid]);
+
+
+  React.useEffect(() => {
+    if(uid) {
+    queryProjectFundStats();
+    }
+  }, [queryProjectFundStats, uid]);
+
 
   return (
     <>
@@ -52,6 +70,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                     <Fundraising
                       totalRaised="$0.00"
                       contributors={0}
+                      projectId={uid}
                       onDonate={() => {
                         router.push(`/donate/${uid}`);
                       }}

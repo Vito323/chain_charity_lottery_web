@@ -1,15 +1,19 @@
 import React from "react";
 import "./style.css";
+import { ProjectFundStats } from "@/hooks/useFundPoolManager";
 
 interface FundraisingProps {
   totalRaised?: string;
   contributors?: number;
   onDonate?: () => void;
+  projectFundStats?: ProjectFundStats;
+  projectId?: string;
 }
 
 const Fundraising: React.FC<FundraisingProps> = ({
   totalRaised = "$0.00",
   contributors = 0,
+  projectId = '',
   onDonate,
 }) => {
   return (
@@ -28,7 +32,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
         <div className="fundraising-info">
           <div className="fundraising-info-item">
             <div className="fundraising-info-item-label">ID</div>
-            <div className="fundraising-info-item-value">{contributors.toLocaleString()}</div>
+            <div className="fundraising-info-item-value">{projectId}</div>
           </div>
         </div>
 

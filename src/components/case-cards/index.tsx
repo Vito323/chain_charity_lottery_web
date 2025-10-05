@@ -8,6 +8,8 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { useRouter } from "next/navigation";
 import "./style.css";
 import { ProjectData } from "@/service/project";
+import { ProjectFundStats, useFundPoolManager } from "@/hooks/useFundPoolManager";
+import logger from "@/utils/logger";
 dayjs.extend(relativeTime)
 interface FundraisingCardProps extends ProjectData {
   raised?: string;
@@ -24,14 +26,33 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
   id
 }) => {
   const router = useRouter();
-
+  const {getProjectFundStats} = useFundPoolManager();
   const handleCardClick = () => {
     router.push(`/case-single/${id}`);
   };
 
+  const [currentProjectFundStats, setCurrentProjectFundStats] = React.useState<ProjectFundStats | null>(null);
+
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+
+  const queryProjectFundStats = async () => {
+    try {
+      const res = await getProjectFundStats(id);
+      setCurrentProjectFundStats(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  React.useEffect(() => {
+    queryProjectFundStats();
+  }, []);
+
+  console.log(currentProjectFundStats);
+
 
   return (
     <div className="fundraising-card" onClick={handleCardClick}>
