@@ -5,11 +5,11 @@ import { WagmiProvider } from 'wagmi';
 import { Locale, RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { config } from '@/lib/wagmi';
 import { useLocale } from 'next-intl';
-import { polygonAmoy } from 'wagmi/chains';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CategoryData, queryCategories } from '@/service/project';
+import { queryCategories } from '@/service/project';
 import useGlobalStore from '@/store';
+import { polygon } from 'wagmi/chains';
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -18,8 +18,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   const getCategories = React.useCallback(async () => {
     const response = await queryCategories();
-    if(response){
-      setCategories(response as unknown as CategoryData[]);
+    if(response.ok){
+      setCategories(response.data);
     }
   }, [setCategories]);
 
@@ -32,6 +32,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
+          initialChain={polygon}
           locale={currentLocale as Locale}
           theme={lightTheme({ accentColor: '#08cc7f', accentColorForeground: '#ffffff' })}
         >

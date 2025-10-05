@@ -30,8 +30,8 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
 
   const getDetail = React.useCallback(async () => {
     const response = await projectDetail(uid);
-    if (response) {
-      setDetail(response as unknown as ProjectDetailData);
+    if (response.ok) {
+      setDetail(response.data);
     }
   }, [uid]);
 
@@ -48,7 +48,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
   }, [getProject, uid]);
 
   React.useEffect(() => {
-    if (uid && isConnected) {
+    if (uid && isConnected && chainId) {
       queryProjectFundStats();
     }
   }, [queryProjectFundStats, uid, isConnected, chainId]);
@@ -72,8 +72,8 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   </div>
                   <div className="case-fundraising-container">
                     <Fundraising
-                      totalRaised={currentProjectInfo?.withdrawableAmount || 0}
-                      contributors={currentProjectInfo?.totalDonated || 0}
+                      totalRaised={detail?.totalDonated || 0}
+                      contributors={detail?.donationCount || 0}
                       projectId={uid}
                       onDonate={() => {
                         router.push(`/donate/${uid}/${detail?.name || ""}`);

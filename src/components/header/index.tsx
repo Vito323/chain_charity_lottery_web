@@ -62,6 +62,29 @@ const ROUTE_MAP = [
 
 const Header = () => {
   const pathname = usePathname();
+
+  // 通用的动态路由匹配函数
+  const isDynamicRouteMatch = (currentPath: string, routePath: string): boolean => {
+    // 特殊处理根路由
+    if (routePath === "/") {
+      return currentPath === "/";
+    }
+    
+    // 精确匹配
+    if (currentPath === routePath) {
+      return true;
+    }
+    
+    // 简单的 startsWith 匹配（用于单层路由）
+    if (currentPath.startsWith(routePath + '/')) {
+      return true;
+    }
+    
+    // 动态路由匹配：支持 /path/*/*.* 格式
+    // 例如：/project/123/fundraising, /user/456/profile, /admin/789/settings 等
+    const dynamicRoutePattern = new RegExp(`^${routePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/[^/]+(/[^/]+)?(/.*)?$`);
+    return dynamicRoutePattern.test(currentPath);
+  };
   return (
     <div className="middle-header header-style-3">
       <HeaderTopBar />
@@ -94,7 +117,7 @@ const Header = () => {
                   {ROUTE_MAP.map((item, _i) => (
                     <li key={_i}>
                       <Link
-                        className={`${item.path === pathname ? "active" : ""}`}
+                        className={`${isDynamicRouteMatch(pathname, item.path)? "active" : ""}`}
                         href={item.path}
                         title=""
                       >

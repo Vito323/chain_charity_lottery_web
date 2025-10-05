@@ -3,10 +3,14 @@ import React from "react";
 import "./style.scss";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useDonationForm } from "@/hooks/useDonationForm";
-import { useAccount, useBalance, useChainId } from "wagmi";
+import { useAccount, useChainId } from "wagmi";
 import { queryWhiteTokenList } from "@/service/contract";
 import { useFundPoolManager } from "@/hooks/useFundPoolManager";
 import ModalSelect from "../modal-select";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { formatCurrency } from "@/utils/currency";
+import { toast } from "react-toastify";
+import Image from "next/image";
 
 interface ContentProps {
   uid: string;
@@ -16,29 +20,18 @@ interface ContentProps {
 const Content = ({ uid, name }: ContentProps) => {
   const chainId = useChainId();
   const [showTokenModal, setShowTokenModal] = React.useState(false);
-  const { getAllowedTokens } = useFundPoolManager();
+  const { donateToken } = useFundPoolManager();
   const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
   const { tokenPrices, calculateUSDValue } = useTokenPrices();
   const [tokenListLoading, setTokenListLoading] = React.useState(false);
   const [whiteTokenList, setWhiteTokenList] = React.useState<string[]>([]);
-  const [allowedTokens, setAllowedTokens] = React.useState<string[]>([]);
   const { address } = useAccount();
-
-  const result = useBalance({
-    address,
-    chainId,
-  });
-
-  console.log(result, "result123");
 
   // 使用新的token列表hook
 
-  const {
-    formState,
-    handleTokenSelect,
-    handleAmountChange,
-    handleConnectWallet,
-  } = useDonationForm();
+  const { formState, handleTokenSelect, handleAmountChange } =
+    useDonationForm();
 
   // 解构formState
   const { selectedToken, amount, searchTerm, hideZeroBalance } = formState;
@@ -47,47 +40,57 @@ const Content = ({ uid, name }: ContentProps) => {
 
   const getWhiteTokenList = async () => {
     try {
+      setTokenListLoading(true);
       const response = await queryWhiteTokenList();
-      console.log(response, "白名单token地址列表");
-      setWhiteTokenList(response.data || []);
+      if(response.ok) {
+        setWhiteTokenList(response.data || []);
+      }
     } catch (error) {
       console.error("获取白名单token列表失败:", error);
-    } finally{
-
+    } finally {
+      setTokenListLoading(false);
     }
   };
 
-  const queryAllowedTokens = React.useCallback(async () => {
-    try {
-      setTokenListLoading(true);
-      const response = await getAllowedTokens();
-      setAllowedTokens(response || []);
-    } catch (error) {
-      console.error("获取允许的token列表失败:", error);
-    } finally{
-      setTokenListLoading(false);
-    }
-  }, [getAllowedTokens]);
-
   React.useEffect(() => {
     if (isConnected && chainId) {
-      queryAllowedTokens();
+      getWhiteTokenList();
     }
-  }, [isConnected, chainId, queryAllowedTokens]);
+  }, [isConnected, chainId]);
 
   const targetTokenList = React.useMemo(() => {
-    const res = allowedTokens.filter((token) => whiteTokenList.includes(token));
-    if (res.length > 0) {
-      return res.map(item => ({address: item}));
+    if (whiteTokenList.length > 0) {
+      return whiteTokenList.map((item) => ({ address: item }));
     }
     return [];
-  }, [allowedTokens, whiteTokenList]);
+  }, [whiteTokenList]);
 
   React.useEffect(() => {
     getWhiteTokenList();
   }, []);
 
-  console.log(targetTokenList, "targetTokenList");
+  const handleConnectWallet = async () => {
+    if (isConnected) {
+      // 处理捐赠逻辑
+      try {
+        if (selectedToken) {
+          const result = await donateToken(uid, selectedToken.address!, amount);
+          if (result) {
+            toast.success("Donation successful");
+          } else {
+            toast.error("Donation failed");
+          }
+        }
+      } catch (error) {
+        console.error("Donation failed:", error);
+        toast.error("Donation failed");
+      }
+
+      console.log("Processing donation...");
+    } else {
+      openConnectModal?.();
+    }
+  };
 
   return (
     <div className="wpo-donation-page-area section-padding">
@@ -113,6 +116,12 @@ const Content = ({ uid, name }: ContentProps) => {
                   <div className="project-id-field">
                     <span className="project-text">
                       Project: {decodeURIComponent(name)} <br></br>
+                      
+                    </span>
+                  </div>
+                  <div className="project-id-field">
+                    <span className="project-text">
+  
                       ID: {uid}
                     </span>
                   </div>
@@ -134,17 +143,17 @@ const Content = ({ uid, name }: ContentProps) => {
                       }}
                     >
                       <div className="selected-token-display">
-                        {/* {selectedToken && tokenIcons[selectedToken] ? (
+                        {selectedToken && selectedToken.symbol ? (
                           <Image
-                            src={tokenIcons[selectedToken]}
-                            alt={selectedToken}
+                            src={`/icons/tokens/${selectedToken.symbol}.svg`}
+                            alt={selectedToken.symbol}
                             width={20}
                             height={20}
                             className="selected-token-icon"
                           />
-                        ) : null} */}
+                        ) : null}
                         <span className="token-label">
-                          {selectedToken || "Select Token"}
+                          {selectedToken?.symbol || "Select Token"}
                         </span>
                       </div>
                       <i className="fa fa-chevron-down dropdown-icon"></i>
@@ -162,8 +171,10 @@ const Content = ({ uid, name }: ContentProps) => {
                     <div className="usd-value-container">
                       {
                         <span className="token-price">
-                          {selectedToken ? `1 ${selectedToken} = ` : ""}$
-                          {(tokenPrices[selectedToken] || 0).toFixed(2)}
+                          {selectedToken ? `1 ${selectedToken.symbol} = ` : ""}
+                          {formatCurrency(
+                            tokenPrices[selectedToken?.symbol || ""] || 0
+                          )}
                         </span>
                       }
                     </div>
@@ -176,7 +187,7 @@ const Content = ({ uid, name }: ContentProps) => {
                     <span className="total-label">Your total donation</span>
                     <span className="total-value">
                       {amount && selectedToken
-                        ? `$${calculateUSDValue(amount, selectedToken)}`
+                        ? `$${calculateUSDValue(amount, selectedToken.symbol)}`
                         : "---"}
                     </span>
                   </div>

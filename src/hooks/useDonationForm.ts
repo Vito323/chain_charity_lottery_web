@@ -1,10 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+
+export interface TokenInfo {
+  symbol: string;
+  name: string;
+  icon?: string;
+  balance?: string;
+  decimals?: number;
+  displayBalance?: string;
+  isNative: boolean;
+  address?: string;
+}
 
 interface DonationFormState {
-  selectedToken: string;
+  selectedToken: TokenInfo | null;
   amount: string;
   showTokenModal: boolean;
   searchTerm: string;
@@ -13,10 +23,9 @@ interface DonationFormState {
 
 export const useDonationForm = () => {
   const account = useAccount();
-  const { openConnectModal } = useConnectModal();
   
   const [formState, setFormState] = useState<DonationFormState>({
-    selectedToken: '',
+    selectedToken: null,
     amount: '',
     showTokenModal: false,
     searchTerm: '',
@@ -26,7 +35,7 @@ export const useDonationForm = () => {
   // 重置表单状态
   const resetForm = () => {
     setFormState({
-      selectedToken: '',
+      selectedToken: null,
       amount: '',
       showTokenModal: false,
       searchTerm: '',
@@ -45,7 +54,7 @@ export const useDonationForm = () => {
   };
 
   // 处理代币选择
-  const handleTokenSelect = (token: string) => {
+  const handleTokenSelect = (token: TokenInfo) => {
     updateFormState({ 
       selectedToken: token, 
       showTokenModal: false 
@@ -58,21 +67,12 @@ export const useDonationForm = () => {
   };
 
   // 处理钱包连接
-  const handleConnectWallet = () => {
-    if (account.isConnected) {
-      // 处理捐赠逻辑
-      console.log('Processing donation...');
-    } else {
-      openConnectModal?.();
-    }
-  };
 
   return {
     formState,
     updateFormState,
     handleTokenSelect,
     handleAmountChange,
-    handleConnectWallet,
     resetForm,
     isConnected: account.isConnected,
     chainId: account.chainId

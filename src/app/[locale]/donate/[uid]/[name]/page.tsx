@@ -1,6 +1,5 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import PageTitle from "@/components/page-title";
 import Scrollbar from "@/components/scrollbar";
 import Content from "../../content";
 
@@ -18,10 +17,10 @@ const DonatePage = async ({ params }: DonatePageProps) => {
   return (
     <>
       <Header />
-      <PageTitle pageTitle={"Donate Now"} pagePrevs={[
+      {/* <PageTitle pageTitle={"Donate Now"} pagePrevs={[
         {label: "Project", href: `/project`},
         {label: name, href: `/project/${uid}`}
-      ]} pagesub={'Donate Now'} />
+      ]} pagesub={'Donate Now'} /> */}
       <Content uid={uid} name={name} />
       <Footer />
       <Scrollbar />

@@ -8,9 +8,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/navigation";
 import "./style.css";
 import { ProjectData } from "@/service/project";
-import {
-  useFundPoolManager,
-} from "@/hooks/useFundPoolManager";
+import { useFundPoolManager } from "@/hooks/useFundPoolManager";
 import { useAccount, useChainId } from "wagmi";
 import { formatCurrency } from "@/utils/currency";
 dayjs.extend(relativeTime);
@@ -37,6 +35,8 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
   description,
   image,
   id,
+  totalDonated,
+  donationCount,
 }) => {
   const router = useRouter();
 
@@ -70,7 +70,6 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
       queryProjectFundStats();
     }
   }, [isConnected, queryProjectFundStats, chainId]);
-
 
   return (
     <div className="fundraising-card" onClick={handleCardClick}>
@@ -115,9 +114,9 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
           </div>
           <div className="funding-details">
             <div className="contributors-info">
-              Raised from <strong>{currentProjectInfo?.totalDonated || 0}</strong> contributors
+              Raised from <strong>{donationCount || 0}</strong> contributors
             </div>
-            <div className="raised-amount">{formatCurrency(currentProjectInfo?.withdrawableAmount || 0)}</div>
+            <div className="raised-amount">{formatCurrency(totalDonated)}</div>
           </div>
         </div>
 

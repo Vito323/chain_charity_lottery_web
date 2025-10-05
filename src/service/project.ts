@@ -13,12 +13,20 @@ export interface ProjectData {
   description: string;
   image: string[];
   createdAt: string;
+  donationCount: number;
+  totalDonated: number;
 }
 
 
 export interface ProjectDetailData extends ProjectData {
   content: string;
+  categoryId: string;
+  ownerId: string;
+  beneficiary: string;
+  status: number;
+  updatedAt: string;
   tracks: TracksData[];
+  // donors: DonorData[];
 }
 
 export interface TracksData {
@@ -31,21 +39,21 @@ export interface TracksData {
 
 
 export const queryCategories = async () =>
-  action({
-    url: `/categories`,
+  action<CategoryData[]>({
+    url: `/category`,
     method: "GET",
   });
 
 
   export const queryProjects = async (categoryId: string) =>
-    action({
+    action<ProjectData[]>({
       url: `/project/${categoryId}`,
       method: "GET",
     });
 
 
     export const projectDetail = async (id: string) =>
-      action({
+      action<ProjectDetailData>({
         url: `/project/view/${id}`,
         method: "GET",
       });

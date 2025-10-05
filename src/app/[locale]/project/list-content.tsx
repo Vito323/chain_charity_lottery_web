@@ -21,8 +21,8 @@ const ListContent = ({activeTab, index, categoryId}: ListContentProps) => {
     setError(null);
     try{
       const response = await queryProjects(categoryId);
-      if(response){
-        setList(response as unknown as ProjectData[]);
+      if(response.ok){
+        setList(response.data);
       }
     }catch(error){
       console.error(error);

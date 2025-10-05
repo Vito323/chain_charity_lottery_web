@@ -3,38 +3,15 @@
 import Image from "next/image";
 import React from "react";
 import { Form, Modal } from "react-bootstrap";
-import { useAccount, useBalance, useChainId, useReadContract } from "wagmi";
+import { useAccount, useBalance, useChainId } from "wagmi";
+import { TokenInfo as DonationTokenInfo } from "@/hooks/useDonationForm";
+import { useTokenInfoList, TokenInfo as TokenInfoList } from "@/hooks/useTokenInfo";
 
-const ERC20_ABI = [
-  {
-    constant: true,
-    inputs: [{ name: "_owner", type: "address" }],
-    name: "balanceOf",
-    outputs: [{ name: "balance", type: "uint256" }],
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "decimals",
-    outputs: [{ name: "", type: "uint8" }],
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "symbol",
-    outputs: [{ name: "", type: "string" }],
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "name",
-    outputs: [{ name: "", type: "string" }],
-    type: "function",
-  },
-] as const;
+// 统一的 TokenInfo 接口，兼容两种用法
+interface UnifiedTokenInfo extends DonationTokenInfo {
+  formattedBalance?: string;
+  balance?: string;
+}
 
 // 代币图标映射
 const TOKEN_ICONS: Record<string, string> = {
@@ -50,16 +27,7 @@ const TOKEN_ICONS: Record<string, string> = {
   WBTC: "fa-circle",
 };
 
-export interface TokenInfo {
-  symbol: string;
-  name: string;
-  icon?: string;
-  balance?: string;
-  decimals?: number;
-  displayBalance?: string;
-  isNative: boolean;
-  address?: string;
-}
+// TokenInfo 接口现在从 useDonationForm 导入
 
 export interface ModalSelectProps {
   showTokenModal: boolean;
@@ -67,7 +35,7 @@ export interface ModalSelectProps {
   searchTerm: string;
   hideZeroBalance: boolean;
   tokenList: { address: string }[];
-  handleTokenSelect: (symbol: string) => void;
+  handleTokenSelect: (token: DonationTokenInfo) => void;
   propTokenListLoading?: boolean;
 }
 
@@ -83,7 +51,7 @@ const ModalSelect = ({
   const [searchTerm, setSearchTerm] = React.useState(propSearchTerm);
   const [hideZeroBalance, setHideZeroBalance] =
     React.useState(propHideZeroBalance);
-  const [filteredTokens, setFilteredTokens] = React.useState<TokenInfo[]>([]);
+  // 移除 filteredTokens state，直接使用 allTokens
   const chainId = useChainId();
   const { address } = useAccount();
 
@@ -94,9 +62,23 @@ const ModalSelect = ({
     chainId,
   });
 
-  // 构建完整的代币列表
-  const buildTokenList = React.useCallback(() => {
-    const tokens: TokenInfo[] = [];
+  // 获取 ERC20 token 信息列表 - 使用 useMemo 避免不必要的重新计算
+  const erc20TokenAddresses = React.useMemo(() => {
+    return tokenList
+      .filter(({ address }) => 
+        address && address !== "0x0000000000000000000000000000000000000000"
+      )
+      .map(({ address }) => address);
+  }, [tokenList]);
+
+  const { 
+    data: erc20TokenInfos, 
+    isLoading: erc20TokensLoading 
+  } = useTokenInfoList(erc20TokenAddresses);
+
+  // 构建完整的代币列表 - 使用 useMemo 避免无限循环
+  const allTokens = React.useMemo(() => {
+    const tokens: UnifiedTokenInfo[] = [];
 
     // 1. 添加原生代币（始终在第一位）- 使用useBalance返回的信息
     if (nativeBalance) {
@@ -124,35 +106,28 @@ const ModalSelect = ({
       });
     }
 
-    // 2. 添加ERC20代币
-    tokenList.forEach(({ address: tokenAddress }) => {
-      if (
-        tokenAddress &&
-        tokenAddress !== "0x0000000000000000000000000000000000000000"
-      ) {
+    // 2. 添加ERC20代币 - 使用 useTokenInfoList 获取的信息
+    if (erc20TokenInfos && erc20TokenInfos.length > 0) {
+      erc20TokenInfos.forEach((tokenInfo: TokenInfoList) => {
         tokens.push({
-          symbol: "",
-          name: "",
-          icon: "fa-circle",
-          balance: "0.0000",
-          decimals: 18,
+          symbol: tokenInfo.symbol,
+          name: tokenInfo.name,
+          icon: TOKEN_ICONS[tokenInfo.symbol] || "fa-circle",
+          balance: tokenInfo.formattedBalance,
+          formattedBalance: tokenInfo.formattedBalance,
+          decimals: tokenInfo.decimals,
           isNative: false,
-          address: tokenAddress,
+          address: tokenInfo.address,
         });
-      }
-    });
+      });
+    }
 
-    setFilteredTokens(tokens);
-  }, [nativeBalance, tokenList]);
-
-  // 当依赖项变化时重新构建列表
-  React.useEffect(() => {
-    buildTokenList();
-  }, [buildTokenList]);
+    return tokens;
+  }, [nativeBalance, erc20TokenInfos]);
 
   // 过滤代币列表
   const filteredTokenList = React.useMemo(() => {
-    return filteredTokens
+    return allTokens
       .filter((token) => {
         const matchesSearch =
           token.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -167,7 +142,7 @@ const ModalSelect = ({
         if (!a.isNative && b.isNative) return 1;
         return 0;
       });
-  }, [filteredTokens, searchTerm, hideZeroBalance]);
+  }, [allTokens, searchTerm, hideZeroBalance]);
 
   return (
     <Modal
@@ -204,7 +179,7 @@ const ModalSelect = ({
 
         {/* 代币列表 */}
         <div className="token-list-section">
-          {propTokenListLoading ? (
+          {(propTokenListLoading || erc20TokensLoading) ? (
             <div className="loading-tokens">
               <div className="loading-icon">
                 <i className="fa fa-spinner fa-spin"></i>
@@ -253,116 +228,39 @@ const ModalSelect = ({
 };
 
 interface TokenListItemProps {
-  token: TokenInfo;
-  handleTokenSelect: (symbol: string) => void;
+  token: UnifiedTokenInfo;
+  handleTokenSelect: (t: DonationTokenInfo) => void;
 }
 
 const TokenListItem = ({ token, handleTokenSelect }: TokenListItemProps) => {
-  const { address: accountAddress } = useAccount();
-  const chainId = useChainId();
-
-  // 获取代币信息（符号、名称、小数位数）
-  const tokenSymbolData = useReadContract({
-    address: token.address as `0x${string}`,
-    abi: ERC20_ABI,
-    functionName: "symbol",
-    chainId: chainId,
-    query: {
-      enabled:
-        !!token.address &&
-        !token.isNative &&
-        token.address !== "0x0000000000000000000000000000000000000000",
-    },
-  });
-
-  const tokenNameData = useReadContract({
-    address: token.address as `0x${string}`,
-    abi: ERC20_ABI,
-    functionName: "name",
-    chainId: chainId,
-    query: {
-      enabled:
-        !!token.address &&
-        !token.isNative &&
-        token.address !== "0x0000000000000000000000000000000000000000",
-    },
-  });
-
-  const tokenDecimalsData = useReadContract({
-    address: token.address as `0x${string}`,
-    abi: ERC20_ABI,
-    functionName: "decimals",
-    chainId: chainId,
-    query: {
-      enabled:
-        !!token.address &&
-        !token.isNative &&
-        token.address !== "0x0000000000000000000000000000000000000000",
-    },
-  });
-
-  const tokenBalanceData = useReadContract({
-    address: token.address as `0x${string}`,
-    abi: ERC20_ABI,
-    functionName: "balanceOf",
-    args: accountAddress ? [accountAddress] : undefined,
-    chainId: chainId,
-    query: {
-      enabled:
-        !!accountAddress &&
-        !!token.address &&
-        !token.isNative &&
-        token.address !== "0x0000000000000000000000000000000000000000",
-      refetchInterval: 10000,
-    },
-  });
-
-  // 构建完整的代币信息
-  const tokenInfo = React.useMemo(() => {
-    if (token.isNative) {
-      return token; // 原生代币信息已经完整
-    }
-
-    const symbol = (tokenSymbolData.data as string) || "";
-    const name = (tokenNameData.data as string) || "";
-    const decimals = Number(tokenDecimalsData.data) || 18;
-    const balance = tokenBalanceData.data
-      ? (Number(tokenBalanceData.data) / Math.pow(10, decimals)).toFixed(4)
-      : "0.0000";
-
-      return {
-        ...token,
-        symbol,
-        name,
-        decimals,
-        balance,
-        icon: TOKEN_ICONS[symbol] || "fa-circle",
-      };
-  }, [
-    token,
-    tokenSymbolData.data,
-    tokenNameData.data,
-    tokenDecimalsData.data,
-    tokenBalanceData.data,
-  ]);
-
+  // token 信息已经在父组件中完整加载，直接使用
   const handleClick = () => {
-    if (parseFloat(tokenInfo.balance || "0") > 0) {
-      handleTokenSelect(tokenInfo.symbol);
+    if (parseFloat(token.balance || "0") > 0) {
+      // 转换为 DonationTokenInfo 格式
+      const donationTokenInfo: DonationTokenInfo = {
+        symbol: token.symbol,
+        name: token.name,
+        icon: token.icon,
+        balance: token.balance,
+        decimals: token.decimals,
+        isNative: token.isNative,
+        address: token.address,
+      };
+      handleTokenSelect(donationTokenInfo);
     }
   };
 
   return (
     <div
       className={`token-list-item ${
-        parseFloat(tokenInfo.balance || "0") === 0 ? "disabled" : ""
+        parseFloat(token.balance || "0") === 0 ? "disabled" : ""
       }`}
       onClick={handleClick}
     >
       <div className="token-icon-container">
         <Image
-          src={"/icons/tokens/" + tokenInfo.symbol + ".svg"}
-          alt={tokenInfo.symbol}
+          src={"/icons/tokens/" + token.symbol + ".svg"}
+          alt={token.symbol}
           width={32}
           height={32}
           className="token-list-icon-img"
@@ -377,14 +275,14 @@ const TokenListItem = ({ token, handleTokenSelect }: TokenListItemProps) => {
           }}
         />
         <div className="givbacks-indicator">
-          <i className="fa fa-hand-paper givbacks-icon"></i>
+          <i className="fa fa-hand-paper"></i>
         </div>
       </div>
       <div className="token-info">
-        <div className="token-symbol">{tokenInfo.symbol}</div>
-        <div className="token-name">{tokenInfo.name}</div>
+        <div className="token-symbol">{token.symbol}</div>
+        <div className="token-name">{token.name}</div>
       </div>
-      <div className="token-balance">{tokenInfo.balance}</div>
+      <div className="token-balance">{token.balance}</div>
     </div>
   );
 };
