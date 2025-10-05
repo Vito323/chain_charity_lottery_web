@@ -100,14 +100,14 @@ const Covers = ({ images }: { images: string[] }) => {
       {images.length > 1 && (
         <>
           <button 
-            className="swiper-button-prev-custom slick-arrow slick-prev"
+            className="swiper-button-prev-custom"
             onClick={handlePrevClick}
             type="button"
           >
             <i className="ti-angle-left"></i>
           </button>
           <button 
-            className="swiper-button-next-custom slick-arrow slick-next"
+            className="swiper-button-next-custom"
             onClick={handleNextClick}
             type="button"
           >

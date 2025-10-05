@@ -1,12 +1,15 @@
 import MarkdownRenderer from "@/components/markdown-renderer";
 import "@/components/markdown-renderer/case-bb-styles.scss";
+import { DonorData } from "@/service/project";
+import { formatCurrency } from "@/utils/currency";
 
 interface TabAboutProps {
   markdownContent?: string;
   title?: string;
+  donors?: DonorData[];
 }
 
-const TabAbout = ({ markdownContent = '', title = '' }: TabAboutProps) => {
+const TabAbout = ({ markdownContent = '', title = '', donors = [] }: TabAboutProps) => {
  
   return (
     <div className="row">
@@ -17,9 +20,9 @@ const TabAbout = ({ markdownContent = '', title = '' }: TabAboutProps) => {
             <div className="progress-section">
               <div className="process">
                 <div className="progress">
-                  <div className="progress-bar" style={{width: '0%'}}>
+                  <div className="progress-bar" style={{width: `0%`}}>
                     <div className="progress-value">
-                      <span>0</span>%
+                      <span>{0}</span>%
                     </div>
                   </div>
                 </div>
@@ -27,13 +30,13 @@ const TabAbout = ({ markdownContent = '', title = '' }: TabAboutProps) => {
             </div>
             <ul>
               <li>
-                <span>Raised:</span> $0.00
+                <span>Raised:</span> {formatCurrency(donors.reduce((acc, donor) => acc + donor.amount, 0))}
               </li>
               <li>
-                <span>Goal:</span> $0.00
+                <span>Goal:</span> {formatCurrency(0)}
               </li>
               <li>
-                <span>Donar:</span> 0
+                <span>Donar:</span> {donors.length}
               </li>
             </ul>
             <div className="case-bb-text">
