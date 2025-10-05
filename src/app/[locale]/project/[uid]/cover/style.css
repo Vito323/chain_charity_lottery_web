@@ -118,7 +118,6 @@
 
 .swiper-button-prev-custom i {
   font-family: "themify";
-  content: "\e629";
   opacity: 1;
   color: inherit;
 }
@@ -130,7 +129,6 @@
 
 .swiper-button-next-custom i {
   font-family: "themify";
-  content: "\e628";
   opacity: 1;
   color: inherit;
 }

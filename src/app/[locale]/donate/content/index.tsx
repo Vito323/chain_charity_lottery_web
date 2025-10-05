@@ -115,13 +115,11 @@ const Content = ({ uid, name }: ContentProps) => {
                   </div>
                   <div className="project-id-field">
                     <span className="project-text">
-                      Project: {decodeURIComponent(name)} <br></br>
-                      
+                      Project: {decodeURIComponent(name)} <br></br>                    
                     </span>
                   </div>
                   <div className="project-id-field">
                     <span className="project-text">
-  
                       ID: {uid}
                     </span>
                   </div>

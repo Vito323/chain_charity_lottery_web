@@ -3,7 +3,7 @@ import { TabPanel, Tabs } from "@/components/tab";
 import TabAbout from "./tab-about";
 import TabUpdates from "./tab-updates";
 import DonationList from "./donation-list";
-import { TracksData } from "@/service/project";
+import { DonorData, TracksData } from "@/service/project";
 import { ProjectChainInfo } from "@/components/case-cards";
 
 const TABS = [
@@ -20,7 +20,7 @@ const TABS = [
   },
 ];
 
-const TabContent = ({title, content, tracks, currentProjectInfo}: {title: string, content: string, tracks: TracksData[], currentProjectInfo: ProjectChainInfo | null}) => {
+const TabContent = ({title, content, tracks, currentProjectInfo, donors}: {title: string, content: string, tracks: TracksData[], currentProjectInfo: ProjectChainInfo | null, donors: DonorData[]}) => {
   const [activeTab, setActiveTab] = React.useState(0);
 
   const targetTabs = React.useMemo(() => {
@@ -39,7 +39,7 @@ const TabContent = ({title, content, tracks, currentProjectInfo}: {title: string
   return (
     <Tabs tabBar={targetTabs} activeTab={activeTab} onTabChange={setActiveTab}>
       <TabPanel active={activeTab === 0}>
-        <TabAbout markdownContent={content} title={title} />
+        <TabAbout markdownContent={content} donors={donors} title={title} />
       </TabPanel>
       <TabPanel active={activeTab === 1}>
         <DonationList currentProjectInfo={currentProjectInfo} />

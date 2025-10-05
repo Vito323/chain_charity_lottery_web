@@ -72,8 +72,8 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   </div>
                   <div className="case-fundraising-container">
                     <Fundraising
-                      totalRaised={detail?.totalDonated || 0}
-                      contributors={detail?.donationCount || 0}
+                      totalRaised={detail?.donors.reduce((acc, donor) => acc + donor.amount, 0) || 0}
+                      contributors={detail?.donors.length || 0}
                       projectId={uid}
                       onDonate={() => {
                         router.push(`/donate/${uid}/${detail?.name || ""}`);
@@ -85,6 +85,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   title={detail?.name || ""}
                   content={detail?.content || ""}
                   tracks={detail?.tracks || []}
+                  donors={detail?.donors || []}
                   currentProjectInfo={currentProjectInfo}
                 ></TabContent>
               </div>
