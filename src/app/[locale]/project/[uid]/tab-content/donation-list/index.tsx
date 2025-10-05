@@ -34,19 +34,14 @@ const DonationList = ({
   const donations: Donation[] = [];
 
   const networkAddresses: NetworkAddress[] = [
-    // { name: "Optimism", address: "0xabcd...efgh", icon: "fa-circle", color: "#FF0420" },
-    // { name: "Arbitrum", address: "0x9876...5432", icon: "fa-shield", color: "#2D374B" },
-    // { name: "Celo", address: "0x1111...2222", icon: "fa-circle", color: "#35D07F" },
     {
       name: "Polygon",
       address: currentProjectInfo?.beneficiary || "",
       icon: "fa-circle",
       color: "#8247E5",
     },
-    // { name: "Base", address: "0x5555...6666", icon: "fa-circle", color: "#0052FF" }
   ];
 
-  console.log(currentProjectInfo, "currentProjectInfo");
 
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -104,49 +99,67 @@ const DonationList = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {donations.map((donation) => (
-                      <tr
-                        key={donation.id}
-                        className={donation.isHighlighted ? "highlighted" : ""}
-                      >
-                        <td>{donation.donatedAt}</td>
-                        <td>{donation.donor}</td>
-                        <td>
-                          <div className="network-cell">
-                            <i
-                              className={`fa ${donation.network.icon} network-icon`}
-                              style={{ color: donation.network.color }}
-                            ></i>
-                            {donation.network.name}
+                    {donations.length > 0 ? (
+                      donations.map((donation) => (
+                        <tr
+                          key={donation.id}
+                          className={donation.isHighlighted ? "highlighted" : ""}
+                        >
+                          <td>{donation.donatedAt}</td>
+                          <td>{donation.donor}</td>
+                          <td>
+                            <div className="network-cell">
+                              <i
+                                className={`fa ${donation.network.icon} network-icon`}
+                                style={{ color: donation.network.color }}
+                              ></i>
+                              {donation.network.name}
+                            </div>
+                          </td>
+                          <td>
+                            <div className="amount-cell">
+                              {donation.amount}
+                              <span className="external-link">
+                                <i className="fa fa-external-link"></i>
+                              </span>
+                            </div>
+                          </td>
+                          <td>{donation.usdValue}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="empty-state-row">
+                        <td colSpan={5} className="empty-state-cell">
+                          <div className="empty-state">
+                            <div className="empty-state-icon">
+                              <i className="fa fa-heart"></i>
+                            </div>
+                            <h3 className="empty-state-title">No Donations Yet</h3>
+                            <p className="empty-state-description">
+                              No one has donated to this project yet. Be the first supporter!
+                            </p>
                           </div>
                         </td>
-                        <td>
-                          <div className="amount-cell">
-                            {donation.amount}
-                            <span className="external-link">
-                              <i className="fa fa-external-link"></i>
-                            </span>
-                          </div>
-                        </td>
-                        <td>{donation.usdValue}</td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>
 
-              <div className="pagination">
-                <button className="pagination-btn">Prev</button>
-                <div className="pagination-numbers">
-                  <span className="page-number active">1</span>
-                  {/* <span className="page-number">2</span>
-                  <span className="page-number">3</span>
-                  <span className="page-dots">...</span>
-                  <span className="page-number">12</span>
-                  <span className="page-number">413</span> */}
+              {donations.length > 0 && (
+                <div className="pagination">
+                  <button className="pagination-btn">Prev</button>
+                  <div className="pagination-numbers">
+                    <span className="page-number active">1</span>
+                    {/* <span className="page-number">2</span>
+                    <span className="page-number">3</span>
+                    <span className="page-dots">...</span>
+                    <span className="page-number">12</span>
+                    <span className="page-number">413</span> */}
+                  </div>
+                  <button className="pagination-btn">Next</button>
                 </div>
-                <button className="pagination-btn">Next</button>
-              </div>
+              )}
             </div>
           </div>
           <div className="col-12 col-lg-4">
