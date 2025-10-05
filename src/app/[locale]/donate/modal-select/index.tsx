@@ -66,9 +66,9 @@ export interface ModalSelectProps {
   changeModalState: (state: boolean) => void;
   searchTerm: string;
   hideZeroBalance: boolean;
-  tokenListLoading: boolean;
   tokenList: { address: string }[];
   handleTokenSelect: (symbol: string) => void;
+  propTokenListLoading?: boolean;
 }
 
 const ModalSelect = ({
@@ -78,7 +78,7 @@ const ModalSelect = ({
   tokenList,
   searchTerm: propSearchTerm,
   hideZeroBalance: propHideZeroBalance,
-  tokenListLoading: propTokenListLoading,
+  propTokenListLoading,
 }: ModalSelectProps) => {
   const [searchTerm, setSearchTerm] = React.useState(propSearchTerm);
   const [hideZeroBalance, setHideZeroBalance] =
@@ -86,6 +86,7 @@ const ModalSelect = ({
   const [filteredTokens, setFilteredTokens] = React.useState<TokenInfo[]>([]);
   const chainId = useChainId();
   const { address } = useAccount();
+
 
   // 获取原生代币余额
   const { data: nativeBalance } = useBalance({

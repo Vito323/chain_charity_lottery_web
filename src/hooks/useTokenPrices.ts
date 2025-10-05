@@ -24,6 +24,7 @@ export const useTokenPrices = () => {
         "chainlink",
         "uniswap",
         "wrapped-bitcoin",
+        "polygon-ecosystem-token"
       ];
       
       const response = await fetch(
@@ -45,6 +46,7 @@ export const useTokenPrices = () => {
           chainlink: "LINK",
           uniswap: "UNI",
           "wrapped-bitcoin": "WBTC",
+          "polygon-ecosystem-token": "POL",
         };
 
         Object.entries(data).forEach(([id, priceData]) => {

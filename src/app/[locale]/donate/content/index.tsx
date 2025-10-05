@@ -2,9 +2,7 @@
 import React from "react";
 import "./style.scss";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
-import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useDonationForm } from "@/hooks/useDonationForm";
-import { useTokenList } from "@/hooks/useTokenList";
 import { useAccount, useBalance, useChainId } from "wagmi";
 import { queryWhiteTokenList } from "@/service/contract";
 import { useFundPoolManager } from "@/hooks/useFundPoolManager";
@@ -19,8 +17,9 @@ const Content = ({ uid, name }: ContentProps) => {
   const chainId = useChainId();
   const [showTokenModal, setShowTokenModal] = React.useState(false);
   const { getAllowedTokens } = useFundPoolManager();
+  const { isConnected } = useAccount();
   const { tokenPrices, calculateUSDValue } = useTokenPrices();
-  const { tokenBalances, isConnected } = useTokenBalances();
+  const [tokenListLoading, setTokenListLoading] = React.useState(false);
   const [whiteTokenList, setWhiteTokenList] = React.useState<string[]>([]);
   const [allowedTokens, setAllowedTokens] = React.useState<string[]>([]);
   const { address } = useAccount();
@@ -33,11 +32,7 @@ const Content = ({ uid, name }: ContentProps) => {
   console.log(result, "result123");
 
   // 使用新的token列表hook
-  const { loading: tokenListLoading } = useTokenList(
-    whiteTokenList,
-    allowedTokens,
-    tokenBalances
-  );
+
   const {
     formState,
     handleTokenSelect,
@@ -57,15 +52,20 @@ const Content = ({ uid, name }: ContentProps) => {
       setWhiteTokenList(response.data || []);
     } catch (error) {
       console.error("获取白名单token列表失败:", error);
+    } finally{
+
     }
   };
 
   const queryAllowedTokens = React.useCallback(async () => {
     try {
+      setTokenListLoading(true);
       const response = await getAllowedTokens();
       setAllowedTokens(response || []);
     } catch (error) {
       console.error("获取允许的token列表失败:", error);
+    } finally{
+      setTokenListLoading(false);
     }
   }, [getAllowedTokens]);
 
@@ -204,8 +204,8 @@ const Content = ({ uid, name }: ContentProps) => {
         handleTokenSelect={handleTokenSelect}
         searchTerm={searchTerm}
         hideZeroBalance={hideZeroBalance}
-        tokenListLoading={tokenListLoading}
         tokenList={targetTokenList}
+        propTokenListLoading={tokenListLoading}
       ></ModalSelect>
     </div>
   );

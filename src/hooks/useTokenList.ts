@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount, useChainId } from 'wagmi';
-import { mainnet, polygon, polygonAmoy } from 'wagmi/chains';
+import { mainnet, polygon } from 'wagmi/chains';
 
 // 代币信息接口
 interface TokenInfo {

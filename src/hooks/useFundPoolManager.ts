@@ -29,12 +29,6 @@ interface Donation {
   projectId: string;
 }
 
-interface BalanceBreakdown {
-  totalBalance: number;
-  availableTeamFunds: number;
-  availableLotteryFunds: number;
-  totalAvailableProjectFunds: number;
-}
 
 export interface ProjectFundStats {
   totalDonated: number;
