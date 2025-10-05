@@ -66,7 +66,7 @@ const Newsletter = () => {
     setEmailError("");
     try {
       const response = await subscribeEmail(email);
-      if (response.success) {
+      if (response.ok) {
         setEmail("");
         toast.success("Subscription successful! Thank you for your attention");
       }

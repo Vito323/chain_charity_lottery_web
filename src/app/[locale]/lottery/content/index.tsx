@@ -118,7 +118,7 @@ const LotteryContent: React.FC = () => {
 
   const queryLotteryConfig = async () => {
     const res = await getLotteryConfig();
-    if(res.success){
+    if(res.ok){
       setLotteryConfig(res.data);
     }
   };

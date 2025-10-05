@@ -14,9 +14,9 @@ export declare type ActionOption = {
 };
 
 export declare type ActionResult<D> = {
-  success: boolean;
-  message?: string;
-  status: string;
+  ok: boolean;
+  msg?: string;
+  code?: string;
   data: D;
 };
 
