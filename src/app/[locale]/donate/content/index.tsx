@@ -11,6 +11,8 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatCurrency } from "@/utils/currency";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 interface ContentProps {
   uid: string;
@@ -19,6 +21,8 @@ interface ContentProps {
 
 const Content = ({ uid, name }: ContentProps) => {
   const chainId = useChainId();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [showTokenModal, setShowTokenModal] = React.useState(false);
   const { donateToken, donate, isLoading: donationLoading } = useFundPoolManager();
   const { isConnected } = useAccount();
@@ -29,16 +33,10 @@ const Content = ({ uid, name }: ContentProps) => {
   const { address } = useAccount();
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [donationSuccess, setDonationSuccess] = React.useState(false);
-
-  // 使用新的token列表hook
-
   const { formState, handleTokenSelect, handleAmountChange } =
     useDonationForm();
 
-  // 解构formState
   const { selectedToken, amount, searchTerm, hideZeroBalance } = formState;
-
-  // 代币列表现在通过ModalSelect组件处理
 
   const getWhiteTokenList = async () => {
     try {
@@ -48,7 +46,7 @@ const Content = ({ uid, name }: ContentProps) => {
         setWhiteTokenList(response.data || []);
       }
     } catch (error) {
-      console.error("获取白名单token列表失败:", error);
+      console.error(error);
     } finally {
       setTokenListLoading(false);
     }
@@ -71,15 +69,30 @@ const Content = ({ uid, name }: ContentProps) => {
     getWhiteTokenList();
   }, []);
 
-  // 成功状态自动重置
+  // 处理返回上一页的逻辑
+  const handleReturnToPreviousPage = React.useCallback(() => {
+    const returnUrl = searchParams.get('returnUrl');
+    if (returnUrl) {
+      router.push(returnUrl);
+      return;
+    }
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push(`/project/${uid}`);
+    }
+  }, [searchParams, router, uid]);
+
+  // 成功状态自动重置和返回上一页
   React.useEffect(() => {
     if (donationSuccess) {
       const timer = setTimeout(() => {
         setDonationSuccess(false);
-      }, 3000); // 3秒后重置成功状态
+        handleReturnToPreviousPage();
+      }, 200);
       return () => clearTimeout(timer);
     }
-  }, [donationSuccess]);
+  }, [donationSuccess, handleReturnToPreviousPage]);
 
   const handleConnectWallet = async () => {
     if (isConnected) {
