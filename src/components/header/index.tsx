@@ -91,7 +91,7 @@ const Header = () => {
       <div className="container">
         <div className="header-content">
           <div className="row">
-            <div className="col-lg-3 col-12">
+            <div className="col-lg-6 col-12">
               <div className="logo">
                 <Link href="/" title="">
                   <div className="logo-container">
@@ -103,15 +103,15 @@ const Header = () => {
                       alt=""
                     />
                     <div>
-                      <h4 className="logo-name">ChainCharity</h4>
-                      <p className="logo-desc">Lottery</p>
+                      <h4 className="logo-name">Hawaiian Nation Charity Foundation</h4>
+                      <p className="logo-desc">ChainCharity Lottery</p>
                     </div>
                   </div>
                   {/* <img src={Logo} alt="" /> */}
                 </Link>
               </div>
             </div>
-            <div className="col-lg-9 d-lg-block d-none">
+            <div className="col-lg-6 d-lg-block d-none">
               <nav>
                 <ul>
                   {ROUTE_MAP.map((item, _i) => (

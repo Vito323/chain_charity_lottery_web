@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ChainCharity Lottery",
+  title: "Hawaiian Nation Charity Foundation",
   description: "ChainCharity Lottery",
 };
 
