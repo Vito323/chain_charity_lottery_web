@@ -1,20 +1,13 @@
 import React, { useState } from "react";
 import "./style.css";
 import { ProjectChainInfo } from "@/components/case-cards";
+import { ProjectDetailData } from "@/service/project";
+import dayjs from "dayjs";
+import { SCAN_URL } from "@/constants/enum";
 
-interface Donation {
-  id: number;
-  donatedAt: string;
-  donor: string;
-  network: {
-    name: string;
-    icon: string;
-    color: string;
-  };
-  amount: string;
-  usdValue: string;
-  isHighlighted?: boolean;
-}
+const formatStr = (str: string, start = 6, end = 4) => {
+  return `${str.slice(0, start)}...${str.slice(-end)}`;
+};
 
 interface NetworkAddress {
   name: string;
@@ -24,14 +17,14 @@ interface NetworkAddress {
 }
 
 const DonationList = ({
+  projectInfo,
   currentProjectInfo,
 }: {
+  projectInfo?: ProjectDetailData;
   currentProjectInfo: ProjectChainInfo | null;
 }) => {
   const [sortField, setSortField] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-
-  const donations: Donation[] = [];
 
   const networkAddresses: NetworkAddress[] = [
     {
@@ -44,12 +37,12 @@ const DonationList = ({
 
 
   const handleSort = (field: string) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortField(field);
-      setSortDirection("desc");
-    }
+    // if (sortField === field) {
+    //   setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    // } else {
+    //   setSortField(field);
+    //   setSortDirection("desc");
+    // }
   };
 
   const getSortIcon = (field: string) => {
@@ -80,62 +73,70 @@ const DonationList = ({
                     <tr>
                       <th onClick={() => handleSort("donatedAt")}>
                         Donated at{" "}
-                        <i className={`fa ${getSortIcon("donatedAt")}`}></i>
+                        {/* <i className={`fa ${getSortIcon("donatedAt")}`}></i> */}
                       </th>
                       <th onClick={() => handleSort("donor")}>
-                        Donor <i className={`fa ${getSortIcon("donor")}`}></i>
+                        Donor 
+                        {/* <i className={`fa ${getSortIcon("donor")}`}></i> */}
                       </th>
                       <th onClick={() => handleSort("network")}>
-                        Network{" "}
-                        <i className={`fa ${getSortIcon("network")}`}></i>
+                        Hash Tx
+                        {/* <i className={`fa ${getSortIcon("network")}`}></i> */}
                       </th>
                       <th onClick={() => handleSort("amount")}>
-                        Amount <i className={`fa ${getSortIcon("amount")}`}></i>
+                        Amount 
+                        {/* <i className={`fa ${getSortIcon("amount")}`}></i> */}
                       </th>
-                      <th onClick={() => handleSort("usdValue")}>
+                      {/* <th onClick={() => handleSort("usdValue")}>
                         USD Value{" "}
                         <i className={`fa ${getSortIcon("usdValue")}`}></i>
-                      </th>
+                      </th> */}
                     </tr>
                   </thead>
                   <tbody>
-                    {donations.length > 0 ? (
-                      donations.map((donation) => (
+                    {projectInfo?.donors && projectInfo?.donors?.length > 0 ? (
+                      projectInfo?.donors.map((donation) => (
                         <tr
-                          key={donation.id}
-                          className={donation.isHighlighted ? "highlighted" : ""}
+                          key={donation.hash}
                         >
-                          <td>{donation.donatedAt}</td>
-                          <td>{donation.donor}</td>
+                          <td>{dayjs(donation?.createdAt).format("YYYY-MM-DD HH:mm:ss")}</td>
+                          <td>{formatStr(donation?.address)}</td>
                           <td>
-                            <div className="network-cell">
+                          <div className="amount-cell">
+                              {formatStr(donation.hash, 6, 8)}
+                              <span className="external-link" onClick={() => window.open(`${SCAN_URL.POLYGON}${donation.hash}`, "_blank")}>
+                                <i className="fa fa-external-link"></i>
+                              </span>
+                            </div>
+  
+                            {/* <div className="network-cell">
                               <i
                                 className={`fa ${donation.network.icon} network-icon`}
                                 style={{ color: donation.network.color }}
                               ></i>
                               {donation.network.name}
-                            </div>
+                            </div> */}
                           </td>
                           <td>
                             <div className="amount-cell">
-                              {donation.amount}
-                              <span className="external-link">
+                              {donation.total}
+                              {/* <span className="external-link">
                                 <i className="fa fa-external-link"></i>
-                              </span>
+                              </span> */}
                             </div>
                           </td>
-                          <td>{donation.usdValue}</td>
+                          {/* <td>{donation.available}</td> */}
                         </tr>
                       ))
                     ) : (
-                      <tr className="empty-state-row">
-                        <td colSpan={5} className="empty-state-cell">
-                          <div className="empty-state">
-                            <div className="empty-state-icon">
+                      <tr className="donation-empty-state-row">
+                        <td colSpan={5} className="donation-empty-state-cell">
+                          <div className="donation-empty-state">
+                            <div className="donation-empty-state-icon">
                               <i className="fa fa-heart"></i>
                             </div>
-                            <h3 className="empty-state-title">No Donations Yet</h3>
-                            <p className="empty-state-description">
+                            <h3 className="donation-empty-state-title">No Donations Yet</h3>
+                            <p className="donation-empty-state-description">
                               No one has donated to this project yet. Be the first supporter!
                             </p>
                           </div>
@@ -145,21 +146,21 @@ const DonationList = ({
                   </tbody>
                 </table>
               </div>
-
+{/* 
               {donations.length > 0 && (
                 <div className="pagination">
                   <button className="pagination-btn">Prev</button>
                   <div className="pagination-numbers">
                     <span className="page-number active">1</span>
-                    {/* <span className="page-number">2</span>
+                    <span className="page-number">2</span>
                     <span className="page-number">3</span>
                     <span className="page-dots">...</span>
                     <span className="page-number">12</span>
-                    <span className="page-number">413</span> */}
+                    <span className="page-number">413</span>
                   </div>
                   <button className="pagination-btn">Next</button>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
           <div className="col-12 col-lg-4">

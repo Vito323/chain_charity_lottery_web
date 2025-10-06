@@ -3,7 +3,7 @@ import "./style.css";
 import { TracksData } from "@/service/project";
 import dayjs from "dayjs";
 
-const TabUpdates = ({ datas = [] }: { datas: TracksData[] }) => {
+const TabUpdates = ({ datas = [] }: { datas?: TracksData[] }) => {
   return (
     <div className="row">
       <div className="col-12">

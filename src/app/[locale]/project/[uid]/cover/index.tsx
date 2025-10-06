@@ -143,18 +143,18 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
         {images.map((image, index) => (
           <SwiperSlide key={index}>
             <div className="swiper-slide-content">
-              {!imageLoadStates[index] && (
+              {/* {!imageLoadStates[index] && (
                 <div className="image-loading">
                   <div className="loading-spinner"></div>
                   <div className="loading-text">Loading...</div>
                 </div>
-              )}
+              )} */}
               <Image
                 src={image}
                 alt={`Project Image ${index + 1}`}
                 width={800}
                 height={354}
-                className={`swiper-image ${imageLoadStates[index] ? 'loaded' : 'loading'}`}
+                className={`swiper-image loaded`}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -164,8 +164,6 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
                 }}
                 priority={index === 0}
                 unoptimized
-                onLoad={() => handleImageLoad(index)}
-                onError={() => handleImageError(index)}
               />
             </div>
           </SwiperSlide>

@@ -37,7 +37,6 @@ export interface ModalSelectProps {
   tokenList: { address: string }[];
   handleTokenSelect: (token: DonationTokenInfo) => void;
   propTokenListLoading?: boolean;
-  onRefreshBalances?: (refreshFn: () => Promise<void>) => void;
 }
 
 const ModalSelect = ({
@@ -48,7 +47,6 @@ const ModalSelect = ({
   searchTerm: propSearchTerm,
   hideZeroBalance: propHideZeroBalance,
   propTokenListLoading,
-  onRefreshBalances,
 }: ModalSelectProps) => {
   const [searchTerm, setSearchTerm] = React.useState(propSearchTerm);
   const [hideZeroBalance, setHideZeroBalance] =
@@ -82,22 +80,26 @@ const ModalSelect = ({
   // 刷新所有余额的函数
   const refreshAllBalances = React.useCallback(async () => {
     try {
+      console.log('Refreshing balances when modal opens...');
       await Promise.all([
         refetchNativeBalance(),
         refetchERC20Balances()
       ]);
+      console.log('Balances refreshed successfully');
     } catch (error) {
       console.error('Failed to refresh balances:', error);
     }
   }, [refetchNativeBalance, refetchERC20Balances]);
 
-  // 暴露刷新函数给父组件
+  // 当 modal 显示时刷新余额
   React.useEffect(() => {
-    if (onRefreshBalances) {
-      // 将刷新函数传递给父组件
-      onRefreshBalances(refreshAllBalances);
+    if (showTokenModal) {
+      refreshAllBalances();
     }
-  }, [onRefreshBalances, refreshAllBalances]);
+  }, [showTokenModal, refreshAllBalances]);
+
+
+
 
   // 构建完整的代币列表 - 使用 useMemo 避免无限循环
   const allTokens = React.useMemo(() => {

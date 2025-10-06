@@ -22,12 +22,10 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
   const { getProject } = useFundPoolManager();
   const { isConnected } = useAccount();
   const chainId = useChainId();
-  const [detail, setDetail] = React.useState<ProjectDetailData | null>(null);
+  const [detail, setDetail] = React.useState<ProjectDetailData>();
   const [currentProjectInfo, setCurrentProjectFundInfo] =
     React.useState<ProjectChainInfo | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
-  // 使用 uid 参数获取项目数据
-  console.log("Project UID:", uid);
 
   const getDetail = React.useCallback(async () => {
     try {
@@ -80,8 +78,8 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   </div>
                   <div className="case-fundraising-container">
                     <Fundraising
-                      totalRaised={detail?.donors.reduce((acc, donor) => acc + donor.amount, 0) || 0}
-                      contributors={detail?.donors.length || 0}
+                      totalRaised={detail?.totalDonated}
+                      contributors={detail?.donationCount || 0}
                       projectId={uid}
                       onDonate={() => {
                         router.push(`/donate/${uid}/${detail?.name || ""}`);
@@ -90,10 +88,7 @@ const CaseSingle = ({ uid }: CaseSingleProps) => {
                   </div>
                 </div>
                 <TabContent
-                  title={detail?.name || ""}
-                  content={detail?.content || ""}
-                  tracks={detail?.tracks || []}
-                  donors={detail?.donors || []}
+                  projectInfo={detail}
                   currentProjectInfo={currentProjectInfo}
                 ></TabContent>
               </div>

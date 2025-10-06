@@ -3,7 +3,7 @@ import { TabPanel, Tabs } from "@/components/tab";
 import TabAbout from "./tab-about";
 import TabUpdates from "./tab-updates";
 import DonationList from "./donation-list";
-import { DonorData, TracksData } from "@/service/project";
+import { DonorData, ProjectDetailData, TracksData } from "@/service/project";
 import { ProjectChainInfo } from "@/components/case-cards";
 
 const TABS = [
@@ -20,7 +20,7 @@ const TABS = [
   },
 ];
 
-const TabContent = ({title, content, tracks, currentProjectInfo, donors}: {title: string, content: string, tracks: TracksData[], currentProjectInfo: ProjectChainInfo | null, donors: DonorData[]}) => {
+const TabContent = ({projectInfo, currentProjectInfo}: {projectInfo?: ProjectDetailData, currentProjectInfo: ProjectChainInfo | null}) => {
   const [activeTab, setActiveTab] = React.useState(0);
 
   const targetTabs = React.useMemo(() => {
@@ -28,24 +28,30 @@ const TabContent = ({title, content, tracks, currentProjectInfo, donors}: {title
       if(item.label === "Updates") {
         return {
           ...item,
-          badge: tracks.length,
+          badge: projectInfo?.tracks.length,
+        }
+      }
+      if(item.label === "Donations") {
+        return {
+          ...item,
+          badge: projectInfo?.donors.length,
         }
       }
       return item;
     })
-  }, [tracks])
+  }, [projectInfo?.tracks, projectInfo?.donors])
 
 
   return (
     <Tabs tabBar={targetTabs} activeTab={activeTab} onTabChange={setActiveTab}>
       <TabPanel active={activeTab === 0}>
-        <TabAbout markdownContent={content} donors={donors} title={title} />
+        <TabAbout projectInfo={projectInfo} />
       </TabPanel>
       <TabPanel active={activeTab === 1}>
-        <DonationList currentProjectInfo={currentProjectInfo} />
+        <DonationList projectInfo={projectInfo} currentProjectInfo={currentProjectInfo} />
       </TabPanel>
       <TabPanel active={activeTab === 2}>
-        <TabUpdates datas={tracks} />
+        <TabUpdates datas={projectInfo?.tracks} />
       </TabPanel>
     </Tabs>
   );

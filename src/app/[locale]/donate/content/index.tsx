@@ -29,7 +29,6 @@ const Content = ({ uid, name }: ContentProps) => {
   const { address } = useAccount();
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [donationSuccess, setDonationSuccess] = React.useState(false);
-  const [refreshBalancesFn, setRefreshBalancesFn] = React.useState<(() => Promise<void>) | null>(null);
 
   // 使用新的token列表hook
 
@@ -109,18 +108,6 @@ const Content = ({ uid, name }: ContentProps) => {
           toast.success("Donation successful! Thank you for your support.");
           // 重置表单
           handleAmountChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
-          // 刷新余额
-          if (refreshBalancesFn) {
-            try {
-              console.log("Refreshing balances after successful donation...");
-              await refreshBalancesFn();
-              console.log("Balances refreshed successfully");
-            } catch (error) {
-              console.error("Failed to refresh balances:", error);
-            }
-          } else {
-            console.warn("Refresh balances function not available");
-          }
         } else {
           toast.error("Donation failed. Please try again.");
         }
@@ -290,7 +277,6 @@ const Content = ({ uid, name }: ContentProps) => {
         hideZeroBalance={hideZeroBalance}
         tokenList={targetTokenList}
         propTokenListLoading={tokenListLoading}
-        onRefreshBalances={setRefreshBalancesFn}
       ></ModalSelect>
     </div>
   );

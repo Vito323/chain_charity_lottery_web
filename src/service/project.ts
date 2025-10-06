@@ -27,19 +27,17 @@ export interface ProjectDetailData extends ProjectData {
   updatedAt: string;
   tracks: TracksData[];
   donors: DonorData[];
+  goal: number;
 }
 
 export interface DonorData {
-  id: string;
-  projectId: string;
   address: string;
-  amount: number;
-  token: string;
-  timestamp: number;
-  status: number;
-  hash: string;
+  available: string;
   createdAt: string;
-  updatedAt: string;
+  hash: string;
+  timestamp: number;
+  token: string;
+  total: string;
 }
 
 export interface TracksData {

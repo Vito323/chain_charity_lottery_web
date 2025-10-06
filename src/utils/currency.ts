@@ -3,7 +3,7 @@
  */
 
 /**
- * 格式化美金金额，添加千分位逗号
+ * 格式化美金金额，添加千分位逗号（不进行四舍五入）
  * @param amount 金额（数字或字符串）
  * @param currency 货币符号，默认为 '$'
  * @param decimals 小数位数，默认为 2
@@ -11,7 +11,7 @@
  * 
  * @example
  * formatCurrency(1234567) // "$1,234,567.00"
- * formatCurrency(1234567.89, '$', 2) // "$1,234,567.89"
+ * formatCurrency(1234567.896, '$', 2) // "$1,234,567.89" (截断而不是四舍五入)
  * formatCurrency("1500000") // "$1,500,000.00"
  */
 export function formatCurrency(
@@ -27,25 +27,29 @@ export function formatCurrency(
     return `${currency}0.00`;
   }
   
-  // 使用 Intl.NumberFormat 进行格式化
+  // 使用 Math.floor 截断小数位，不进行四舍五入
+  const multiplier = Math.pow(10, decimals);
+  const truncatedAmount = Math.floor(numAmount * multiplier) / multiplier;
+  
+  // 使用 Intl.NumberFormat 进行格式化（只用于千分位分隔符）
   const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
   
-  return `${currency}${formatter.format(numAmount)}`;
+  return `${currency}${formatter.format(truncatedAmount)}`;
 }
 
 /**
- * 格式化美金金额，自动处理小数位
+ * 格式化美金金额，自动处理小数位（不进行四舍五入）
  * @param amount 金额（数字或字符串）
  * @param currency 货币符号，默认为 '$'
  * @returns 格式化后的货币字符串（整数不显示小数位，小数保留2位）
  * 
  * @example
  * formatCurrencyAuto(1234567) // "$1,234,567"
- * formatCurrencyAuto(1234567.89) // "$1,234,567.89"
- * formatCurrencyAuto(1500000.5) // "$1,500,000.5"
+ * formatCurrencyAuto(1234567.896) // "$1,234,567.89" (截断而不是四舍五入)
+ * formatCurrencyAuto(1500000.5) // "$1,500,000.50"
  */
 export function formatCurrencyAuto(
   amount: number | string,
@@ -57,8 +61,10 @@ export function formatCurrencyAuto(
     return `${currency}0`;
   }
   
-  // 判断是否为整数
-  const isInteger = numAmount % 1 === 0;
+  // 判断是否为整数（使用截断后的值）
+  const multiplier = Math.pow(10, 2);
+  const truncatedAmount = Math.floor(numAmount * multiplier) / multiplier;
+  const isInteger = truncatedAmount % 1 === 0;
   const decimals = isInteger ? 0 : 2;
   
   return formatCurrency(numAmount, currency, decimals);

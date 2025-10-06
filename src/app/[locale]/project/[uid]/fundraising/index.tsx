@@ -32,8 +32,8 @@ const Fundraising: React.FC<FundraisingProps> = ({
 
         <div className="fundraising-info">
           <div className="project-id-tag">
-            ID:
-            {projectId}
+            <span>ID:</span>
+            <span>{projectId}</span>
           </div>
         </div>
 
