@@ -1,0 +1,287 @@
+.cosmos-developers {
+  padding: 120px 0;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1a1a2e 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmos-developers::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.cosmos-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-developers-content {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.cosmos-developers-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cosmos-developers-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.cosmos-developers-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.cosmos-developers-subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #6366f1;
+  margin-bottom: 2rem;
+}
+
+.cosmos-developers-description {
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cosmos-developer-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.cosmos-developer-feature {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2.5rem;
+  display: flex;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.6s ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmos-developer-feature::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cosmos-developer-feature:hover {
+  transform: translateY(-10px);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+}
+
+.cosmos-developer-feature:hover::before {
+  opacity: 1;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cosmos-developer-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-developer-emoji {
+  font-size: 1.5rem;
+}
+
+.cosmos-developer-content {
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-developer-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.cosmos-developer-description {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cosmos-developer-tools {
+  text-align: center;
+}
+
+.cosmos-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cosmos-tool-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.6s ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmos-tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cosmos-tool-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+}
+
+.cosmos-tool-card:hover::before {
+  opacity: 1;
+}
+
+.cosmos-tool-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-tool-emoji {
+  font-size: 2rem;
+}
+
+.cosmos-tool-content {
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-tool-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.cosmos-tool-description {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.cosmos-tool-action {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cosmos-tool-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .cosmos-developers {
+    padding: 80px 0;
+  }
+  
+  .cosmos-developers-title {
+    font-size: 2.5rem;
+  }
+  
+  .cosmos-developers-subtitle {
+    font-size: 1.5rem;
+  }
+  
+  .cosmos-developer-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .cosmos-developer-feature {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .cosmos-tools-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,790 @@
+.modern-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  transition: all 0.3s ease;
+
+  &.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-bottom-color: rgba(226, 232, 240, 0.8);
+  }
+
+  .navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+  }
+
+  // 品牌区域
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    z-index: 1001;
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      gap: 12px;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .brand-icon {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          right: 2px;
+          bottom: 2px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        .icon-aperture {
+          position: relative;
+          width: 20px;
+          height: 20px;
+          z-index: 2;
+
+          .aperture-segment {
+            position: absolute;
+            width: 8px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+            top: 50%;
+            left: 50%;
+            transform-origin: left center;
+
+            &:nth-child(1) {
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            &:nth-child(2) {
+              transform: translate(-50%, -50%) rotate(45deg);
+            }
+            &:nth-child(3) {
+              transform: translate(-50%, -50%) rotate(90deg);
+            }
+            &:nth-child(4) {
+              transform: translate(-50%, -50%) rotate(135deg);
+            }
+          }
+        }
+      }
+    }
+
+    .brand-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      letter-spacing: -0.025em;
+    }
+  }
+
+  // 桌面端导航
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-item {
+      position: relative;
+
+      &.dropdown {
+        .nav-link {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          background: none;
+          border: none;
+          padding: 12px 24px;
+          color: #64748b;
+          font-weight: 500;
+          font-size: 0.95rem;
+          border-radius: 8px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+          &:hover {
+            color: #1e293b;
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-1px);
+          }
+
+          .dropdown-arrow {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            color: #94a3b8;
+          }
+        }
+      }
+    }
+
+    .nav-link {
+      position: relative;
+      display: block;
+      padding: 12px 24px;
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: transparent;
+      border: none;
+
+      &:hover {
+        color: #1e293b;
+        text-decoration: none;
+        transform: translateY(-1px);
+        background: rgba(59, 130, 246, 0.05);
+      }
+
+      &.active {
+        color: #1e293b;
+        font-weight: 600;
+        background: rgba(59, 130, 246, 0.1);
+      }
+
+      .nav-indicator {
+        display: none;
+      }
+    }
+
+    // 下拉菜单样式
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      z-index: 1000;
+      min-width: 200px;
+      padding: 8px;
+
+      .dropdown-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .dropdown-item {
+        .dropdown-link {
+          display: block;
+          padding: 12px 16px;
+          text-decoration: none;
+          color: #64748b;
+          font-weight: 500;
+          font-size: 0.9rem;
+          border-radius: 8px;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+
+          &:hover {
+            color: #1e293b;
+            background: rgba(59, 130, 246, 0.08);
+            text-decoration: none;
+            transform: translateX(4px);
+          }
+
+          &:active {
+            transform: translateX(2px);
+          }
+        }
+      }
+    }
+  }
+
+  // 语言切换器和Connect Wallet 按钮
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    // 语言切换器
+    .language-switcher {
+      position: relative;
+
+      .language-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(226, 232, 240, 0.6);
+        border-radius: 12px;
+        color: #475569;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        min-width: 80px;
+        justify-content: center;
+        height: 40px;
+
+        &:hover {
+          background: rgba(255, 255, 255, 1);
+          border-color: rgba(59, 130, 246, 0.4);
+          color: #1e293b;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .current-language {
+          font-size: 1.2rem;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .dropdown-arrow {
+          font-size: 0.6rem;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: #64748b;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 12px;
+          height: 12px;
+          line-height: 1;
+        }
+      }
+
+      .language-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        z-index: 1000;
+        min-width: 160px;
+        padding: 8px;
+
+        .language-option {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+          padding: 12px 16px;
+          background: none;
+          border: none;
+          color: #64748b;
+          font-size: 0.9rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 8px;
+          margin-bottom: 4px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          &:hover {
+            background: rgba(59, 130, 246, 0.08);
+            color: #1e293b;
+            transform: translateX(4px);
+          }
+
+          &.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+            color: #1e293b;
+            font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+          }
+
+          .flag {
+            font-size: 1.1rem;
+            line-height: 1;
+          }
+
+          .name {
+            font-size: 0.9rem;
+            line-height: 1;
+          }
+        }
+      }
+    }
+
+    .connect-wallet-btn {
+      position: relative;
+      padding: 0;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 12px rgba(30, 41, 59, 0.25);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: linear-gradient(135deg, #334155, #475569);
+        box-shadow: 0 6px 20px rgba(30, 41, 59, 0.35);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(30, 41, 59, 0.2);
+      }
+
+      .btn-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 10px 20px;
+        line-height: 1;
+      }
+
+      .ripple {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+    }
+  }
+
+  // 移动端菜单按钮
+  .mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+
+    .hamburger-line {
+      width: 24px;
+      height: 2px;
+      background: #1e293b;
+      border-radius: 1px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+      position: absolute;
+
+      &:nth-child(1) {
+        top: 12px;
+      }
+
+      &:nth-child(2) {
+        top: 19px;
+      }
+
+      &:nth-child(3) {
+        top: 26px;
+      }
+    }
+  }
+
+  // 移动端菜单
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+    .mobile-menu-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mobile-nav-item {
+      .mobile-nav-link {
+        display: block;
+        padding: 18px 20px;
+        text-decoration: none;
+        color: #64748b;
+        font-weight: 500;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        background: transparent;
+        border: 1px solid transparent;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          border-radius: 12px;
+        }
+
+        &:hover {
+          color: #1e293b;
+          text-decoration: none;
+          background: rgba(59, 130, 246, 0.08);
+          transform: translateX(8px);
+          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+          border-color: rgba(59, 130, 246, 0.2);
+
+          &::before {
+            opacity: 1;
+          }
+        }
+
+        &.active {
+          color: #1e293b;
+          font-weight: 600;
+          background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.08));
+          border: 1px solid rgba(59, 130, 246, 0.3);
+          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+          transform: translateX(4px);
+
+          &::before {
+            opacity: 1;
+          }
+
+          &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+            border-radius: 0 2px 2px 0;
+            transform: translateY(-50%);
+          }
+        }
+      }
+
+      // 移动端下拉菜单
+      .mobile-dropdown {
+        .mobile-dropdown-trigger {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 18px 20px;
+          background: transparent;
+          border: 1px solid transparent;
+          color: #64748b;
+          font-weight: 500;
+          font-size: 1.1rem;
+          border-radius: 12px;
+          margin-bottom: 8px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+
+          &:hover {
+            color: #1e293b;
+            background: rgba(59, 130, 246, 0.08);
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.2);
+          }
+
+          .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            color: #94a3b8;
+          }
+        }
+
+        .mobile-dropdown-content {
+          margin-left: 20px;
+          margin-bottom: 8px;
+          border-left: 2px solid rgba(59, 130, 246, 0.2);
+          padding-left: 16px;
+
+          .mobile-dropdown-item {
+            .mobile-dropdown-link {
+              display: block;
+              padding: 14px 16px;
+              text-decoration: none;
+              color: #64748b;
+              font-weight: 500;
+              font-size: 1rem;
+              border-radius: 8px;
+              margin-bottom: 4px;
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              position: relative;
+
+              &:hover {
+                color: #1e293b;
+                background: rgba(59, 130, 246, 0.08);
+                text-decoration: none;
+                transform: translateX(4px);
+              }
+
+              &:active {
+                transform: translateX(2px);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .mobile-language-switcher {
+      margin: 20px 0;
+      padding: 20px 0;
+      border-top: 1px solid rgba(226, 232, 240, 0.3);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+
+      .language-options {
+        display: flex;
+        gap: 12px;
+
+        .mobile-language-option {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px 20px;
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(226, 232, 240, 0.6);
+          border-radius: 12px;
+          color: #475569;
+          font-size: 0.9rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+          &:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #1e293b;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+          }
+
+          &:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+
+          &.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #1e293b;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+          }
+
+          .flag {
+            font-size: 1.2rem;
+            line-height: 1;
+          }
+
+          .name {
+            font-size: 0.9rem;
+            line-height: 1;
+          }
+        }
+      }
+    }
+
+    .mobile-connect-btn {
+      margin-top: 8px;
+
+      .connect-wallet-btn.mobile {
+        width: 100%;
+        padding: 0;
+        background: linear-gradient(135deg, #1e293b, #334155);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: linear-gradient(135deg, #334155, #475569);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 15px rgba(30, 41, 59, 0.3);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    .navbar-container {
+      padding: 0 16px;
+      height: 60px;
+    }
+
+    .desktop-nav {
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+    }
+
+    .navbar-brand {
+      .brand-name {
+        font-size: 1.25rem;
+      }
+
+      .brand-icon {
+        width: 32px;
+        height: 32px;
+
+        .icon-circle {
+          width: 32px;
+          height: 32px;
+
+          .icon-aperture {
+            width: 16px;
+            height: 16px;
+
+            .aperture-segment {
+              width: 6px;
+              height: 1.5px;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-actions {
+      .language-switcher {
+        display: none;
+      }
+      
+      .connect-wallet-btn {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navbar-container {
+      padding: 0 12px;
+    }
+
+    .navbar-brand {
+      .brand-name {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// 焦点样式（可访问性）
+.modern-navbar {
+  .nav-link:focus-visible,
+  .connect-wallet-btn:focus-visible,
+  .mobile-menu-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+// 减少动画偏好设置
+@media (prefers-reduced-motion: reduce) {
+  .modern-navbar {
+    .icon-circle {
+      animation: none !important;
+    }
+    
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}

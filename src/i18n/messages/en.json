@@ -1,5 +1,12 @@
 {
   "home": {
     "hello": "Hello World"
+  },
+  "navigation": {
+    "home": "Home",
+    "projects": "Projects",
+    "lottery": "Lottery",
+    "connectWallet": "Connect Wallet",
+    "language": "Language"
   }
 }

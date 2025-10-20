@@ -1,0 +1,246 @@
+.ecosystem-section {
+  padding: 120px 0;
+  background: #000000;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(153, 69, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 80px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .section-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+
+      @media (max-width: 768px) {
+        font-size: 2.5rem;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 2rem;
+      }
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      font-weight: 400;
+
+      @media (max-width: 768px) {
+        font-size: 1.125rem;
+      }
+    }
+
+    .explore-btn {
+      background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+      color: #000000;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 20px 40px rgba(153, 69, 255, 0.4);
+      }
+    }
+  }
+
+  .ecosystem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    margin-top: 80px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+  }
+
+  .ecosystem-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-8px);
+    }
+
+    .card-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      position: relative;
+      overflow: hidden;
+
+      .icon-emoji {
+        font-size: 2.5rem;
+        z-index: 2;
+        position: relative;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+        border-radius: 20px;
+      }
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-description {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+      margin-bottom: 0;
+    }
+
+    .card-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      opacity: 0;
+      border-radius: 50%;
+      filter: blur(60px);
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    &:hover .card-glow {
+      opacity: 0.3;
+    }
+
+    // 特殊动画效果
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+
+    &:hover::after {
+      left: 100%;
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 1024px) {
+    padding: 80px 0;
+
+    .section-header {
+      margin-bottom: 60px;
+
+      .section-title {
+        font-size: 3rem;
+      }
+    }
+
+    .ecosystem-grid {
+      margin-top: 60px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 60px 0;
+
+    .section-header {
+      margin-bottom: 40px;
+
+      .section-title {
+        font-size: 2.5rem;
+      }
+
+      .section-subtitle {
+        font-size: 1.125rem;
+      }
+    }
+
+    .ecosystem-grid {
+      margin-top: 40px;
+      grid-template-columns: 1fr;
+    }
+
+    .ecosystem-card {
+      padding: 24px 20px;
+
+      .card-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+
+        .icon-emoji {
+          font-size: 2rem;
+        }
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+      }
+
+      .card-description {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

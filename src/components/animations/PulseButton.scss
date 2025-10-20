@@ -1,0 +1,74 @@
+.pulse-button {
+  position: relative;
+  background: #1e293b;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:hover:not(.disabled) {
+    background: #334155;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(30, 41, 59, 0.3);
+  }
+
+  &:active:not(.disabled) {
+    transform: translateY(0);
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .button-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: all 0.6s ease;
+  }
+
+  &.pulsing .pulse-ring {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}
+
+// Variant styles
+.pulse-button.primary {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  
+  &:hover:not(.disabled) {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+  }
+}
+
+.pulse-button.secondary {
+  background: transparent;
+  color: #1e293b;
+  border: 2px solid #e2e8f0;
+  
+  &:hover:not(.disabled) {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+}
+
+
+

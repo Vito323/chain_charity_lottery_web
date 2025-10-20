@@ -3,20 +3,42 @@ import Newsletter from '../newsletter'
 import './style.css'
 import Link from 'next/link'
 import Image from "next/image";
+import { useScrollAnimation, useStaggeredAnimation } from '@/hooks/useScrollAnimation';
 
 const Footer = () =>{
+    const { elementRef: footerRef } = useScrollAnimation({
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        delay: 0.2
+    });
+
+    const { containerRef: upperFooterRef } = useStaggeredAnimation('.widget', {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        delay: 0.3
+    });
+
+    const { elementRef: lowerFooterRef } = useScrollAnimation({
+        y: 30,
+        opacity: 0,
+        duration: 0.6,
+        delay: 0.5
+    });
 
     const ClickHandler = () =>{
         window.scrollTo(10, 0);
      }
 
   return(
-    <footer className="wpo-site-footer">
+    <footer ref={footerRef} className="wpo-site-footer">
         <Newsletter />
         <div className="wpo-upper-footer">
             <div className="container">
                 <div className="row">
-                    <div className="col col-lg-3 col-md-6 col-sm-12">
+                    <div ref={upperFooterRef as React.RefObject<HTMLDivElement>} className="col col-lg-3 col-md-6 col-sm-12">
                         <div className="widget about-widget">
                             <div className="logo widget-title">
                             <Image
@@ -71,7 +93,7 @@ const Footer = () =>{
                 </div>
             </div>
         </div>
-        <div className="wpo-lower-footer">
+        <div ref={lowerFooterRef as React.RefObject<HTMLDivElement>} className="wpo-lower-footer">
             <div className="container">
                 <div className="row">
                     <div className="col col-xs-12">

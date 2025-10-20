@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Sora } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import "./globals.css";
 import "@/styles/flaticon.css";
@@ -9,14 +9,10 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { Providers } from "./providers";
 import { getLocale } from 'next-intl/server';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"]
 });
 
 export const metadata: Metadata = {
@@ -32,9 +28,7 @@ export default async function RootLayout({ children }: Props) {
   const locale = await getLocale();
   return (
     <html lang={locale}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${sora.variable} antialiased font-sans`}>
         <div className="App" id="scrool">
           <NextIntlClientProvider locale={locale}>
             <Providers>{children}</Providers>

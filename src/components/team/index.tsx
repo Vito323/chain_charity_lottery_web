@@ -1,18 +1,46 @@
+"use client";
 import "./style.scss";
 import Image from "next/image";
+import { useScrollAnimation, useStaggeredAnimation } from '@/hooks/useScrollAnimation';
+
 const OurTeam = () => {
+  const { elementRef: sectionRef } = useScrollAnimation({
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    delay: 0.2
+  });
+
+  const { containerRef: headerRef } = useStaggeredAnimation('.title-line, .slogan', {
+    y: 40,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    delay: 0.3
+  });
+
+  const { containerRef: speakersRef } = useStaggeredAnimation('.speaker-item', {
+    y: 80,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    delay: 0.5
+  });
+
   return (
-    <section className="our-speakers speakers-home-two">
+    <section ref={sectionRef} className="our-speakers speakers-home-two">
       <div className="bg-img"></div>
       {/* <span className="title-position title-position-left">Speakers</span>
       <span className="title-position title-position-right">Experts</span> */}
       <div className="container">
-        <h2 className="title-line">Our Team</h2>
-        <p className="slogan">
-          They possess the secret knowledge and interesting experience of
-          creating a digital product.
-        </p>
-        <div className="our-speakers-cover">
+        <div ref={headerRef}>
+          <h2 className="title-line">Our Team</h2>
+          <p className="slogan">
+            They possess the secret knowledge and interesting experience of
+            creating a digital product.
+          </p>
+        </div>
+        <div ref={speakersRef} className="our-speakers-cover">
           <div className="speaker-item">
             <div className="speaker-item-img">
               <Image

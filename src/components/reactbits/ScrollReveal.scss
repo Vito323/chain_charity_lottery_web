@@ -1,0 +1,27 @@
+.scroll-reveal {
+  will-change: transform, opacity;
+}
+
+// Stagger animation for multiple children
+.scroll-reveal-stagger {
+  .scroll-reveal {
+    &:nth-child(1) { animation-delay: 0ms; }
+    &:nth-child(2) { animation-delay: 100ms; }
+    &:nth-child(3) { animation-delay: 200ms; }
+    &:nth-child(4) { animation-delay: 300ms; }
+    &:nth-child(5) { animation-delay: 400ms; }
+    &:nth-child(6) { animation-delay: 500ms; }
+  }
+}
+
+// Performance optimization
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+
+

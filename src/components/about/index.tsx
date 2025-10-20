@@ -1,17 +1,39 @@
+"use client";
 import "./style.css";
 import VideoModal from "../modal-video";
 import Link from "next/link";
+import { useScrollAnimation, useStaggeredAnimation } from '@/hooks/useScrollAnimation';
 
 const About = () => {
-  //   const ClickHandler = () => {
-  //     window.scrollTo(10, 0);
-  //   };
+  const { elementRef: sectionRef } = useScrollAnimation({
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    delay: 0.2
+  });
+
+  const { containerRef: textContentRef } = useStaggeredAnimation('.wpo-about-text > *', {
+    y: 40,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.15,
+    delay: 0.3
+  });
+
+  const { elementRef: imageRef } = useScrollAnimation({
+    x: 50,
+    opacity: 0,
+    duration: 1,
+    delay: 0.5,
+    ease: "power3.out"
+  });
+
   return (
-    <div className="wpo-about-area section-padding">
+    <div ref={sectionRef} className="wpo-about-area section-padding">
       <div className="container">
         <div className="row">
           <div className="col-lg-6 col-md-12 colsm-12">
-            <div className="wpo-about-text">
+            <div ref={textContentRef} className="wpo-about-text">
               <div className="wpo-section-title">
                 <span>What We Do?</span>
                 <h2>We Are In A Mission To Help The Helpless</h2>
@@ -40,7 +62,7 @@ const About = () => {
             </div>
           </div>
           <div className="col-lg-6 col-md-12 colsm-12">
-            <div className="wpo-about-img-3">
+            <div ref={imageRef} className="wpo-about-img-3">
               <img src={"/images/about3.png"} alt="" />
             </div>
           </div>

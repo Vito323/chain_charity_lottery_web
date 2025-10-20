@@ -4,11 +4,27 @@ import "./style.css";
 import { subscribeEmail } from "@/service/general";
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
+import { useScrollAnimation, useStaggeredAnimation } from '@/hooks/useScrollAnimation';
 
 const Newsletter = () => {
   const [email, setEmail] = React.useState<string>("");
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [emailError, setEmailError] = React.useState<string>("");
+
+  const { elementRef: sectionRef } = useScrollAnimation({
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    delay: 0.2
+  });
+
+  const { containerRef: contentRef } = useStaggeredAnimation('.wpo-newsletter > *', {
+    y: 40,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    delay: 0.3
+  });
 
 
   const validateEmail = (email: string): boolean => {
@@ -76,11 +92,11 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="wpo-news-letter-section">
+    <section ref={sectionRef} className="wpo-news-letter-section">
       <div className="container">
         <div className="row">
           <div className="col col-md-6 offset-lg-3 col-sm-8 offset-md-2">
-            <div className="wpo-newsletter">
+            <div ref={contentRef} className="wpo-newsletter">
               <h3>Follow us for further information</h3>
               <div className="wpo-newsletter-form">
                 <form>

@@ -1,0 +1,188 @@
+.cosmos-stats {
+  padding: 100px 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmos-stats::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.cosmos-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-stats-content {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.cosmos-stats-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cosmos-stats-title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cosmos-stats-description {
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+}
+
+.cosmos-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.cosmos-stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmos-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cosmos-stat-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1);
+}
+
+.cosmos-stat-card:hover::before {
+  opacity: 1;
+}
+
+.cosmos-stat-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #6366f1;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-stat-label {
+  font-size: 1.1rem;
+  color: #b0b0b0;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
+}
+
+.cosmos-stats-cta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cosmos-cta-button {
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.cosmos-cta-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+}
+
+.cosmos-cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+.cosmos-cta-secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cosmos-cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .cosmos-stats {
+    padding: 80px 0;
+  }
+  
+  .cosmos-stats-title {
+    font-size: 2.5rem;
+  }
+  
+  .cosmos-stats-description {
+    font-size: 1.1rem;
+  }
+  
+  .cosmos-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .cosmos-stat-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .cosmos-stat-number {
+    font-size: 2.5rem;
+  }
+  
+  .cosmos-stats-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+}

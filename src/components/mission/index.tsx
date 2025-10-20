@@ -1,18 +1,42 @@
+"use client";
 import './style.css'
+import { useScrollAnimation, useStaggeredAnimation } from '@/hooks/useScrollAnimation';
 
 const Mission = (props: { subclass?: string }) => {
+    const { elementRef: sectionRef } = useScrollAnimation({
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        delay: 0.2
+    });
+
+    const { containerRef: titleRef } = useStaggeredAnimation('.wpo-section-title', {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.1
+    });
+
+    const { containerRef: missionItemsRef } = useStaggeredAnimation('.wpo-mission-item', {
+        y: 60,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        delay: 0.3
+    });
+
     return(
-        <div className={`wpo-mission-area ${props.subclass}`}>
+        <div ref={sectionRef} className={`wpo-mission-area ${props.subclass}`}>
             <div className="container">
                 <div className="row">
                     <div className="col-12">
-                        <div className="wpo-section-title">
+                        <div ref={titleRef} className="wpo-section-title">
                             <span>What We Do?</span>
                             <h2>We Are In A Mission To Help The Helpless</h2>
                         </div>
                     </div>
                 </div>
-                <div className="wpo-mission-wrap">
+                <div ref={missionItemsRef} className="wpo-mission-wrap">
                     <div className="row">
                         <div className="col-lg-3 col-md-6 col-sm-12 col-12 custom-grid">
                             <div className="wpo-mission-item">

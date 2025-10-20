@@ -1,0 +1,182 @@
+.stalwart-features {
+  padding: 120px 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.stalwart-features::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.stalwart-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.stalwart-features-content {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.stalwart-features-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stalwart-features-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.stalwart-features-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.stalwart-features-description {
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.stalwart-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.stalwart-feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.6s ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.stalwart-feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stalwart-feature-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1);
+}
+
+.stalwart-feature-card:hover::before {
+  opacity: 1;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stalwart-feature-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--feature-color, #6366f1);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+}
+
+.stalwart-feature-emoji {
+  font-size: 1.5rem;
+}
+
+.stalwart-feature-content {
+  position: relative;
+  z-index: 2;
+}
+
+.stalwart-feature-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.stalwart-feature-description {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.stalwart-feature-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--feature-color, #6366f1);
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stalwart-feature-card:hover .stalwart-feature-accent {
+  opacity: 1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .stalwart-features {
+    padding: 80px 0;
+  }
+  
+  .stalwart-features-title {
+    font-size: 2.5rem;
+  }
+  
+  .stalwart-features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stalwart-feature-card {
+    padding: 2rem;
+  }
+}

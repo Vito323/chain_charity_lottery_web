@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 import { Locale, RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
@@ -15,6 +17,7 @@ const queryClient = new QueryClient();
 export function Providers({ children }: { children: React.ReactNode }) {
   const currentLocale = useLocale();
   const setCategories = useGlobalStore((state) => state.setCategories);
+  const pathname = usePathname();
 
   const getCategories = React.useCallback(async () => {
     const response = await queryCategories();
@@ -36,7 +39,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
           locale={currentLocale as Locale}
           theme={lightTheme({ accentColor: '#08cc7f', accentColorForeground: '#ffffff' })}
         >
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
           <ToastContainer></ToastContainer>
         </RainbowKitProvider>
       </QueryClientProvider>

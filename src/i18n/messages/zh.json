@@ -1,5 +1,12 @@
 {
   "home": {
     "hello": "你好，世界"
+  },
+  "navigation": {
+    "home": "首页",
+    "projects": "项目",
+    "lottery": "抽奖",
+    "connectWallet": "连接钱包",
+    "language": "语言"
   }
 }
