@@ -117,7 +117,7 @@ export const useCounterAnimation = (targetValue: number, duration: number = 2) =
         scrollTrigger: {
           trigger: element,
           start: "top 80%",
-          toggleActions: "play none none reverse"
+          toggleActions: "play none none none"
         },
         onUpdate: function() {
           const current = Math.round(parseInt(this.targets()[0].textContent) || 0);

@@ -92,11 +92,11 @@ const Newsletter = () => {
   };
 
   return (
-    <section ref={sectionRef} className="wpo-news-letter-section">
+    <section ref={sectionRef as React.RefObject<HTMLElement>} className="wpo-news-letter-section">
       <div className="container">
         <div className="row">
           <div className="col col-md-6 offset-lg-3 col-sm-8 offset-md-2">
-            <div ref={contentRef} className="wpo-newsletter">
+            <div ref={contentRef as React.RefObject<HTMLDivElement>} className="wpo-newsletter">
               <h3>Follow us for further information</h3>
               <div className="wpo-newsletter-form">
                 <form>

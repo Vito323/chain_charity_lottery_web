@@ -95,6 +95,10 @@ const config: Config = {
           '0%': { boxShadow: '0 0 5px rgba(59, 130, 246, 0.5)' },
           '100%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)' },
         },
+        zoomIn95: {
+          '0%': { opacity: '0', transform: 'translateY(-10px) scale(0.95)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -104,7 +108,50 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }: { addUtilities: any }) {
+      const newUtilities = {
+        '.animate-in': {
+          animation: 'fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        '.fade-in-0': {
+          'animation-name': 'fadeIn',
+        },
+        '.zoom-in-95': {
+          'animation-name': 'zoomIn95',
+        },
+        '.duration-300': {
+          'animation-duration': '0.3s',
+        },
+        '.scrollbar-thin': {
+          'scrollbar-width': 'thin',
+        },
+        '.scrollbar-track-white\\/10': {
+          'scrollbar-color': 'rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)',
+        },
+        '.scrollbar-thumb-white\\/30': {
+          'scrollbar-color': 'rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)',
+        },
+        '.hover\\:scrollbar-thumb-white\\/50:hover': {
+          'scrollbar-color': 'rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1)',
+        },
+        '.scrollbar-thin::-webkit-scrollbar': {
+          width: '4px',
+        },
+        '.scrollbar-thin::-webkit-scrollbar-track': {
+          background: 'rgba(255, 255, 255, 0.1)',
+        },
+        '.scrollbar-thin::-webkit-scrollbar-thumb': {
+          background: 'rgba(255, 255, 255, 0.3)',
+          'border-radius': '2px',
+        },
+        '.scrollbar-thin::-webkit-scrollbar-thumb:hover': {
+          background: 'rgba(255, 255, 255, 0.5)',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 }
 
 export default config

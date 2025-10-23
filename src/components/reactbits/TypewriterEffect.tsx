@@ -38,7 +38,6 @@ const TypewriterEffect = ({ text, speed = 100, delay = 0, className = "" }: Type
       className={`typewriter-effect ${className} ${isComplete ? 'complete' : ''}`}
       animate={controls}
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       {displayText}
@@ -56,6 +55,7 @@ const TypewriterEffect = ({ text, speed = 100, delay = 0, className = "" }: Type
 };
 
 export default TypewriterEffect;
+
 
 
 

@@ -26,7 +26,7 @@ const StalwartRoadmap = () => {
       x: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut',
+        ease: 'easeOut' as const,
       },
     },
   };
@@ -34,74 +34,74 @@ const StalwartRoadmap = () => {
   const roadmapItems = [
     {
       quarter: 'Q1 2024',
-      title: 'Foundation & Core AI',
-      description: 'Launched our core AI platform with basic machine learning capabilities.',
+      title: 'Foundation & Core Mission',
+      description: 'Established our charitable foundation with core humanitarian programs and community outreach.',
       status: 'completed',
       features: [
-        'Core AI Engine Development',
-        'Basic ML Model Training',
-        'API Infrastructure',
-        'Initial User Interface',
+        'Emergency Relief Programs',
+        'Educational Support Initiatives',
+        'Medical Aid Distribution',
+        'Volunteer Network Building',
       ],
     },
     {
       quarter: 'Q2 2024',
-      title: 'Advanced Features',
-      description: 'Enhanced platform with advanced AI capabilities and improved performance.',
+      title: 'Community Impact',
+      description: 'Expanded our reach with enhanced community programs and disaster response capabilities.',
       status: 'completed',
       features: [
-        'Natural Language Processing',
-        'Computer Vision Integration',
-        'Real-time Processing',
-        'Enhanced Security',
+        'Disaster Relief Operations',
+        'Environmental Protection Projects',
+        'Healthcare Access Programs',
+        'Digital Donation Platform',
       ],
     },
     {
       quarter: 'Q3 2024',
-      title: 'Enterprise Solutions',
-      description: 'Introduced enterprise-grade features and scalability improvements.',
+      title: 'Global Partnerships',
+      description: 'Forged strategic partnerships with international organizations and local communities.',
       status: 'completed',
       features: [
-        'Enterprise Dashboard',
-        'Advanced Analytics',
-        'Custom Model Training',
-        '24/7 Support',
+        'International NGO Partnerships',
+        'Corporate Social Responsibility',
+        'Government Collaboration',
+        'Transparency & Accountability',
       ],
     },
     {
       quarter: 'Q4 2024',
-      title: 'AI Ecosystem',
-      description: 'Building a comprehensive AI ecosystem with third-party integrations.',
+      title: 'Digital Innovation',
+      description: 'Building a comprehensive digital ecosystem for charitable giving and impact tracking.',
       status: 'current',
       features: [
-        'Third-party Integrations',
-        'Marketplace Launch',
-        'Community Features',
-        'Mobile Applications',
+        'Blockchain Transparency',
+        'Impact Measurement Tools',
+        'Mobile Donation App',
+        'Real-time Project Updates',
       ],
     },
     {
       quarter: 'Q1 2025',
       title: 'Global Expansion',
-      description: 'Expanding globally with multi-language support and regional data centers.',
+      description: 'Expanding our humanitarian efforts globally with multi-regional operations and local partnerships.',
       status: 'upcoming',
       features: [
-        'Multi-language Support',
-        'Regional Data Centers',
-        'Global Compliance',
-        'Local Partnerships',
+        'Multi-country Operations',
+        'Local Community Centers',
+        'Cultural Adaptation Programs',
+        'Regional Leadership Teams',
       ],
     },
     {
       quarter: 'Q2 2025',
-      title: 'Next-Gen AI',
-      description: 'Introducing next-generation AI capabilities with quantum computing integration.',
+      title: 'Sustainable Impact',
+      description: 'Focusing on long-term sustainable solutions and systemic change for lasting impact.',
       status: 'upcoming',
       features: [
-        'Quantum AI Integration',
-        'Advanced Neural Networks',
-        'Predictive Analytics',
-        'Autonomous Systems',
+        'Sustainable Development Goals',
+        'Capacity Building Programs',
+        'Policy Advocacy',
+        'Social Innovation Labs',
       ],
     },
   ];
@@ -122,13 +122,13 @@ const StalwartRoadmap = () => {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'Completed';
+        return 'Achieved';
       case 'current':
-        return 'In Progress';
+        return 'Active';
       case 'upcoming':
-        return 'Upcoming';
+        return 'Planned';
       default:
-        return 'Upcoming';
+        return 'Planned';
     }
   };
 
@@ -145,13 +145,13 @@ const StalwartRoadmap = () => {
             variants={itemVariants}
             className="text-4xl md:text-5xl font-bold text-white mb-6"
           >
-            Our Roadmap
+            Our Impact Journey
           </motion.h2>
           <motion.p
             variants={itemVariants}
             className="text-xl text-gray-300 max-w-3xl mx-auto"
           >
-            Follow our journey as we build the future of artificial intelligence, one milestone at a time.
+            Follow our journey as we build a better world through compassion and action, one milestone at a time.
           </motion.p>
         </motion.div>
 
@@ -224,39 +224,6 @@ const StalwartRoadmap = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="text-center mt-16"
-        >
-          <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Stay Updated
-            </h3>
-            <p className="text-gray-300 mb-6">
-              Get notified about our latest updates, new features, and roadmap progress.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Subscribe to Updates
-              </motion.button>
-              <motion.button
-                className="px-8 py-3 border-2 border-white/30 text-white font-semibold rounded-full hover:bg-white/10 transition-all duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                View Full Roadmap
-              </motion.button>
-            </div>
           </div>
         </motion.div>
       </div>

@@ -3,18 +3,20 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import StalwartConnectButton from '../custom-connect-button/StalwartConnectButton';
 
 const navItems = [
-  { label: 'Features', href: '#features' },
-  { label: 'Products', href: '#products' },
-  { label: 'Technology', href: '#technology' },
-  { label: 'Ecosystem', href: '#ecosystem' },
-  { label: 'Roadmap', href: '#roadmap' },
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/project' },
+  { label: 'Lottery', href: '/lottery' },
+  { label: 'Dao', href: '/dao' },
 ];
 
 export default function StalwartHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -45,44 +47,49 @@ export default function StalwartHeader() {
             {/* Logo */}
             <Link href="#" className="flex items-center gap-3 group">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-fuchsia-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
-                <span className="text-white font-bold text-lg">S</span>
+                <span className="text-white font-bold text-lg">C</span>
               </div>
-              <span className="text-white font-bold text-xl tracking-tight">Stalwart AI</span>
+              <span className="text-white font-bold text-xl tracking-tight">Hawaiian Nation Charity Foundation</span>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              {navItems.map((item, index) => (
-                <motion.a
-                  key={item.href}
-                  href={item.href}
-                  className="relative text-white/80 hover:text-white font-medium text-sm transition-colors duration-200 group"
-                  whileHover={{ y: -1 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 group-hover:w-full transition-all duration-300" />
-                </motion.a>
-              ))}
+              {navItems.map((item, index) => {
+                const isActive = pathname === item.href || (item.href !== '#' && pathname.startsWith(item.href));
+                return (
+                  <motion.a
+                    key={item.href}
+                    href={item.href}
+                    className={`relative font-medium text-sm transition-all duration-200 group ${
+                      isActive 
+                        ? 'text-white' 
+                        : 'text-white/80 hover:text-white'
+                    }`}
+                    whileHover={{ y: -1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {item.label}
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 ${
+                      isActive 
+                        ? 'w-full' 
+                        : 'w-0 group-hover:w-full'
+                    }`} />
+                  </motion.a>
+                );
+              })}
             </nav>
 
             {/* CTA Button */}
-            <motion.a
-              href="#"
-              className="hidden md:flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 via-pink-600 to-fuchsia-600 text-white font-semibold text-sm shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
-              whileHover={{ scale: 1.05, y: -1 }}
-              whileTap={{ scale: 0.95 }}
+            <motion.div
+              className="hidden md:flex"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <span>Get Started</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </motion.a>
+              <StalwartConnectButton />
+            </motion.div>
 
             {/* Mobile Menu Button */}
             <motion.button
@@ -135,32 +142,35 @@ export default function StalwartHeader() {
           >
             <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl shadow-black/20 p-6">
               <nav className="flex flex-col gap-1">
-                {navItems.map((item, index) => (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    className="px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 font-medium transition-all duration-200"
-                    onClick={() => setOpen(false)}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ x: 4 }}
-                  >
-                    {item.label}
-                  </motion.a>
-                ))}
-                <motion.a
-                  href="#"
-                  className="mt-4 px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-fuchsia-600 text-white text-center font-semibold shadow-lg"
-                  onClick={() => setOpen(false)}
+                {navItems.map((item, index) => {
+                  const isActive = pathname === item.href || (item.href !== '#' && pathname.startsWith(item.href));
+                  return (
+                    <motion.a
+                      key={item.href}
+                      href={item.href}
+                      className={`px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                        isActive 
+                          ? 'text-white bg-white/20 border border-white/30' 
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
+                      }`}
+                      onClick={() => setOpen(false)}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ x: 4 }}
+                    >
+                      {item.label}
+                    </motion.a>
+                  );
+                })}
+                <motion.div
+                  className="mt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                 >
-                  Get Started
-                </motion.a>
+                  <StalwartConnectButton />
+                </motion.div>
               </nav>
             </div>
           </motion.div>

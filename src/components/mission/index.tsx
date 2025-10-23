@@ -26,17 +26,17 @@ const Mission = (props: { subclass?: string }) => {
     });
 
     return(
-        <div ref={sectionRef} className={`wpo-mission-area ${props.subclass}`}>
+        <div ref={sectionRef as React.RefObject<HTMLDivElement>} className={`wpo-mission-area ${props.subclass}`}>
             <div className="container">
                 <div className="row">
                     <div className="col-12">
-                        <div ref={titleRef} className="wpo-section-title">
+                        <div ref={titleRef as React.RefObject<HTMLDivElement>} className="wpo-section-title">
                             <span>What We Do?</span>
                             <h2>We Are In A Mission To Help The Helpless</h2>
                         </div>
                     </div>
                 </div>
-                <div ref={missionItemsRef} className="wpo-mission-wrap">
+                <div ref={missionItemsRef as React.RefObject<HTMLDivElement>} className="wpo-mission-wrap">
                     <div className="row">
                         <div className="col-lg-3 col-md-6 col-sm-12 col-12 custom-grid">
                             <div className="wpo-mission-item">

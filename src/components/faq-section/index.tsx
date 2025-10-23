@@ -49,7 +49,7 @@ const FaqSection = () => {
       <div className="container">
         <FadeInUp>
           <div className="section-header">
-            <h2 className="section-title">Got Questions? We've Got Answers</h2>
+            <h2 className="section-title">Got Questions? We&apos;ve Got Answers</h2>
             <p className="section-subtitle">Crypto FAQ, AI-Powered for Speed & Clarity</p>
             
             <form className="search-form" onSubmit={handleSearch}>

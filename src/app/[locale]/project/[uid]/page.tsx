@@ -1,26 +1,25 @@
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-// import PageTitle from "@/components/page-title";
-import Scrollbar from "@/components/scrollbar";
-import CaseSingle from "./content";
+import StalwartShowcase from "./content";
+import StalwartHeader from "@/components/stalwart-header";
+import StalwartFooter from "@/components/stalwart-footer";
+import ScrollToTop from "@/components/scroll-to-top";
 
-interface CaseSinglePageProps {
+interface StalwartShowcasePageProps {
   params: Promise<{
     uid: string;
   }>;
 }
 
-const CaseSinglePage = async ({ params }: CaseSinglePageProps) => {
+const StalwartShowcasePage = async ({ params }: StalwartShowcasePageProps) => {
   const { uid } = await params;
   
   return (
     <>
-      <Header />
-      <CaseSingle uid={uid} />
-      <Footer />
-      <Scrollbar />
+      <StalwartHeader />
+      <StalwartShowcase uid={uid} />
+      <StalwartFooter />
+      <ScrollToTop />
     </>
   );
 };
 
-export default CaseSinglePage;
+export default StalwartShowcasePage;

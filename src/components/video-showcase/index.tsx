@@ -115,7 +115,7 @@ const VideoShowcase = () => {
                   whileTap={{ scale: 0.95 }}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.8, duration: 0.6, ease: "back.out(1.7)" }}
+                  transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" as const }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>

@@ -25,11 +25,11 @@ const CounterSection = (props: {countclass?: string}) => {
     const { elementRef: projectsRef, currentValue: projectsValue } = useCounterAnimation(605, 2);
 
     return(
-        <div ref={sectionRef} className={`wpo-counter-area ${props.countclass}`}>
+        <div ref={sectionRef as React.RefObject<HTMLDivElement>} className={`wpo-counter-area ${props.countclass}`}>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
-                        <div ref={counterGridsRef} className="wpo-counter-grids">
+                        <div ref={counterGridsRef as React.RefObject<HTMLDivElement>} className="wpo-counter-grids">
                             <div className="grid">
                                 <div>
                                     <h2><span ref={donationRef} className="odometer" data-count="6200">6200</span>+</h2>

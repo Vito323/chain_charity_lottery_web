@@ -51,7 +51,7 @@ const DigitalOwnershipHero = () => {
     if (coinsRef.current) {
       const coins = coinsRef.current.querySelectorAll(".coin");
       coins.forEach((coin, index) => {
-        coin.style.animationDelay = `${index * 0.2}s`;
+        (coin as HTMLElement).style.animationDelay = `${index * 0.2}s`;
       });
     }
   }, []);
@@ -60,7 +60,7 @@ const DigitalOwnershipHero = () => {
     <section ref={heroRef} className="digital-ownership-hero">
       <div className="hero-container">
         {/* 顶部信息栏 */}
-        <div ref={contentRef}>
+        <div ref={contentRef as React.RefObject<HTMLDivElement>}>
           <div className="top-info-bar">
             <div className="hot-tag">
               <span className="flame-icon">🔥</span>

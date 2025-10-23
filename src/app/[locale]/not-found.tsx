@@ -1,17 +1,15 @@
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-import PageTitle from "@/components/page-title";
-import Scrollbar from "@/components/scrollbar";
-import Error from "./404";
+import StalwartHeader from "@/components/stalwart-header";
+import StalwartFooter from "@/components/stalwart-footer";
+import Stalwart404 from "@/components/stalwart-404";
+import ScrollToTop from "@/components/scroll-to-top";
 
 const ErrorPage = () => {
   return (
     <>
-      <Header />
-      <PageTitle pageTitle={"404"} pagesub={"404"} />
-      <Error />
-      <Footer />
-      <Scrollbar />
+      <StalwartHeader />
+      <Stalwart404 />
+      <StalwartFooter />
+      <ScrollToTop />
     </>
   );
 };

@@ -56,8 +56,8 @@ const LandingFooter = () => {
                         key={linkIndex} 
                         href={link.href} 
                         className="link-item"
-                        target={link.external ? "_blank" : undefined}
-                        rel={link.external ? "noopener noreferrer" : undefined}
+                        target={link.href.startsWith('http') ? "_blank" : undefined}
+                        rel={link.href.startsWith('http') ? "noopener noreferrer" : undefined}
                       >
                         {link.label}
                       </Link>

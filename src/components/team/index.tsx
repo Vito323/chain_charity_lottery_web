@@ -28,19 +28,19 @@ const OurTeam = () => {
   });
 
   return (
-    <section ref={sectionRef} className="our-speakers speakers-home-two">
+    <section ref={sectionRef as React.RefObject<HTMLElement>} className="our-speakers speakers-home-two">
       <div className="bg-img"></div>
       {/* <span className="title-position title-position-left">Speakers</span>
       <span className="title-position title-position-right">Experts</span> */}
       <div className="container">
-        <div ref={headerRef}>
+        <div ref={headerRef as React.RefObject<HTMLDivElement>}>
           <h2 className="title-line">Our Team</h2>
           <p className="slogan">
             They possess the secret knowledge and interesting experience of
             creating a digital product.
           </p>
         </div>
-        <div ref={speakersRef} className="our-speakers-cover">
+        <div ref={speakersRef as React.RefObject<HTMLDivElement>} className="our-speakers-cover">
           <div className="speaker-item">
             <div className="speaker-item-img">
               <Image

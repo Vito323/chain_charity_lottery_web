@@ -27,7 +27,6 @@ const StalwartFeatures = () => {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut',
       },
     },
   };
@@ -35,33 +34,23 @@ const StalwartFeatures = () => {
   const features = [
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bc9_f-img1.png',
-      title: 'Low-latency inference',
-      description: 'Optimized runtime delivering consistently fast responses for real-world workloads.'
+      title: 'Educational support',
+      description: 'Provide essential resources to underprivileged students. makes their dreams a reality.'
     },
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bcd_f-img2.png',
-      title: 'Scalable infra',
-      description: 'Elastic capacity with intelligent autoscaling for spikes and steady demand.'
+      title: 'Medical assistance',
+      description: 'Provide timely aid and health security to communities and individuals lacking medical resources. Let compassion be the best medicine.'
     },
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bca_f-img3.png',
-      title: 'Observability',
-      description: 'Built-in metrics, tracing and logs to debug and optimize model performance.'
+      title: 'Environmental Protection',
+      description: 'Join our initiatives, from planting trees to cleaning water sources, to secure the green future we depend on.'
     },
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bcc_f-img4.png',
-      title: 'Security-first',
-      description: 'Enterprise-grade security, isolation and compliance for sensitive data.'
-    },
-    {
-      img: '/assets/images/66fa5b30f77a5519b8e02bcb_f-img5.png',
-      title: 'Developer tooling',
-      description: 'Local dev parity, SDKs and CLI to streamline your AI workflow.'
-    },
-    {
-      img: '/assets/images/66fa5b30f77a5519b8e02bd6_f-img6.png',
-      title: 'Cost efficiency',
-      description: 'Smart batching, caching and tiered resources to optimize spend.'
+      title: 'Disaster relief',
+      description: 'When disaster strikes, we move fast to provide critical relief like food, shelter, and medical care to help victims rebuild their lives.'
     }
   ];
 
@@ -79,25 +68,15 @@ const StalwartFeatures = () => {
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/80 text-xs"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
-            Stalwart Blockchain Features
+            What We Do?
           </motion.div>
-          <div className="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-            <div className="lg:col-span-7">
-              <motion.h2
-                variants={itemVariants}
-                className="text-3xl md:text-5xl font-extrabold text-white tracking-tight"
-              >
-                Enterprise‑grade blockchain infrastructure
-              </motion.h2>
-            </div>
-            <div className="lg:col-span-5">
-              <motion.p
-                variants={itemVariants}
-                className="text-sm md:text-base text-white/75 leading-relaxed"
-              >
-                Purpose‑built capabilities for high‑throughput, low‑latency applications. Secure by default with first‑class developer experience.
-              </motion.p>
-            </div>
+          <div className="mt-5">
+            <motion.h2
+              variants={itemVariants}
+              className="text-3xl md:text-5xl font-extrabold text-white tracking-tight text-center"
+            >
+              We Are In A Mission To Help The Helpless
+            </motion.h2>
           </div>
         </motion.div>
 
@@ -105,7 +84,7 @@ const StalwartFeatures = () => {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
         >
           {features.map((feature, index) => (
             <motion.div
@@ -141,22 +120,6 @@ const StalwartFeatures = () => {
               <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-fuchsia-600/20" />
             </motion.div>
           ))}
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="text-center mt-14"
-        >
-          <motion.button
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-fuchsia-600 text-white font-semibold rounded-full text-lg hover:from-purple-700 hover:via-pink-700 hover:to-fuchsia-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Explore All Features
-          </motion.button>
         </motion.div>
       </div>
     </section>

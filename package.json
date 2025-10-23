@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p $(node scripts/port-detector.js)",
+    "dev": "next dev --turbopack -p 3000",
     "dev:fixed": "next dev --turbopack -p 3000",
     "build": "next build --turbopack",
     "start": "next start",
@@ -40,6 +40,7 @@
     "remark-gfm": "^4.0.1",
     "slick-carousel": "^1.8.1",
     "swiper": "^12.0.2",
+    "tailwindcss-animate": "^1.0.7",
     "three": "^0.180.0",
     "viem": "~2.37.9",
     "wagmi": "^2.17.5",

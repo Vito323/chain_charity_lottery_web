@@ -1,22 +1,19 @@
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import Scrollbar from "@/components/scrollbar"
-import UserCenter from "./content"
+'use client';
 
+import StalwartHeader from "@/components/stalwart-header"
+import StalwartFooter from "@/components/stalwart-footer"
+import ScrollToTop from "@/components/scroll-to-top"
+import StalwartUserDashboard from "./content"
 
-
-const UserPage = () => {
+const StalwartUserPage = () => {
   return (
-    <>
-        <Header />
-        {/* <PageTitle pageTitle={"User Center"} pagesub={"User Center"} /> */}
-        <UserCenter />
-        <Footer />
-        <Scrollbar />
-    </>
-
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      <StalwartHeader />
+      <StalwartUserDashboard />
+      <StalwartFooter />
+      <ScrollToTop />
+    </div>
   )
 }
 
-
-export default UserPage;
+export default StalwartUserPage;

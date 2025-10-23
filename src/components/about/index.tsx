@@ -21,7 +21,7 @@ const About = () => {
   });
 
   const { elementRef: imageRef } = useScrollAnimation({
-    x: 50,
+    y: 50,
     opacity: 0,
     duration: 1,
     delay: 0.5,
@@ -29,11 +29,11 @@ const About = () => {
   });
 
   return (
-    <div ref={sectionRef} className="wpo-about-area section-padding">
+    <div ref={sectionRef as React.RefObject<HTMLDivElement>} className="wpo-about-area section-padding">
       <div className="container">
         <div className="row">
           <div className="col-lg-6 col-md-12 colsm-12">
-            <div ref={textContentRef} className="wpo-about-text">
+            <div ref={textContentRef as React.RefObject<HTMLDivElement>} className="wpo-about-text">
               <div className="wpo-section-title">
                 <span>What We Do?</span>
                 <h2>We Are In A Mission To Help The Helpless</h2>
@@ -62,7 +62,7 @@ const About = () => {
             </div>
           </div>
           <div className="col-lg-6 col-md-12 colsm-12">
-            <div ref={imageRef} className="wpo-about-img-3">
+            <div ref={imageRef as React.RefObject<HTMLDivElement>} className="wpo-about-img-3">
               <img src={"/images/about3.png"} alt="" />
             </div>
           </div>

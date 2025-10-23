@@ -1,9 +1,9 @@
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-import Scrollbar from "@/components/scrollbar";
-import Content from "../../content";
+import StalwartHeader from "@/components/stalwart-header";
+import StalwartFooter from "@/components/stalwart-footer";
+import StalwartDonate from "@/components/stalwart-donate";
+import ScrollToTop from "@/components/scroll-to-top";
 
-interface DonatePageProps {
+interface StalwartDonatePageProps {
   params: Promise<{
     uid: string;
     name: string;
@@ -11,20 +11,17 @@ interface DonatePageProps {
   }>;
 }
 
-const DonatePage = async ({ params }: DonatePageProps) => {
+const StalwartDonatePage = async ({ params }: StalwartDonatePageProps) => {
   const { uid, name } = await params;
   
   return (
-    <>
-      <Header />
-      {/* <PageTitle pageTitle={"Donate Now"} pagePrevs={[
-        {label: "Project", href: `/project`},
-        {label: name, href: `/project/${uid}`}
-      ]} pagesub={'Donate Now'} /> */}
-      <Content uid={uid} name={name} />
-      <Footer />
-      <Scrollbar />
-    </>
+    <div className="min-h-screen bg-slate-900">
+      <StalwartHeader />
+      <StalwartDonate uid={uid} name={name} />
+      <StalwartFooter />
+      <ScrollToTop />
+    </div>
   );
 };
-export default DonatePage;
+
+export default StalwartDonatePage;
