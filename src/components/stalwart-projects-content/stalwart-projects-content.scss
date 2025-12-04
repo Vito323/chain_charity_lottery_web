@@ -89,6 +89,137 @@
   margin-top: 3rem;
 }
 
+// Donation activity section
+.stalwart-donation-activity {
+  margin-top: 3rem;
+  padding: 24px 24px 22px;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background:
+    radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98)),
+    linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(129, 140, 248, 0.18));
+  box-shadow: 0 18px 55px rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(18px);
+}
+
+.stalwart-donation-activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.stalwart-donation-activity-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stalwart-donation-activity-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.stalwart-donation-activity-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #22c55e 0%, #38bdf8 40%, #6366f1 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stalwart-donation-activity-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.stalwart-donation-activity-list {
+  margin-top: 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 1));
+  overflow: hidden;
+}
+
+.stalwart-donation-activity-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.stalwart-donation-activity-item.is-last {
+  border-bottom: none;
+}
+
+.stalwart-donation-activity-item:nth-child(odd) {
+  background: radial-gradient(circle at 0% 0%, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.96));
+}
+
+.stalwart-donation-activity-address {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.stalwart-donation-activity-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: conic-gradient(from 180deg, #38bdf8, #a855f7, #22c55e, #38bdf8);
+  padding: 2px;
+  position: relative;
+}
+
+.stalwart-donation-activity-avatar::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at top left, #020617, #020617);
+}
+
+.stalwart-donation-activity-hash {
+  font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stalwart-donation-activity-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stalwart-donation-activity-amount-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.stalwart-donation-activity-amount-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.stalwart-donation-activity-time {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-align: right;
+  white-space: nowrap;
+}
+
 // Skeleton Loading Styles
 .stalwart-skeleton-container {
   display: flex;
@@ -239,6 +370,10 @@
   .stalwart-skeleton-grid {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
+
+  .stalwart-donation-activity {
+    margin-top: 2.5rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -261,6 +396,22 @@
   .stalwart-skeleton-tabs {
     flex-wrap: wrap;
     gap: 0.5rem;
+  }
+
+  .stalwart-donation-activity {
+    padding: 18px 16px 16px;
+  }
+
+  .stalwart-donation-activity-item {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+    gap: 10px;
+  }
+
+  .stalwart-donation-activity-time {
+    grid-column: 1 / -1;
+    text-align: left;
   }
 }
 

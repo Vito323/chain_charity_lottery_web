@@ -1,0 +1,373 @@
+'use client';
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAccount } from 'wagmi';
+import Link from 'next/link';
+import OwnedLotteryCard from '../components/OwnedLotteryCard';
+import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import { RarityType } from '@/app/[locale]/nft-market/types';
+
+type FilterTab = 'hold' | 'listed';
+
+interface OwnedLotteryTicket {
+  id: string;
+  image: string;
+  rarity: RarityType;
+  rarityLabel: string;
+  purchasePrice: number;
+  currency: string;
+  isListed?: boolean; // Whether the ticket is listed for sale
+}
+
+// Mock data based on the image
+const defaultOwnedTickets: OwnedLotteryTicket[] = [
+  {
+    id: '1',
+    image: '/images/placeholder-all.png',
+    rarity: 'rare',
+    rarityLabel: 'Rare',
+    purchasePrice: 818.266,
+    currency: 'CLT',
+    isListed: false,
+  },
+  {
+    id: '2',
+    image: '/images/placeholder-all.png',
+    rarity: 'common',
+    rarityLabel: 'Common',
+    purchasePrice: 256.56,
+    currency: 'CLT',
+    isListed: true,
+  },
+  {
+    id: '3',
+    image: '/images/placeholder-all.png',
+    rarity: 'common',
+    rarityLabel: 'Common',
+    purchasePrice: 118.266,
+    currency: 'CLT',
+    isListed: false,
+  },
+  {
+    id: '4',
+    image: '/images/placeholder-all.png',
+    rarity: 'mythic',
+    rarityLabel: 'Mythic',
+    purchasePrice: 95818.266,
+    currency: 'CLT',
+    isListed: true,
+  },
+  {
+    id: '5',
+    image: '/images/placeholder-all.png',
+    rarity: 'epic',
+    rarityLabel: 'Epic',
+    purchasePrice: 1818.266,
+    currency: 'CLT',
+    isListed: false,
+  },
+  {
+    id: '6',
+    image: '/images/placeholder-all.png',
+    rarity: 'legendary',
+    rarityLabel: 'Legendary',
+    purchasePrice: 8818.266,
+    currency: 'CLT',
+    isListed: true,
+  },
+];
+
+const StalwartMyTickets: React.FC = () => {
+  const { isConnected } = useAccount();
+  const [ownedTickets, setOwnedTickets] = useState<OwnedLotteryTicket[]>(defaultOwnedTickets);
+  const [isLoading] = useState(false);
+  const [error] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<FilterTab>('hold');
+
+  const handleSell = async (ticketId: string) => {
+    // TODO: Implement sell functionality
+    console.log('Selling ticket:', ticketId);
+    // Show sell modal or handle sale
+    // After selling, update the ticket's isListed status
+    setOwnedTickets(prev => 
+      prev.map(ticket => 
+        ticket.id === ticketId ? { ...ticket, isListed: true } : ticket
+      )
+    );
+  };
+
+  const handleDelist = async (ticketId: string) => {
+    // TODO: Implement delist functionality
+    console.log('Delisting ticket:', ticketId);
+    // After delisting, update the ticket's isListed status
+    setOwnedTickets(prev => 
+      prev.map(ticket => 
+        ticket.id === ticketId ? { ...ticket, isListed: false } : ticket
+      )
+    );
+  };
+
+  // Filter tickets based on active tab
+  const filteredTickets = ownedTickets.filter(ticket => 
+    activeTab === 'hold' ? !ticket.isListed : ticket.isListed
+  );
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: 'easeOut' as const,
+      },
+    },
+  };
+
+  // Calculate totals based on filtered tickets
+  const totalTickets = filteredTickets.length;
+  const totalValue = filteredTickets.reduce((sum, ticket) => sum + ticket.purchasePrice, 0);
+
+  return (
+    <section className="relative py-20 md:py-32">
+      {/* Background Elements */}
+
+      <motion.div
+        className="relative z-10 max-w-7xl mx-auto px-6 md:px-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Section Header */}
+        <motion.div variants={itemVariants} className="text-center mb-16">
+          <motion.div
+            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-white/90 mb-6"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-sm">My Tickets</span>
+          </motion.div>
+
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Lottery <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">Ticket Portfolio</span>
+          </h2>
+          <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+            View and manage your lottery ticket collection. Sell your tickets on the marketplace anytime.
+          </p>
+        </motion.div>
+
+        {/* Connect Wallet Prompt */}
+        {!isConnected && (
+          <motion.div
+            variants={itemVariants}
+            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 text-center mb-12"
+          >
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              Connect Your Wallet
+            </h3>
+            <p className="text-white/70 mb-6 max-w-md mx-auto">
+              Connect your wallet to view your lottery ticket collection and manage your assets.
+            </p>
+            <StalwartConnectButton />
+          </motion.div>
+        )}
+
+        {/* Filter Tabs: Hold / Listed */}
+        { (
+          <motion.div
+            variants={itemVariants}
+            className="mb-6 md:mb-8 flex justify-center"
+          >
+            <div className="inline-flex items-center rounded-full bg-white/5 border border-white/10 p-1 backdrop-blur-sm">
+              {(['hold', 'listed'] as FilterTab[]).map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 md:px-6 py-1.5 md:py-2 text-xs md:text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer ${
+                    activeTab === tab
+                      ? 'bg-white text-slate-900 shadow-md shadow-black/20'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {tab === 'hold' ? 'Hold' : 'Listed'}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Summary Cards */}
+        {isConnected && ownedTickets.length > 0 && (
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-12"
+          >
+            <motion.div
+              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6"
+              whileHover={{ scale: 1.02, y: -4 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="text-sm text-white/60 mb-2">Total Tickets</div>
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                {totalTickets}
+              </div>
+              <div className="text-xs text-white/50">
+                {activeTab === 'hold' ? 'In your collection' : 'Listed for sale'}
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6"
+              whileHover={{ scale: 1.02, y: -4 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="text-sm text-white/60 mb-2">Total Value</div>
+              <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">
+                {totalValue.toLocaleString(undefined, {
+                  minimumFractionDigits: 3,
+                  maximumFractionDigits: 3,
+                })} CLT
+              </div>
+              <div className="text-xs text-white/50">Purchase price total</div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Loading State */}
+        {isLoading && (
+          <motion.div
+            className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white/80">Loading your tickets...</p>
+          </motion.div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <motion.div
+            className="text-center py-20 bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-3xl"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              Failed to Load Tickets
+            </h3>
+            <p className="text-white/60">{error}</p>
+          </motion.div>
+        )}
+
+        {/* Tickets Grid */}
+        {!isLoading && !error && isConnected && ownedTickets.length > 0 && (
+          <AnimatePresence mode="wait">
+            {filteredTickets.length > 0 ? (
+              <motion.div
+                key={activeTab}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+              >
+                {filteredTickets.map((ticket, index) => (
+                  <OwnedLotteryCard
+                    key={ticket.id}
+                    ticket={ticket}
+                    animationDelay={index * 0.1}
+                    isListed={ticket.isListed || false}
+                    onSell={handleSell}
+                    onDelist={handleDelist}
+                  />
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key={`empty-${activeTab}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
+              >
+                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-8 h-8 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  {activeTab === 'hold' ? 'No Tickets Held' : 'No Tickets Listed'}
+                </h3>
+                <p className="text-white/60">
+                  {activeTab === 'hold' 
+                    ? 'You don\'t have any tickets in your collection.'
+                    : 'You don\'t have any tickets listed for sale.'}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !error && isConnected && ownedTickets.length === 0 && (
+          <motion.div
+            className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              No Tickets Found
+            </h3>
+            <p className="text-white/60 mb-6">
+              You don&apos;t have any lottery tickets yet. Start by purchasing tickets to build your collection.
+            </p>
+            <Link
+              href="/lottery"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+            >
+              Browse Lottery
+            </Link>
+          </motion.div>
+        )}
+      </motion.div>
+    </section>
+  );
+};
+
+export default StalwartMyTickets;
+

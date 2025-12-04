@@ -1,0 +1,365 @@
+'use client';
+
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import StalwartHeader from '@/components/stalwart-header';
+import StalwartFooter from '@/components/stalwart-footer';
+import ScrollToTop from '@/components/scroll-to-top';
+import LotteryCard from './components/LotteryCard';
+import { LotteryTicket } from './types';
+
+// Mock data for new lottery tickets
+const newLotteryTickets: LotteryTicket[] = [
+  {
+    id: '1',
+    image: '/images/placeholder-all.png',
+    rarity: 'rare',
+    rarityLabel: 'Rare',
+    basicWinRate: '1/2,000',
+    maxPrize: '$1,000',
+    redemptionCost: '500',
+    currency: 'CLT',
+  },
+  {
+    id: '2',
+    image: '/images/placeholder-all.png',
+    rarity: 'common',
+    rarityLabel: 'Common',
+    basicWinRate: '1/1,500',
+    maxPrize: '$100',
+    redemptionCost: '100',
+    currency: 'CLT',
+  },
+  {
+    id: '3',
+    image: '/images/placeholder-all.png',
+    rarity: 'common',
+    rarityLabel: 'Common',
+    basicWinRate: '1/1,500',
+    maxPrize: '$100',
+    redemptionCost: '100',
+    currency: 'CLT',
+  },
+  {
+    id: '4',
+    image: '/images/placeholder-all.png',
+    rarity: 'mythic',
+    rarityLabel: 'Mythic',
+    basicWinRate: '1/10,000',
+    maxPrize: '$1,000,000',
+    redemptionCost: '10,000',
+    currency: 'CLT',
+  },
+  {
+    id: '5',
+    image: '/images/placeholder-all.png',
+    rarity: 'epic',
+    rarityLabel: 'Epic',
+    basicWinRate: '1/3,000',
+    maxPrize: '$10,000',
+    redemptionCost: '1,000',
+    currency: 'CLT',
+  },
+  {
+    id: '6',
+    image: '/images/placeholder-all.png',
+    rarity: 'legendary',
+    rarityLabel: 'Legendary',
+    basicWinRate: '1/5,000',
+    maxPrize: '$100,000',
+    redemptionCost: '5,000',
+    currency: 'CLT',
+  },
+  {
+    id: '7',
+    image: '/images/placeholder-all.png',
+    rarity: 'rare',
+    rarityLabel: 'Rare',
+    basicWinRate: '1/2,000',
+    maxPrize: '$1,000',
+    redemptionCost: '500',
+    currency: 'CLT',
+  },
+];
+
+// Mock data for market lottery tickets
+const marketLotteryTickets: LotteryTicket[] = [
+  {
+    id: 'm1',
+    image: '/images/placeholder-all.png',
+    rarity: 'rare',
+    rarityLabel: 'Rare',
+    redemptionCost: '500',
+    salePrice: '818.266',
+    currency: 'CLT',
+  },
+  {
+    id: 'm2',
+    image: '/images/placeholder-all.png',
+    rarity: 'common',
+    rarityLabel: 'Common',
+    redemptionCost: '100',
+    salePrice: '256.56',
+    currency: 'CLT',
+  },
+  {
+    id: 'm3',
+    image: '/images/placeholder-all.png',
+    rarity: 'common',
+    rarityLabel: 'Common',
+    redemptionCost: '100',
+    salePrice: '118.266',
+    currency: 'CLT',
+  },
+  {
+    id: 'm4',
+    image: '/images/placeholder-all.png',
+    rarity: 'mythic',
+    rarityLabel: 'Mythic',
+    redemptionCost: '10,000',
+    salePrice: '95,818.266',
+    currency: 'CLT',
+  },
+  {
+    id: 'm5',
+    image: '/images/placeholder-all.png',
+    rarity: 'epic',
+    rarityLabel: 'Epic',
+    redemptionCost: '1,000',
+    salePrice: '1,818.266',
+    currency: 'CLT',
+  },
+  {
+    id: 'm6',
+    image: '/images/placeholder-all.png',
+    rarity: 'legendary',
+    rarityLabel: 'Legendary',
+    redemptionCost: '5,000',
+    salePrice: '8,818.266',
+    currency: 'CLT',
+  },
+  {
+    id: 'm7',
+    image: '/images/placeholder-all.png',
+    rarity: 'rare',
+    rarityLabel: 'Rare',
+    redemptionCost: '500',
+    salePrice: '618.266',
+    currency: 'CLT',
+  },
+];
+
+type TabType = 'new' | 'market';
+
+const StalwartNFTMarketPage = () => {
+  const [activeTab, setActiveTab] = useState<TabType>('new');
+  const [sortBy, setSortBy] = useState<'latest' | 'price' | 'rarity' | 'follow'>('latest');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  const handleSort = (type: 'latest' | 'price' | 'rarity' | 'follow') => {
+    if (sortBy === type) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(type);
+      setSortOrder('desc');
+    }
+  };
+
+  const tabs = [
+    { id: 'new' as TabType, label: 'New Lottery' },
+    { id: 'market' as TabType, label: 'Lottery Market' },
+  ];
+
+  const currentTickets = activeTab === 'new' ? newLotteryTickets : marketLotteryTickets;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      <StalwartHeader />
+      {/* Hero Section */}
+      <section className="relative pt-32 md:pt-40 pb-12 md:pb-20 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-950/80 to-slate-950" />
+          
+          {/* Animated Background Shapes */}
+          <motion.div
+            className="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+          <motion.div
+            className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.4, 0.7, 0.4],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <motion.div
+              className="inline-flex items-center gap-2.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-white/90 mb-6"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs md:text-sm">Chain Charity Lottery</span>
+            </motion.div>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight mb-6">
+              NFT
+              <br />
+              <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
+                Marketplace
+              </span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">
+              Discover and collect unique lottery tickets with different rarities and win rates
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="py-8 md:py-16 bg-gradient-to-b from-slate-950 to-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Tab Navigation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-6 md:mb-8"
+          >
+            {/* Tabs */}
+            <div className="flex gap-2 p-1 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md mb-4 md:mb-6 w-full md:w-auto">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm lg:text-base transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
+                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort Options */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              <button
+                onClick={() => handleSort('latest')}
+                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                  sortBy === 'latest'
+                    ? 'bg-white/10 text-white border border-white/20'
+                    : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                Latest
+              </button>
+              <button
+                onClick={() => handleSort('price')}
+                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 whitespace-nowrap ${
+                  sortBy === 'price'
+                    ? 'bg-white/10 text-white border border-white/20'
+                    : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                Price
+                {sortBy === 'price' && (
+                  <svg
+                    className={`w-3 h-3 transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={() => handleSort('rarity')}
+                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 whitespace-nowrap ${
+                  sortBy === 'rarity'
+                    ? 'bg-white/10 text-white border border-white/20'
+                    : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                Rarity
+                {sortBy === 'rarity' && (
+                  <svg
+                    className={`w-3 h-3 transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={() => handleSort('follow')}
+                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                  sortBy === 'follow'
+                    ? 'bg-white/10 text-white border border-white/20'
+                    : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                Follow
+              </button>
+              <button className="flex-shrink-0 p-1.5 md:p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/5 border border-white/10 transition-all duration-300">
+                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Cards Grid */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+          >
+            {currentTickets.map((ticket, index) => (
+              <LotteryCard
+                key={ticket.id}
+                ticket={ticket}
+                type={activeTab}
+                animationDelay={index * 0.1}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <StalwartFooter />
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
+    </div>
+  );
+};
+
+export default StalwartNFTMarketPage;

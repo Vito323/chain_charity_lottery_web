@@ -1,16 +1,24 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useDisconnect } from "wagmi";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 
 const StalwartConnectButton = () => {
   const { disconnect } = useDisconnect();
   const [showDropdown, setShowDropdown] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -19,11 +27,19 @@ const StalwartConnectButton = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    if (showDropdown) {
+      // 防止背景滚动
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.body.style.overflow = '';
+    }
+
     return () => {
+      document.body.style.overflow = '';
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [showDropdown]);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -36,6 +52,156 @@ const StalwartConnectButton = () => {
     };
     return fallbackChains[chainId] || '?';
   };
+
+  // Dropdown内容组件
+  const renderDropdownContent = (
+    account: { address: string },
+    chain: { id: number; name?: string; iconUrl?: string },
+    openChainModal: () => void
+  ) => (
+    <>
+      <div className="p-6 border-b border-white/10 md:p-5">
+        <div className="mb-4">
+          <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">WALLET</div>
+          <div className="flex items-center gap-2">
+            <div className="text-base font-bold text-white font-mono md:text-base sm:text-sm">{formatAddress(account.address)}</div>
+            <button 
+              className="bg-transparent border-0 text-white/60 cursor-pointer p-1 rounded transition-all duration-200 hover:bg-white/10 hover:text-purple-600 active:bg-white/20"
+              onClick={() => {
+                navigator.clipboard.writeText(account.address);
+                setCopySuccess(true);
+                setTimeout(() => setCopySuccess(false), 2000);
+              }}
+              title="Copy full address"
+            >
+              <i className={`fa text-xs ${copySuccess ? 'fa-check' : 'fa-copy'}`}></i>
+            </button>
+          </div>
+        </div>
+        
+        <div>
+          <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">Network</div>
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-full flex items-center justify-center text-xs font-bold overflow-hidden">
+              {(() => {
+                if (chain.iconUrl) {
+                  return (
+                    <Image 
+                      src={chain.iconUrl} 
+                      alt={chain.name || 'Chain'} 
+                      width={20} 
+                      height={20} 
+                      className="w-full h-full object-cover rounded-full" 
+                    />
+                  );
+                }
+                const fallbackIcon = getFallbackChainIcon(chain.id);
+                return <span className="text-xs font-bold">{fallbackIcon}</span>;
+              })()}
+            </div>
+            <span className="text-sm font-bold text-white flex-1 md:text-sm sm:text-xs">{chain.name}</span>
+            <button 
+              className="text-xs text-pink-400 bg-transparent border-0 cursor-pointer font-medium p-0 no-underline hover:text-pink-300 hover:underline active:text-pink-200"
+              onClick={() => {
+                openChainModal();
+                setShowDropdown(false);
+              }}
+            >
+              Switch Network
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex flex-col flex-1 min-h-0">
+        <div className="py-2 flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-white/10 scrollbar-thumb-white/30 hover:scrollbar-thumb-white/50 max-h-[300px] md:max-h-[300px]">
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/user");
+              setShowDropdown(false);
+            }}
+          >
+            User Center
+          </button>
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/network/my-nodes");
+              setShowDropdown(false);
+            }}
+          >
+            Hold Nodes
+          </button>
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/network");
+              setShowDropdown(false);
+            }}
+          >
+            Node Earnings
+          </button>
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/network/purchase-history");
+              setShowDropdown(false);
+            }}
+          >
+            Node Purchase Records
+          </button>
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/lottery/my-tickets");
+              setShowDropdown(false);
+            }}
+          >
+            Hold Lottery
+          </button>
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/lottery/winning-records");
+              setShowDropdown(false);
+            }}
+          >
+            Winning Records
+          </button>
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/user/token-details");
+              setShowDropdown(false);
+            }}
+          >
+            Token Details
+          </button>
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+            onClick={() => {
+              router.push("/user/donation-records");
+              setShowDropdown(false);
+            }}
+          >
+            Donation Records
+          </button>
+        </div>
+        <div className="border-t border-white/10 pt-2 pb-2">
+          <button 
+            className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-red-400 cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-red-400/20 active:to-red-400/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-red-400/10 md:hover:to-red-400/5 md:hover:text-red-300"
+            onClick={() => {
+              disconnect();
+              setShowDropdown(false);
+            }}
+          >
+            Disconnect
+          </button>
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <ConnectButton.Custom>
@@ -91,83 +257,75 @@ const StalwartConnectButton = () => {
               );
             })()}
             
-            {showDropdown && connected && (
-              <div className="absolute top-full right-0 bg-slate-900/95 rounded-2xl shadow-2xl shadow-black/40 min-w-[300px] z-[1000] mt-3 overflow-hidden border border-white/10 backdrop-blur-xl animate-in fade-in-0 zoom-in-95 duration-300 sm:right-0 sm:left-auto sm:min-w-[280px] sm:max-w-[calc(100vw-32px)] sm:mr-4 md:min-w-[300px] md:max-w-none md:mr-0">
-                <div className="p-5 border-b border-white/10 sm:p-4">
-                  <div className="mb-4">
-                    <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">WALLET</div>
-                    <div className="flex items-center gap-2">
-                      <div className="text-base font-bold text-white font-mono sm:text-sm">{formatAddress(account.address)}</div>
-                      <button 
-                        className="bg-transparent border-0 text-white/60 cursor-pointer p-1 rounded transition-all duration-200 hover:bg-white/10 hover:text-purple-600"
-                        onClick={() => {
-                          navigator.clipboard.writeText(account.address);
-                          setCopySuccess(true);
-                          setTimeout(() => setCopySuccess(false), 2000);
-                        }}
-                        title="Copy full address"
-                      >
-                        <i className={`fa text-xs ${copySuccess ? 'fa-check' : 'fa-copy'}`}></i>
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">Network</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-5 h-5 bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-full flex items-center justify-center text-xs font-bold overflow-hidden">
-                        {(() => {
-                          if (chain.iconUrl) {
-                            return (
-                              <Image 
-                                src={chain.iconUrl} 
-                                alt={chain.name || 'Chain'} 
-                                width={20} 
-                                height={20} 
-                                className="w-full h-full object-cover rounded-full" 
-                              />
-                            );
-                          }
-                          const fallbackIcon = getFallbackChainIcon(chain.id);
-                          return <span className="text-xs font-bold">{fallbackIcon}</span>;
-                        })()}
-                      </div>
-                      <span className="text-sm font-bold text-white flex-1 sm:text-xs">{chain.name}</span>
-                      <button 
-                        className="text-xs text-pink-400 bg-transparent border-0 cursor-pointer font-medium p-0 no-underline hover:text-pink-300 hover:underline"
-                        onClick={() => {
-                          openChainModal();
-                          setShowDropdown(false);
-                        }}
-                      >
-                        Switch Network
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="py-2 max-h-[300px] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-white/10 scrollbar-thumb-white/30 hover:scrollbar-thumb-white/50">
-                  <button 
-                    className="block w-full px-5 py-3.5 bg-transparent border-0 text-left text-sm text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border hover:bg-gradient-to-r hover:from-purple-600/10 hover:to-pink-600/5 hover:text-purple-300 hover:translate-x-0.5 active:translate-x-0.5 sm:px-4 sm:py-2.5 sm:text-xs"
-                    onClick={() => {
-                      router.push("/user");
-                      setShowDropdown(false);
-                    }}
+            <AnimatePresence>
+              {showDropdown && connected && (
+                <>
+                  {/* 移动端 Bottom Sheet - 使用 Portal 渲染到 body */}
+                  {mounted && createPortal(
+                    <AnimatePresence>
+                      {showDropdown && (
+                        <motion.div
+                          key="bottom-sheet"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="fixed inset-0 z-[9999] md:hidden"
+                          onClick={() => setShowDropdown(false)}
+                        >
+                          {/* 遮罩背景 */}
+                          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                          
+                          {/* Bottom Sheet 容器 */}
+                          <motion.div
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                            className="absolute bottom-0 left-0 right-0 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 rounded-t-3xl shadow-2xl border-t border-white/10 max-h-[85vh] overflow-hidden flex flex-col"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {/* 拖拽指示器 */}
+                            <div className="flex justify-center pt-4 pb-3 cursor-grab active:cursor-grabbing" onTouchStart={() => {}}>
+                              <div className="w-12 h-1.5 bg-white/30 rounded-full"></div>
+                            </div>
+                            
+                            {/* 标题和关闭按钮 */}
+                            <div className="flex items-center justify-between px-5 pb-4 border-b border-white/10">
+                              <h3 className="text-lg font-semibold text-white">Wallet Menu</h3>
+                              <button
+                                onClick={() => setShowDropdown(false)}
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 transition-colors"
+                                aria-label="Close"
+                              >
+                                <i className="fa fa-times text-white/80 text-sm"></i>
+                              </button>
+                            </div>
+
+                            {/* 内容 */}
+                            <div className="overflow-y-auto flex-1 overscroll-contain">
+                              {renderDropdownContent(account, chain, openChainModal)}
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>,
+                    document.body
+                  )}
+
+                  {/* 桌面端 Dropdown */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="hidden md:flex md:flex-col absolute top-full right-0 bg-slate-900/95 rounded-2xl shadow-2xl shadow-black/40 z-[1000] mt-3 overflow-hidden border border-white/10 backdrop-blur-xl min-w-[300px] max-w-[300px] max-h-[85vh]"
                   >
-                    User Center
-                  </button>
-                  <button 
-                    className="block w-full px-5 py-3.5 bg-transparent border-0 text-left text-sm text-red-400 cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border border-t border-white/10 mt-2 pt-4 hover:bg-gradient-to-r hover:from-red-400/10 hover:to-red-400/5 hover:text-red-300 hover:translate-x-0.5 active:translate-x-0.5 sm:px-4 sm:py-2.5 sm:text-xs"
-                    onClick={() => {
-                      disconnect();
-                      setShowDropdown(false);
-                    }}
-                  >
-                    Disconnect
-                  </button>
-                </div>
-              </div>
-            )}
+                    {renderDropdownContent(account, chain, openChainModal)}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </div>
         );
       }}

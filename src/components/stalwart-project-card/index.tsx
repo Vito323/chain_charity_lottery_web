@@ -16,8 +16,9 @@ import "./stalwart-project-card.scss";
 dayjs.extend(relativeTime);
 
 interface StalwartProjectCardProps extends ProjectData {
-  raised?: string;
-  contributors?: number;
+  /**
+   * Optional animation delay when card enters.
+   */
   animationDelay?: number;
 }
 
@@ -48,11 +49,19 @@ const StalwartProjectCard: React.FC<StalwartProjectCardProps> = ({
   const chainId = useChainId();
   const { getProject } = useFundPoolManager();
 
-  const [, setCurrentProjectFundInfo] = React.useState<ProjectChainInfo | null>(null);
+  const [, setCurrentProjectFundInfo] =
+    React.useState<ProjectChainInfo | null>(null);
   const [isHovered, setIsHovered] = React.useState(false);
 
+  // NOTE: 当前项目列表接口没有返回目标金额，这里用一个
+  // 合理的上限做归一化，仅用于前端展示进度效果。
+  const PROGRESS_BASE = 150_000;
+  const rawProgress =
+    PROGRESS_BASE > 0 ? (totalDonated / PROGRESS_BASE) * 100 : 0;
+  const progress = Math.max(0, Math.min(100, rawProgress));
+
   const handleCardClick = () => {
-    console.log('Card clicked:', id, name);
+    console.log("Card clicked:", id, name);
     router.push(`/project/${id}`);
   };
 
@@ -85,127 +94,98 @@ const StalwartProjectCard: React.FC<StalwartProjectCardProps> = ({
       onHoverEnd={() => setIsHovered(false)}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.6, 
+      transition={{
+        duration: 0.6,
         delay: animationDelay,
-        ease: "easeOut"
+        ease: "easeOut",
       }}
-      whileHover={{ 
+      whileHover={{
         y: -10,
-        transition: { duration: 0.3 }
+        transition: { duration: 0.3 },
       }}
-      style={{ 
-        cursor: 'pointer',
-        position: 'relative',
-        zIndex: 1
+      style={{
+        cursor: "pointer",
+        position: "relative",
+        zIndex: 1,
       }}
     >
-      {/* Card Image */}
+      {/* Cover Image */}
       <div className="stalwart-card-image-container">
         <Image
           src={image[0]}
           alt={name}
           className="stalwart-card-image"
           width={400}
-          height={250}
+          height={260}
           unoptimized
           style={{ objectFit: "cover" }}
         />
-        
-        {/* Overlay Icons */}
-        <motion.div 
-          className="stalwart-card-overlay-icons"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <motion.div 
-            className="stalwart-overlay-icon"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <i className="fa fa-rocket"></i>
-          </motion.div>
-          <motion.div 
-            className="stalwart-overlay-icon"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <i className="fa fa-share-alt"></i>
-          </motion.div>
-        </motion.div>
-
-        {/* Gradient Overlay */}
-        <div className="stalwart-card-gradient-overlay"></div>
       </div>
 
-      {/* Card Content */}
+      {/* Card Body */}
       <div className="stalwart-card-content">
-        {/* Update Time */}
-        <div className="stalwart-card-update-time">
-          <span className="stalwart-update-label">
-            Last Updated: {dayjs(createdAt).fromNow()}
+        {/* Header: title + donate button */}
+        <div className="stalwart-card-header">
+          <div className="stalwart-card-title-wrap">
+            <h3 className="stalwart-card-title">{name}</h3>
+            <p className="stalwart-card-subtitle">
+              {description}
+            </p>
+          </div>
+
+          <motion.div
+            className="stalwart-card-cta-wrap"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: isHovered ? 1 : 1, scale: 1 }}
+            transition={{ duration: 0.25 }}
+          >
+            <Link
+              href={`/project/${id}/${name}`}
+              className="stalwart-donate-btn-inline"
+              onClick={handleButtonClick}
+            >
+              <span>Donate Now</span>
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* Meta info */}
+        <div className="stalwart-card-meta">
+          <span className="stalwart-meta-updated">
+            Updated {dayjs(createdAt).fromNow()}
+          </span>
+          <span className="stalwart-meta-contributors">
+            {donationCount || 0} contributors
           </span>
         </div>
 
-        {/* Title */}
-        <h3 className="stalwart-card-title">{name}</h3>
-
-        {/* Organizer */}
-        <div className="stalwart-card-organizer">
-          <span className="stalwart-organizer-name">ChainCharity</span>
-        </div>
-
-        {/* Description */}
-        <p className="stalwart-card-description">{description}</p>
-
-        {/* Funding Info */}
-        <div className="stalwart-card-funding-info">
-          <div className="stalwart-funding-label">
-            <span>Total amount raised</span>
-          </div>
-          <div className="stalwart-funding-details">
-            <div className="stalwart-contributors-info">
-              Raised from <strong>{donationCount || 0}</strong> contributors
-            </div>
-            <div className="stalwart-raised-amount">{formatCurrency(totalDonated)}</div>
+        {/* Funding progress bar */}
+        <div className="stalwart-card-progress">
+          <div className="stalwart-progress-track">
+            <div
+              className="stalwart-progress-bar"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </div>
 
-        {/* Verification */}
-        <div className="stalwart-card-verification">
-          <i className="fa fa-check-circle stalwart-verification-icon"></i>
-          <span className="stalwart-verification-text">Verified</span>
-        </div>
+        {/* Footer: amount + progress */}
+        <div className="stalwart-card-footer">
+          <div className="stalwart-footer-block">
+            <span className="stalwart-footer-label">Total Raised</span>
+            <span className="stalwart-footer-value">
+              {formatCurrency(totalDonated)} USDT
+            </span>
+          </div>
 
-        {/* Actions */}
-        <motion.div 
-          className="stalwart-card-actions"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ 
-            opacity: isHovered ? 1 : 0, 
-            y: isHovered ? 0 : 20 
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          <Link
-            href={`/stalwart-donate/${id}/${name}`}
-            className="stalwart-donate-btn"
-            onClick={handleButtonClick}
-          >
-            <span>Donate Now</span>
-            <i className="fa fa-arrow-right"></i>
-          </Link>
-        </motion.div>
+          <div className="stalwart-footer-block stalwart-footer-block-right">
+            <span className="stalwart-footer-label">Funding Progress</span>
+            <span className="stalwart-footer-value">
+              {progress.toFixed(0)}%
+            </span>
+          </div>
+        </div>
       </div>
-
-      {/* Hover Effect Border */}
-      <motion.div
-        className="stalwart-card-hover-border"
-        initial={{ scale: 0 }}
-        animate={{ scale: isHovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-      />
     </motion.div>
   );
 };

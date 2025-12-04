@@ -36,6 +36,7 @@
     "react-modal-video": "^2.0.2",
     "react-slick": "^0.31.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.5.1",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
     "slick-carousel": "^1.8.1",

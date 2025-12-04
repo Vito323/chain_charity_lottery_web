@@ -165,6 +165,69 @@ const CustomConnectButton = () => {
                     User Center
                   </button>
                   <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/network");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Hold Nodes
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/network");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Node Earnings
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/network");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Node Purchase Records
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/lottery");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Hold Lottery
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/lottery/history");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Winning Records
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/user/transaction-records");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Transaction Records
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/user/earnings-details");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Earnings Details
+                  </button>
+                  <button 
                     className="menu-item sign-out"
                     onClick={() => {
                       disconnect();

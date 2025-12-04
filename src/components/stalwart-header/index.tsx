@@ -10,6 +10,8 @@ const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Projects', href: '/project' },
   { label: 'Lottery', href: '/lottery' },
+  { label: 'NFT Market', href: '/nft-market' },
+  { label: 'Nodes', href: '/network' },
   { label: 'Dao', href: '/dao' },
 ];
 
@@ -49,13 +51,16 @@ export default function StalwartHeader() {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-fuchsia-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <span className="text-white font-bold text-lg">C</span>
               </div>
-              <span className="text-white font-bold text-xl tracking-tight">Hawaiian Nation Charity Foundation</span>
+              <span className="text-white font-bold text-xl tracking-tight">Charity</span>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
               {navItems.map((item, index) => {
-                const isActive = pathname === item.href || (item.href !== '#' && pathname.startsWith(item.href));
+                // 对于 Home 路径，只在精确匹配时才选中（不能是其他路径的子路径）
+                const isActive = item.href === '/' 
+                  ? pathname === '/' || pathname === ''
+                  : pathname === item.href || (item.href !== '#' && pathname.startsWith(item.href + '/'));
                 return (
                   <motion.a
                     key={item.href}
@@ -143,7 +148,10 @@ export default function StalwartHeader() {
             <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl shadow-black/20 p-6">
               <nav className="flex flex-col gap-1">
                 {navItems.map((item, index) => {
-                  const isActive = pathname === item.href || (item.href !== '#' && pathname.startsWith(item.href));
+                  // 对于 Home 路径，只在精确匹配时才选中（不能是其他路径的子路径）
+                  const isActive = item.href === '/' 
+                    ? pathname === '/' || pathname === ''
+                    : pathname === item.href || (item.href !== '#' && pathname.startsWith(item.href + '/'));
                   return (
                     <motion.a
                       key={item.href}

@@ -239,7 +239,7 @@ const StalwartLotteryContent: React.FC = () => {
         </motion.div>
 
         {/* NFT Tickets Section */}
-        <motion.div variants={itemVariants} className="mb-16">
+        {/* <motion.div variants={itemVariants} className="mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
             Your NFT Tickets
           </h2>
@@ -359,7 +359,7 @@ const StalwartLotteryContent: React.FC = () => {
               ))}
             </div>
           )}
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </section>
   );
