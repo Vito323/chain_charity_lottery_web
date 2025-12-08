@@ -67,6 +67,7 @@ const mockFollowWinningData: WinningDetailData = {
 
 const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
   const t = useTranslations('lottery.winningDetail');
+  const tCommon = useTranslations('common');
   // In production, fetch data by winningId
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _winningId = winningId; // Reserved for future API integration
@@ -142,7 +143,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
               <div className="relative w-full max-w-sm mx-auto md:max-w-none md:w-40 md:h-52 h-[60vh] rounded-xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900">
                 <Image
                   src={winningData.ticketImage}
-                  alt={`Winning Ticket ${winningData.id}`}
+                  alt={`${tCommon('images.winningTicket')} ${winningData.id}`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 160px"

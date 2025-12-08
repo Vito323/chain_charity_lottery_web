@@ -3,6 +3,7 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useAccount, useBalance, useChainId } from "wagmi";
+import { useTranslations } from 'next-intl';
 import { TokenInfo as DonationTokenInfo } from "@/hooks/useDonationForm";
 import { useTokenInfoList, TokenInfo as TokenInfoList } from "@/hooks/useTokenInfo";
 
@@ -45,6 +46,7 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
   searchTerm: propSearchTerm,
   hideZeroBalance: propHideZeroBalance,
 }) => {
+  const tCommon = useTranslations('common');
   const [searchInput, setSearchInput] = useState(propSearchTerm);
   const [hideZeroBalance, setHideZeroBalance] = useState(propHideZeroBalance);
   const chainId = useChainId();
@@ -335,7 +337,7 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
               <div className="flex items-center justify-center py-12">
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
-                  <p className="text-white/60">Loading tokens...</p>
+                  <p className="text-white/60">{tCommon('tokens.loadingTokens')}</p>
                 </div>
               </div>
             ) : filteredTokens.length === 0 ? (

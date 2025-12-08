@@ -167,7 +167,8 @@
     },
     "jackpot": {
       "title": "当前奖池",
-      "description": "每张彩票的购买都会增加奖池金额"
+      "description": "每张彩票的购买都会增加奖池金额",
+      "connectWallet": "连接钱包"
     },
     "history": {
       "badge": "历史结果",
@@ -378,7 +379,8 @@
       },
       "annualizedYield": "年化收益率",
       "globalLimit": "全球限额",
-      "nodePrice": "节点价格"
+      "nodePrice": "节点价格",
+      "viewDetails": "查看详情"
     },
     "myNodes": {
       "badge": "我的节点持仓",
@@ -758,7 +760,11 @@
     "stats": {
       "rarity": "稀有度",
       "maxPrize": "最高奖金",
-      "baseWinRate": "基础中奖率"
+      "baseWinRate": "基础中奖率",
+      "winRate": "中奖率",
+      "onSale": "在售",
+      "validUntil": "有效期至",
+      "holder": "持有者"
     },
     "education": {
       "title": "教育支持",
@@ -781,7 +787,9 @@
     },
     "history": {
       "generation": "世代",
+      "generationValue": "第三代",
       "baseValue": "基础价值",
+      "baseValueAmount": "1,500 USDT",
       "familyBadge": "家族徽章",
       "premiumLineage": "优质血统",
       "purchaseRecords": "购买记录",

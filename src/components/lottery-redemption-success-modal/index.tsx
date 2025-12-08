@@ -23,6 +23,7 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
   type = 'redemption',
 }) => {
   const t = useTranslations('lottery.modals.success');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
   const router = useRouter();
   const isFollowType = type === 'follow';
@@ -130,7 +131,7 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
                 <div className="relative w-full aspect-[3/4]">
                   <Image
                     src={ticket.image}
-                    alt={`Lottery Ticket ${ticket.id}`}
+                    alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
                     fill
                     className="object-cover"
                     unoptimized

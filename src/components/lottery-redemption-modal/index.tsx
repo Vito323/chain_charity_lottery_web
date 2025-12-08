@@ -96,7 +96,7 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
             <button
               onClick={onClose}
               className="absolute top-6 right-6 sm:top-8 sm:right-8 z-10 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-              aria-label="Close"
+              aria-label={tCommon('accessibility.close')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

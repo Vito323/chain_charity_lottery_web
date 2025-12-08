@@ -21,6 +21,7 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
   nodeCount = 1,
 }) => {
   const t = useTranslations('nodePurchaseModal.success');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
   const router = useRouter();
   const isGenesis = nodeType === 'genesis';
@@ -79,7 +80,7 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
             <button
               onClick={onClose}
               className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-              aria-label="Close"
+              aria-label={tCommon('accessibility.close')}
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -119,7 +120,7 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
                 >
                   <Image
                     src="/images/placeholder-all.png"
-                    alt="Genesis Node Certificate"
+                    alt={tCommon('images.genesisNodeCertificate')}
                     fill
                     className="object-cover"
                     unoptimized

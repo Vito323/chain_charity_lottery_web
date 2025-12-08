@@ -28,6 +28,7 @@ const WinningRecordCard: React.FC<WinningRecordCardProps> = ({
   animationDelay = 0 
 }) => {
   const t = useTranslations('lottery.winningRecords.card');
+  const tCommon = useTranslations('common');
   const winningTypeLabel = record.winningType === 'lottery' 
     ? t('lotteryWon') 
     : t('followWon');
@@ -109,7 +110,7 @@ const WinningRecordCard: React.FC<WinningRecordCardProps> = ({
             <div className="aspect-[3/4] relative">
               <Image
                 src={record.ticketImage}
-                alt={`Winning Ticket ${record.id}`}
+                alt={`${tCommon('images.winningTicket')} ${record.id}`}
                 fill
                 className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                 style={{ willChange: 'transform' }}

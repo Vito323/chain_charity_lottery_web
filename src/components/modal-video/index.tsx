@@ -1,9 +1,11 @@
 "use client";
 import React from "react";
+import { useTranslations } from 'next-intl';
 import ModalVideo from "react-modal-video";
 import "react-modal-video/scss/modal-video.scss";
 
 const VideoModal = () => {
+  const tCommon = useTranslations('common');
   const [isOpen, setIsOpen] = React.useState(false);
   
   const handleOpenModal = () => {
@@ -16,7 +18,7 @@ const VideoModal = () => {
       {/* 视频播放按钮 */}
       <button 
         onClick={handleOpenModal}
-        aria-label="Play video"
+        aria-label={tCommon('accessibility.playVideo')}
         type="button"
         className="group relative w-16 h-16 bg-white/80 hover:bg-white border-2 border-white rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500/50"
       >

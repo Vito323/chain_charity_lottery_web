@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import NFTCard from '../nft-card';
 import EmptyState from '../empty-state';
 
@@ -35,6 +36,7 @@ const NFTList: React.FC<NFTListProps> = ({
   onNFTClick,
   className = ""
 }) => {
+  const tCommon = useTranslations('common');
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -74,8 +76,8 @@ const NFTList: React.FC<NFTListProps> = ({
   if (!loading && nfts.length === 0) {
     return (
       <EmptyState
-        title="No NFT Collection"
-        description="You don't have any NFT collections yet. Start exploring the digital art world!"
+        title={tCommon('nft.noCollection')}
+        description={tCommon('nft.noCollectionDescription')}
         icon={
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -109,7 +111,7 @@ const NFTList: React.FC<NFTListProps> = ({
           {loading && (
             <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400 text-sm">
               <div className="w-5 h-5 border-2 border-gray-200 dark:border-gray-700 border-t-blue-500 rounded-full animate-spin"></div>
-              <span>Loading...</span>
+              <span>{tCommon('status.loading')}</span>
             </div>
           )}
         </div>
@@ -118,7 +120,7 @@ const NFTList: React.FC<NFTListProps> = ({
       {/* No more data notification */}
       {!hasMore && nfts.length > 0 && (
         <div className="text-center text-gray-500 dark:text-gray-500 text-sm py-5 border-t border-gray-200 dark:border-gray-700 mt-5">
-          <span>All NFTs loaded</span>
+          <span>{tCommon('nft.allLoaded')}</span>
         </div>
       )}
     </div>

@@ -43,6 +43,7 @@ const rarityConfig: Record<RarityType, { color: string; bgGradient: string; bord
 
 const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay = 0 }) => {
   const t = useTranslations('nftMarket');
+  const tCommon = useTranslations('common');
   const rarityStyle = rarityConfig[ticket.rarity];
 
   return (
@@ -82,7 +83,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
             <div className="aspect-[3/4] relative">
               <Image
                 src={ticket.image}
-                alt={`Lottery Ticket ${ticket.id}`}
+                alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
                 fill
                 className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                 style={{ willChange: 'transform' }}
@@ -102,7 +103,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
           <span
             className={`inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs md:text-sm font-semibold ${rarityStyle.color} bg-gradient-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor}`}
           >
-            {t(`rarity.${ticket.rarity}`)}
+            {tCommon(`rarity.${ticket.rarity}`)}
           </span>
         </div>
 

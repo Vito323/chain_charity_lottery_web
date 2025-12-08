@@ -120,7 +120,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
       ) : type === 'listed' ? (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-white/5 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6 border border-white/10">
           <div className="text-white/80 text-xs sm:text-sm md:text-base text-center sm:text-left w-full sm:w-auto">
-            <span className="text-white/60">{t('nftMarket.card.salePrice')}: </span>
+            <span className="text-white/60">{t('actions.purchasePrice')}: </span>
             <span className="text-white font-semibold">
               {ticket.salePrice || ticket.redemptionCost} {ticket.currency}
             </span>

@@ -136,6 +136,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
 
 const TransactionRecords: React.FC = () => {
   const t = useTranslations('user.transactionRecords');
+  const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const [transactionRecords] = useState<TransactionRecord[]>(defaultTransactionRecords);
   const [isLoading] = useState(false);
@@ -274,7 +275,7 @@ const TransactionRecords: React.FC = () => {
                   <div className="w-full aspect-[4/3] rounded-t-2xl overflow-hidden bg-white/5 border-b border-white/10">
                     <Image
                       src={record.image}
-                      alt={`Lottery Ticket ${record.id}`}
+                      alt={`${tCommon('images.lotteryTicket')} ${record.id}`}
                       width={400}
                       height={300}
                       className="w-full h-full object-cover"

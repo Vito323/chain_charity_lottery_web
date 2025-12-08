@@ -5,6 +5,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 import "./style.scss";
 import { useRouter } from "next/navigation";
+import { useTranslations } from 'next-intl';
 
 const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
@@ -12,6 +13,7 @@ const CustomConnectButton = () => {
   const [copySuccess, setCopySuccess] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const tCommon = useTranslations('common');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -70,7 +72,7 @@ const CustomConnectButton = () => {
                     className="connect-button-trigger"
                     onClick={openConnectModal}
                   >
-                    Connect wallet
+                    {tCommon('actions.connectWallet')}
                   </button>
                 );
               }
@@ -81,7 +83,7 @@ const CustomConnectButton = () => {
                     className="connect-button-trigger error"
                     onClick={openChainModal}
                   >
-                    Wrong network
+                    {tCommon('wallet.wrongNetwork')}
                   </button>
                 );
               }
@@ -101,7 +103,7 @@ const CustomConnectButton = () => {
               <div className="wallet-dropdown">
                 <div className="wallet-info">
                   <div className="wallet-section">
-                    <div className="section-title">WALLET</div>
+                    <div className="section-title">{tCommon('wallet.wallet')}</div>
                     <div className="wallet-address-container">
                       <div className="wallet-address">{formatAddress(account.address)}</div>
                       <button 
@@ -111,7 +113,7 @@ const CustomConnectButton = () => {
                           setCopySuccess(true);
                           setTimeout(() => setCopySuccess(false), 2000);
                         }}
-                        title="Copy full address"
+                        title={tCommon('wallet.copyFullAddress')}
                       >
                         <i className={`fa ${copySuccess ? 'fa-check' : 'fa-copy'}`}></i>
                       </button>
@@ -119,7 +121,7 @@ const CustomConnectButton = () => {
                   </div>
                   
                   <div className="network-section">
-                    <div className="section-title">Network</div>
+                    <div className="section-title">{tCommon('wallet.network')}</div>
                     <div className="network-info">
                       <div className="network-icon">
                         {(() => {
@@ -127,7 +129,7 @@ const CustomConnectButton = () => {
                             return (
                               <Image 
                                 src={chain.iconUrl} 
-                                alt={chain.name || 'Chain'} 
+                                alt={chain.name || tCommon('images.chain')} 
                                 width={20} 
                                 height={20} 
                                 className="chain-icon-img" 
@@ -147,7 +149,7 @@ const CustomConnectButton = () => {
                           setShowDropdown(false);
                         }}
                       >
-                        Switch Network
+                        {tCommon('wallet.switchNetwork')}
                       </button>
                     </div>
                   </div>
@@ -162,7 +164,16 @@ const CustomConnectButton = () => {
                       setShowDropdown(false);
                     }}
                   >
-                    User Center
+                    {tCommon('wallet.userCenter')}
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/network/my-nodes");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    {tCommon('wallet.holdNodes')}
                   </button>
                   <button 
                     className="menu-item"
@@ -171,43 +182,52 @@ const CustomConnectButton = () => {
                       setShowDropdown(false);
                     }}
                   >
-                    Hold Nodes
+                    {tCommon('wallet.nodeEarnings')}
                   </button>
                   <button 
                     className="menu-item"
                     onClick={() => {
-                      router.push("/network");
+                      router.push("/network/purchase-history");
                       setShowDropdown(false);
                     }}
                   >
-                    Node Earnings
+                    {tCommon('wallet.nodePurchaseRecords')}
                   </button>
                   <button 
                     className="menu-item"
                     onClick={() => {
-                      router.push("/network");
+                      router.push("/lottery/my-tickets");
                       setShowDropdown(false);
                     }}
                   >
-                    Node Purchase Records
+                    {tCommon('wallet.holdLottery')}
                   </button>
                   <button 
                     className="menu-item"
                     onClick={() => {
-                      router.push("/lottery");
+                      router.push("/lottery/winning-records");
                       setShowDropdown(false);
                     }}
                   >
-                    Hold Lottery
+                    {tCommon('wallet.winningRecords')}
                   </button>
                   <button 
                     className="menu-item"
                     onClick={() => {
-                      router.push("/lottery/history");
+                      router.push("/user/token-details");
                       setShowDropdown(false);
                     }}
                   >
-                    Winning Records
+                    {tCommon('wallet.tokenDetails')}
+                  </button>
+                  <button 
+                    className="menu-item"
+                    onClick={() => {
+                      router.push("/user/donation-records");
+                      setShowDropdown(false);
+                    }}
+                  >
+                    {tCommon('wallet.donationRecords')}
                   </button>
                   <button 
                     className="menu-item"
@@ -216,7 +236,7 @@ const CustomConnectButton = () => {
                       setShowDropdown(false);
                     }}
                   >
-                    Transaction Records
+                    {tCommon('wallet.transactionRecords')}
                   </button>
                   <button 
                     className="menu-item"
@@ -225,7 +245,7 @@ const CustomConnectButton = () => {
                       setShowDropdown(false);
                     }}
                   >
-                    Earnings Details
+                    {tCommon('wallet.earningsDetails')}
                   </button>
                   <button 
                     className="menu-item sign-out"
@@ -234,7 +254,7 @@ const CustomConnectButton = () => {
                       setShowDropdown(false);
                     }}
                   >
-                    Disconnect
+                    {tCommon('wallet.disconnect')}
                   </button>
                 </div>
               </div>

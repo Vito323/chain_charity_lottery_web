@@ -6,41 +6,41 @@ import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import "./style.scss";
 
-// 导航菜单配置 - 参考 GraphLinq 网站结构
+// Navigation menu configuration
 const NAVIGATION_MENU = [
   {
     key: "our-chain",
-    label: "我们的链",
+    label: "Our Chain",
     children: [
-      { key: "about", label: "关于 Graphlinq", path: "/about" },
-      { key: "chain-status", label: "链状态", path: "/chain-status" },
-      { key: "block-explorer", label: "区块浏览器", path: "/explorer" },
-      { key: "bridge", label: "跨链桥", path: "/bridge" },
+      { key: "about", label: "About Graphlinq", path: "/about" },
+      { key: "chain-status", label: "Chain Status", path: "/chain-status" },
+      { key: "block-explorer", label: "Block Explorer", path: "/explorer" },
+      { key: "bridge", label: "Bridge", path: "/bridge" },
     ]
   },
   {
     key: "products",
-    label: "产品",
+    label: "Products",
     children: [
-      { key: "ai-chatbot", label: "AI 聊天机器人", path: "/ai-chatbot" },
-      { key: "no-code-ide", label: "无代码 IDE", path: "/ide" },
-      { key: "analytics", label: "分析工具", path: "/analytics" },
-      { key: "marketplace", label: "市场", path: "/marketplace" },
+      { key: "ai-chatbot", label: "AI Chatbot", path: "/ai-chatbot" },
+      { key: "no-code-ide", label: "No-Code IDE", path: "/ide" },
+      { key: "analytics", label: "Analytics", path: "/analytics" },
+      { key: "marketplace", label: "Marketplace", path: "/marketplace" },
     ]
   },
   {
     key: "resources",
-    label: "资源",
+    label: "Resources",
     children: [
-      { key: "documentation", label: "文档", path: "/docs" },
-      { key: "lite-paper", label: "白皮书", path: "/whitepaper" },
-      { key: "blog", label: "博客", path: "/blog" },
-      { key: "add-metamask", label: "添加到 MetaMask", path: "/add-metamask" },
+      { key: "documentation", label: "Documentation", path: "/docs" },
+      { key: "lite-paper", label: "White Paper", path: "/whitepaper" },
+      { key: "blog", label: "Blog", path: "/blog" },
+      { key: "add-metamask", label: "Add to MetaMask", path: "/add-metamask" },
     ]
   },
   {
     key: "home",
-    label: "首页",
+    label: "Home",
     path: "/",
   },
 ] as {key: string; label: string; path?: string; children?: {key: string; label: string; path: string;}[];}[];
@@ -52,6 +52,7 @@ const ModernNavbar = () => {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const t = useTranslations('navigation');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
 
   // 通用的动态路由匹配函数
@@ -121,7 +122,7 @@ const ModernNavbar = () => {
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'zh', name: '中文', flag: '🇨🇳' }
+    { code: 'zh', name: 'Chinese', flag: '🇨🇳' }
   ];
 
   return (
@@ -363,7 +364,7 @@ const ModernNavbar = () => {
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
+          aria-label={isMobileMenuOpen ? tCommon('accessibility.closeMenu') : tCommon('accessibility.openMenu')}
         >
           <motion.span
             className="hamburger-line"

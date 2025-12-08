@@ -138,7 +138,7 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
               <div className="relative w-full h-96 rounded-2xl overflow-hidden">
                 <Image
                   src={image}
-                  alt={`Project Image ${index + 1}`}
+                  alt={`${tCommon('images.projectImage')} ${index + 1}`}
                   width={800}
                   height={400}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

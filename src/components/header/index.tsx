@@ -23,6 +23,7 @@ function Header() {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations('navigation');
+  const tCommon = useTranslations('common');
   const [, startTransition] = useTransition();
   const languageMenuRef = useRef<HTMLDivElement>(null);
 
@@ -220,7 +221,7 @@ function Header() {
             <motion.button
               className="md:hidden inline-flex items-center justify-center w-12 h-12 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-all duration-200"
               onClick={() => setOpen((v) => !v)}
-              aria-label="Toggle Menu"
+              aria-label={tCommon('accessibility.toggleMenu')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

@@ -180,7 +180,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
             <button
               onClick={onClose}
               className="absolute top-6 right-6 sm:top-8 sm:right-8 z-10 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-              aria-label="Close"
+              aria-label={tCommon('accessibility.close')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -264,7 +264,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
                       onClick={() => handleQuantityChange(-1)}
                       disabled={quantity <= 1}
                       className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white cursor-pointer transition-colors"
-                      aria-label="Decrease quantity"
+                      aria-label={tCommon('accessibility.decreaseQuantity')}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -282,7 +282,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
                       onClick={() => handleQuantityChange(1)}
                       disabled={quantity >= maxQuantity}
                       className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white cursor-pointer transition-colors"
-                      aria-label="Increase quantity"
+                      aria-label={tCommon('accessibility.increaseQuantity')}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

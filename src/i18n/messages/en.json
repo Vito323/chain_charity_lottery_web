@@ -245,7 +245,8 @@
     },
     "jackpot": {
       "title": "Current Jackpot",
-      "description": "Prize pool grows with each ticket purchase"
+      "description": "Prize pool grows with each ticket purchase",
+      "connectWallet": "Connect Wallet"
     },
     "history": {
       "badge": "Historical Results",
@@ -456,7 +457,8 @@
       },
       "annualizedYield": "Annualized yield",
       "globalLimit": "Global limit",
-      "nodePrice": "Node price"
+      "nodePrice": "Node price",
+      "viewDetails": "View Details"
     },
     "myNodes": {
       "badge": "My Node Holdings",
@@ -836,7 +838,11 @@
     "stats": {
       "rarity": "Rarity",
       "maxPrize": "Max Prize",
-      "baseWinRate": "Base Win Rate"
+      "baseWinRate": "Base Win Rate",
+      "winRate": "Win Rate",
+      "onSale": "On Sale",
+      "validUntil": "Valid Until",
+      "holder": "Holder"
     },
     "education": {
       "title": "Education Support",
@@ -859,7 +865,9 @@
     },
     "history": {
       "generation": "Generation",
+      "generationValue": "3rd",
       "baseValue": "Base Value",
+      "baseValueAmount": "1,500 USDT",
       "familyBadge": "Family Badge",
       "premiumLineage": "Premium Lineage",
       "purchaseRecords": "Purchase Records",

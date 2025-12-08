@@ -84,7 +84,8 @@
       "subscribeSuccess": "Subscription successful! Thank you for your attention",
       "donationSuccess": "Donation successful! Thank you for your support.",
       "donationSuccessful": "Donation Successful!",
-      "copied": "Copied!"
+      "copied": "Copied!",
+      "delistSuccess": "Ticket delisted successfully"
     },
     "labels": {
       "price": "Price",
@@ -99,6 +100,54 @@
       "projectId": "Project ID",
       "walletAddress": "Wallet Address",
       "transactionHash": "Transaction Hash"
+    },
+    "wallet": {
+      "wrongNetwork": "Wrong Network",
+      "switchNetwork": "Switch Network",
+      "wallet": "WALLET",
+      "network": "Network",
+      "walletMenu": "Wallet Menu",
+      "userCenter": "User Center",
+      "holdNodes": "Hold Nodes",
+      "nodeEarnings": "Node Earnings",
+      "nodePurchaseRecords": "Node Purchase Records",
+      "holdLottery": "Hold Lottery",
+      "winningRecords": "Winning Records",
+      "tokenDetails": "Token Details",
+      "donationRecords": "Donation Records",
+      "transactionRecords": "Transaction Records",
+      "earningsDetails": "Earnings Details",
+      "disconnect": "Disconnect",
+      "copyFullAddress": "Copy full address",
+      "close": "Close"
+    },
+    "accessibility": {
+      "closeMenu": "Close menu",
+      "openMenu": "Open menu",
+      "toggleMenu": "Toggle Menu",
+      "close": "Close",
+      "decreaseShares": "Decrease shares",
+      "increaseShares": "Increase shares",
+      "scrollToTop": "Scroll to top",
+      "playVideo": "Play video",
+      "decreaseQuantity": "Decrease quantity",
+      "increaseQuantity": "Increase quantity"
+    },
+    "nft": {
+      "noCollection": "No NFT Collection",
+      "noCollectionDescription": "You don't have any NFT collections yet. Start exploring the digital art world!",
+      "allLoaded": "All NFTs loaded"
+    },
+    "tokens": {
+      "loadingTokens": "Loading tokens..."
+    },
+    "images": {
+      "aboutUs": "About us",
+      "genesisNodeCertificate": "Genesis Node Certificate",
+      "lotteryTicket": "Lottery Ticket",
+      "winningTicket": "Winning Ticket",
+      "projectImage": "Project Image",
+      "chain": "Chain"
     }
   }
 }

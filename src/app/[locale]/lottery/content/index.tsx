@@ -17,6 +17,8 @@ interface CountdownTime {
 const LotteryContent: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('lottery');
+  const tCommon = useTranslations('common');
+  const tTime = useTranslations('common.time');
 
   const {
     nfts,
@@ -195,10 +197,10 @@ const LotteryContent: React.FC = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             {[
-              { value: countdown.days, label: t('countdown.days') },
-              { value: countdown.hours, label: t('countdown.hours') },
-              { value: countdown.minutes, label: t('countdown.minutes') },
-              { value: countdown.seconds, label: t('countdown.seconds') },
+              { value: countdown.days, label: tTime('days') },
+              { value: countdown.hours, label: tTime('hours') },
+              { value: countdown.minutes, label: tTime('minutes') },
+              { value: countdown.seconds, label: tTime('seconds') },
             ].map((item, index) => (
               <motion.div
                 key={item.label}
@@ -259,17 +261,17 @@ const LotteryContent: React.FC = () => {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                Connect Your Wallet
+                {tCommon('actions.connectYourWallet')}
               </h3>
               <p className="text-white/60 mb-6">
-                Please connect your wallet to view your lottery tickets
+                {tCommon('actions.connectYourWalletDescription')}
               </p>
               <motion.button
                 className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Connect Wallet
+                {tCommon('actions.connectWallet')}
               </motion.button>
             </motion.div>
           ) : nftsLoading ? (

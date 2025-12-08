@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { LotteryTicket } from '../types';
 
 interface TicketImageProps {
@@ -9,6 +10,8 @@ interface TicketImageProps {
 }
 
 export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
+  const t = useTranslations('nftDetail.stats');
+  const tCommon = useTranslations('common');
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -22,7 +25,7 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
           <div className="relative w-full aspect-square max-w-md mx-auto lg:max-w-none">
             <Image
               src="/images/placeholder-all.png"
-              alt={`${ticket.series} - ${ticket.level}`}
+              alt={`${tCommon('images.lotteryTicket')} ${ticket.series} - ${ticket.level}`}
               fill
               className="object-contain p-4"
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -44,19 +47,19 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
                 <div className="text-lg sm:text-xl font-bold text-white mb-1">
                   {ticket.rarityPercentage}
                 </div>
-                <div className="text-white/60 text-xs sm:text-sm">Rarity</div>
+                <div className="text-white/60 text-xs sm:text-sm">{t('rarity')}</div>
               </div>
               <div className="text-center">
                 <div className="text-lg sm:text-xl font-bold text-emerald-400 mb-1">
                   {ticket.maxPrize}
                 </div>
-                <div className="text-white/60 text-xs sm:text-sm">Max Prize</div>
+                <div className="text-white/60 text-xs sm:text-sm">{t('maxPrize')}</div>
               </div>
               <div className="text-center">
                 <div className="text-lg sm:text-xl font-bold text-white mb-1">
                   {ticket.basicWinRate}
                 </div>
-                <div className="text-white/60 text-xs sm:text-sm">Win Rate</div>
+                <div className="text-white/60 text-xs sm:text-sm">{t('winRate')}</div>
               </div>
             </div>
 
@@ -65,24 +68,24 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
                 {type === 'listed' && (
                   <div className="mb-3">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-semibold bg-white/10 text-white/80 border border-white/20">
-                      On Sale
+                      {t('onSale')}
                     </span>
                   </div>
                 )}
                 <div>
-                  <div className="text-white/60 text-xs sm:text-sm mb-1">Sale Price</div>
+                  <div className="text-white/60 text-xs sm:text-sm mb-1">{tCommon('labels.salePrice')}</div>
                   <div className="text-lg sm:text-xl font-bold text-white">
                     {ticket.salePrice} {ticket.currency}
                   </div>
                 </div>
                 <div>
-                  <div className="text-white/60 text-xs sm:text-sm mb-1">Valid Until</div>
+                  <div className="text-white/60 text-xs sm:text-sm mb-1">{t('validUntil')}</div>
                   <div className="text-sm sm:text-base font-semibold text-white/90">
                     {ticket.validUntil}
                   </div>
                 </div>
                 <div>
-                  <div className="text-white/60 text-xs sm:text-sm mb-2">Holder</div>
+                  <div className="text-white/60 text-xs sm:text-sm mb-2">{t('holder')}</div>
                   <div className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-full bg-white/10 flex-shrink-0" />
                     <div className="font-mono text-xs sm:text-sm text-white/80 truncate">
@@ -95,14 +98,14 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
             {type === 'hold' && (
               <div className="pt-4 border-t border-white/10 space-y-3">
                 <div>
-                  <div className="text-white/60 text-xs sm:text-sm mb-1">Purchase Price</div>
+                  <div className="text-white/60 text-xs sm:text-sm mb-1">{tCommon('labels.purchasePrice')}</div>
                   <div className="text-lg sm:text-xl font-bold text-white">
                     {ticket.salePrice || ticket.redemptionCost} {ticket.currency}
                   </div>
                 </div>
                 {ticket.holderAddress && (
                   <div>
-                    <div className="text-white/60 text-xs sm:text-sm mb-2">Holder</div>
+                    <div className="text-white/60 text-xs sm:text-sm mb-2">{t('holder')}</div>
                     <div className="flex items-center gap-2">
                       <div className="h-8 w-8 rounded-full bg-white/10 flex-shrink-0" />
                       <div className="font-mono text-xs sm:text-sm text-white/80 truncate">

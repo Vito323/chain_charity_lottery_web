@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 export default function ScrollToTop() {
+  const tCommon = useTranslations('common');
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -99,7 +101,7 @@ export default function ScrollToTop() {
             onClick={scrollToTop}
             disabled={isLoading}
             className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-purple-600/80 to-pink-600/80 hover:from-purple-600 hover:to-pink-600 border border-white/20 rounded-full flex items-center justify-center text-white backdrop-blur-xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            aria-label="Scroll to top"
+            aria-label={tCommon('accessibility.scrollToTop')}
           >
             {isLoading ? (
               <motion.div

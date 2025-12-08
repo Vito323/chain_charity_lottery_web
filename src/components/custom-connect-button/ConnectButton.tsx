@@ -6,19 +6,15 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from 'next-intl';
 
-const ConnectButton = () => {
+const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
   const [showDropdown, setShowDropdown] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+  const tCommon = useTranslations('common');
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -62,7 +58,7 @@ const ConnectButton = () => {
     <>
       <div className="p-6 border-b border-white/10 md:p-5">
         <div className="mb-4">
-          <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">WALLET</div>
+          <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">{tCommon('wallet.wallet')}</div>
           <div className="flex items-center gap-2">
             <div className="text-base font-bold text-white font-mono md:text-base sm:text-sm">{formatAddress(account.address)}</div>
             <button 
@@ -72,7 +68,7 @@ const ConnectButton = () => {
                 setCopySuccess(true);
                 setTimeout(() => setCopySuccess(false), 2000);
               }}
-              title="Copy full address"
+              title={tCommon('wallet.copyFullAddress')}
             >
               <i className={`fa text-xs ${copySuccess ? 'fa-check' : 'fa-copy'}`}></i>
             </button>
@@ -80,7 +76,7 @@ const ConnectButton = () => {
         </div>
         
         <div>
-          <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">Network</div>
+          <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">{tCommon('wallet.network')}</div>
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-full flex items-center justify-center text-xs font-bold overflow-hidden">
               {(() => {
@@ -88,7 +84,7 @@ const ConnectButton = () => {
                   return (
                     <Image 
                       src={chain.iconUrl} 
-                      alt={chain.name || 'Chain'} 
+                      alt={chain.name || tCommon('images.chain')} 
                       width={20} 
                       height={20} 
                       className="w-full h-full object-cover rounded-full" 
@@ -107,7 +103,7 @@ const ConnectButton = () => {
                 setShowDropdown(false);
               }}
             >
-              Switch Network
+              {tCommon('wallet.switchNetwork')}
             </button>
           </div>
         </div>
@@ -122,7 +118,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            User Center
+            {tCommon('wallet.userCenter')}
           </button>
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
@@ -131,7 +127,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Hold Nodes
+            {tCommon('wallet.holdNodes')}
           </button>
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
@@ -140,7 +136,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Node Earnings
+            {tCommon('wallet.nodeEarnings')}
           </button>
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
@@ -149,7 +145,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Node Purchase Records
+            {tCommon('wallet.nodePurchaseRecords')}
           </button>
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
@@ -158,7 +154,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Hold Lottery
+            {tCommon('wallet.holdLottery')}
           </button>
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
@@ -167,7 +163,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Winning Records
+            {tCommon('wallet.winningRecords')}
           </button>
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
@@ -176,7 +172,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Token Details
+            {tCommon('wallet.tokenDetails')}
           </button>
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
@@ -185,7 +181,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Donation Records
+            {tCommon('wallet.donationRecords')}
           </button>
         </div>
         <div className="border-t border-white/10 pt-2 pb-2">
@@ -196,7 +192,7 @@ const ConnectButton = () => {
               setShowDropdown(false);
             }}
           >
-            Disconnect
+            {tCommon('wallet.disconnect')}
           </button>
         </div>
       </div>
@@ -230,7 +226,7 @@ const ConnectButton = () => {
                     className="relative bg-gradient-to-br from-purple-600 via-pink-600 to-rose-500 text-white border-0 rounded-full px-7 py-3.5 text-base font-semibold cursor-pointer transition-all duration-300 ease-out font-inherit flex items-center gap-2 shadow-lg shadow-purple-600/25 overflow-hidden min-w-[140px] justify-center hover:from-purple-700 hover:via-pink-700 hover:to-rose-600 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-purple-600/35 active:translate-y-0 active:shadow-lg active:shadow-purple-600/25 focus:outline-none before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-500 hover:before:left-full"
                     onClick={openConnectModal}
                   >
-                    Connect wallet
+                    {tCommon('actions.connectWallet')}
                   </button>
                 );
               }
@@ -241,7 +237,7 @@ const ConnectButton = () => {
                     className="relative bg-gradient-to-br from-red-600 to-red-700 text-white border-0 rounded-full px-7 py-3.5 text-base font-semibold cursor-pointer transition-all duration-300 ease-out font-inherit flex items-center gap-2 shadow-lg shadow-red-600/25 overflow-hidden min-w-[140px] justify-center hover:from-red-700 hover:to-red-800 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-red-600/35 active:translate-y-0 active:shadow-lg active:shadow-red-600/25 focus:outline-none before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-500 hover:before:left-full"
                     onClick={openChainModal}
                   >
-                    Wrong network
+                    {tCommon('wallet.wrongNetwork')}
                   </button>
                 );
               }
@@ -292,11 +288,11 @@ const ConnectButton = () => {
                             
                             {/* 标题和关闭按钮 */}
                             <div className="flex items-center justify-between px-5 pb-4 border-b border-white/10">
-                              <h3 className="text-lg font-semibold text-white">Wallet Menu</h3>
+                              <h3 className="text-lg font-semibold text-white">{tCommon('wallet.walletMenu')}</h3>
                               <button
                                 onClick={() => setShowDropdown(false)}
                                 className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 transition-colors"
-                                aria-label="Close"
+                                aria-label={tCommon('wallet.close')}
                               >
                                 <i className="fa fa-times text-white/80 text-sm"></i>
                               </button>
@@ -333,4 +329,4 @@ const ConnectButton = () => {
   );
 };
 
-export default ConnectButton;
+export default CustomConnectButton;

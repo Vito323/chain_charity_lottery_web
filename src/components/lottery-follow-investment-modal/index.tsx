@@ -117,7 +117,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
             <button
               onClick={onClose}
               className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-              aria-label="Close"
+              aria-label={tCommon('accessibility.close')}
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -148,7 +148,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
                     onClick={() => handleSharesChange(-1)}
                     disabled={shares <= 1}
                     className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white cursor-pointer transition-colors"
-                    aria-label="Decrease shares"
+                    aria-label={tCommon('accessibility.decreaseShares')}
                   >
                     <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -164,7 +164,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
                   <button
                     onClick={() => handleSharesChange(1)}
                     className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white cursor-pointer transition-colors"
-                    aria-label="Increase shares"
+                    aria-label={tCommon('accessibility.increaseShares')}
                   >
                     <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

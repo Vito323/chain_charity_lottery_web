@@ -31,7 +31,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x1234567890123456789012345678901234567890',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '20秒前',
+    relativeTime: '20 seconds ago',
     timestamp: '2025-08-08 18:18:18',
   },
   {
@@ -39,7 +39,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '58秒前',
+    relativeTime: '58 seconds ago',
     timestamp: '2025-08-08 18:18:00',
   },
   {
@@ -47,7 +47,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x9876543210987654321098765432109876543210',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '1分钟前',
+    relativeTime: '1 minute ago',
     timestamp: '2025-08-08 18:17:00',
   },
   {
@@ -55,7 +55,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x1111111111111111111111111111111111111111',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '28分钟前',
+    relativeTime: '28 minutes ago',
     timestamp: '2025-08-08 17:50:00',
   },
   {
@@ -63,7 +63,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x2222222222222222222222222222222222222222',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '1小时前',
+    relativeTime: '1 hour ago',
     timestamp: '2025-08-08 17:18:00',
   },
   {
@@ -71,7 +71,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x3333333333333333333333333333333333333333',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '18小时前',
+    relativeTime: '18 hours ago',
     timestamp: '2025-08-08 00:18:00',
   },
   {
@@ -79,7 +79,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x4444444444444444444444444444444444444444',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '1天前',
+    relativeTime: '1 day ago',
     timestamp: '2025-08-07 18:18:00',
   },
   {
@@ -87,7 +87,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x5555555555555555555555555555555555555555',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '18天前',
+    relativeTime: '18 days ago',
     timestamp: '2025-07-21 18:18:00',
   },
   {
@@ -95,7 +95,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x6666666666666666666666666666666666666666',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '188天前',
+    relativeTime: '188 days ago',
     timestamp: '2025-02-01 18:18:00',
   },
   {
@@ -103,7 +103,7 @@ const defaultDonationRecords: DonationRecord[] = [
     donorAddress: '0x7777777777777777777777777777777777777777',
     amount: 200,
     currency: 'USDT',
-    relativeTime: '388天前',
+    relativeTime: '388 days ago',
     timestamp: '2024-07-16 18:18:00',
   },
 ];

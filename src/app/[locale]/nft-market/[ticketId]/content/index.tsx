@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { toast } from 'react-toastify';
 import { TicketImage } from './components/TicketImage';
 import { BasicInfoTab } from './components/BasicInfoTab';
 import { HistoryTab } from './components/HistoryTab';
@@ -88,6 +89,7 @@ const mockWinningRecords: WinningRecord[] = [
 
 const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, type }) => {
   const t = useTranslations('nftDetail');
+  const tCommon = useTranslations('common');
   // In production, fetch ticket by ticketId
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _ticketId = ticketId; // Reserved for future API integration
@@ -223,7 +225,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
     // TODO: Implement actual delist API call
     // After delisting, update the ticket status or redirect
     // For now, just show a success message
-    alert('Ticket delisted successfully');
+    toast.success(tCommon('success.delistSuccess'));
   };
 
   return (

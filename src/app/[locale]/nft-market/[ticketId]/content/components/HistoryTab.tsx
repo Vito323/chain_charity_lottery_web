@@ -31,11 +31,11 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-6 md:mb-8 pb-6 md:pb-8 border-b border-white/10">
           <div className="text-center">
             <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">{t('generation')}</div>
-            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">3rd</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">{t('generationValue')}</div>
           </div>
           <div className="text-center">
             <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">{t('baseValue')}</div>
-            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-400">1,500 USDT</div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-400">{t('baseValueAmount')}</div>
           </div>
           <div className="text-center">
             <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">{t('familyBadge')}</div>

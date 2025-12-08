@@ -10,6 +10,7 @@ import { Link } from '@/i18n/navigation';
 
 const About = () => {
   const t = useTranslations('about');
+  const tCommon = useTranslations('common');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -104,7 +105,7 @@ const About = () => {
               <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm p-4">
                 <Image
                   src="/images/about3.png"
-                  alt="About us"
+                  alt={tCommon('images.aboutUs')}
                   width={600}
                   height={500}
                   className="w-full h-auto rounded-2xl object-cover group-hover:scale-105 transition-transform duration-500"

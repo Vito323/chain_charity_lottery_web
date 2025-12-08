@@ -127,7 +127,7 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
             <div className="aspect-[3/4] relative">
               <Image
                 src={ticket.image}
-                alt={`Lottery Ticket ${ticket.id}`}
+                alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
                 fill
                 className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                 style={{ willChange: 'transform' }}
