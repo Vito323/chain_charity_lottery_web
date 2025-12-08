@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 import { formatCurrency } from '@/utils/currency';
 
@@ -125,6 +126,8 @@ const defaultTokenDetails: TokenDetail[] = [
 ];
 
 const StalwartTokenDetails: React.FC = () => {
+  const t = useTranslations('user.tokenDetails');
+  const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const [tokenDetails] = useState<TokenDetail[]>(defaultTokenDetails);
   const [isLoading] = useState(false);
@@ -173,14 +176,14 @@ const StalwartTokenDetails: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-            <span className="text-sm">Token Details</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Token <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">Portfolio</span>
+            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            View your token balances and track your portfolio value across different assets.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -196,10 +199,10 @@ const StalwartTokenDetails: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Connect Your Wallet
+              {t('connect.title')}
             </h3>
             <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Connect your wallet to view your token balances and portfolio details.
+              {t('connect.description')}
             </p>
             <StalwartConnectButton />
           </motion.div>
@@ -214,7 +217,7 @@ const StalwartTokenDetails: React.FC = () => {
             <div className="bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-fuchsia-500/20 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-6 md:p-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="text-white/70 text-sm md:text-base">
-                  Total Portfolio Value
+                  {t('totalPortfolioValue')}
                 </div>
                 <div className="flex items-baseline gap-2">
                   <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
@@ -238,7 +241,7 @@ const StalwartTokenDetails: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white/80">Loading token details...</p>
+            <p className="text-white/80">{tCommon('status.loading')}</p>
           </motion.div>
         )}
 
@@ -256,7 +259,7 @@ const StalwartTokenDetails: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Failed to Load Token Details
+              {tCommon('errors.failedToLoadTokenDetails')}
             </h3>
             <p className="text-white/60">{error}</p>
           </motion.div>
@@ -315,10 +318,10 @@ const StalwartTokenDetails: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              No Tokens Found
+              {t('empty.title')}
             </h3>
             <p className="text-white/60 mb-6">
-              You don&apos;t have any tokens in your wallet yet.
+              {t('empty.description')}
             </p>
           </motion.div>
         )}

@@ -3,10 +3,12 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 const StalwartRoadmap = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const t = useTranslations('roadmap');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,80 +33,22 @@ const StalwartRoadmap = () => {
     },
   };
 
-  const roadmapItems = [
-    {
-      quarter: 'Q1 2024',
-      title: 'Foundation & Core Mission',
-      description: 'Established our charitable foundation with core humanitarian programs and community outreach.',
-      status: 'completed',
-      features: [
-        'Emergency Relief Programs',
-        'Educational Support Initiatives',
-        'Medical Aid Distribution',
-        'Volunteer Network Building',
-      ],
-    },
-    {
-      quarter: 'Q2 2024',
-      title: 'Community Impact',
-      description: 'Expanded our reach with enhanced community programs and disaster response capabilities.',
-      status: 'completed',
-      features: [
-        'Disaster Relief Operations',
-        'Environmental Protection Projects',
-        'Healthcare Access Programs',
-        'Digital Donation Platform',
-      ],
-    },
-    {
-      quarter: 'Q3 2024',
-      title: 'Global Partnerships',
-      description: 'Forged strategic partnerships with international organizations and local communities.',
-      status: 'completed',
-      features: [
-        'International NGO Partnerships',
-        'Corporate Social Responsibility',
-        'Government Collaboration',
-        'Transparency & Accountability',
-      ],
-    },
-    {
-      quarter: 'Q4 2024',
-      title: 'Digital Innovation',
-      description: 'Building a comprehensive digital ecosystem for charitable giving and impact tracking.',
-      status: 'current',
-      features: [
-        'Blockchain Transparency',
-        'Impact Measurement Tools',
-        'Mobile Donation App',
-        'Real-time Project Updates',
-      ],
-    },
-    {
-      quarter: 'Q1 2025',
-      title: 'Global Expansion',
-      description: 'Expanding our humanitarian efforts globally with multi-regional operations and local partnerships.',
-      status: 'upcoming',
-      features: [
-        'Multi-country Operations',
-        'Local Community Centers',
-        'Cultural Adaptation Programs',
-        'Regional Leadership Teams',
-      ],
-    },
-    {
-      quarter: 'Q2 2025',
-      title: 'Sustainable Impact',
-      description: 'Focusing on long-term sustainable solutions and systemic change for lasting impact.',
-      status: 'upcoming',
-      features: [
-        'Sustainable Development Goals',
-        'Capacity Building Programs',
-        'Policy Advocacy',
-        'Social Innovation Labs',
-      ],
-    },
-  ];
+  const roadmapKeys = ['q1_2024', 'q2_2024', 'q3_2024', 'q4_2024', 'q1_2025', 'q2_2025'];
+  const roadmapStatuses = ['completed', 'completed', 'completed', 'current', 'upcoming', 'upcoming'];
+  
+  const roadmapItems = roadmapKeys.map((key, index) => ({
+    key,
+    quarter: t(`items.${key}.quarter`),
+    title: t(`items.${key}.title`),
+    description: t(`items.${key}.description`),
+    status: roadmapStatuses[index],
+    features: [
+      t(`items.${key}.features.0`),
+      t(`items.${key}.features.1`),
+      t(`items.${key}.features.2`),
+      t(`items.${key}.features.3`),
+    ],
+  }));
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -120,16 +64,7 @@ const StalwartRoadmap = () => {
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'Achieved';
-      case 'current':
-        return 'Active';
-      case 'upcoming':
-        return 'Planned';
-      default:
-        return 'Planned';
-    }
+    return t(`status.${status}`);
   };
 
   return (
@@ -145,13 +80,13 @@ const StalwartRoadmap = () => {
             variants={itemVariants}
             className="text-4xl md:text-5xl font-bold text-white mb-6"
           >
-            Our Impact Journey
+            {t('title')}
           </motion.h2>
           <motion.p
             variants={itemVariants}
             className="text-xl text-gray-300 max-w-3xl mx-auto"
           >
-            Follow our journey as we build a better world through compassion and action, one milestone at a time.
+            {t('subtitle')}
           </motion.p>
         </motion.div>
 

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import StalwartHeader from '@/components/stalwart-header';
 import StalwartFooter from '@/components/stalwart-footer';
 import ScrollToTop from '@/components/scroll-to-top';
@@ -152,6 +153,7 @@ const marketLotteryTickets: LotteryTicket[] = [
 type TabType = 'new' | 'market';
 
 const StalwartNFTMarketPage = () => {
+  const t = useTranslations('nftMarket');
   const [activeTab, setActiveTab] = useState<TabType>('new');
   const [sortBy, setSortBy] = useState<'latest' | 'price' | 'rarity' | 'follow'>('latest');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -166,8 +168,8 @@ const StalwartNFTMarketPage = () => {
   };
 
   const tabs = [
-    { id: 'new' as TabType, label: 'New Lottery' },
-    { id: 'market' as TabType, label: 'Lottery Market' },
+    { id: 'new' as TabType, label: t('tabs.new') },
+    { id: 'market' as TabType, label: t('tabs.market') },
   ];
 
   const currentTickets = activeTab === 'new' ? newLotteryTickets : marketLotteryTickets;
@@ -219,19 +221,19 @@ const StalwartNFTMarketPage = () => {
               className="inline-flex items-center gap-2.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-white/90 mb-6"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs md:text-sm">Chain Charity Lottery</span>
+              <span className="text-xs md:text-sm">{t('badge')}</span>
             </motion.div>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight mb-6">
-              NFT
+              {t('title')}
               <br />
               <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
-                Marketplace
+                {t('titleHighlight')}
               </span>
             </h1>
             
             <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">
-              Discover and collect unique lottery tickets with different rarities and win rates
+              {t('subtitle')}
             </p>
           </motion.div>
         </div>
@@ -274,7 +276,7 @@ const StalwartNFTMarketPage = () => {
                     : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
                 }`}
               >
-                Latest
+                {t('sort.latest')}
               </button>
               <button
                 onClick={() => handleSort('price')}
@@ -284,7 +286,7 @@ const StalwartNFTMarketPage = () => {
                     : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
                 }`}
               >
-                Price
+                {t('sort.price')}
                 {sortBy === 'price' && (
                   <svg
                     className={`w-3 h-3 transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}
@@ -304,7 +306,7 @@ const StalwartNFTMarketPage = () => {
                     : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
                 }`}
               >
-                Rarity
+                {t('sort.rarity')}
                 {sortBy === 'rarity' && (
                   <svg
                     className={`w-3 h-3 transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}
@@ -324,7 +326,7 @@ const StalwartNFTMarketPage = () => {
                     : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
                 }`}
               >
-                Follow
+                {t('sort.follow')}
               </button>
               <button className="flex-shrink-0 p-1.5 md:p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/5 border border-white/10 transition-all duration-300">
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

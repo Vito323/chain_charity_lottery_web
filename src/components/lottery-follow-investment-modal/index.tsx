@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
+import { useTranslations } from 'next-intl';
 
 interface LotteryFollowInvestmentModalProps {
   isOpen: boolean;
@@ -23,6 +24,8 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
   onConfirmFollow,
   mockMode = false,
 }) => {
+  const t = useTranslations('lottery.modals.follow');
+  const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const canProceed = mockMode || isConnected;
   const [shares, setShares] = useState(1);
@@ -123,13 +126,13 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
 
             {/* Header Section */}
             <div className="space-y-4 pt-2 pr-10 sm:pr-12">
-              <h2 className="text-xl sm:text-2xl font-bold text-white">Follow Investment</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">{t('title')}</h2>
             </div>
 
             {/* Redemption Cost */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
               <div className="flex items-center justify-between">
-                <div className="text-sm sm:text-base text-white/70">Lottery Redemption Cost:</div>
+                <div className="text-sm sm:text-base text-white/70">{t('redemptionCost')}</div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
                   {redemptionCost.toLocaleString()} CLT
                 </div>
@@ -139,7 +142,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
             {/* Shares Input */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
               <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <div className="text-sm sm:text-base text-white/70">Number of Shares:</div>
+                <div className="text-sm sm:text-base text-white/70">{t('numberOfShares')}</div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleSharesChange(-1)}
@@ -174,7 +177,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
             {/* Actual Payment Price */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
               <div className="flex items-center justify-between">
-                <div className="text-sm sm:text-base text-white/70">Actual Payment Price:</div>
+                <div className="text-sm sm:text-base text-white/70">{t('actualPaymentPrice')}</div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
                   {actualPayment.toLocaleString()} CLT
                 </div>
@@ -184,7 +187,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
             {/* Reward Calculation Formula */}
             <div className="rounded-xl border border-white/10 bg-white/5 p-3 sm:p-4">
               <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
-                If you win, you will receive a bonus = lottery bonus × investment amount / lottery redemption cost
+                {t('rewardFormula')}
               </p>
             </div>
 
@@ -198,13 +201,13 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
                 className="mt-1 w-5 h-5 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-2 focus:ring-purple-500/50 cursor-pointer flex-shrink-0"
               />
               <label htmlFor="terms-checkbox-follow" className="flex-1 text-xs sm:text-sm md:text-base text-white/70 cursor-pointer">
-                I have read and accepted the{' '}
+                {tCommon('terms.accept')}{' '}
                 <a href="#" className="text-purple-400 hover:text-purple-300 underline">
-                  Terms of Service
+                  {tCommon('terms.service')}
                 </a>{' '}
-                and{' '}
+                {tCommon('terms.and')}{' '}
                 <a href="#" className="text-purple-400 hover:text-purple-300 underline">
-                  Privacy Policy
+                  {tCommon('terms.privacy')}
                 </a>
               </label>
             </div>
@@ -225,12 +228,12 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Processing...
+                  {tCommon('actions.processing')}
                 </>
               ) : !canProceed ? (
-                'Please Connect Wallet First'
+                tCommon('actions.connectWalletFirst')
               ) : (
-                'Confirm Follow Investment'
+                t('confirm')
               )}
             </button>
           </div>

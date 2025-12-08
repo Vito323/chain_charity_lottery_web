@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useTranslations, useLocale } from 'next-intl';
 import { LotteryTicket } from '@/app/[locale]/nft-market/types';
 
 interface LotteryRedemptionSuccessModalProps {
@@ -21,6 +22,8 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
   ticketCount,
   type = 'redemption',
 }) => {
+  const t = useTranslations('lottery.modals.success');
+  const locale = useLocale();
   const router = useRouter();
   const isFollowType = type === 'follow';
   const isPurchaseType = type === 'purchase';
@@ -52,8 +55,12 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
 
   if (!isOpen) return null;
 
-  // 获取序数后缀
+  // 获取序数后缀 - 根据语言环境返回不同的格式
   const getOrdinalSuffix = (num: number): string => {
+    // 中文使用"第X个"格式，英文使用"Xst/nd/rd/th"格式
+    if (locale === 'zh') {
+      return `${num}`;
+    }
     const j = num % 10;
     const k = num % 100;
     if (j === 1 && k !== 11) return num + 'st';
@@ -92,22 +99,17 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
             >
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                 {isSellType
-                  ? 'Lottery Ticket Listed Successfully'
+                  ? t('title.sell')
                   : isPurchaseType 
-                    ? 'Lottery Purchase Successful' 
+                    ? t('title.purchase') 
                     : isFollowType 
-                      ? 'Lottery Follow Investment Successful' 
-                      : 'Lottery Redemption Successful'}
+                      ? t('title.follow') 
+                      : t('title.redemption')}
               </h2>
               <p className="text-sm sm:text-base text-white/70">
                 {isSellType
-                  ? `This is your ${getOrdinalSuffix(ticketCount)} time selling a lottery ticket`
-                  : `This is your ${getOrdinalSuffix(ticketCount)} ${
-                      isPurchaseType 
-                        ? 'purchased lottery ticket' 
-                        : isFollowType 
-                          ? 'follow-on investment lottery ticket' 
-                          : 'redeemed lottery ticket'}`}
+                  ? t('description.sell', { count: ticketCount, ordinal: locale === 'zh' ? '' : getOrdinalSuffix(ticketCount) })
+                  : t(`description.${isPurchaseType ? 'purchase' : isFollowType ? 'follow' : 'redemption'}`, { count: ticketCount, ordinal: locale === 'zh' ? '' : getOrdinalSuffix(ticketCount) })}
               </p>
             </motion.div>
 
@@ -149,12 +151,12 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
               className="space-y-2 text-sm sm:text-base text-white/70"
             >
               {isSellType ? (
-                <p>After the transaction is completed, the income, after deducting fees, will be automatically deposited into your logged-in wallet</p>
+                <p>{t('info.sell')}</p>
               ) : (
                 <>
-                  <p>Please pay attention to the 4 daily draw results</p>
+                  <p>{t('info.drawResults')}</p>
                   {(isPurchaseType || type === 'redemption') && (
-                    <p>You can also sell the lottery ticket in the marketplace</p>
+                    <p>{t('info.marketplace')}</p>
                   )}
                 </>
               )}
@@ -171,12 +173,10 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
                 className="text-sm sm:text-base text-purple-400 hover:text-purple-300 transition-colors cursor-pointer inline-flex items-center gap-1"
               >
                 {isSellType
-                  ? 'View my listed lottery tickets'
+                  ? t('viewTickets.listed')
                   : isFollowType 
-                    ? 'View my follow-on investments' 
-                    : isPurchaseType 
-                      ? 'View my lottery tickets' 
-                      : 'View my lottery tickets'} <span>&gt;</span>
+                    ? t('viewTickets.follow') 
+                    : t('viewTickets.default')} <span>&gt;</span>
               </button>
             </motion.div>
 
@@ -191,19 +191,19 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
                 onClick={handleNFTMarketplace}
                 className="flex-1 rounded-full py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm sm:text-base font-medium transition-colors cursor-pointer"
               >
-                NFT Marketplace
+                {t('buttons.marketplace')}
               </button>
               <button
                 onClick={handleContinueRedemption}
                 className="flex-1 rounded-full py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm sm:text-base font-medium transition-colors cursor-pointer"
               >
                 {isSellType
-                  ? 'Continue Selling'
+                  ? t('buttons.continueSell')
                   : isPurchaseType 
-                    ? 'Continue Purchase' 
+                    ? t('buttons.continuePurchase') 
                     : isFollowType 
-                      ? 'Continue Follow Investment' 
-                      : 'Continue Redemption'}
+                      ? t('buttons.continueFollow') 
+                      : t('buttons.continueRedemption')}
               </button>
             </motion.div>
           </div>

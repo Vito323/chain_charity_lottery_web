@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from 'next-intl';
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useDonationForm } from "@/hooks/useDonationForm";
 import { useAccount, useChainId } from "wagmi";
@@ -20,6 +21,8 @@ interface StalwartDonateProps {
 }
 
 const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
+  const t = useTranslations('donate');
+  const tCommon = useTranslations('common');
   const chainId = useChainId();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -97,12 +100,12 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
     if (isConnected) {
       // 验证输入
       if (!selectedToken) {
-        toast.error("Please select a token");
+        toast.error(tCommon('validation.pleaseSelectToken'));
         return;
       }
       
       if (!amount || parseFloat(amount) <= 0) {
-        toast.error("Please enter a valid amount");
+        toast.error(tCommon('validation.pleaseEnterAmount'));
         return;
       }
 
@@ -117,23 +120,23 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
           
         if (result) {
           setDonationSuccess(true);
-          toast.success("Donation successful! Thank you for your support.");
+          toast.success(tCommon('success.donationSuccess'));
           // 重置表单
           handleAmountChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
         } else {
-          toast.error("Donation failed. Please try again.");
+          toast.error(tCommon('errors.donationFailed'));
         }
       } catch (error: any) {
         console.error("Donation failed:", error);
         
         // 根据错误类型显示不同的错误信息
-        let errorMessage = "Donation failed. Please try again.";
+        let errorMessage = tCommon('errors.donationFailed');
         if (error.message?.includes("user rejected")) {
-          errorMessage = "Transaction was cancelled by user";
+          errorMessage = tCommon('errors.transactionCancelled');
         } else if (error.message?.includes("insufficient funds")) {
-          errorMessage = "Insufficient balance for this transaction";
+          errorMessage = tCommon('errors.insufficientFunds');
         } else if (error.message?.includes("gas")) {
-          errorMessage = "Transaction failed due to gas issues";
+          errorMessage = tCommon('errors.gasIssue');
         }
         
         toast.error(errorMessage);
@@ -170,7 +173,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full mb-6"
             >
               <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-white/80">Crypto Donation</span>
+              <span className="text-sm font-medium text-white/80">{t('badge')}</span>
             </motion.div>
             
             <motion.h1
@@ -179,9 +182,9 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="text-4xl md:text-5xl font-bold text-white mb-4"
             >
-              Support the  
+              {t('title')}  
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Project
+                {t('titleHighlight')}
               </span>
             </motion.h1>
             
@@ -191,7 +194,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-lg text-white/70 max-w-md mx-auto"
             >
-              Make a difference with your crypto donation
+              {t('subtitle')}
             </motion.p>
           </div>
 
@@ -214,7 +217,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                    <p className="!text-sm !font-semibold !text-white !uppercase !tracking-wide">Project Name</p>
+                    <p className="!text-sm !font-semibold !text-white !uppercase !tracking-wide">{t('projectName')}</p>
                   </div>
                   <p className="text-white font-semibold text-lg break-words leading-relaxed">{decodeURIComponent(name)}</p>
                 </div>
@@ -230,7 +233,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <p className="!text-sm !font-semibold !text-white !uppercase !tracking-wide">Project ID</p>
+                    <p className="!text-sm !font-semibold !text-white !uppercase !tracking-wide">{t('projectId')}</p>
                   </div>
                   <p className="text-white font-mono text-base break-all bg-white/5 px-3 py-2 rounded-lg border border-white/10">{uid}</p>
                 </div>
@@ -248,10 +251,10 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-yellow-400'}`}></div>
-                    <p className="!text-sm !font-semibold !text-white !uppercase !tracking-wide">Wallet Address</p>
+                    <p className="!text-sm !font-semibold !text-white !uppercase !tracking-wide">{t('walletAddress')}</p>
                   </div>
                   <p className="text-white font-mono text-base break-all bg-white/5 px-3 py-2 rounded-lg border border-white/10">
-                    {isConnected ? address : "Please connect your wallet"}
+                    {isConnected ? address : tCommon('validation.pleaseConnectWallet')}
                   </p>
                 </div>
               </div>
@@ -259,7 +262,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
 
             {/* Token Selection */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-white/80 mb-3">Select Token</label>
+              <label className="block text-sm font-medium text-white/80 mb-3">{t('selectToken')}</label>
               <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/10">
                 <div
                   className={`flex items-center gap-3 flex-1 cursor-pointer ${
@@ -287,7 +290,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
                     </div>
                   )}
                   <span className="text-white font-medium">
-                    {selectedToken?.symbol || "Select Token"}
+                    {selectedToken?.symbol || t('selectToken')}
                   </span>
                 </div>
                 <svg className="w-5 h-5 text-white/60" fill="currentColor" viewBox="0 0 20 20">
@@ -298,7 +301,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
 
             {/* Amount Input */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-white/80 mb-3">Amount</label>
+              <label className="block text-sm font-medium text-white/80 mb-3">{t('amount')}</label>
               <div className="relative">
                 <input
                   type="number"
@@ -311,7 +314,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
                   step="0.000001"
                 />
                 {amount && parseFloat(amount) <= 0 && (
-                  <p className="mt-2 text-sm text-red-400">Please enter a valid amount</p>
+                  <p className="mt-2 text-sm text-red-400">{tCommon('validation.pleaseEnterAmount')}</p>
                 )}
               </div>
               {selectedToken && (
@@ -324,7 +327,7 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
             {/* Total Donation */}
             <div className="mb-8">
               <div className="flex justify-between items-center p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
-                <span className="text-white/80 font-medium">Total Donation</span>
+                <span className="text-white/80 font-medium">{t('totalDonation')}</span>
                 <span className="text-white font-bold text-lg">
                   {amount && selectedToken
                     ? `$${calculateUSDValue(amount, selectedToken.symbol)}`
@@ -355,19 +358,19 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Processing...
+                  {tCommon('actions.processing')}
                 </div>
               ) : donationSuccess ? (
                 <div className="flex items-center justify-center gap-2">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  Donation Successful!
+                  {t('donationSuccessful')}
                 </div>
               ) : isConnected ? (
-                "Donate Now"
+                tCommon('actions.donateNow')
               ) : (
-                "Connect Wallet"
+                tCommon('actions.connectWallet')
               )}
             </motion.button>
           </motion.div>

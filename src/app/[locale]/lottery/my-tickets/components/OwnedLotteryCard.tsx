@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { RarityType } from '@/app/[locale]/nft-market/types';
 
 interface OwnedLotteryTicket {
@@ -58,6 +59,8 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
   onSell,
   onDelist
 }) => {
+  const t = useTranslations('myTickets.card');
+  const tCommon = useTranslations('common');
   const rarityStyle = rarityConfig[ticket.rarity];
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -151,7 +154,7 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
         {/* Purchase Price */}
         <div className="mb-3 md:mb-4">
           <div className="flex items-center justify-between">
-            <span className="text-white/60 text-xs md:text-sm">Purchase Price</span>
+            <span className="text-white/60 text-xs md:text-sm">{t('purchasePrice')}</span>
             <span className="text-white font-bold text-sm md:text-base">
               {ticket.purchasePrice.toLocaleString(undefined, {
                 minimumFractionDigits: 3,
@@ -171,10 +174,10 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
           style={{ willChange: 'transform' }}
         >
           {isProcessing 
-            ? 'Processing...' 
+            ? tCommon('actions.processing') 
             : isListed 
-              ? 'Delist' 
-              : 'Sell'}
+              ? t('delist') 
+              : t('sell')}
         </button>
       </div>
     </motion.div>

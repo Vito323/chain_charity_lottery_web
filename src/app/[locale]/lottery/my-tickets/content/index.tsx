@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import OwnedLotteryCard from '../components/OwnedLotteryCard';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 import { RarityType } from '@/app/[locale]/nft-market/types';
@@ -80,6 +81,8 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
 
 const StalwartMyTickets: React.FC = () => {
   const { isConnected } = useAccount();
+  const t = useTranslations('myTickets');
+  const tCommon = useTranslations('common');
   const [ownedTickets, setOwnedTickets] = useState<OwnedLotteryTicket[]>(defaultOwnedTickets);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);
@@ -160,14 +163,14 @@ const StalwartMyTickets: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm">My Tickets</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Lottery <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">Ticket Portfolio</span>
+            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            View and manage your lottery ticket collection. Sell your tickets on the marketplace anytime.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -183,10 +186,10 @@ const StalwartMyTickets: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Connect Your Wallet
+              {t('connectTitle')}
             </h3>
             <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Connect your wallet to view your lottery ticket collection and manage your assets.
+              {t('connectDescription')}
             </p>
             <StalwartConnectButton />
           </motion.div>
@@ -210,7 +213,7 @@ const StalwartMyTickets: React.FC = () => {
                       : 'text-white/70 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  {tab === 'hold' ? 'Hold' : 'Listed'}
+                  {tab === 'hold' ? t('tabs.hold') : t('tabs.listed')}
                 </button>
               ))}
             </div>
@@ -228,12 +231,12 @@ const StalwartMyTickets: React.FC = () => {
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="text-sm text-white/60 mb-2">Total Tickets</div>
+              <div className="text-sm text-white/60 mb-2">{t('summary.totalTickets')}</div>
               <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                 {totalTickets}
               </div>
               <div className="text-xs text-white/50">
-                {activeTab === 'hold' ? 'In your collection' : 'Listed for sale'}
+                {activeTab === 'hold' ? t('summary.inCollection') : t('summary.listedForSale')}
               </div>
             </motion.div>
 
@@ -242,14 +245,14 @@ const StalwartMyTickets: React.FC = () => {
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="text-sm text-white/60 mb-2">Total Value</div>
+              <div className="text-sm text-white/60 mb-2">{t('summary.totalValue')}</div>
               <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">
                 {totalValue.toLocaleString(undefined, {
                   minimumFractionDigits: 3,
                   maximumFractionDigits: 3,
                 })} CLT
               </div>
-              <div className="text-xs text-white/50">Purchase price total</div>
+              <div className="text-xs text-white/50">{t('summary.purchasePriceTotal')}</div>
             </motion.div>
           </motion.div>
         )}
@@ -263,7 +266,7 @@ const StalwartMyTickets: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white/80">Loading your tickets...</p>
+            <p className="text-white/80">{tCommon('status.loading')}</p>
           </motion.div>
         )}
 
@@ -281,7 +284,7 @@ const StalwartMyTickets: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Failed to Load Tickets
+              {tCommon('errors.failedToLoadTickets')}
             </h3>
             <p className="text-white/60">{error}</p>
           </motion.div>
@@ -325,12 +328,12 @@ const StalwartMyTickets: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">
-                  {activeTab === 'hold' ? 'No Tickets Held' : 'No Tickets Listed'}
+                  {activeTab === 'hold' ? t('empty.noTicketsHeld') : t('empty.noTicketsListed')}
                 </h3>
                 <p className="text-white/60">
                   {activeTab === 'hold' 
-                    ? 'You don\'t have any tickets in your collection.'
-                    : 'You don\'t have any tickets listed for sale.'}
+                    ? t('empty.noTicketsHeldDesc')
+                    : t('empty.noTicketsListedDesc')}
                 </p>
               </motion.div>
             )}
@@ -351,16 +354,16 @@ const StalwartMyTickets: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              No Tickets Found
+              {t('empty.noTicketsFound')}
             </h3>
             <p className="text-white/60 mb-6">
-              You don&apos;t have any lottery tickets yet. Start by purchasing tickets to build your collection.
+              {t('empty.noTicketsFoundDesc')}
             </p>
             <Link
               href="/lottery"
               className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
             >
-              Browse Lottery
+              {t('empty.browseLottery')}
             </Link>
           </motion.div>
         )}

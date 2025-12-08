@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { formatCurrency } from '@/utils/currency';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 
@@ -95,6 +96,8 @@ const defaultPurchaseRecords: NodePurchaseRecord[] = [
 ];
 
 const StalwartPurchaseHistory: React.FC = () => {
+  const t = useTranslations('network.purchaseHistory');
+  const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const [purchaseRecords] = useState<NodePurchaseRecord[]>(defaultPurchaseRecords);
   const [isLoading] = useState(false);
@@ -104,13 +107,13 @@ const StalwartPurchaseHistory: React.FC = () => {
   const getNodeTypeName = (type: 'genesis' | 'super' | 'standard'): string => {
     switch (type) {
       case 'genesis':
-        return 'Genesis Node';
+        return tCommon('nodeTypes.genesis');
       case 'super':
-        return 'Super Node';
+        return tCommon('nodeTypes.super');
       case 'standard':
-        return 'Standard Node';
+        return tCommon('nodeTypes.standard');
       default:
-        return 'Node';
+        return tCommon('nodeTypes.node');
     }
   };
 
@@ -212,14 +215,14 @@ const StalwartPurchaseHistory: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm">Purchase History</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Node <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">Purchase Records</span>
+            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            View your complete history of node purchases with detailed transaction information.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -235,10 +238,10 @@ const StalwartPurchaseHistory: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Connect Your Wallet
+              {t('connect.title')}
             </h3>
             <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Connect your wallet to view your node purchase history and transaction records.
+              {t('connect.description')}
             </p>
             <StalwartConnectButton />
           </motion.div>
@@ -255,11 +258,11 @@ const StalwartPurchaseHistory: React.FC = () => {
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="text-sm text-white/60 mb-2">Total Purchase Cost</div>
+              <div className="text-sm text-white/60 mb-2">{t('summary.totalPurchaseCost')}</div>
               <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                 {formatCurrency(totalPurchaseCost)}
               </div>
-              <div className="text-xs text-white/50">Across all purchases</div>
+              <div className="text-xs text-white/50">{t('summary.acrossAllPurchases')}</div>
             </motion.div>
 
             <motion.div
@@ -267,11 +270,11 @@ const StalwartPurchaseHistory: React.FC = () => {
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="text-sm text-white/60 mb-2">Total Nodes Purchased</div>
+              <div className="text-sm text-white/60 mb-2">{t('summary.totalNodesPurchased')}</div>
               <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">
                 {totalNodes}
               </div>
-              <div className="text-xs text-white/50">Total purchase count</div>
+              <div className="text-xs text-white/50">{t('summary.totalPurchaseCount')}</div>
             </motion.div>
           </motion.div>
         )}
@@ -285,7 +288,7 @@ const StalwartPurchaseHistory: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white/80">Loading purchase history...</p>
+            <p className="text-white/80">{tCommon('status.loading')}</p>
           </motion.div>
         )}
 
@@ -303,7 +306,7 @@ const StalwartPurchaseHistory: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Failed to Load Purchase History
+              {tCommon('errors.failedToLoadPurchaseHistory')}
             </h3>
             <p className="text-white/60">{error}</p>
           </motion.div>
@@ -321,13 +324,13 @@ const StalwartPurchaseHistory: React.FC = () => {
                 <thead className="bg-white/5 border-b border-white/10">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      Node
+                      {t('table.node')}
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      Purchase Cost
+                      {t('table.purchaseCost')}
                     </th>
                     <th className="px-6 py-4 text-right text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      Purchase Time
+                      {t('table.purchaseTime')}
                     </th>
                   </tr>
                 </thead>
@@ -397,7 +400,7 @@ const StalwartPurchaseHistory: React.FC = () => {
                     
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div>
-                        <div className="text-white/60 text-xs mb-1">Purchase Cost</div>
+                        <div className="text-white/60 text-xs mb-1">{t('table.purchaseCost')}</div>
                         <div className="text-white font-medium">
                           {formatCurrency(record.purchaseCost.usd)}
                         </div>
@@ -407,7 +410,7 @@ const StalwartPurchaseHistory: React.FC = () => {
                       </div>
                       
                       <div>
-                        <div className="text-white/60 text-xs mb-1">Purchase Time</div>
+                        <div className="text-white/60 text-xs mb-1">{t('table.purchaseTime')}</div>
                         <div className="text-white font-medium text-xs">
                           {timeFormatted.date}
                         </div>
@@ -437,16 +440,16 @@ const StalwartPurchaseHistory: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              No Purchase Records Found
+              {t('empty.title')}
             </h3>
             <p className="text-white/60 mb-6">
-              You don&apos;t have any purchase records yet. Start by purchasing a node to see your transaction history.
+              {t('empty.description')}
             </p>
             <Link
               href="/network"
               className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
             >
-              Browse Node Tiers
+              {t('empty.browseNodeTiers')}
             </Link>
           </motion.div>
         )}

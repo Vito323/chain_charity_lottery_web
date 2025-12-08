@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 import { RarityType } from '@/app/[locale]/nft-market/types';
 
@@ -23,51 +24,51 @@ interface TransactionRecord {
   timestamp: string;
 }
 
-// Rarity configuration
-const rarityConfig: Record<RarityType, { color: string; label: string }> = {
+// Rarity configuration - will be translated in component
+const getRarityConfig = (tCommon: any): Record<RarityType, { color: string; label: string }> => ({
   common: {
     color: 'text-gray-400',
-    label: 'Common',
+    label: tCommon('rarity.common'),
   },
   rare: {
     color: 'text-blue-400',
-    label: 'Rare',
+    label: tCommon('rarity.rare'),
   },
   epic: {
     color: 'text-purple-400',
-    label: 'Epic',
+    label: tCommon('rarity.epic'),
   },
   legendary: {
     color: 'text-orange-400',
-    label: 'Legendary',
+    label: tCommon('rarity.legendary'),
   },
   mythic: {
     color: 'text-yellow-400',
-    label: 'Mythic',
+    label: tCommon('rarity.mythic'),
   },
-};
+});
 
-// Transaction type configuration
-const transactionTypeConfig: Record<TransactionType, { label: string; color: string; bgColor: string; borderColor: string }> = {
+// Transaction type configuration - will be translated in component
+const getTransactionTypeConfig = (t: any): Record<TransactionType, { label: string; color: string; bgColor: string; borderColor: string }> => ({
   buy: {
-    label: 'Buy',
+    label: t('transactionTypes.buy'),
     color: 'text-emerald-400',
     bgColor: 'bg-emerald-500/10',
     borderColor: 'border-emerald-500/30',
   },
   sell: {
-    label: 'Sell',
+    label: t('transactionTypes.sell'),
     color: 'text-red-400',
     bgColor: 'bg-red-500/10',
     borderColor: 'border-red-500/30',
   },
   follow: {
-    label: 'Follow',
+    label: t('transactionTypes.follow'),
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/30',
   },
-};
+});
 
 // Mock data based on the image
 const defaultTransactionRecords: TransactionRecord[] = [
@@ -134,10 +135,14 @@ const defaultTransactionRecords: TransactionRecord[] = [
 ];
 
 const StalwartTransactionRecords: React.FC = () => {
+  const t = useTranslations('user.transactionRecords');
   const { isConnected } = useAccount();
   const [transactionRecords] = useState<TransactionRecord[]>(defaultTransactionRecords);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);
+  
+  const rarityConfig = getRarityConfig(tCommon);
+  const transactionTypeConfig = getTransactionTypeConfig(t);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -180,14 +185,14 @@ const StalwartTransactionRecords: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-            <span className="text-sm">Transaction Records</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Transaction <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">History</span>
+            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            View all your lottery ticket transaction records including purchases, sales, and follow investments.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -203,10 +208,10 @@ const StalwartTransactionRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Connect Your Wallet
+              {t('connect.title')}
             </h3>
             <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Connect your wallet to view your transaction records and trading history.
+              {t('connect.description')}
             </p>
             <StalwartConnectButton />
           </motion.div>
@@ -221,7 +226,7 @@ const StalwartTransactionRecords: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white/80">Loading transaction records...</p>
+            <p className="text-white/80">{tCommon('status.loading')}</p>
           </motion.div>
         )}
 
@@ -239,7 +244,7 @@ const StalwartTransactionRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Failed to Load Transaction Records
+              {tCommon('errors.failedToLoadTransactionRecords')}
             </h3>
             <p className="text-white/60">{error}</p>
           </motion.div>
@@ -331,16 +336,16 @@ const StalwartTransactionRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              No Transaction Records Found
+              {t('empty.title')}
             </h3>
             <p className="text-white/60 mb-6">
-              You haven&apos;t made any transactions yet. Start trading lottery tickets to see your transaction history!
+              {t('empty.description')}
             </p>
             <Link
               href="/lottery"
               className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
             >
-              Browse Lottery
+              {t('empty.browseLottery')}
             </Link>
           </motion.div>
         )}

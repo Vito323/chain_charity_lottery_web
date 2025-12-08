@@ -3,70 +3,72 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface TabTechnologyProps {
   projectInfo?: any;
 }
 
 const TabTechnology = ({ projectInfo }: TabTechnologyProps) => {
+  const t = useTranslations('projectDetail.technology');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const technologies = [
     {
       name: "React",
-      description: "Modern UI library for building interactive user interfaces",
+      description: t('technologies.react'),
       icon: "ti-atom",
-      category: "Frontend",
+      category: t('categories.frontend'),
       color: "from-blue-500 to-cyan-500"
     },
     {
       name: "Next.js",
-      description: "Full-stack React framework for production-ready applications",
+      description: t('technologies.nextjs'),
       icon: "▲",
-      category: "Framework",
+      category: t('categories.framework'),
       color: "from-gray-500 to-gray-700"
     },
     {
       name: "TypeScript",
-      description: "Type-safe JavaScript for scalable application development",
+      description: t('technologies.typescript'),
       icon: "ti-code",
-      category: "Language",
+      category: t('categories.language'),
       color: "from-blue-600 to-blue-800"
     },
     {
       name: "Tailwind CSS",
-      description: "Utility-first CSS framework for rapid UI development",
+      description: t('technologies.tailwind'),
       icon: "ti-palette",
-      category: "Styling",
+      category: t('categories.styling'),
       color: "from-cyan-500 to-teal-500"
     },
     {
       name: "Framer Motion",
-      description: "Production-ready motion library for React animations",
+      description: t('technologies.framerMotion'),
       icon: "ti-zap",
-      category: "Animation",
+      category: t('categories.animation'),
       color: "from-purple-500 to-pink-500"
     },
     {
       name: "Node.js",
-      description: "JavaScript runtime for building scalable server-side applications",
+      description: t('technologies.nodejs'),
       icon: "ti-server",
-      category: "Backend",
+      category: t('categories.backend'),
       color: "from-green-500 to-emerald-500"
     },
     {
       name: "PostgreSQL",
-      description: "Advanced open-source relational database system",
+      description: t('technologies.postgresql'),
       icon: "ti-database",
-      category: "Database",
+      category: t('categories.database'),
       color: "from-blue-700 to-indigo-700"
     },
     {
       name: "Docker",
-      description: "Containerization platform for consistent deployment",
+      description: t('technologies.docker'),
       icon: "ti-layers",
-      category: "DevOps",
+      category: t('categories.devops'),
       color: "from-blue-400 to-blue-600"
     }
   ];
@@ -106,10 +108,10 @@ const TabTechnology = ({ projectInfo }: TabTechnologyProps) => {
     >
       <motion.div variants={itemVariants} className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-          Technology Stack
+          {t('title')}
         </h2>
         <p className="text-lg text-white/80 max-w-2xl mx-auto">
-          We leverage cutting-edge technologies to deliver exceptional results and maintain the highest standards of quality and performance.
+          {t('subtitle')}
         </p>
       </motion.div>
 
@@ -151,28 +153,28 @@ const TabTechnology = ({ projectInfo }: TabTechnologyProps) => {
       <motion.div variants={itemVariants} className="mt-12">
         <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-8 border border-white/10">
           <h3 className="text-2xl font-bold text-white mb-6 text-center">
-            Why Our Technology Choice Matters
+            {t('whyMatters.title')}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <i className="ti-rocket text-4xl text-purple-400 mb-4"></i>
-              <h4 className="text-lg font-semibold text-white mb-2">Performance</h4>
+              <h4 className="text-lg font-semibold text-white mb-2">{t('whyMatters.performance.title')}</h4>
               <p className="text-white/80 text-sm">
-                Optimized for speed and efficiency with modern web technologies
+                {t('whyMatters.performance.description')}
               </p>
             </div>
             <div className="text-center">
               <i className="ti-lock text-4xl text-purple-400 mb-4"></i>
-              <h4 className="text-lg font-semibold text-white mb-2">Security</h4>
+              <h4 className="text-lg font-semibold text-white mb-2">{t('whyMatters.security.title')}</h4>
               <p className="text-white/80 text-sm">
-                Built with security-first principles and best practices
+                {t('whyMatters.security.description')}
               </p>
             </div>
             <div className="text-center">
               <i className="ti-trending-up text-4xl text-purple-400 mb-4"></i>
-              <h4 className="text-lg font-semibold text-white mb-2">Scalability</h4>
+              <h4 className="text-lg font-semibold text-white mb-2">{t('whyMatters.scalability.title')}</h4>
               <p className="text-white/80 text-sm">
-                Designed to grow with your business and user base
+                {t('whyMatters.scalability.description')}
               </p>
             </div>
           </div>

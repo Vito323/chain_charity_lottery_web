@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 import { formatCurrency } from '@/utils/currency';
 
@@ -109,6 +110,8 @@ const defaultDonationRecords: DonationRecord[] = [
 
 const StalwartDonationRecords: React.FC = () => {
   const { isConnected } = useAccount();
+  const t = useTranslations('donationRecords');
+  const tCommon = useTranslations('common');
   const [donationRecords] = useState<DonationRecord[]>(defaultDonationRecords);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);
@@ -156,14 +159,14 @@ const StalwartDonationRecords: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm">Donation Records</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Donation <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">History</span>
+            {t('title')} <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            View all your donation records and track your contributions to various projects.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -179,10 +182,10 @@ const StalwartDonationRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Connect Your Wallet
+              {t('connectTitle')}
             </h3>
             <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Connect your wallet to view your donation records and contribution history.
+              {t('connectDescription')}
             </p>
             <StalwartConnectButton />
           </motion.div>
@@ -197,7 +200,7 @@ const StalwartDonationRecords: React.FC = () => {
             <div className="bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="text-white/70 text-sm md:text-base">
-                  Total Donations
+                  {t('totalDonations')}
                 </div>
                 <div className="flex items-baseline gap-2">
                   <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
@@ -221,7 +224,7 @@ const StalwartDonationRecords: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white/80">Loading donation records...</p>
+            <p className="text-white/80">{tCommon('status.loading')}</p>
           </motion.div>
         )}
 
@@ -239,7 +242,7 @@ const StalwartDonationRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Failed to Load Donation Records
+              {tCommon('errors.failedToLoadDonationRecords')}
             </h3>
             <p className="text-white/60">{error}</p>
           </motion.div>
@@ -265,7 +268,7 @@ const StalwartDonationRecords: React.FC = () => {
                     {/* Donation Text */}
                     <div className="flex-1 min-w-0">
                       <div className="text-base md:text-lg font-semibold text-white truncate">
-                        <span className="font-mono">{formatAddress(record.donorAddress)}</span> 捐赠了 {record.amount.toLocaleString()} {record.currency}
+                        <span className="font-mono">{formatAddress(record.donorAddress)}</span> {t('donated')} {record.amount.toLocaleString()} {record.currency}
                       </div>
                     </div>
                   </div>
@@ -303,16 +306,16 @@ const StalwartDonationRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              No Donation Records Found
+              {t('empty.title')}
             </h3>
             <p className="text-white/60 mb-6">
-              You haven&apos;t made any donations yet. Start contributing to projects you care about!
+              {t('empty.description')}
             </p>
             <Link
               href="/project"
               className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 hover:from-emerald-700 hover:to-teal-700 transition-all duration-300"
             >
-              Browse Projects
+              {t('empty.browseProjects')}
             </Link>
           </motion.div>
         )}

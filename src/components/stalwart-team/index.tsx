@@ -4,10 +4,12 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 const StalwartTeam = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const t = useTranslations('team');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -74,21 +76,21 @@ const StalwartTeam = () => {
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/80 text-xs mb-6"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
-            Our Team
+            {t('badge')}
           </motion.div>
           
           <motion.h2
             variants={itemVariants}
             className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-6"
           >
-            Meet The People Behind Our Mission
+            {t('title')}
           </motion.h2>
           
           <motion.p
             variants={itemVariants}
             className="text-lg text-white/80 max-w-3xl mx-auto leading-relaxed"
           >
-            They possess the secret knowledge and interesting experience of creating a digital product that makes a real difference in people&apos;s lives.
+            {t('subtitle')}
           </motion.p>
         </motion.div>
 

@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { TabPanel, Tabs } from "@/components/tab";
 import TabAbout from "./tab-about";
 import TabDonations from "./tab-donations";
@@ -11,24 +12,25 @@ import TabUpdates from "./tab-updates";
 import { ProjectDetailData } from "@/service/project";
 import { ProjectChainInfo } from "@/components/case-cards";
 
-const TABS = [
-  {
-    label: "About",
-  },
-  {
-    label: "Donations",
-    badge: 0,
-  },
-  {
-    label: "Updates",
-    badge: 0,
-  },
-];
-
 const TabContent = ({ projectInfo, currentProjectInfo, uid }: { projectInfo?: ProjectDetailData; currentProjectInfo?: ProjectChainInfo | null; uid: string }) => {
+  const t = useTranslations('projectDetail.tabs');
   const [activeTab, setActiveTab] = React.useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  const TABS = [
+    {
+      label: t('about'),
+    },
+    {
+      label: t('donations'),
+      badge: 0,
+    },
+    {
+      label: t('updates'),
+      badge: 0,
+    },
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -56,13 +58,13 @@ const TabContent = ({ projectInfo, currentProjectInfo, uid }: { projectInfo?: Pr
   // 计算带 badge 的标签数据
   const targetTabs = React.useMemo(() => {
     return TABS.map((item) => {
-      if(item.label === "Updates") {
+      if(item.label === t('updates')) {
         return {
           ...item,
           badge: projectInfo?.tracks?.length || 0,
         }
       }
-      if(item.label === "Donations") {
+      if(item.label === t('donations')) {
         return {
           ...item,
           badge: projectInfo?.donors?.length || 0,
@@ -70,7 +72,7 @@ const TabContent = ({ projectInfo, currentProjectInfo, uid }: { projectInfo?: Pr
       }
       return item;
     })
-  }, [projectInfo?.tracks, projectInfo?.donors])
+  }, [projectInfo?.tracks, projectInfo?.donors, t])
 
   return (
     <motion.div

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { ProjectDetailData, TracksData } from '@/service/project';
 import { ProjectChainInfo } from '@/components/case-cards';
 
@@ -13,6 +14,7 @@ interface TabUpdatesProps {
 }
 
 const TabUpdates = ({ projectInfo, currentProjectInfo, uid }: TabUpdatesProps) => {
+  const t = useTranslations('projectDetail.updates');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -49,7 +51,7 @@ const TabUpdates = ({ projectInfo, currentProjectInfo, uid }: TabUpdatesProps) =
     >
       <motion.div variants={itemVariants} className="mb-8">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-          Updates
+          {t('title')}
         </h2>
         
         {/* 更新列表 */}
@@ -90,7 +92,7 @@ const TabUpdates = ({ projectInfo, currentProjectInfo, uid }: TabUpdatesProps) =
                 {/* 内容区域 */}
                 <div className="flex-1 min-w-0">
                   <h3 className="text-2xl font-semibold text-white mb-3 hover:text-purple-300 transition-colors">
-                    {update.name || 'Untitled Update'}
+                    {update.name || t('untitledUpdate')}
                   </h3>
                   <div className="text-white/80 leading-relaxed">
                     {(update.description || '').split('\n').map((paragraph: string, pIndex: number) => (
@@ -108,10 +110,10 @@ const TabUpdates = ({ projectInfo, currentProjectInfo, uid }: TabUpdatesProps) =
                 <i className="ti-pencil text-2xl text-purple-400"></i>
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                No Updates Yet
+                {t('empty.title')}
               </h3>
               <p className="text-white/60">
-                Project updates will appear here as they become available.
+                {t('empty.description')}
               </p>
             </motion.div>
           )}

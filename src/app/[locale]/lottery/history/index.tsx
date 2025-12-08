@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { formatCurrency } from '@/utils/currency';
+import { useTranslations } from 'next-intl';
 
 // 历史开奖结果数据类型
 interface LotteryHistoryItem {
@@ -53,6 +54,8 @@ const defaultHistoryData: LotteryHistoryItem[] = [
 ];
 
 const StalwartLotteryHistory = () => {
+  const t = useTranslations('lottery.history');
+  const tCommon = useTranslations('common');
   const [historyData] = useState<LotteryHistoryItem[]>(defaultHistoryData);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);
@@ -134,14 +137,14 @@ const StalwartLotteryHistory = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm">Historical Results</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Lottery <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">History</span>
+            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            Track all previous lottery draws and winning numbers. Verify results on the blockchain.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -154,7 +157,7 @@ const StalwartLotteryHistory = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white/80">Loading lottery history...</p>
+            <p className="text-white/80">{tCommon('status.loading')}</p>
           </motion.div>
         )}
 
@@ -172,7 +175,7 @@ const StalwartLotteryHistory = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Failed to Load History
+              {tCommon('errors.failedToLoadHistory')}
             </h3>
             <p className="text-white/60">{error}</p>
           </motion.div>
@@ -189,16 +192,16 @@ const StalwartLotteryHistory = () => {
                 <thead className="bg-white/5 border-b border-white/10">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      Draw Date
+                      {t('table.drawDate')}
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      Transaction Hash
+                      {tCommon('labels.transactionHash')}
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      Winning DNA
+                      {t('table.winningDNA')}
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      Prize Pool
+                      {t('table.prizePool')}
                     </th>
                   </tr>
                 </thead>
@@ -269,7 +272,7 @@ const StalwartLotteryHistory = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.2 }}
                           >
-                            Copied!
+                            {tCommon('success.copied')}
                           </motion.div>
                         )}
                       </td>
@@ -314,10 +317,10 @@ const StalwartLotteryHistory = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              No Lottery History Available
+              {t('empty.title')}
             </h3>
             <p className="text-white/60">
-              Check back later for the latest draw results
+              {t('empty.description')}
             </p>
           </motion.div>
         )}
@@ -329,23 +332,23 @@ const StalwartLotteryHistory = () => {
         >
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
             <h3 className="text-xl font-semibold text-white mb-4">
-              How to Verify Results
+              {t('verify.title')}
             </h3>
             <p className="text-white/70 mb-6 max-w-2xl mx-auto">
-              All lottery results are recorded on the blockchain. Click on any transaction hash to copy it and verify the results on a blockchain explorer.
+              {t('verify.description')}
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-white/60">
               <span className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                Transparent & Verifiable
+                {t('verify.transparent')}
               </span>
               <span className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-                Blockchain Secured
+                {t('verify.secured')}
               </span>
               <span className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-purple-400"></div>
-                Fair & Random
+                {t('verify.fair')}
               </span>
             </div>
           </div>

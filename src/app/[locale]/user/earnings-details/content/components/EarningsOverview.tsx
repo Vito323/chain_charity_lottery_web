@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 type ChartType = 'yield' | 'amount';
@@ -35,6 +36,7 @@ const earningsAmountData = [
 ];
 
 const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
+  const t = useTranslations('earningsDetails.overview');
   const [chartType, setChartType] = useState<ChartType>('yield');
 
   const chartData = chartType === 'yield' ? yieldRateData : earningsAmountData;
@@ -48,7 +50,7 @@ const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
 
   return (
     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8">
-      <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">Earnings Overview</h3>
+      <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">{t('title')}</h3>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8">
@@ -57,7 +59,7 @@ const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
           whileHover={{ scale: 1.02, y: -2 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="text-sm md:text-base text-white/70 mb-2">Yesterday&apos;s Earnings (USDT)</div>
+          <div className="text-sm md:text-base text-white/70 mb-2">{t('yesterdayEarnings')}</div>
           <div className="text-2xl md:text-3xl font-bold text-emerald-400">+8,888.88</div>
         </motion.div>
 
@@ -66,7 +68,7 @@ const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
           whileHover={{ scale: 1.02, y: -2 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="text-sm md:text-base text-white/70 mb-2">Yield Rate</div>
+          <div className="text-sm md:text-base text-white/70 mb-2">{t('yieldRate')}</div>
           <div className="text-2xl md:text-3xl font-bold text-purple-400">+38.88%</div>
         </motion.div>
 
@@ -75,7 +77,7 @@ const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
           whileHover={{ scale: 1.02, y: -2 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="text-sm md:text-base text-white/70 mb-2">Year-to-date Earnings (USDT)</div>
+          <div className="text-sm md:text-base text-white/70 mb-2">{t('yearToDateEarnings')}</div>
           <div className="text-2xl md:text-3xl font-bold text-cyan-400">+668,888.88</div>
         </motion.div>
       </div>
@@ -91,7 +93,7 @@ const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
               : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white border border-white/10'
           }`}
         >
-          Yield Rate Curve
+          {t('yieldRateCurve')}
         </button>
         <button
           type="button"
@@ -102,7 +104,7 @@ const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
               : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white border border-white/10'
           }`}
         >
-          Earnings Amount Curve
+          {t('earningsAmountCurve')}
         </button>
       </div>
 
@@ -132,7 +134,7 @@ const EarningsOverview: React.FC<EarningsOverviewProps> = () => {
               }}
               formatter={(value: number) => [
                 chartType === 'yield' ? `${value}%` : `${value.toLocaleString()} USDT`,
-                chartType === 'yield' ? 'Yield Rate' : 'Earnings',
+                chartType === 'yield' ? t('yieldRateLabel') : t('earningsLabel'),
               ]}
             />
             <Line

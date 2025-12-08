@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface NodePurchaseSuccessModalProps {
   isOpen: boolean;
@@ -19,8 +20,21 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
   nodeType,
   nodeCount = 1,
 }) => {
+  const t = useTranslations('nodePurchaseModal.success');
+  const locale = useLocale();
   const router = useRouter();
   const isGenesis = nodeType === 'genesis';
+
+  // 获取序数后缀 - 根据语言环境返回不同的格式
+  const getOrdinalSuffix = (num: number): string => {
+    if (locale === 'zh') {
+      return `${num}`;
+    }
+    if (num === 1) return 'st';
+    if (num === 2) return 'nd';
+    if (num === 3) return 'rd';
+    return 'th';
+  };
 
   const handleViewNodes = () => {
     onClose();
@@ -79,10 +93,10 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
               className="pt-2 pr-10 sm:pr-12"
             >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">
-                Node Purchase Successful
+                {t('title')}
               </h2>
               <p className="text-xs sm:text-sm md:text-base text-white/70">
-                This is your {nodeCount}{nodeCount === 1 ? 'st' : nodeCount === 2 ? 'nd' : nodeCount === 3 ? 'rd' : 'th'} node
+                {t('description', { count: nodeCount, ordinal: locale === 'zh' ? '' : getOrdinalSuffix(nodeCount) })}
               </p>
             </motion.div>
 
@@ -143,7 +157,7 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
                 onClick={handleViewNodes}
                 className="text-sm sm:text-base text-purple-400 hover:text-purple-300 transition-colors cursor-pointer inline-flex items-center gap-1"
               >
-                View my nodes <span>&gt;</span>
+                {t('viewNodes')} <span>&gt;</span>
               </button>
             </motion.div>
 
@@ -158,13 +172,13 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
                 onClick={handleReturnHome}
                 className="flex-1 rounded-full py-2.5 sm:py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm md:text-base font-medium transition-colors cursor-pointer"
               >
-                Return to Homepage
+                {t('returnHome')}
               </button>
               <button
                 onClick={handleContinuePurchase}
                 className="flex-1 rounded-full py-2.5 sm:py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm md:text-base font-medium transition-colors cursor-pointer"
               >
-                Continue Purchase
+                {t('continuePurchase')}
               </button>
             </motion.div>
           </div>

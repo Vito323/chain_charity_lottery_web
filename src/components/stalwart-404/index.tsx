@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 const Stalwart404 = () => {
+  const t = useTranslations('notFound');
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -128,19 +130,18 @@ const Stalwart404 = () => {
             whileHover={{ scale: 1.05 }}
           >
             <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-            <span className="text-sm font-medium">Page Not Found</span>
+            <span className="text-sm font-medium">{t('badge')}</span>
           </motion.div>
           
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Oops! Something went{' '}
+            {t('title')}{' '}
             <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
-              wrong
+              {t('titleHighlight')}
             </span>
           </h1>
           
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            The page you&apos;re looking for seems to have vanished into the digital void. 
-            Don&apos;t worry, even the best explorers sometimes take a wrong turn.
+            {t('description')}
           </p>
         </motion.div>
 
@@ -157,7 +158,7 @@ const Stalwart404 = () => {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
-              Back to Home
+              {t('backToHome')}
             </Link>
           </motion.div>
         </motion.div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { TicketImage } from './components/TicketImage';
 import { BasicInfoTab } from './components/BasicInfoTab';
 import { HistoryTab } from './components/HistoryTab';
@@ -86,6 +87,7 @@ const mockWinningRecords: WinningRecord[] = [
 ];
 
 const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, type }) => {
+  const t = useTranslations('nftDetail');
   // In production, fetch ticket by ticketId
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _ticketId = ticketId; // Reserved for future API integration
@@ -237,7 +239,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
           <motion.div variants={itemVariants} className="text-center mb-8 md:mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-xs md:text-sm text-white/80 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>ChainCharity Lottery</span>
+              <span>{t('badge')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-2">
               {ticket.series}
@@ -266,7 +268,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
                         : 'text-white/70 hover:text-white hover:bg-white/10'
                     }`}
                   >
-                    {tab === 'basic' ? 'Basic Info' : 'History'}
+                    {tab === 'basic' ? t('tabs.basicInfo') : t('tabs.history')}
                   </button>
                 ))}
               </div>

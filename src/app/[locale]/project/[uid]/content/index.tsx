@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import TabContent from "./tab-content/index";
 import Covers from "./cover/index";
 import Fundraising from "./fundraising/index";
@@ -19,6 +20,7 @@ interface StalwartShowcaseProps {
 
 const StalwartShowcase = ({ uid }: StalwartShowcaseProps) => {
   const router = useRouter();
+  const t = useTranslations('projectDetail');
   const { getProject } = useFundPoolManager();
   const { isConnected } = useAccount();
   const chainId = useChainId();
@@ -138,7 +140,7 @@ const StalwartShowcase = ({ uid }: StalwartShowcaseProps) => {
                 transition={{ duration: 0.6, ease: 'easeOut' }}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-sm">Active Project</span>
+                <span className="text-sm">{t('badge')}</span>
               </motion.div>
               
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight drop-shadow-[0_3px_16px_rgba(0,0,0,0.6)] mb-6">
@@ -148,7 +150,7 @@ const StalwartShowcase = ({ uid }: StalwartShowcaseProps) => {
                   viewport={{ once: true, amount: 0.6 }}
                   transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
-                  Our Project
+                  {t('title')}
                 </motion.span>
               </h1>
               

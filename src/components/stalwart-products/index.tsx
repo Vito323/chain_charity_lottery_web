@@ -3,8 +3,10 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 const StalwartProducts = () => {
+  const t = useTranslations('products');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -33,26 +35,40 @@ const StalwartProducts = () => {
 
   const products = [
     {
-      title: 'AI Assistant Pro',
-      description: 'Intelligent virtual assistant that understands context and provides personalized responses.',
-      features: ['Natural Language Processing', 'Context Awareness', 'Multi-language Support'],
-      price: '$99/month',
+      title: t('items.assistant.title'),
+      description: t('items.assistant.description'),
+      features: [
+        t('items.assistant.features.0'),
+        t('items.assistant.features.1'),
+        t('items.assistant.features.2')
+      ],
+      price: t('items.assistant.price'),
       popular: false,
       gradient: 'from-blue-500 to-cyan-500',
     },
     {
-      title: 'Enterprise AI Suite',
-      description: 'Comprehensive AI solution for large organizations with advanced analytics and automation.',
-      features: ['Advanced Analytics', 'Process Automation', 'Custom Integrations', '24/7 Support'],
-      price: '$499/month',
+      title: t('items.enterprise.title'),
+      description: t('items.enterprise.description'),
+      features: [
+        t('items.enterprise.features.0'),
+        t('items.enterprise.features.1'),
+        t('items.enterprise.features.2'),
+        t('items.enterprise.features.3')
+      ],
+      price: t('items.enterprise.price'),
       popular: true,
       gradient: 'from-purple-500 to-pink-500',
     },
     {
-      title: 'AI Developer Kit',
-      description: 'Complete toolkit for developers to build and deploy AI-powered applications.',
-      features: ['SDK & APIs', 'Documentation', 'Code Examples', 'Community Support'],
-      price: '$199/month',
+      title: t('items.developer.title'),
+      description: t('items.developer.description'),
+      features: [
+        t('items.developer.features.0'),
+        t('items.developer.features.1'),
+        t('items.developer.features.2'),
+        t('items.developer.features.3')
+      ],
+      price: t('items.developer.price'),
       popular: false,
       gradient: 'from-green-500 to-emerald-500',
     },
@@ -71,13 +87,13 @@ const StalwartProducts = () => {
             variants={itemVariants}
             className="text-4xl md:text-5xl font-bold text-white mb-6"
           >
-            Our Products
+            {t('title')}
           </motion.h2>
           <motion.p
             variants={itemVariants}
             className="text-xl text-gray-300 max-w-3xl mx-auto"
           >
-            Choose from our range of AI-powered solutions designed to meet your specific needs and scale with your business.
+            {t('subtitle')}
           </motion.p>
         </motion.div>
 
@@ -100,7 +116,7 @@ const StalwartProducts = () => {
               {product.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
                   <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                    Most Popular
+                    {t('mostPopular')}
                   </span>
                 </div>
               )}
@@ -136,7 +152,7 @@ const StalwartProducts = () => {
                   {/* Price */}
                   <div className="text-center mb-6">
                     <span className="text-4xl font-bold text-white">{product.price}</span>
-                    <span className="text-gray-400 ml-2">per month</span>
+                    <span className="text-gray-400 ml-2">{t('perMonth')}</span>
                   </div>
 
                   {/* CTA Button */}
@@ -149,7 +165,7 @@ const StalwartProducts = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    {product.popular ? 'Get Started' : 'Learn More'}
+                    {product.popular ? t('getStarted') : t('learnMore')}
                   </motion.button>
                 </div>
 
@@ -169,17 +185,17 @@ const StalwartProducts = () => {
         >
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8 max-w-2xl mx-auto">
             <h3 className="text-2xl font-bold text-white mb-4">
-              Need a Custom Solution?
+              {t('customSolution.title')}
             </h3>
             <p className="text-gray-300 mb-6">
-              Our team can create a tailored AI solution that perfectly fits your unique requirements.
+              {t('customSolution.description')}
             </p>
             <motion.button
               className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Contact Sales
+              {t('customSolution.contactSales')}
             </motion.button>
           </div>
         </motion.div>

@@ -3,8 +3,10 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useCounterAnimation } from '@/hooks/useScrollAnimation';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 const StalwartHero = () => {
+  const t = useTranslations('hero');
   const [isLoaded, setIsLoaded] = useState(false);
 
   // 计数动画钩子
@@ -61,7 +63,7 @@ const StalwartHero = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs md:text-sm">Connecting the world with Kindness</span>
+            <span className="text-xs md:text-sm">{t('badge')}</span>
           </motion.div>
           <h1 className="mt-6 text-[2.5rem] md:text-6xl lg:text-7xl xl:text-[5.2rem] font-extrabold text-white leading-[1.05] tracking-tight drop-shadow-[0_3px_16px_rgba(0,0,0,0.6)]">
             <motion.span
@@ -70,7 +72,7 @@ const StalwartHero = () => {
               viewport={{ once: true, amount: 0.6 }}
               transition={{ duration: 0.7, ease: 'easeOut' }}
             >
-              Connecting the world with 
+              {t('titlePart1')}{' '}
             </motion.span>
             <br className="hidden md:block" />
             <motion.span
@@ -81,7 +83,7 @@ const StalwartHero = () => {
               viewport={{ once: true, amount: 0.6 }}
               transition={{ duration: 1.8, ease: 'easeInOut' }}
             >
-              Kindness
+              {t('titlePart2')}
             </motion.span>
           </h1>
           <motion.p
@@ -91,7 +93,7 @@ const StalwartHero = () => {
             viewport={{ once: true, amount: 0.6 }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
           >
-            Protecting our home with action.
+            {t('subtitle')}
           </motion.p>
         </motion.div>
 
@@ -106,7 +108,7 @@ const StalwartHero = () => {
             whileTap={{ scale: 0.97 }}
           >
             <Link href="/project">
-            View project
+            {t('viewProject')}
             </Link>
           </motion.div>
         </motion.div>
@@ -138,7 +140,7 @@ const StalwartHero = () => {
             <div className="text-4xl md:text-5xl font-bold text-white mb-2">
               <span ref={donationRef}>{donationValue.toLocaleString()}</span>+
             </div>
-            <div className="text-gray-300 text-lg">Donation</div>
+            <div className="text-gray-300 text-lg">{t('donation')}</div>
           </motion.div>
           
           <motion.div
@@ -148,7 +150,7 @@ const StalwartHero = () => {
             <div className="text-4xl md:text-5xl font-bold text-white mb-2">
               <span ref={fundRef}>{fundValue.toLocaleString()}</span>k
             </div>
-            <div className="text-gray-300 text-lg">Fund Raised</div>
+            <div className="text-gray-300 text-lg">{t('fundRaised')}</div>
           </motion.div>
           
           <motion.div
@@ -158,7 +160,7 @@ const StalwartHero = () => {
             <div className="text-4xl md:text-5xl font-bold text-white mb-2">
               <span ref={volunteersRef}>{volunteersValue.toLocaleString()}</span>+
             </div>
-            <div className="text-gray-300 text-lg">Volunteers</div>
+            <div className="text-gray-300 text-lg">{t('volunteers')}</div>
           </motion.div>
           
           <motion.div
@@ -168,7 +170,7 @@ const StalwartHero = () => {
             <div className="text-4xl md:text-5xl font-bold text-white mb-2">
               <span ref={projectsRef}>{projectsValue.toLocaleString()}</span>+
             </div>
-            <div className="text-gray-300 text-lg">Projects</div>
+            <div className="text-gray-300 text-lg">{t('projects')}</div>
           </motion.div>
         </motion.div>
       </motion.div>

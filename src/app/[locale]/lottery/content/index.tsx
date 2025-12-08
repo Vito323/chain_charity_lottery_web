@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
 import { useWalletNFTs } from "@/hooks/useWalletNFTs";
 import { getLotteryConfig, LotteryConfig } from "@/service/lottery";
+import { useTranslations } from 'next-intl';
 
 interface CountdownTime {
   days: number;
@@ -15,6 +16,7 @@ interface CountdownTime {
 
 const StalwartLotteryContent: React.FC = () => {
   const { isConnected } = useAccount();
+  const t = useTranslations('lottery');
 
   const {
     nfts,
@@ -167,18 +169,18 @@ const StalwartLotteryContent: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm">Next Draw Countdown</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
-            <span>Charity </span>
+            <span>{t('title')} </span>
             <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
-              Lottery
+              {t('titleHighlight')}
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            Join the Stalwart community lottery and support charitable causes while having a chance to win amazing prizes.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -188,15 +190,15 @@ const StalwartLotteryContent: React.FC = () => {
           className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 mb-16"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">
-            Next Draw In
+            {t('countdown.title')}
           </h2>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             {[
-              { value: countdown.days, label: 'Days' },
-              { value: countdown.hours, label: 'Hours' },
-              { value: countdown.minutes, label: 'Minutes' },
-              { value: countdown.seconds, label: 'Seconds' },
+              { value: countdown.days, label: t('countdown.days') },
+              { value: countdown.hours, label: t('countdown.hours') },
+              { value: countdown.minutes, label: t('countdown.minutes') },
+              { value: countdown.seconds, label: t('countdown.seconds') },
             ].map((item, index) => (
               <motion.div
                 key={item.label}
@@ -221,7 +223,7 @@ const StalwartLotteryContent: React.FC = () => {
           {/* Jackpot Section */}
           <div className="text-center">
             <h3 className="text-xl md:text-2xl font-semibold text-white/80 mb-4">
-              Current Jackpot
+              {t('jackpot.title')}
             </h3>
             <div className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-2">
               {isConnected ? (
@@ -229,11 +231,11 @@ const StalwartLotteryContent: React.FC = () => {
                   ${jackpotValue.toLocaleString()}
                 </span>
               ) : (
-                "Please Connect Wallet"
+                t('jackpot.connectWallet')
               )}
             </div>
             <p className="text-white/60 text-sm">
-              Prize pool grows with each ticket purchase
+              {t('jackpot.description')}
             </p>
           </div>
         </motion.div>

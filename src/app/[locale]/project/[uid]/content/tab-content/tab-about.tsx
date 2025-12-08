@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import MarkdownRenderer from "@/components/markdown-renderer";
 import "@/components/markdown-renderer/case-bb-styles.scss";
 import { ProjectDetailData } from "@/service/project";
@@ -15,6 +16,7 @@ interface TabAboutProps {
 }
 
 const TabAbout = ({ projectInfo, currentProjectInfo, uid }: TabAboutProps) => {
+  const t = useTranslations('projectDetail.about');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -76,7 +78,7 @@ const TabAbout = ({ projectInfo, currentProjectInfo, uid }: TabAboutProps) => {
         {/* 进度条 - 延用原有进度条逻辑 */}
         <div className="mb-8">
           <div className="flex justify-between text-sm text-white/70 mb-4">
-            <span>Progress</span>
+            <span>{t('progress')}</span>
             <span>{Math.round(progress)}%</span>
           </div>
           <div className="w-full bg-white/10 rounded-full h-3 mb-4">
@@ -95,19 +97,19 @@ const TabAbout = ({ projectInfo, currentProjectInfo, uid }: TabAboutProps) => {
               <div className="text-2xl font-bold text-white mb-1">
                 ${totalDonated.toFixed(2)}
               </div>
-              <div className="text-white/70 text-sm">Raised</div>
+              <div className="text-white/70 text-sm">{t('raised')}</div>
             </div>
             <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
               <div className="text-2xl font-bold text-white mb-1">
                 ${goal.toFixed(2)}
               </div>
-              <div className="text-white/70 text-sm">Goal</div>
+              <div className="text-white/70 text-sm">{t('goal')}</div>
             </div>
             <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
               <div className="text-2xl font-bold text-white mb-1">
                 {projectInfo?.donationCount || 0}
               </div>
-              <div className="text-white/70 text-sm">Donors</div>
+              <div className="text-white/70 text-sm">{t('donors')}</div>
             </div>
           </div>
         </div>

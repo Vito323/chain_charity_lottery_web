@@ -1,36 +1,38 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from 'next-intl';
 import "./style.scss";
 import FadeInUp from "../animations/FadeInUp";
 
 const FaqSection = () => {
+  const t = useTranslations('faq');
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const faqItems = [
     {
-      question: "What is Web3?",
-      answer: "Web3 is the next evolution of the internet, built on blockchain technology. It enables decentralized applications, digital ownership, and peer-to-peer interactions without intermediaries."
+      question: t('items.0.question'),
+      answer: t('items.0.answer')
     },
     {
-      question: "What can I own in Web3?",
-      answer: "You can own digital assets like NFTs (art, music, collectibles), cryptocurrency, virtual land, in-game items, and even your digital identity. Everything is verifiable and truly yours."
+      question: t('items.1.question'),
+      answer: t('items.1.answer')
     },
     {
-      question: "How do I get started?",
-      answer: "Getting started is easy! First, set up a crypto wallet like MetaMask, then connect it to our platform. You can then browse, purchase, or create digital assets."
+      question: t('items.2.question'),
+      answer: t('items.2.answer')
     },
     {
-      question: "Do I need technical knowledge?",
-      answer: "No technical knowledge required! Our platform is designed to be user-friendly. We provide guides and support to help you navigate the Web3 space easily."
+      question: t('items.3.question'),
+      answer: t('items.3.answer')
     },
     {
-      question: "Are my assets safe?",
-      answer: "Yes! Your assets are secured by blockchain technology and smart contracts. Only you have access to your wallet and assets through your private keys."
+      question: t('items.4.question'),
+      answer: t('items.4.answer')
     },
     {
-      question: "Can I use my assets outside this site?",
-      answer: "Absolutely! Your digital assets are yours and can be used across different platforms, marketplaces, and applications that support the same blockchain standards."
+      question: t('items.5.question'),
+      answer: t('items.5.answer')
     }
   ];
 
@@ -49,13 +51,13 @@ const FaqSection = () => {
       <div className="container">
         <FadeInUp>
           <div className="section-header">
-            <h2 className="section-title">Got Questions? We&apos;ve Got Answers</h2>
-            <p className="section-subtitle">Crypto FAQ, AI-Powered for Speed & Clarity</p>
+            <h2 className="section-title">{t('title')}</h2>
+            <p className="section-subtitle">{t('subtitle')}</p>
             
             <form className="search-form" onSubmit={handleSearch}>
               <input
                 type="text"
-                placeholder="Ask anything"
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"

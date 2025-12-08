@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { useTranslations } from 'next-intl';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import NodePurchaseModal from '@/components/node-purchase-modal';
 import NodePurchaseSuccessModal from '@/components/node-purchase-success-modal';
@@ -14,6 +15,8 @@ interface StalwartNodeDetailProps {
 }
 
 const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
+  const t = useTranslations('nodeDetail');
+  const tNetwork = useTranslations('network');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const { isConnected } = useAccount();
@@ -43,19 +46,19 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
 
   // 节点基本信息
   const nodeInfo = {
-    name: isGenesis ? 'Genesis Node' : isStandard ? 'Standard Node' : isSuper ? 'Super Node' : 'Node',
+    name: isGenesis ? tNetwork('nodeTiers.genesis.name') : isStandard ? tNetwork('nodeTiers.standard.name') : isSuper ? tNetwork('nodeTiers.super.name') : 'Node',
     title: isGenesis 
-      ? 'Genesis Node Investment NFT Certificate' 
+      ? t('certificates.genesisNodeCertificate')
       : isStandard 
-      ? 'Standard Node Investment Certificate'
+      ? t('certificates.certificateOfOwnership')
       : isSuper
-      ? 'Super Node Investment Certificate'
-      : 'Node Investment Certificate',
+      ? t('certificates.certificateOfOwnership')
+      : t('certificates.certificateOfOwnership'),
     description: isGenesis
-      ? 'Exclusive investment opportunity for early supporters with exceptional returns'
+      ? tNetwork('nodeTiers.genesis.description')
       : isStandard
-      ? 'Accessible entry for everyday investors with stable returns'
-      : 'Designed for experienced investors with competitive yields',
+      ? tNetwork('nodeTiers.standard.description')
+      : tNetwork('nodeTiers.super.description'),
   };
 
   // 处理购买节点
@@ -100,28 +103,28 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
   const certificates = [
     {
       id: 1,
-      title: 'CERTIFICATE OF OWNERSHIP',
-      subtitle: 'OWNER NAME',
+      title: t('certificates.certificateOfOwnership'),
+      subtitle: t('certificates.ownerName'),
       gradient: 'from-gray-800 to-gray-900',
       borderColor: 'border-gray-700',
     },
     {
       id: 2,
-      title: 'CERTIFICATE OF OWNERSHIP',
-      subtitle: 'OWNER NAME',
+      title: t('certificates.certificateOfOwnership'),
+      subtitle: t('certificates.ownerName'),
       gradient: 'from-amber-700 via-yellow-800 to-amber-900',
       borderColor: 'border-amber-600',
     },
     {
       id: 3,
-      title: 'CHAINCHARITY LOTTERY GENESIS NODE OWNER CERTIFICATE',
+      title: t('certificates.genesisCertificate'),
       subtitle: '',
       gradient: 'from-slate-400 to-slate-600',
       borderColor: 'border-slate-500',
     },
     {
       id: 4,
-      title: 'GENESIS NODE OWNER CERTIFICATE',
+      title: t('certificates.genesisNodeCertificate'),
       subtitle: '100,000 CHAINCHARITY',
       gradient: 'from-blue-900 to-indigo-900',
       borderColor: 'border-blue-700',
@@ -132,46 +135,46 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
   const securityMeasures = [
     {
       id: 1,
-      title: 'Four-fold Protection Mechanism',
+      title: t('security.protection.title'),
       icon: 'ti-pulse',
       items: [
-        '$45 million protection funds (46% of total financing)',
-        'Four-level price protection barrier',
-        'Ensure long-term stable growth of token prices',
-        'Automatically intervene to protect investor rights during market fluctuations',
+        t('security.protection.item1'),
+        t('security.protection.item2'),
+        t('security.protection.item3'),
+        t('security.protection.item4'),
       ],
     },
     {
       id: 2,
-      title: 'Technical Security Assurance',
+      title: t('security.technical.title'),
       icon: 'ti-lock',
       items: [
-        'Based on Ethereum mainnet, decentralized management',
-        'Multi-signature wallet, segregated fund custody',
-        '8 third-party security audits ensure code security',
-        'Chainlink VRF verified random numbers ensure fair lottery draws',
+        t('security.technical.item1'),
+        t('security.technical.item2'),
+        t('security.technical.item3'),
+        t('security.technical.item4'),
       ],
     },
     {
       id: 3,
-      title: '100% Transparency',
+      title: t('security.transparency.title'),
       icon: 'ti-bar-chart',
       items: [
-        'All transactions are traceable on-chain, permanently recorded',
-        'Platform monthly financial reports are publicly transparent',
-        'DAO community supervision, user co-governance',
-        'Third-party independent audit, authoritative certification',
+        t('security.transparency.item1'),
+        t('security.transparency.item2'),
+        t('security.transparency.item3'),
+        t('security.transparency.item4'),
       ],
     },
     {
       id: 4,
-      title: 'Insurance Fund Escort',
+      title: t('security.insurance.title'),
       icon: 'ti-shield',
       items: [
-        'Three-level risk buffering mechanism fully covered',
-        'Professional insurance company fund custody',
-        'User fund security is always paramount',
-        'Blockchain technology ensures every transaction is secure and reliable',
+        t('security.insurance.item1'),
+        t('security.insurance.item2'),
+        t('security.insurance.item3'),
+        t('security.insurance.item4'),
       ],
     },
   ];
@@ -219,7 +222,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                       <span className="text-sm sm:text-base font-semibold text-white">
                         {nodeStats.sold.toLocaleString()}/{nodeStats.totalLimit.toLocaleString()}
                       </span>
-                      <span className="text-xs text-white/60 hidden sm:inline">Total</span>
+                      <span className="text-xs text-white/60 hidden sm:inline">{t('stats.total')}</span>
                     </div>
                   </div>
                 ) : (
@@ -316,7 +319,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
           {isGenesis && (
             <motion.section variants={itemVariants} className="space-y-3 sm:space-y-4">
               <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white text-center px-4">
-                NFT Certificates
+                {t('certificates.title')}
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                 {certificates.map((cert, index) => (
@@ -354,7 +357,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                   {/* Investment Returns Section */}
                   <div className="space-y-3 sm:space-y-4">
                     <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-3 sm:mb-4">
-                      Investment Returns
+                      {t('purchase.investmentReturns')}
                     </h2>
                     <div className="grid grid-cols-2 gap-2 sm:gap-3">
                       <motion.div
@@ -363,7 +366,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                         transition={{ delay: 0.2 }}
                         className="rounded-lg border border-white/10 bg-white/5 p-3 sm:p-4"
                       >
-                        <div className="text-xs text-white/60 mb-1">Initial</div>
+                        <div className="text-xs text-white/60 mb-1">{t('purchase.initial')}</div>
                         <div className="text-lg sm:text-xl md:text-2xl font-bold text-white">
                           {isGenesis ? '$100K' : isStandard ? '100K USDT' : '$50K'}
                         </div>
@@ -374,7 +377,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                         transition={{ delay: 0.3 }}
                         className="rounded-lg border border-white/10 bg-white/5 p-3 sm:p-4"
                       >
-                        <div className="text-xs text-white/60 mb-1">3-Year Return</div>
+                        <div className="text-xs text-white/60 mb-1">{t('purchase.threeYearReturn')}</div>
                         <div className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-400">
                           {isGenesis ? '$2.4M' : isStandard ? '200K USDT' : '$1.2M'}
                         </div>
@@ -388,7 +391,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                         transition={{ delay: 0.4 }}
                         className="rounded-lg border border-white/10 bg-white/5 p-2.5 sm:p-3 text-center"
                       >
-                        <div className="text-xs text-white/60 mb-1">Year 1</div>
+                        <div className="text-xs text-white/60 mb-1">{t('purchase.year1')}</div>
                         <div className="text-sm sm:text-base font-bold text-white">
                           {isGenesis ? '$350K' : isStandard ? '2K USDT' : '$175K'}
                         </div>
@@ -399,7 +402,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                         transition={{ delay: 0.5 }}
                         className="rounded-lg border border-white/10 bg-white/5 p-2.5 sm:p-3 text-center"
                       >
-                        <div className="text-xs text-white/60 mb-1">Year 2</div>
+                        <div className="text-xs text-white/60 mb-1">{t('purchase.year2')}</div>
                         <div className="text-sm sm:text-base font-bold text-white">
                           {isGenesis ? '$520K' : isStandard ? '6K USDT' : '$260K'}
                         </div>
@@ -410,7 +413,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                         transition={{ delay: 0.6 }}
                         className="rounded-lg border border-white/10 bg-white/5 p-2.5 sm:p-3 text-center"
                       >
-                        <div className="text-xs text-white/60 mb-1">Year 3</div>
+                        <div className="text-xs text-white/60 mb-1">{t('purchase.year3')}</div>
                         <div className="text-sm sm:text-base font-bold text-white">
                           {isGenesis ? '$630K' : isStandard ? '10K USDT' : '$315K'}
                         </div>
@@ -428,7 +431,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                       } p-3 sm:p-4`}
                     >
                       <div className="flex items-baseline justify-between gap-2 mb-1.5">
-                        <div className="text-xs text-white/70">Total Return Rate</div>
+                        <div className="text-xs text-white/70">{t('purchase.totalReturnRate')}</div>
                         <div className={`text-xl sm:text-2xl md:text-3xl font-extrabold ${
                           isStandard ? 'text-emerald-300' : 'text-purple-300'
                         }`}>
@@ -448,7 +451,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                   {/* Price Advantage Section */}
                   <div className="space-y-3 sm:space-y-4 md:flex md:flex-col">
                     <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-3 sm:mb-4">
-                      Price Advantage
+                      {t('purchase.priceAdvantage')}
                     </h2>
                     <div className="grid grid-cols-2 gap-2 sm:gap-3">
                       <motion.div
@@ -457,9 +460,9 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                         transition={{ delay: 0.2 }}
                         className="rounded-lg border border-white/10 bg-white/5 p-3 sm:p-4"
                       >
-                        <div className="text-xs text-white/60 mb-1">Node Price</div>
+                        <div className="text-xs text-white/60 mb-1">{t('purchase.nodePrice')}</div>
                         <div className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-400">$0.17/CLT</div>
-                        <p className="text-xs text-white/60 mt-1">Exclusive price</p>
+                        <p className="text-xs text-white/60 mt-1">{t('purchase.exclusivePrice')}</p>
                       </motion.div>
                       <motion.div
                         initial={{ opacity: 0, x: 20 }}
@@ -467,9 +470,9 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                         transition={{ delay: 0.3 }}
                         className="rounded-lg border border-white/10 bg-white/5 p-3 sm:p-4"
                       >
-                        <div className="text-xs text-white/60 mb-1">Public Price</div>
+                        <div className="text-xs text-white/60 mb-1">{t('purchase.publicPrice')}</div>
                         <div className="text-lg sm:text-xl md:text-2xl font-bold text-white">$2.5/CLT</div>
-                        <p className="text-xs text-white/60 mt-1">Public offering</p>
+                        <p className="text-xs text-white/60 mt-1">{t('purchase.publicOffering')}</p>
                       </motion.div>
                     </div>
                     <motion.div
@@ -479,11 +482,11 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
                       className="rounded-lg border-2 border-emerald-500/50 bg-gradient-to-r from-emerald-900/30 to-teal-900/30 p-3 sm:p-4 md:mt-auto"
                     >
                       <div className="flex items-center justify-between gap-2 mb-1.5">
-                        <div className="text-xs text-white/70">Advantage</div>
+                        <div className="text-xs text-white/70">{t('purchase.advantage')}</div>
                         <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-emerald-400">14.6x</div>
                       </div>
                       <p className="text-xs text-white/80">
-                        Node investors gain 14.6x price advantage
+                        {t('purchase.advantageDescription')}
                       </p>
                     </motion.div>
                   </div>
@@ -495,7 +498,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
           {/* Security Measures Section */}
           <motion.section variants={itemVariants} className="space-y-3 sm:space-y-4">
             <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white text-center px-4">
-              Security Assurance
+              {t('security.title')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               {securityMeasures.map((measure, index) => (
@@ -535,7 +538,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
               whileTap={{ scale: 0.95 }}
               className="w-full sm:w-auto inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
             >
-              {isConnected ? 'Purchase Node' : 'Connect Wallet to Purchase'}
+              {isConnected ? t('purchase.title') : t('purchase.connectWallet')}
             </motion.button>
           </motion.section>
 
@@ -545,7 +548,7 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
             className="text-center pt-4 sm:pt-5 border-t border-white/10 px-4"
           >
             <p className="text-xs text-white/70 leading-relaxed">
-              All nodes are sold until exhausted, never to be reissued | Node holders enjoy permanent platform dividend rights
+              {t('purchase.footerNote')}
             </p>
           </motion.div>
         </motion.div>

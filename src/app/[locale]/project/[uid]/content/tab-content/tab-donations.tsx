@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { ProjectDetailData, DonorData } from '@/service/project';
 import { ProjectChainInfo } from '@/components/case-cards';
 import { SCAN_URL } from '@/constants/enum';
@@ -21,6 +22,8 @@ interface TabDonationsProps {
 }
 
 const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProps) => {
+  const t = useTranslations('projectDetail.donations');
+  const tCommon = useTranslations('common');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -66,7 +69,7 @@ const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProp
     >
       <motion.div variants={itemVariants} className="mb-8">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-          Donations
+          {t('title')}
         </h2>
         
         {/* 捐赠表格 */}
@@ -74,10 +77,10 @@ const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProp
           <table className="w-full text-white/80">
             <thead>
               <tr className="border-b border-white/10">
-                <th className="text-left py-4 px-2">Donated at</th>
-                <th className="text-left py-4 px-2">Donor</th>
-                <th className="text-left py-4 px-2">Hash Tx</th>
-                <th className="text-left py-4 px-2">Amount</th>
+                <th className="text-left py-4 px-2">{t('table.donatedAt')}</th>
+                <th className="text-left py-4 px-2">{t('table.donor')}</th>
+                <th className="text-left py-4 px-2">{tCommon('labels.transactionHash')}</th>
+                <th className="text-left py-4 px-2">{t('table.amount')}</th>
               </tr>
             </thead>
             <tbody>
@@ -95,7 +98,7 @@ const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProp
                       className="border-b border-white/5 hover:bg-white/5 transition-colors"
                     >
                       <td className="py-4 px-2">
-                        {isValidDate ? createdAt.toLocaleDateString() : 'Invalid Date'}
+                        {isValidDate ? createdAt.toLocaleDateString() : t('table.invalidDate')}
                       </td>
                       <td className="py-4 px-2 font-mono text-sm">
                         {address.length > 10 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address}
@@ -108,7 +111,7 @@ const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProp
                           <span 
                             className="text-white/40 hover:text-white/80 cursor-pointer transition-colors duration-200"
                             onClick={() => window.open(`${SCAN_URL.POLYGON}${hash}`, "_blank")}
-                            title="查看交易详情"
+                            title={t('table.viewTransactionDetails')}
                           >
                             <i className="fa fa-external-link text-xs"></i>
                           </span>
@@ -128,10 +131,10 @@ const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProp
                         <i className="ti-heart text-2xl text-purple-400"></i>
                       </div>
                       <h3 className="text-xl font-semibold text-white mb-2">
-                        No Donations Yet
+                        {t('empty.title')}
                       </h3>
                       <p className="text-white/60">
-                        No one has donated to this project yet. Be the first supporter!
+                        {t('empty.description')}
                       </p>
                     </div>
                   </td>
@@ -146,13 +149,13 @@ const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProp
       <motion.div variants={itemVariants} className="mt-8">
         <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
           <h3 className="text-lg font-semibold text-white mb-4">
-            All time donations received
+            {t('sidebar.allTimeDonations')}
           </h3>
           <h4 className="text-2xl font-bold text-white mb-4">
-            Be the first to give!
+            {t('sidebar.beFirstToGive')}
           </h4>
           <h5 className="text-lg font-semibold text-white mb-4">
-            Project recipient address
+            {t('sidebar.projectRecipientAddress')}
           </h5>
           
           <div className="space-y-3">
@@ -168,7 +171,7 @@ const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProp
                   <div>
                     <div className="text-white font-semibold">{network.name}</div>
                     <div className="text-white/60 text-sm font-mono">
-                      {network.address || 'No address available'}
+                      {network.address || t('sidebar.noAddressAvailable')}
                     </div>
                   </div>
                 </div>

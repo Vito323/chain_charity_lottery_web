@@ -9,8 +9,24 @@ export default getRequestConfig(async ({requestLocale}) => {
     ? requested
     : routing.defaultLocale;
  
+  // Load common translations and locale-specific translations
+  const commonMessages = (await import(`./messages/common.${locale}.json`)).default;
+  const localeMessages = (await import(`./messages/${locale}.json`)).default;
+ 
+  // Merge common translations with locale-specific translations
+  // Locale-specific translations will override common translations if keys overlap
+  const messages = {
+    ...commonMessages,
+    ...localeMessages,
+    // Deep merge common and locale messages to preserve nested structure
+    common: {
+      ...commonMessages.common,
+      ...(localeMessages.common || {})
+    }
+  };
+ 
   return {
     locale,
-    messages: (await import(`./messages/${locale}.json`)).default
+    messages
   };
 });

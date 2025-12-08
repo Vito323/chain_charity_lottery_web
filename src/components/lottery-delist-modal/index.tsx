@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 interface LotteryDelistModalProps {
   isOpen: boolean;
@@ -19,6 +20,8 @@ const LotteryDelistModal: React.FC<LotteryDelistModalProps> = ({
   ticketImage = '/images/placeholder-all.png',
   onConfirmDelist,
 }) => {
+  const t = useTranslations('lottery.modals.delist');
+  const tCommon = useTranslations('common');
   const [isProcessing, setIsProcessing] = useState(false);
 
   // 当Modal关闭时重置所有状态
@@ -93,7 +96,7 @@ const LotteryDelistModal: React.FC<LotteryDelistModalProps> = ({
 
             {/* Title */}
             <div className="pt-2 pr-12 sm:pr-16">
-              <h2 className="text-xl sm:text-2xl font-bold text-white">Confirm Delist?</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">{t('title')}</h2>
             </div>
 
             {/* Content Area - Flexbox Layout */}
@@ -118,7 +121,7 @@ const LotteryDelistModal: React.FC<LotteryDelistModalProps> = ({
               {/* Right: Description Text */}
               <div className="flex-1 flex items-center">
                 <p className="text-sm sm:text-base text-white/70 leading-relaxed">
-                  After delisting, it can be relisted for sale.
+                  {t('description')}
                 </p>
               </div>
             </div>
@@ -131,7 +134,7 @@ const LotteryDelistModal: React.FC<LotteryDelistModalProps> = ({
                 disabled={isProcessing}
                 className="flex-1 sm:flex-none px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Cancel
+                {tCommon('actions.cancel')}
               </button>
 
               {/* Confirm Button */}
@@ -150,10 +153,10 @@ const LotteryDelistModal: React.FC<LotteryDelistModalProps> = ({
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Processing...
+                    {tCommon('actions.processing')}
                   </>
                 ) : (
-                  'Confirm'
+                  tCommon('actions.confirm')
                 )}
               </button>
             </div>

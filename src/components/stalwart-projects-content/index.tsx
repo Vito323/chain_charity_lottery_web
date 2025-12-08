@@ -8,6 +8,7 @@ import { Tabs } from "@/components/tab";
 import useGlobalStore from "@/store";
 import { CategoryData } from "@/service/project";
 import { useFundPoolManager } from "@/hooks/useFundPoolManager";
+import { useTranslations } from 'next-intl';
 import StalwartProjectList from "../stalwart-project-list";
 import "./stalwart-projects-content.scss";
 
@@ -106,6 +107,7 @@ const StalwartProjectsContent = () => {
     getProjectFundStats,
   } = useFundPoolManager();
 
+  const t = useTranslations('projects');
   const categories = useGlobalStore((state) => state.categories);
   const [activeTab, setActiveTab] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -171,7 +173,7 @@ const StalwartProjectsContent = () => {
               animate={isVisible ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              <span>Our Projects</span>
+              <span>{t('badge')}</span>
             </motion.div>
             
             <motion.h2
@@ -180,7 +182,7 @@ const StalwartProjectsContent = () => {
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              Discover Our <span className="stalwart-highlight">Impactful</span> Initiatives
+              {t('title')} <span className="stalwart-highlight">{t('titleHighlight')}</span> {t('titleSuffix')}
             </motion.h2>
             
             <motion.p
@@ -189,7 +191,7 @@ const StalwartProjectsContent = () => {
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              Explore our diverse range of charitable projects and initiatives that are making a real difference in communities around the world. Each project is carefully selected and verified to ensure maximum impact and transparency.
+              {t('description')}
             </motion.p>
           </div>
 
@@ -234,10 +236,10 @@ const StalwartProjectsContent = () => {
                     <span className="stalwart-donation-activity-number">
                       {new Intl.NumberFormat("en-US").format(56789)}
                     </span>{" "}
-                    kind-hearted donors have contributed so far
+                    {t('donationActivity.title')}
                   </p>
                   <p className="stalwart-donation-activity-subtitle">
-                    Recent on-chain donations from our global community.
+                    {t('donationActivity.subtitle')}
                   </p>
                 </div>
               </div>
@@ -261,7 +263,7 @@ const StalwartProjectsContent = () => {
 
                       <div className="stalwart-donation-activity-amount">
                         <span className="stalwart-donation-activity-amount-label">
-                          Donated
+                          {t('donationActivity.donated')}
                         </span>
                         <span className="stalwart-donation-activity-amount-value">
                           {item.amount.toLocaleString("en-US", {

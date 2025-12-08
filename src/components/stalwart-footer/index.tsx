@@ -5,8 +5,13 @@ import { useState, useMemo } from 'react';
 import { subscribeEmail } from '@/service/general';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 const StalwartFooter = () => {
+  const t = useTranslations('footer');
+  const tNav = useTranslations('navigation');
+  const tCommon = useTranslations('common');
   const [email, setEmail] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>('');
@@ -21,7 +26,7 @@ const StalwartFooter = () => {
       setEmailError('');
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (value && !emailRegex.test(value)) {
-        setEmailError('Please enter a valid email address');
+        setEmailError(tCommon('validation.emailInvalid'));
       }
     }, 300),
     []
@@ -49,14 +54,14 @@ const StalwartFooter = () => {
     e.preventDefault();
 
     if (!email.trim()) {
-      setEmailError('Please enter your email address');
-      toast.error('Please enter your email address');
+      setEmailError(tCommon('validation.emailRequired'));
+      toast.error(tCommon('validation.emailRequired'));
       return;
     }
 
     if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address');
-      toast.error('Please enter a valid email address');
+      setEmailError(tCommon('validation.emailInvalid'));
+      toast.error(tCommon('validation.emailInvalid'));
       return;
     }
 
@@ -66,10 +71,10 @@ const StalwartFooter = () => {
       const response = await subscribeEmail(email);
       if (response.ok) {
         setEmail('');
-        toast.success('Subscription successful! Thank you for your attention');
+        toast.success(tCommon('success.subscribeSuccess'));
       }
     } catch {
-      toast.error('Subscription failed. Please try again.');
+      toast.error(tCommon('errors.subscribeFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -77,9 +82,9 @@ const StalwartFooter = () => {
 
   const footerLinks = {
     useful: [
-      { name: 'Home', href: '/' },
-      { name: 'Projects', href: '/project' },
-      { name: 'Lottery', href: '/lottery' },
+      { name: tNav('home'), href: '/' },
+      { name: tNav('projects'), href: '/project' },
+      { name: tNav('lottery'), href: '/lottery' },
     ],
   };
 
@@ -97,10 +102,10 @@ const StalwartFooter = () => {
             className="text-center max-w-2xl mx-auto"
           >
             <h3 className="text-3xl font-bold mb-4">
-              Stay in the Loop
+              {t('newsletterTitle')}
             </h3>
             <p className="text-gray-300 mb-8">
-             Follow us for further information
+              {t('newsletterDescription')}
             </p>
             <div className="max-w-md mx-auto">
               <form className="flex flex-col sm:flex-row gap-4">
@@ -119,7 +124,7 @@ const StalwartFooter = () => {
                     value={email}
                     onChange={handleEmailChange}
                     onKeyPress={handleKeyPress}
-                    placeholder="Enter your email"
+                    placeholder={t('emailPlaceholder')}
                     disabled={isLoading}
                     autoComplete="email"
                     className={`flex-1 w-full px-4 py-3 bg-white/10 border rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
@@ -140,7 +145,7 @@ const StalwartFooter = () => {
                   whileHover={!email || !!emailError || isLoading ? {} : { scale: 1.05 }}
                   whileTap={!email || !!emailError || isLoading ? {} : { scale: 0.95 }}
                 >
-                  {isLoading ? 'Subscribing...' : 'Subscribe'}
+                  {isLoading ? tCommon('status.subscribing') : t('subscribe')}
                 </motion.button>
               </form>
               
@@ -194,7 +199,7 @@ const StalwartFooter = () => {
                 <span className="text-xl font-bold">Hawaiian Nation Charity</span>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed">
-                Connecting the world with kindness, protecting our home with action.
+                {t('brandDescription')}
               </p>
             </motion.div>
           </div>
@@ -208,17 +213,17 @@ const StalwartFooter = () => {
               viewport={{ once: true }}
             >
               <h4 className="text-lg font-semibold mb-4">
-                Useful Links
+                {t('usefulLinks')}
               </h4>
               <ul className="space-y-3">
                 {footerLinks.useful.map((link, index) => (
                   <li key={index}>
-                    <a
+                    <Link
                       href={link.href}
                       className="text-gray-300 hover:text-white transition-colors duration-300"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -234,7 +239,7 @@ const StalwartFooter = () => {
               viewport={{ once: true }}
             >
               <h4 className="text-lg font-semibold mb-4">
-                Contact Us
+                {t('contactUs')}
               </h4>
               <div className="space-y-3">
                 <div className="flex items-center text-gray-300">
@@ -264,7 +269,7 @@ const StalwartFooter = () => {
         >
           <div className="text-center">
             <p className="text-gray-300 text-sm">
-              © 2025 ChainCharity. All rights reserved
+              {t('copyright')}
             </p>
           </div>
         </motion.div>

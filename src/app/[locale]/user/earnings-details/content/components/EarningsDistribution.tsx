@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import dayjs from 'dayjs';
 
 type PeriodType = 'day' | 'week' | 'month' | 'year';
@@ -34,6 +35,7 @@ const dailyEarningsData: Record<string, number> = {
 };
 
 const EarningsDistribution: React.FC<EarningsDistributionProps> = () => {
+  const t = useTranslations('earningsDetails.distribution');
   const [period, setPeriod] = useState<PeriodType>('day');
   const [displayFormat, setDisplayFormat] = useState<DisplayFormat>('currency');
   const [currentMonth, setCurrentMonth] = useState(dayjs('2025-08-01'));
@@ -81,7 +83,7 @@ const EarningsDistribution: React.FC<EarningsDistributionProps> = () => {
 
   return (
     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8">
-      <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">Earnings Distribution</h3>
+      <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">{t('title')}</h3>
 
       {/* Period Tabs and Display Format */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
@@ -97,7 +99,7 @@ const EarningsDistribution: React.FC<EarningsDistributionProps> = () => {
                   : 'text-white/70 hover:text-white hover:bg-white/10'
               }`}
             >
-              {p === 'day' ? 'Day' : p === 'week' ? 'Week' : p === 'month' ? 'Month' : 'Year'}
+              {t(p)}
             </button>
           ))}
         </div>
@@ -158,9 +160,9 @@ const EarningsDistribution: React.FC<EarningsDistributionProps> = () => {
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-2">
           {/* Weekday Headers */}
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+          {['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((day) => (
             <div key={day} className="text-center text-sm text-white/60 font-medium py-2">
-              {day}
+              {t(`weekdays.${day}`)}
             </div>
           ))}
 

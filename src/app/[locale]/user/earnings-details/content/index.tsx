@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
+import { useTranslations } from 'next-intl';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 import EarningsOverview from './components/EarningsOverview';
 import EarningsDistribution from './components/EarningsDistribution';
@@ -10,6 +11,7 @@ import DailyEarningsDetails from './components/DailyEarningsDetails';
 
 const StalwartEarningsDetails: React.FC = () => {
   const { isConnected } = useAccount();
+  const t = useTranslations('earningsDetails');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -52,14 +54,14 @@ const StalwartEarningsDetails: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm">Earnings Details</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Earnings <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">Overview</span>
+            {t('title')} <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            Track your earnings performance, distribution, and daily details across all your nodes.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -75,10 +77,10 @@ const StalwartEarningsDetails: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Connect Your Wallet
+              {t('connectTitle')}
             </h3>
             <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Connect your wallet to view your earnings details and performance metrics.
+              {t('connectDescription')}
             </p>
             <StalwartConnectButton />
           </motion.div>

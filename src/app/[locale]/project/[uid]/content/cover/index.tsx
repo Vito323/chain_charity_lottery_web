@@ -6,6 +6,7 @@ import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
@@ -15,6 +16,8 @@ interface CoversProps {
 }
 
 const Covers = ({ images, isLoading = false }: CoversProps) => {
+  const t = useTranslations('projectDetail.cover');
+  const tCommon = useTranslations('common');
   const swiperRef = useRef<SwiperType | null>(null);
   const [imageLoadStates, setImageLoadStates] = useState<boolean[]>([]);
 
@@ -71,7 +74,7 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
   // Loading state component
   const LoadingSkeleton = () => (
     <div className="w-full h-96 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 flex items-center justify-center">
-      <div className="text-white/60">Loading...</div>
+      <div className="text-white/60">{tCommon('status.loading')}</div>
     </div>
   );
 
@@ -80,7 +83,7 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
     <div className="w-full h-96 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 flex items-center justify-center">
       <div className="text-center">
         <i className="ti-camera text-4xl text-white/40 mb-2"></i>
-        <div className="text-white/60">No images available</div>
+        <div className="text-white/60">{t('noImages')}</div>
       </div>
     </div>
   );

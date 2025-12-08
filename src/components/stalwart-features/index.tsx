@@ -4,10 +4,12 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 const StalwartFeatures = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const t = useTranslations('features');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -34,23 +36,19 @@ const StalwartFeatures = () => {
   const features = [
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bc9_f-img1.png',
-      title: 'Educational support',
-      description: 'Provide essential resources to underprivileged students. makes their dreams a reality.'
+      key: 'educational'
     },
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bcd_f-img2.png',
-      title: 'Medical assistance',
-      description: 'Provide timely aid and health security to communities and individuals lacking medical resources. Let compassion be the best medicine.'
+      key: 'medical'
     },
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bca_f-img3.png',
-      title: 'Environmental Protection',
-      description: 'Join our initiatives, from planting trees to cleaning water sources, to secure the green future we depend on.'
+      key: 'environmental'
     },
     {
       img: '/assets/images/66fa5b30f77a5519b8e02bcc_f-img4.png',
-      title: 'Disaster relief',
-      description: 'When disaster strikes, we move fast to provide critical relief like food, shelter, and medical care to help victims rebuild their lives.'
+      key: 'disaster'
     }
   ];
 
@@ -68,14 +66,14 @@ const StalwartFeatures = () => {
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/80 text-xs"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
-            What We Do?
+            {t('badge')}
           </motion.div>
           <div className="mt-5">
             <motion.h2
               variants={itemVariants}
               className="text-3xl md:text-5xl font-extrabold text-white tracking-tight text-center"
             >
-              We Are In A Mission To Help The Helpless
+              {t('title')}
             </motion.h2>
           </div>
         </motion.div>
@@ -109,10 +107,10 @@ const StalwartFeatures = () => {
               {/* Content */}
               <div className="relative z-10">
                 <h3 className="text-lg md:text-xl font-bold !text-white mb-3 transition-colors duration-300">
-                  {feature.title}
+                  {t(`items.${feature.key}.title`)}
                 </h3>
                 <p className="!text-white/70 text-base md:text-lg leading-relaxed">
-                  {feature.description}
+                  {t(`items.${feature.key}.description`)}
                 </p>
               </div>
 

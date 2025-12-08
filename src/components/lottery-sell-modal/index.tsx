@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
+import { useTranslations } from 'next-intl';
 
 interface LotterySellModalProps {
   isOpen: boolean;
@@ -21,6 +22,8 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
   onConfirmSell,
   mockMode = false,
 }) => {
+  const t = useTranslations('lottery.modals.sell');
+  const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const canProceed = mockMode || isConnected;
   const [salePrice, setSalePrice] = useState<string>(purchasePrice.toLocaleString());
@@ -128,14 +131,14 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
 
             {/* Header Section */}
             <div className="pt-2 pr-12 sm:pr-16">
-              <h2 className="text-xl sm:text-2xl font-bold text-white">List Ticket for Sale</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">{t('title')}</h2>
             </div>
 
             {/* Content Area */}
             <div className="space-y-4">
               {/* Sale Price Input */}
               <div className="space-y-3">
-                <label className="text-sm sm:text-base text-white/70 block mb-2">Sale Price:</label>
+                <label className="text-sm sm:text-base text-white/70 block mb-2">{t('salePrice')}</label>
                 <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <input
                     type="text"
@@ -150,7 +153,7 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
 
               {/* Duration Input */}
               <div className="space-y-3">
-                <label className="text-sm sm:text-base text-white/70 block mb-2">Sale Duration:</label>
+                <label className="text-sm sm:text-base text-white/70 block mb-2">{t('saleDuration')}</label>
                 <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <input
                     type="text"
@@ -159,20 +162,20 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
                     placeholder="7"
                     className="flex-1 bg-transparent text-white text-lg sm:text-xl font-semibold outline-none placeholder:text-white/30"
                   />
-                  <span className="text-white/70 text-sm sm:text-base">Days</span>
+                  <span className="text-white/70 text-sm sm:text-base">{tCommon('time.days')}</span>
                 </div>
               </div>
 
               {/* Fees Section */}
               <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                <h3 className="text-sm sm:text-base font-semibold text-white/70">Handling Fee:</h3>
+                <h3 className="text-sm sm:text-base font-semibold text-white/70">{t('handlingFee')}</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm sm:text-base">
-                    <span className="text-white/60">Service Fee</span>
+                    <span className="text-white/60">{t('serviceFee')}</span>
                     <span className="text-white font-semibold">{serviceFeeRate * 100}%</span>
                   </div>
                   <div className="flex items-center justify-between text-sm sm:text-base">
-                    <span className="text-white/60">Creator Fee</span>
+                    <span className="text-white/60">{t('creatorFee')}</span>
                     <span className="text-white font-semibold">{creatorFeeRate * 100}%</span>
                   </div>
                 </div>
@@ -188,13 +191,13 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
                   className="mt-1 w-5 h-5 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-2 focus:ring-purple-500/50 cursor-pointer flex-shrink-0"
                 />
                 <label htmlFor="terms-checkbox-sell" className="flex-1 text-sm sm:text-base text-white/70 cursor-pointer">
-                  I have read and accepted the{' '}
+                  {tCommon('terms.accept')}{' '}
                   <a href="#" className="text-purple-400 hover:text-purple-300 underline">
-                    Terms of Service
+                    {tCommon('terms.service')}
                   </a>{' '}
-                  and{' '}
+                  {tCommon('terms.and')}{' '}
                   <a href="#" className="text-purple-400 hover:text-purple-300 underline">
-                    Privacy Policy
+                    {tCommon('terms.privacy')}
                   </a>
                 </label>
               </div>
@@ -216,12 +219,12 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Processing...
+                    {tCommon('actions.processing')}
                   </>
                 ) : !canProceed ? (
-                  'Please Connect Wallet First'
+                  tCommon('actions.connectWalletFirst')
                 ) : (
-                  'Confirm Submission'
+                  t('confirmSubmission')
                 )}
             </button>
           </div>

@@ -5,9 +5,11 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
 import VideoModal from '../modal-video';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 const StalwartAbout = () => {
+  const t = useTranslations('about');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -60,19 +62,19 @@ const StalwartAbout = () => {
             <motion.div variants={itemVariants}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/80 text-xs mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
-                What We Do?
+                {t('badge')}
               </div>
               <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                We Are In A Mission To Help The Helpless
+                {t('title')}
               </h2>
             </motion.div>
 
             <motion.div variants={itemVariants} className="space-y-4">
               <p className="text-lg text-white/80 leading-relaxed">
-                Every life deserves a chance, and every person deserves dignity. Our mission is built on a simple, yet profound principle: to be the reliable bridge between urgent need and effective action. We stand in the gap, committing our resources, time, and heart to the most vulnerable communities—from providing essential medical care and educational support to delivering immediate disaster relief.
+                {t('description1')}
               </p>
               <p className="text-lg text-white/80 leading-relaxed">
-                The scale of global challenges is vast, but so is the power of collective generosity. We can&apos;t do this alone. By joining our mission, whether through donation, volunteering, or spreading the word, you become an indispensable force in this change.
+                {t('description2')}
               </p>
             </motion.div>
 
@@ -81,11 +83,11 @@ const StalwartAbout = () => {
                 href="/project"
                 className="px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-fuchsia-600 text-white font-semibold rounded-full text-lg hover:from-purple-700 hover:via-pink-700 hover:to-fuchsia-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 hover:scale-105"
               >
-                Donate Now
+                {t('donateNow')}
               </Link>
               <div className="flex items-center gap-3">
                 <VideoModal />
-                <span className="text-white/70 text-lg">Watch Our Video</span>
+                <span className="text-white/70 text-lg">{t('watchVideo')}</span>
               </div>
             </motion.div>
           </motion.div>

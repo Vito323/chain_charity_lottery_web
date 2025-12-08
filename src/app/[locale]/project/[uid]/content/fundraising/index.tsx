@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 interface FundraisingProps {
@@ -16,6 +17,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
   projectId = '',
   onDonate,
 }) => {
+  const t = useTranslations('projectDetail.fundraising');
   // 安全的数值转换
   const safeTotalRaised = typeof totalRaised === 'number' ? totalRaised : parseFloat(String(totalRaised || '0')) || 0;
   const safeContributors = typeof contributors === 'number' ? contributors : parseInt(String(contributors || '0')) || 0;
@@ -28,12 +30,12 @@ const Fundraising: React.FC<FundraisingProps> = ({
     >
       {/* 筹款摘要部分 */}
       <div className="text-center mb-6">
-        <div className="text-sm text-white/60 mb-2">Total amount raised</div>
+        <div className="text-sm text-white/60 mb-2">{t('totalAmountRaised')}</div>
         <div className="text-4xl font-bold text-white mb-2">
           ${safeTotalRaised.toLocaleString()}
         </div>
         <div className="text-white/70">
-          Raised from <strong>{safeContributors.toLocaleString()}</strong> contributors
+          {t('raisedFrom', { contributors: safeContributors.toLocaleString() })}
         </div>
       </div>
 
@@ -41,7 +43,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
       <div className="mb-6">
         <div className="bg-white/5 rounded-xl p-3 border border-white/10">
           <div className="flex items-start gap-2 text-sm text-white/70">
-            <span className="flex-shrink-0">Project ID:</span>
+            <span className="flex-shrink-0">{t('projectId')}:</span>
             <span className="font-mono text-xs break-all">{projectId}</span>
           </div>
         </div>
@@ -53,7 +55,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
           className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-fuchsia-600 text-white font-semibold rounded-full text-lg hover:from-purple-700 hover:via-pink-700 hover:to-fuchsia-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 hover:scale-105 text-center block cursor-pointer"
           onClick={onDonate}
         >
-          Donate
+          {t('donate')}
         </button>
       </div>
     </motion.div>

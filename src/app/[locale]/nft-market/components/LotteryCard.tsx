@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { LotteryTicket, RarityType } from '../types';
 
@@ -41,6 +42,7 @@ const rarityConfig: Record<RarityType, { color: string; bgGradient: string; bord
 };
 
 const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay = 0 }) => {
+  const t = useTranslations('nftMarket');
   const rarityStyle = rarityConfig[ticket.rarity];
 
   return (
@@ -100,7 +102,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
           <span
             className={`inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs md:text-sm font-semibold ${rarityStyle.color} bg-gradient-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor}`}
           >
-            {ticket.rarityLabel}
+            {t(`rarity.${ticket.rarity}`)}
           </span>
         </div>
 
@@ -110,7 +112,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
             {/* Basic Win Rate */}
             {ticket.basicWinRate && (
               <div className="flex items-center justify-between text-xs md:text-sm">
-                <span className="text-white/60">Basic Win Rate</span>
+                <span className="text-white/60">{t('card.basicWinRate')}</span>
                 <span className="text-white font-semibold">{ticket.basicWinRate}</span>
               </div>
             )}
@@ -118,14 +120,14 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
             {/* Max Prize */}
             {ticket.maxPrize && (
               <div className="flex items-center justify-between text-xs md:text-sm">
-                <span className="text-white/60">Max Prize</span>
+                <span className="text-white/60">{t('card.maxPrize')}</span>
                 <span className="text-white font-semibold">{ticket.maxPrize}</span>
               </div>
             )}
 
             {/* Redemption Cost */}
             <div className="flex items-center justify-between pt-2 border-t border-white/10">
-              <span className="text-white/60 text-xs md:text-sm">Redemption Cost</span>
+              <span className="text-white/60 text-xs md:text-sm">{t('card.redemptionCost')}</span>
               <span className="text-white font-bold text-sm md:text-base">
                 {parseFloat(ticket.redemptionCost).toLocaleString()} {ticket.currency}
               </span>
@@ -135,7 +137,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
           <div className="space-y-2 md:space-y-3">
             {/* Redemption Cost */}
             <div className="flex items-center justify-between text-xs md:text-sm">
-              <span className="text-white/60">Redemption Cost</span>
+              <span className="text-white/60">{t('card.redemptionCost')}</span>
               <span className="text-white font-semibold">
                 {parseFloat(ticket.redemptionCost).toLocaleString()} {ticket.currency}
               </span>
@@ -144,7 +146,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
             {/* Sale Price */}
             {ticket.salePrice && (
               <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                <span className="text-white/60 text-xs md:text-sm">Sale Price</span>
+                <span className="text-white/60 text-xs md:text-sm">{t('card.salePrice')}</span>
                 <span className="text-white font-bold text-sm md:text-base">
                   {parseFloat(ticket.salePrice).toLocaleString()} {ticket.currency}
                 </span>
@@ -158,7 +160,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
           className={`w-full mt-3 md:mt-4 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm lg:text-base bg-gradient-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor} text-white transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98]`}
           style={{ willChange: 'transform' }}
         >
-          {type === 'new' ? 'Purchase' : 'Buy Now'}
+          {type === 'new' ? t('card.purchase') : t('card.buyNow')}
         </button>
       </div>
     </motion.div>

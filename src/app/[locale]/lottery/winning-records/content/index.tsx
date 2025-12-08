@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import WinningRecordCard, { WinningRecord } from '../components/WinningRecordCard';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 
@@ -48,6 +49,8 @@ const defaultWinningRecords: WinningRecord[] = [
 ];
 
 const StalwartWinningRecords: React.FC = () => {
+  const t = useTranslations('lottery.winningRecords');
+  const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const [winningRecords] = useState<WinningRecord[]>(defaultWinningRecords);
   const [isLoading] = useState(false);
@@ -99,14 +102,14 @@ const StalwartWinningRecords: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-sm">Winning Records</span>
+            <span className="text-sm">{t('badge')}</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Lottery <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">Winning History</span>
+            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-            View all your lottery winnings and track your success across different draws.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -122,10 +125,10 @@ const StalwartWinningRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Connect Your Wallet
+              {t('connect.title')}
             </h3>
             <p className="text-white/70 mb-6 max-w-md mx-auto">
-              Connect your wallet to view your winning records and prize history.
+              {t('connect.description')}
             </p>
             <StalwartConnectButton />
           </motion.div>
@@ -140,7 +143,7 @@ const StalwartWinningRecords: React.FC = () => {
             <div className="bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="text-white/70 text-sm md:text-base">
-                  Cumulative Winnings
+                  {t('cumulativeWinnings')}
                 </div>
                 <div className="flex items-baseline gap-2">
                   <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
@@ -164,7 +167,7 @@ const StalwartWinningRecords: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white/80">Loading winning records...</p>
+            <p className="text-white/80">{tCommon('status.loading')}</p>
           </motion.div>
         )}
 
@@ -182,7 +185,7 @@ const StalwartWinningRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              Failed to Load Winning Records
+              {tCommon('errors.failedToLoadWinningRecords')}
             </h3>
             <p className="text-white/60">{error}</p>
           </motion.div>
@@ -218,16 +221,16 @@ const StalwartWinningRecords: React.FC = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              No Winning Records Found
+              {t('empty.title')}
             </h3>
             <p className="text-white/60 mb-6">
-              You haven&apos;t won any prizes yet. Keep trying and good luck on your next draw!
+              {t('empty.description')}
             </p>
             <Link
               href="/lottery"
               className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
             >
-              Browse Lottery
+              {t('empty.browseLottery')}
             </Link>
           </motion.div>
         )}
@@ -245,7 +248,7 @@ const StalwartWinningRecords: React.FC = () => {
               <svg className="w-5 h-5 text-purple-300 group-hover:text-purple-200 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>Token Details</span>
+              <span>{t('navigation.tokenDetails')}</span>
             </div>
           </Link>
           <Link
@@ -256,7 +259,7 @@ const StalwartWinningRecords: React.FC = () => {
               <svg className="w-5 h-5 text-emerald-300 group-hover:text-emerald-200 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span>Donation Records</span>
+              <span>{t('navigation.donationRecords')}</span>
             </div>
           </Link>
         </motion.div>

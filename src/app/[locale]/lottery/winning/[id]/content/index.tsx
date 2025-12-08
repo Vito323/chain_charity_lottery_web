@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 export type WinningType = 'lottery' | 'follow';
 
@@ -65,6 +66,7 @@ const mockFollowWinningData: WinningDetailData = {
 };
 
 const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
+  const t = useTranslations('lottery.winningDetail');
   // In production, fetch data by winningId
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _winningId = winningId; // Reserved for future API integration
@@ -124,7 +126,7 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-sm">
-              {type === 'lottery' ? 'My Lottery Ticket' : 'My Follow-bet'}
+              {type === 'lottery' ? t('badge.lottery') : t('badge.follow')}
             </span>
           </motion.div>
         </motion.div>
@@ -165,7 +167,7 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
 
               {type === 'follow' && winningData.followBetAmount && (
                 <div className="pt-3 md:pt-4 border-t border-white/10">
-                  <div className="text-white/60 text-xs md:text-sm mb-1">Follow-bet Amount</div>
+                  <div className="text-white/60 text-xs md:text-sm mb-1">{t('followBetAmount')}</div>
                   <div className="text-lg md:text-xl lg:text-2xl font-bold text-white">
                     {winningData.followBetAmount.toLocaleString()} {winningData.currency}
                   </div>
@@ -181,7 +183,7 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
           className="bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8 mb-6 md:mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="text-white/70 text-base md:text-lg">Winning Amount</div>
+            <div className="text-white/70 text-base md:text-lg">{t('winningAmount')}</div>
             <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white">
               {winningData.winningAmount.toLocaleString()} {winningData.currency}
             </div>
@@ -190,12 +192,12 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
 
         {/* Draw Information */}
         <motion.div variants={itemVariants} className="space-y-6 md:space-y-8">
-          <h3 className="text-xl md:text-2xl font-bold text-white">Draw Information</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-white">{t('drawInformation')}</h3>
 
           {/* Draw Time */}
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6">
             <div className="flex items-center justify-between">
-              <div className="text-white/60 text-sm md:text-base">Draw Time</div>
+              <div className="text-white/60 text-sm md:text-base">{t('drawTime')}</div>
               <div className="text-white font-semibold text-base md:text-lg">
                 {winningData.drawTime}
               </div>
@@ -209,7 +211,7 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
               variants={itemVariants}
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
-              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">Digital Matrix</div>
+              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">{t('digitalMatrix')}</div>
               <div className="text-lg md:text-xl font-bold text-white font-mono">
                 {winningData.digitalMatrix}
               </div>
@@ -220,7 +222,7 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
               variants={itemVariants}
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
-              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">Color Genes</div>
+              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">{t('colorGenes')}</div>
               <div className="flex gap-1 md:gap-2">
                 {winningData.colorGenes.map((color, index) => (
                   <div
@@ -237,7 +239,7 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
               variants={itemVariants}
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
-              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">Image Symbols</div>
+              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">{t('imageSymbols')}</div>
               <div className="flex gap-2 md:gap-3">
                 {winningData.imageSymbols.map((symbol, index) => (
                   <div
@@ -260,7 +262,7 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
             className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="text-white/60 text-sm md:text-base">Timestamp:</div>
+              <div className="text-white/60 text-sm md:text-base">{t('timestamp')}</div>
               <div className="text-white font-semibold text-sm md:text-base font-mono">
                 {winningData.timestamp}
               </div>

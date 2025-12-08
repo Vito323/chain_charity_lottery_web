@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 export type WinningType = 'lottery' | 'follow';
 
@@ -26,9 +27,10 @@ const WinningRecordCard: React.FC<WinningRecordCardProps> = ({
   record, 
   animationDelay = 0 
 }) => {
+  const t = useTranslations('lottery.winningRecords.card');
   const winningTypeLabel = record.winningType === 'lottery' 
-    ? 'Lottery Ticket Won' 
-    : 'Follow-bet Won';
+    ? t('lotteryWon') 
+    : t('followWon');
   
   const winningTypeBadge = record.winningType === 'lottery'
     ? 'from-blue-500/10 to-blue-600/5 border-blue-500/30 text-blue-400'
@@ -133,7 +135,7 @@ const WinningRecordCard: React.FC<WinningRecordCardProps> = ({
 
         {/* Draw Number */}
         <div className="mb-2 md:mb-3">
-          <div className="text-white/60 text-xs md:text-sm mb-1">Draw Number</div>
+          <div className="text-white/60 text-xs md:text-sm mb-1">{t('drawNumber')}</div>
           <div className="text-white font-semibold text-sm md:text-base">
             #{record.drawNumber}
           </div>
@@ -141,7 +143,7 @@ const WinningRecordCard: React.FC<WinningRecordCardProps> = ({
 
         {/* Prize Amount */}
         <div className="mb-2 md:mb-3">
-          <div className="text-white/60 text-xs md:text-sm mb-1">Prize</div>
+          <div className="text-white/60 text-xs md:text-sm mb-1">{t('prize')}</div>
           <div className="text-emerald-400 font-bold text-sm md:text-base">
             {record.prizeAmount.toLocaleString(undefined, {
               minimumFractionDigits: 0,
@@ -152,7 +154,7 @@ const WinningRecordCard: React.FC<WinningRecordCardProps> = ({
 
         {/* Winning Time */}
         <div className="pt-2 border-t border-white/10">
-          <div className="text-white/60 text-xs md:text-sm mb-1">Winning Time</div>
+          <div className="text-white/60 text-xs md:text-sm mb-1">{t('winningTime')}</div>
           <div className="text-white/80 text-xs">
             {formattedTime.date}
           </div>

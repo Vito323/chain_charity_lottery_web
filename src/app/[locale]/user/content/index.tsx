@@ -8,10 +8,12 @@ import NFTList from '@/components/nft-list';
 import { useWalletNFTs } from '@/hooks/useWalletNFTs';
 import { NFT } from '@/components/nft-list';
 import { useAccount } from 'wagmi';
+import { useTranslations } from 'next-intl';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 
 const StalwartUserDashboard = () => {
   const { address, isConnected } = useAccount();
+  const t = useTranslations('user');
   const { nfts, loading, hasMore, error, loadMore, refresh, totalCount } = useWalletNFTs({
     pageSize: 20,
     initialPage: 1
@@ -59,7 +61,7 @@ const StalwartUserDashboard = () => {
   // 用户统计数据
   const userStats = [
     {
-      label: 'Total NFTs',
+      label: t('stats.totalNFTs.label'),
       value: isConnected ? totalCount : '--',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,10 +69,10 @@ const StalwartUserDashboard = () => {
         </svg>
       ),
       color: 'from-purple-500 to-pink-500',
-      description: 'Digital assets in your wallet'
+      description: t('stats.totalNFTs.description')
     },
     {
-      label: 'Collections',
+      label: t('stats.collections.label'),
       value: isConnected ? Math.ceil(totalCount / 10) : '--',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,22 +80,22 @@ const StalwartUserDashboard = () => {
         </svg>
       ),
       color: 'from-blue-500 to-cyan-500',
-      description: 'Unique collections owned'
+      description: t('stats.collections.description')
     },
     {
-      label: 'Wallet Address',
-      value: isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Not Connected',
+      label: t('stats.walletAddress.label'),
+      value: isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : t('stats.notConnected'),
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       ),
       color: 'from-emerald-500 to-teal-500',
-      description: 'Your wallet identifier'
+      description: t('stats.walletAddress.description')
     },
     {
-      label: 'Status',
-      value: isConnected ? 'Active' : 'Disconnected',
+      label: t('stats.status.label'),
+      value: isConnected ? t('stats.status.active') : t('stats.status.disconnected'),
       icon: isConnected ? (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -104,7 +106,7 @@ const StalwartUserDashboard = () => {
         </svg>
       ),
       color: isConnected ? 'from-green-500 to-emerald-500' : 'from-red-500 to-pink-500',
-      description: 'Connection status'
+      description: t('stats.status.description')
     }
   ];
 
@@ -156,26 +158,15 @@ const StalwartUserDashboard = () => {
               className="inline-flex items-center gap-2.5 px-3 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-white/90 mb-6"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs md:text-sm">User Dashboard</span>
+              <span className="text-xs md:text-sm">{t('title')}</span>
             </motion.div>
             
             <motion.h1
               variants={itemVariants}
               className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight mb-6"
             >
-              Your Digital
-              <br />
-              <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
-                Collection
-              </span>
+              {t('subtitle')}
             </motion.h1>
-            
-            <motion.p
-              variants={itemVariants}
-              className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed"
-            >
-              Manage your NFT collection, track your digital assets, and explore the blockchain ecosystem
-            </motion.p>
           </motion.div>
 
           {/* User Stats */}
@@ -228,22 +219,15 @@ const StalwartUserDashboard = () => {
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/80 text-xs mb-4"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
-                  Your Collection
+                  {t('nfts.title')}
                 </motion.div>
                 
                 <motion.h2
                   variants={itemVariants}
                   className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4"
                 >
-                  NFT Collection
+                  {t('nfts.title')}
                 </motion.h2>
-                
-                <motion.p
-                  variants={itemVariants}
-                  className="text-lg text-white/70 max-w-2xl mb-8"
-                >
-                  Explore and manage your digital assets with ease
-                </motion.p>
               </motion.div>
 
               {/* NFT Actions */}
@@ -255,7 +239,7 @@ const StalwartUserDashboard = () => {
               >
                 <div className="flex items-center gap-4">
                   <div className="text-white/80">
-                    {isConnected ? `Total ${totalCount} NFTs` : 'Connect wallet to view NFTs'}
+                    {isConnected ? `${t('stats.totalNFTs.label')}: ${totalCount}` : t('nfts.empty.description')}
                   </div>
                   {isConnected && address && (
                     <div className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/80 text-sm">
@@ -281,7 +265,7 @@ const StalwartUserDashboard = () => {
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
-                      {loading ? 'Refreshing...' : 'Refresh'}
+                      {loading ? t('nfts.loading') : t('nfts.refresh')}
                     </motion.button>
                   )}
                 </div>
@@ -299,7 +283,7 @@ const StalwartUserDashboard = () => {
                       <span className="text-red-400 text-sm">!</span>
                     </div>
                     <div className="text-red-400">
-                      <strong>Load failed:</strong> {error}
+                      <strong>{t('nfts.error')}:</strong> {error}
                     </div>
                     <motion.button
                       onClick={handleRefresh}
@@ -307,7 +291,7 @@ const StalwartUserDashboard = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Retry
+                      {t('nfts.refresh')}
                     </motion.button>
                   </div>
                 </motion.div>
@@ -329,9 +313,9 @@ const StalwartUserDashboard = () => {
                         <path d="M18 12a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4z"/>
                       </svg>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">Connect Your Wallet</h3>
+                    <h3 className="text-2xl font-bold text-white mb-4">{t('nfts.empty.title')}</h3>
                     <p className="text-white/70 mb-8 leading-relaxed">
-                      Connect your wallet to view and manage your NFT collection
+                      {t('nfts.empty.description')}
                     </p>
                     <StalwartConnectButton />
                   </div>

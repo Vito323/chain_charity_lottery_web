@@ -3,49 +3,51 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface TabFeaturesProps {
   projectInfo?: any;
 }
 
 const TabFeatures = ({ projectInfo }: TabFeaturesProps) => {
+  const t = useTranslations('projectDetail.features');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const features = [
     {
-      title: "Modern Design",
-      description: "Cutting-edge UI/UX design that captivates and engages users with intuitive interfaces and stunning visuals.",
+      title: t('items.modernDesign.title'),
+      description: t('items.modernDesign.description'),
       icon: "ti-palette",
       color: "from-purple-500 to-pink-500"
     },
     {
-      title: "High Performance",
-      description: "Optimized for speed and efficiency across all devices, ensuring smooth user experiences and fast load times.",
+      title: t('items.highPerformance.title'),
+      description: t('items.highPerformance.description'),
       icon: "ti-zap",
       color: "from-blue-500 to-cyan-500"
     },
     {
-      title: "Scalable Solutions",
-      description: "Built to grow with your business needs and requirements, supporting everything from startups to enterprises.",
+      title: t('items.scalableSolutions.title'),
+      description: t('items.scalableSolutions.description'),
       icon: "ti-trending-up",
       color: "from-green-500 to-emerald-500"
     },
     {
-      title: "Secure & Reliable",
-      description: "Enterprise-grade security and 99.9% uptime guarantee, ensuring your data and applications are always protected.",
+      title: t('items.secureReliable.title'),
+      description: t('items.secureReliable.description'),
       icon: "ti-lock",
       color: "from-orange-500 to-red-500"
     },
     {
-      title: "Cross-Platform",
-      description: "Seamless experience across all platforms and devices, from desktop to mobile and everything in between.",
+      title: t('items.crossPlatform.title'),
+      description: t('items.crossPlatform.description'),
       icon: "ti-device-mobile",
       color: "from-indigo-500 to-purple-500"
     },
     {
-      title: "24/7 Support",
-      description: "Round-the-clock support and maintenance, ensuring your project runs smoothly at all times.",
+      title: t('items.support.title'),
+      description: t('items.support.description'),
       icon: "ti-tools",
       color: "from-teal-500 to-blue-500"
     }
@@ -84,10 +86,10 @@ const TabFeatures = ({ projectInfo }: TabFeaturesProps) => {
     >
       <motion.div variants={itemVariants} className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-          Key Features
+          {t('title')}
         </h2>
         <p className="text-lg text-white/80 max-w-2xl mx-auto">
-          Discover the comprehensive range of features and capabilities that make our platform stand out
+          {t('subtitle')}
         </p>
       </motion.div>
 
@@ -116,12 +118,10 @@ const TabFeatures = ({ projectInfo }: TabFeaturesProps) => {
       <motion.div variants={itemVariants} className="mt-12 text-center">
         <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-8 border border-white/10">
           <h3 className="text-2xl font-bold text-white mb-4">
-            Why Choose Our Platform?
+            {t('whyChoose.title')}
           </h3>
           <p className="text-white/80 leading-relaxed max-w-3xl mx-auto">
-            Our platform combines cutting-edge technology with user-centric design to deliver 
-            exceptional experiences. We're committed to continuous innovation and excellence, 
-            ensuring that our users always have access to the best tools and features available.
+            {t('whyChoose.description')}
           </p>
         </div>
       </motion.div>

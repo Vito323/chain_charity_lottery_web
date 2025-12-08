@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { PurchaseRecord, WinningRecord } from '../types';
 
 interface HistoryTabProps {
@@ -16,6 +17,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
   purchaseRecords,
   winningRecords,
 }) => {
+  const t = useTranslations('nftDetail.history');
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -28,20 +30,20 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         {/* Summary Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-6 md:mb-8 pb-6 md:pb-8 border-b border-white/10">
           <div className="text-center">
-            <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">Generation</div>
+            <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">{t('generation')}</div>
             <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">3rd</div>
           </div>
           <div className="text-center">
-            <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">Base Value</div>
+            <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">{t('baseValue')}</div>
             <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-400">1,500 USDT</div>
           </div>
           <div className="text-center">
-            <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">Family Badge</div>
+            <div className="text-xs sm:text-sm text-white/60 mb-1 sm:mb-2">{t('familyBadge')}</div>
             <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs sm:text-sm text-white/80">
               <svg className="w-5 h-5 text-emerald-300" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
-              <span>Premium Lineage</span>
+              <span>{t('premiumLineage')}</span>
             </div>
           </div>
         </div>
@@ -49,15 +51,15 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         {/* Purchase Records */}
         <div className="mb-6 md:mb-8">
           <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-3 sm:mb-4">
-            Purchase Records
+            {t('purchaseRecords')}
           </h3>
           <div className="rounded-xl border border-white/10 bg-slate-900/40 overflow-hidden">
             {/* Table Header */}
             <div className="grid grid-cols-4 gap-2 sm:gap-4 px-4 sm:px-6 py-3 bg-white/5 border-b border-white/10">
-              <div className="text-xs sm:text-sm font-semibold text-white/80">Buyer</div>
-              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">Price</div>
-              <div className="hidden sm:block text-xs sm:text-sm font-semibold text-white/80 text-right">Price (CLT)</div>
-              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">Purchase Time</div>
+              <div className="text-xs sm:text-sm font-semibold text-white/80">{t('buyer')}</div>
+              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">{t('price')}</div>
+              <div className="hidden sm:block text-xs sm:text-sm font-semibold text-white/80 text-right">{t('priceClt')}</div>
+              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">{t('purchaseTime')}</div>
             </div>
             {/* Table Rows */}
             <div className="divide-y divide-white/5">
@@ -92,14 +94,14 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         {/* Winning Records */}
         <div>
           <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-3 sm:mb-4">
-            Winning Records
+            {t('winningRecords')}
           </h3>
           <div className="rounded-xl border border-white/10 bg-slate-900/40 overflow-hidden">
             {/* Table Header */}
             <div className="grid grid-cols-3 gap-2 sm:gap-4 px-4 sm:px-6 py-3 bg-white/5 border-b border-white/10">
-              <div className="text-xs sm:text-sm font-semibold text-white/80">Winner</div>
-              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">Prize</div>
-              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">Winning Time</div>
+              <div className="text-xs sm:text-sm font-semibold text-white/80">{t('winner')}</div>
+              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">{t('prize')}</div>
+              <div className="text-xs sm:text-sm font-semibold text-white/80 text-right">{t('winningTime')}</div>
             </div>
             {/* Table Rows */}
             <div className="divide-y divide-white/5">
@@ -126,7 +128,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                 ))
               ) : (
                 <div className="px-4 sm:px-6 py-8 text-center text-white/50 text-sm">
-                  No winning records yet
+                  {t('noWinningRecords')}
                 </div>
               )}
             </div>

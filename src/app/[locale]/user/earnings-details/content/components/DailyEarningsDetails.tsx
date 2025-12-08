@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import dayjs from 'dayjs';
 
 interface DailyEarningsDetailsProps {}
@@ -13,18 +14,20 @@ interface NodeEarnings {
 }
 
 const DailyEarningsDetails: React.FC<DailyEarningsDetailsProps> = () => {
+  const t = useTranslations('earningsDetails.daily');
+  const tCommon = useTranslations('common');
   const selectedDate = dayjs('2028-08-30');
   
   const nodeEarnings: NodeEarnings[] = [
-    { type: 'Genesis Nodes', count: 2, earnings: 888.88 },
-    { type: 'Super Nodes', count: 2, earnings: 288.88 },
-    { type: 'Regular Nodes', count: 12, earnings: 188.88 },
+    { type: tCommon('nodeTypes.genesis'), count: 2, earnings: 888.88 },
+    { type: tCommon('nodeTypes.super'), count: 2, earnings: 288.88 },
+    { type: t('nodeTypes.regular'), count: 12, earnings: 188.88 },
   ];
 
   return (
     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8">
       <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-        Daily Earnings Details
+        {t('title')}
       </h3>
       <p className="text-sm md:text-base text-white/60 mb-6">
         {selectedDate.format('YYYY-MM-DD')}
@@ -51,7 +54,7 @@ const DailyEarningsDetails: React.FC<DailyEarningsDetailsProps> = () => {
                   {node.type}
                 </div>
                 <div className="text-sm text-white/60">
-                  ({node.count} nodes)
+                  ({node.count} {t('nodes')})
                 </div>
               </div>
             </div>
