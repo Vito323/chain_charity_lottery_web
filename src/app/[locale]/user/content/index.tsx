@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import NFTList from '@/app/[locale]/user-backup/nft-list';
+import NFTList from '@/components/nft-list';
 import { useWalletNFTs } from '@/hooks/useWalletNFTs';
-import { NFT } from '@/app/[locale]/user-backup/nft-list';
+import { NFT } from '@/components/nft-list';
 import { useAccount } from 'wagmi';
 import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
 
