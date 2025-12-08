@@ -189,9 +189,9 @@ const StalwartFooter = () => {
             >
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
-                  <span className="text-white font-bold text-xl">C</span>
+                  <span className="text-white font-bold text-xl">H</span>
                 </div>
-                <span className="text-2xl font-bold"></span>
+                <span className="text-xl font-bold">Hawaiian Nation Charity</span>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed">
                 Connecting the world with kindness, protecting our home with action.

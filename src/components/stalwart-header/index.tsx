@@ -49,9 +49,9 @@ export default function StalwartHeader() {
             {/* Logo */}
             <Link href="#" className="flex items-center gap-3 group">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-fuchsia-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
-                <span className="text-white font-bold text-lg">C</span>
+                <span className="text-white font-bold text-lg">H</span>
               </div>
-              <span className="text-white font-bold text-xl tracking-tight">Charity</span>
+              <span className="text-white font-bold text-xl tracking-tight">Hawaiian Nation Charity</span>
             </Link>
 
             {/* Desktop Navigation */}
