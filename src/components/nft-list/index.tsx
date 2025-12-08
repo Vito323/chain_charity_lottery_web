@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import NFTCard from '../nft-card';
 import EmptyState from '../empty-state';
-import './style.scss';
 
 export interface NFT {
   id: string;
@@ -93,8 +92,8 @@ const NFTList: React.FC<NFTListProps> = ({
   }
 
   return (
-    <div className={`nft-list ${className}`}>
-      <div className="nft-list__grid">
+    <div className={`w-full ${className}`}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] max-[360px]:grid-cols-1 gap-6 xl:gap-5 md:gap-4 sm:gap-3 mb-8 md:mb-6 sm:mb-5">
         {nfts.map((nft) => (
           <NFTCard
             key={nft.id}
@@ -106,10 +105,10 @@ const NFTList: React.FC<NFTListProps> = ({
 
       {/* Load more trigger */}
       {hasMore && (
-        <div ref={loadMoreRef} className="nft-list__load-more-trigger">
+        <div ref={loadMoreRef} className="flex justify-center items-center min-h-[60px] my-5">
           {loading && (
-            <div className="nft-list__loading">
-              <div className="nft-list__spinner"></div>
+            <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400 text-sm">
+              <div className="w-5 h-5 border-2 border-gray-200 dark:border-gray-700 border-t-blue-500 rounded-full animate-spin"></div>
               <span>Loading...</span>
             </div>
           )}
@@ -118,7 +117,7 @@ const NFTList: React.FC<NFTListProps> = ({
 
       {/* No more data notification */}
       {!hasMore && nfts.length > 0 && (
-        <div className="nft-list__no-more">
+        <div className="text-center text-gray-500 dark:text-gray-500 text-sm py-5 border-t border-gray-200 dark:border-gray-700 mt-5">
           <span>All NFTs loaded</span>
         </div>
       )}

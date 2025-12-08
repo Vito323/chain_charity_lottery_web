@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import './style.scss';
 
 interface NFTCardProps {
   id: string;
@@ -54,51 +53,56 @@ const NFTCard: React.FC<NFTCardProps> = ({
   };
 
   return (
-    <div className="nft-card" onClick={handleClick}>
-      <div className="nft-card__image-container">
+    <div 
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md dark:shadow-gray-900/50 overflow-hidden transition-all duration-300 cursor-pointer relative min-h-[320px] md:min-h-[280px] sm:min-h-[260px] flex flex-col hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-gray-900/70" 
+      onClick={handleClick}
+    >
+      <div className="relative w-full h-[200px] md:h-[160px] sm:h-[140px] overflow-hidden">
         <Image 
           src={image} 
           alt={name}
           width={400}
           height={200}
-          className="nft-card__image"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.src = '/images/placeholder-all.png';
           }}
         />
         {price && (
-          <div className="nft-card__price-badge">
+          <div className="absolute top-3 right-3 bg-black/80 text-white px-2 py-1 rounded-md text-xs font-semibold">
             {price} ETH
           </div>
         )}
       </div>
       
-      <div className="nft-card__content">
+      <div className="p-4 md:p-3 sm:p-2.5 flex-1 flex flex-col">
         {collectionName && (
-          <div className="nft-card__collection">
+          <div className="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 uppercase tracking-wider">
             {collectionName}
           </div>
         )}
         
-        <h3 className="nft-card__title">{name}</h3>
+        <h3 className="text-base md:text-sm sm:text-[13px] font-semibold text-gray-800 dark:text-gray-200 m-0 mb-2 leading-snug line-clamp-2">{name}</h3>
         
         {description && (
-          <p className="nft-card__description">{description}</p>
+          <p className="text-sm sm:text-xs text-gray-600 dark:text-gray-400 m-0 mb-3 leading-relaxed line-clamp-2 flex-1">
+            {description}
+          </p>
         )}
         
-        <div className="nft-card__details">
+        <div className="mt-auto">
           {tokenId && (
-            <div className="nft-card__detail">
-              <span className="nft-card__label">Token ID:</span>
-              <span className="nft-card__value">{tokenId}</span>
+            <div className="flex justify-between items-center mb-1 text-xs last:mb-0">
+              <span className="text-gray-500 dark:text-gray-400 font-medium">Token ID:</span>
+              <span className="text-gray-800 dark:text-gray-200 font-semibold">{tokenId}</span>
             </div>
           )}
           
           {owner && (
-            <div className="nft-card__detail">
-              <span className="nft-card__label">Owner:</span>
-              <span className="nft-card__value nft-card__address">
+            <div className="flex justify-between items-center mb-1 text-xs last:mb-0">
+              <span className="text-gray-500 dark:text-gray-400 font-medium">Owner:</span>
+              <span className="text-gray-800 dark:text-gray-200 font-semibold font-mono bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">
                 {owner.slice(0, 6)}...{owner.slice(-4)}
               </span>
             </div>
