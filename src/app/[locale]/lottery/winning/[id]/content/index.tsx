@@ -65,7 +65,7 @@ const mockFollowWinningData: WinningDetailData = {
   followBetAmount: 7890,
 };
 
-const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
+const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
   const t = useTranslations('lottery.winningDetail');
   // In production, fetch data by winningId
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -274,5 +274,5 @@ const StalwartWinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }
   );
 };
 
-export default StalwartWinningDetail;
+export default WinningDetail;
 

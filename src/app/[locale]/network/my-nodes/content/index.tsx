@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatCurrency } from '@/utils/currency';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 
 // Node holding data interface
 interface NodeHolding {
@@ -131,7 +131,7 @@ const defaultNodeHoldings: NodeHolding[] = [
   },
 ];
 
-const StalwartMyNodesList: React.FC = () => {
+const MyNodesList: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('network.myNodes');
   const tCommon = useTranslations('common');
@@ -244,7 +244,7 @@ const StalwartMyNodesList: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connect.description')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -480,5 +480,5 @@ const StalwartMyNodesList: React.FC = () => {
   );
 };
 
-export default StalwartMyNodesList;
+export default MyNodesList;
 

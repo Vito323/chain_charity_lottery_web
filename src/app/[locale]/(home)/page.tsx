@@ -1,15 +1,15 @@
 "use client";
 import { motion } from "framer-motion";
-import StalwartHeader from "@/components/stalwart-header";
-import StalwartHero from "@/components/stalwart-hero";
-import StalwartFeatures from "@/components/stalwart-features";
-import StalwartAbout from "@/components/stalwart-about";
-import StalwartRoadmap from "@/components/stalwart-roadmap";
-import StalwartTeam from "@/components/stalwart-team";
-import StalwartFooter from "@/components/stalwart-footer";
+import Header from "@/components/header";
+import Hero from "@/components/hero";
+import Features from "@/components/features";
+import About from "@/components/about";
+import Roadmap from "@/components/roadmap";
+import Team from "@/components/team";
+import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 
-export default function StalwartPage() {
+export default function HomePage() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -17,43 +17,43 @@ export default function StalwartPage() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-[#0b1020] pt-24"
     >
-      <StalwartHeader />
+      <Header />
       {/* Hero Section */}
       <div id="hero">
-        <StalwartHero />
+        <Hero />
       </div>
 
       {/* Features Section */}
       <div id="features">
-        <StalwartFeatures />
+        <Features />
       </div>
 
       {/* About Section */}
       <div id="about">
-        <StalwartAbout />
+        <About />
       </div>
 
       {/* Team Section */}
       <div id="team">
-        <StalwartTeam />
+        <Team />
       </div>
 
       {/* Products Section */}
-      {/* <div id="products"><StalwartProducts /></div> */}
+      {/* <div id="products"><Products /></div> */}
 
       {/* Technology Section */}
-      {/* <div id="technology"><StalwartTechnology /></div> */}
+      {/* <div id="technology"><Technology /></div> */}
 
       {/* Ecosystem Section */}
-      {/* <div id="ecosystem"><StalwartEcosystem /></div> */}
+      {/* <div id="ecosystem"><Ecosystem /></div> */}
 
       {/* Roadmap Section */}
       <div id="roadmap">
-        <StalwartRoadmap />
+        <Roadmap />
       </div>
 
       {/* Footer */}
-      <StalwartFooter />
+      <Footer />
 
       {/* Scroll to Top Button */}
       <ScrollToTop />

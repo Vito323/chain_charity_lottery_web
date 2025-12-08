@@ -1,19 +1,19 @@
 'use client';
 
-import StalwartHeader from "@/components/stalwart-header"
-import StalwartFooter from "@/components/stalwart-footer"
+import Header from "@/components/header"
+import Footer from "@/components/footer"
 import ScrollToTop from "@/components/scroll-to-top"
-import StalwartUserDashboard from "./content"
+import UserDashboard from "./content"
 
-const StalwartUserPage = () => {
+const UserPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      <StalwartHeader />
-      <StalwartUserDashboard />
-      <StalwartFooter />
+      <Header />
+      <UserDashboard />
+      <Footer />
       <ScrollToTop />
     </div>
   )
 }
 
-export default StalwartUserPage;
+export default UserPage;

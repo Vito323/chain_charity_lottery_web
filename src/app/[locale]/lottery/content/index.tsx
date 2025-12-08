@@ -14,7 +14,7 @@ interface CountdownTime {
   seconds: number;
 }
 
-const StalwartLotteryContent: React.FC = () => {
+const LotteryContent: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('lottery');
 
@@ -367,4 +367,4 @@ const StalwartLotteryContent: React.FC = () => {
   );
 };
 
-export default StalwartLotteryContent;
+export default LotteryContent;

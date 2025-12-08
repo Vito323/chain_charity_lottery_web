@@ -1,9 +1,9 @@
-import StalwartHeader from "@/components/stalwart-header";
-import StalwartFooter from "@/components/stalwart-footer";
-import StalwartDonate from "@/components/stalwart-donate";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import Donate from "@/components/donate";
 import ScrollToTop from "@/components/scroll-to-top";
 
-interface StalwartDonatePageProps {
+interface DonatePageProps {
   params: Promise<{
     uid: string;
     name: string;
@@ -11,17 +11,17 @@ interface StalwartDonatePageProps {
   }>;
 }
 
-const StalwartDonatePage = async ({ params }: StalwartDonatePageProps) => {
+const DonatePage = async ({ params }: DonatePageProps) => {
   const { uid, name } = await params;
   
   return (
     <div className="min-h-screen bg-slate-900">
-      <StalwartHeader />
-      <StalwartDonate uid={uid} name={name} />
-      <StalwartFooter />
+      <Header />
+      <Donate uid={uid} name={name} />
+      <Footer />
       <ScrollToTop />
     </div>
   );
 };
 
-export default StalwartDonatePage;
+export default DonatePage;

@@ -1,20 +1,20 @@
-import StalwartEarningsDetails from './content';
-import StalwartHeader from '@/components/stalwart-header';
-import StalwartFooter from '@/components/stalwart-footer';
+import EarningsDetails from './content';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 
-const StalwartEarningsDetailsPage = () => {
+const EarningsDetailsPage = () => {
   return (
     <>
-      <StalwartHeader />
+      <Header />
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-        <StalwartEarningsDetails />
+        <EarningsDetails />
       </div>
-      <StalwartFooter />
+      <Footer />
       <ScrollToTop />
     </>
   );
 };
 
-export default StalwartEarningsDetailsPage;
+export default EarningsDetailsPage;
 

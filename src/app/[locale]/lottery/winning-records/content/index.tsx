@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import WinningRecordCard, { WinningRecord } from '../components/WinningRecordCard';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 
 // Mock data based on the image
 const defaultWinningRecords: WinningRecord[] = [
@@ -48,7 +48,7 @@ const defaultWinningRecords: WinningRecord[] = [
   },
 ];
 
-const StalwartWinningRecords: React.FC = () => {
+const WinningRecords: React.FC = () => {
   const t = useTranslations('lottery.winningRecords');
   const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
@@ -130,7 +130,7 @@ const StalwartWinningRecords: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connect.description')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -268,5 +268,5 @@ const StalwartWinningRecords: React.FC = () => {
   );
 };
 
-export default StalwartWinningRecords;
+export default WinningRecords;
 

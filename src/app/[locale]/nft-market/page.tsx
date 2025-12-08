@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import StalwartHeader from '@/components/stalwart-header';
-import StalwartFooter from '@/components/stalwart-footer';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 import LotteryCard from './components/LotteryCard';
 import { LotteryTicket } from './types';
@@ -152,7 +152,7 @@ const marketLotteryTickets: LotteryTicket[] = [
 
 type TabType = 'new' | 'market';
 
-const StalwartNFTMarketPage = () => {
+const NFTMarketPage = () => {
   const t = useTranslations('nftMarket');
   const [activeTab, setActiveTab] = useState<TabType>('new');
   const [sortBy, setSortBy] = useState<'latest' | 'price' | 'rarity' | 'follow'>('latest');
@@ -176,7 +176,7 @@ const StalwartNFTMarketPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      <StalwartHeader />
+      <Header />
       {/* Hero Section */}
       <section className="relative pt-32 md:pt-40 pb-12 md:pb-20 overflow-hidden">
         {/* Background Elements */}
@@ -356,7 +356,7 @@ const StalwartNFTMarketPage = () => {
       </section>
 
       {/* Footer */}
-      <StalwartFooter />
+      <Footer />
 
       {/* Scroll to Top Button */}
       <ScrollToTop />
@@ -364,4 +364,4 @@ const StalwartNFTMarketPage = () => {
   );
 };
 
-export default StalwartNFTMarketPage;
+export default NFTMarketPage;

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-const StalwartTechnology = () => {
+const Technology = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -201,4 +201,4 @@ const StalwartTechnology = () => {
   );
 };
 
-export default StalwartTechnology;
+export default Technology;

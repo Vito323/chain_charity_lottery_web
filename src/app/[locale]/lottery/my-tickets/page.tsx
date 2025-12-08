@@ -1,20 +1,20 @@
-import StalwartMyTickets from './content';
-import StalwartHeader from '@/components/stalwart-header';
-import StalwartFooter from '@/components/stalwart-footer';
+import MyTickets from './content';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 
-const StalwartMyTicketsPage = () => {
+const MyTicketsPage = () => {
   return (
     <>
-      <StalwartHeader />
+      <Header />
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-        <StalwartMyTickets />
+        <MyTickets />
       </div>
-      <StalwartFooter />
+      <Footer />
       <ScrollToTop />
     </>
   );
 };
 
-export default StalwartMyTicketsPage;
+export default MyTicketsPage;
 

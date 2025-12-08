@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
-const Stalwart404 = () => {
+const NotFound404 = () => {
   const t = useTranslations('notFound');
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -201,4 +201,4 @@ const Stalwart404 = () => {
   );
 };
 
-export default Stalwart404;
+export default NotFound404;

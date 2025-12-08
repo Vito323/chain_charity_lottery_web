@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import OwnedLotteryCard from '../components/OwnedLotteryCard';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { RarityType } from '@/app/[locale]/nft-market/types';
 
 type FilterTab = 'hold' | 'listed';
@@ -79,7 +79,7 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
   },
 ];
 
-const StalwartMyTickets: React.FC = () => {
+const MyTickets: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('myTickets');
   const tCommon = useTranslations('common');
@@ -191,7 +191,7 @@ const StalwartMyTickets: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connectDescription')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -372,5 +372,5 @@ const StalwartMyTickets: React.FC = () => {
   );
 };
 
-export default StalwartMyTickets;
+export default MyTickets;
 

@@ -6,7 +6,7 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
-const StalwartTeam = () => {
+const Team = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const t = useTranslations('team');
@@ -175,4 +175,4 @@ const StalwartTeam = () => {
   );
 };
 
-export default StalwartTeam;
+export default Team;

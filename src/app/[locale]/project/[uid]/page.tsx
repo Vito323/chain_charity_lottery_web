@@ -1,25 +1,25 @@
-import StalwartShowcase from "./content";
-import StalwartHeader from "@/components/stalwart-header";
-import StalwartFooter from "@/components/stalwart-footer";
+import Showcase from "./content";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 
-interface StalwartShowcasePageProps {
+interface ShowcasePageProps {
   params: Promise<{
     uid: string;
   }>;
 }
 
-const StalwartShowcasePage = async ({ params }: StalwartShowcasePageProps) => {
+const ShowcasePage = async ({ params }: ShowcasePageProps) => {
   const { uid } = await params;
   
   return (
     <>
-      <StalwartHeader />
-      <StalwartShowcase uid={uid} />
-      <StalwartFooter />
+      <Header />
+      <Showcase uid={uid} />
+      <Footer />
       <ScrollToTop />
     </>
   );
 };
 
-export default StalwartShowcasePage;
+export default ShowcasePage;

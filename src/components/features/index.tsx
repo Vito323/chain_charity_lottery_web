@@ -6,7 +6,7 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
-const StalwartFeatures = () => {
+const Features = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const t = useTranslations('features');
@@ -124,4 +124,4 @@ const StalwartFeatures = () => {
   );
 };
 
-export default StalwartFeatures;
+export default Features;

@@ -1,26 +1,26 @@
-import StalwartNodeDetail from "./content";
-import StalwartHeader from "@/components/stalwart-header";
-import StalwartFooter from "@/components/stalwart-footer";
+import NodeDetail from "./content";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 
-interface StalwartNodeDetailPageProps {
+interface NodeDetailPageProps {
   params: Promise<{
     nodeId: string;
   }>;
 }
 
-const StalwartNodeDetailPage = async ({ params }: StalwartNodeDetailPageProps) => {
+const NodeDetailPage = async ({ params }: NodeDetailPageProps) => {
   const { nodeId } = await params;
   
   return (
     <>
-      <StalwartHeader />
-      <StalwartNodeDetail nodeId={nodeId} />
-      <StalwartFooter />
+      <Header />
+      <NodeDetail nodeId={nodeId} />
+      <Footer />
       <ScrollToTop />
     </>
   );
 };
 
-export default StalwartNodeDetailPage;
+export default NodeDetailPage;
 

@@ -8,7 +8,7 @@ import VideoModal from '../modal-video';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
-const StalwartAbout = () => {
+const About = () => {
   const t = useTranslations('about');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -150,4 +150,4 @@ const StalwartAbout = () => {
   );
 };
 
-export default StalwartAbout;
+export default About;

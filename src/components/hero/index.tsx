@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useCounterAnimation } from '@/hooks/useScrollAnimation';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-const StalwartHero = () => {
+const Hero = () => {
   const t = useTranslations('hero');
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -193,4 +193,4 @@ const StalwartHero = () => {
   );
 };
 
-export default StalwartHero;
+export default Hero;

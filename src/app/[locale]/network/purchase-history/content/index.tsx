@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatCurrency } from '@/utils/currency';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 
 // Node purchase record interface
 interface NodePurchaseRecord {
@@ -95,7 +95,7 @@ const defaultPurchaseRecords: NodePurchaseRecord[] = [
   },
 ];
 
-const StalwartPurchaseHistory: React.FC = () => {
+const PurchaseHistory: React.FC = () => {
   const t = useTranslations('network.purchaseHistory');
   const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
@@ -243,7 +243,7 @@ const StalwartPurchaseHistory: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connect.description')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -458,5 +458,5 @@ const StalwartPurchaseHistory: React.FC = () => {
   );
 };
 
-export default StalwartPurchaseHistory;
+export default PurchaseHistory;
 

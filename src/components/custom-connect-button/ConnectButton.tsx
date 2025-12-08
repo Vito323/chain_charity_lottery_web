@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
-const StalwartConnectButton = () => {
+const ConnectButton = () => {
   const { disconnect } = useDisconnect();
   const [showDropdown, setShowDropdown] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -333,4 +333,4 @@ const StalwartConnectButton = () => {
   );
 };
 
-export default StalwartConnectButton;
+export default ConnectButton;

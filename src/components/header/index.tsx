@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { LNG_LIST } from '@/i18n/routing';
-import StalwartConnectButton from '../custom-connect-button/StalwartConnectButton';
+import ConnectButton from '../custom-connect-button/ConnectButton';
 
 const navItems = [
   { key: 'home', href: '/' },
@@ -16,7 +16,7 @@ const navItems = [
   { key: 'dao', href: '/dao' },
 ];
 
-function StalwartHeader() {
+function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
@@ -212,7 +212,7 @@ function StalwartHeader() {
 
               {/* CTA Button */}
               <div>
-                <StalwartConnectButton />
+                <ConnectButton />
               </div>
             </div>
 
@@ -321,7 +321,7 @@ function StalwartHeader() {
                 </div>
 
                 <div className="mt-4">
-                  <StalwartConnectButton />
+                  <ConnectButton />
                 </div>
               </nav>
             </div>
@@ -333,5 +333,5 @@ function StalwartHeader() {
 }
 
 // 使用 memo 包装组件，优化性能
-export default memo(StalwartHeader);
+export default memo(Header);
 

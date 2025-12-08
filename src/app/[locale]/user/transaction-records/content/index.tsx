@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { RarityType } from '@/app/[locale]/nft-market/types';
 
 // Transaction type
@@ -134,7 +134,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
   },
 ];
 
-const StalwartTransactionRecords: React.FC = () => {
+const TransactionRecords: React.FC = () => {
   const t = useTranslations('user.transactionRecords');
   const { isConnected } = useAccount();
   const [transactionRecords] = useState<TransactionRecord[]>(defaultTransactionRecords);
@@ -213,7 +213,7 @@ const StalwartTransactionRecords: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connect.description')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -354,5 +354,5 @@ const StalwartTransactionRecords: React.FC = () => {
   );
 };
 
-export default StalwartTransactionRecords;
+export default TransactionRecords;
 

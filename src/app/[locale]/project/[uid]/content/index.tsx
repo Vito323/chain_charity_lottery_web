@@ -14,11 +14,11 @@ import { useFundPoolManager } from "@/hooks/useFundPoolManager";
 import { ProjectChainInfo } from "@/components/case-cards";
 import { useAccount, useChainId } from "wagmi";
 
-interface StalwartShowcaseProps {
+interface ShowcaseProps {
   uid: string;
 }
 
-const StalwartShowcase = ({ uid }: StalwartShowcaseProps) => {
+const Showcase = ({ uid }: ShowcaseProps) => {
   const router = useRouter();
   const t = useTranslations('projectDetail');
   const { getProject } = useFundPoolManager();
@@ -249,4 +249,4 @@ const StalwartShowcase = ({ uid }: StalwartShowcaseProps) => {
   );
 };
 
-export default StalwartShowcase;
+export default Showcase;

@@ -10,11 +10,11 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import NodePurchaseModal from '@/components/node-purchase-modal';
 import NodePurchaseSuccessModal from '@/components/node-purchase-success-modal';
 
-interface StalwartNodeDetailProps {
+interface NodeDetailProps {
   nodeId: string;
 }
 
-const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
+const NodeDetail: React.FC<NodeDetailProps> = ({ nodeId }) => {
   const t = useTranslations('nodeDetail');
   const tNetwork = useTranslations('network');
   const ref = useRef(null);
@@ -591,5 +591,5 @@ const StalwartNodeDetail: React.FC<StalwartNodeDetailProps> = ({ nodeId }) => {
   );
 };
 
-export default StalwartNodeDetail;
+export default NodeDetail;
 

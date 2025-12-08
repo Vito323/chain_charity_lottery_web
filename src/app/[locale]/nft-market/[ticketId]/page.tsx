@@ -1,5 +1,5 @@
-import StalwartHeader from '@/components/stalwart-header';
-import StalwartFooter from '@/components/stalwart-footer';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 import LotteryTicketDetail from './content';
 
@@ -21,9 +21,9 @@ const LotteryTicketDetailPage = async ({ params, searchParams }: LotteryTicketDe
   
   return (
     <>
-      <StalwartHeader />
+      <Header />
       <LotteryTicketDetail ticketId={ticketId} type={normalizedType} />
-      <StalwartFooter />
+      <Footer />
       <ScrollToTop />
     </>
   );

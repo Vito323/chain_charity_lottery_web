@@ -15,12 +15,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
-interface StalwartDonateProps {
+interface DonateProps {
   uid: string;
   name: string;
 }
 
-const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
+const Donate = ({ uid, name }: DonateProps) => {
   const t = useTranslations('donate');
   const tCommon = useTranslations('common');
   const chainId = useChainId();
@@ -390,4 +390,4 @@ const StalwartDonate = ({ uid, name }: StalwartDonateProps) => {
   );
 };
 
-export default StalwartDonate;
+export default Donate;

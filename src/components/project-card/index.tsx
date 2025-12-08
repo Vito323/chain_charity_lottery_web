@@ -11,11 +11,11 @@ import { ProjectData } from "@/service/project";
 import { useFundPoolManager } from "@/hooks/useFundPoolManager";
 import { useAccount, useChainId } from "wagmi";
 import { formatCurrency } from "@/utils/currency";
-import "./stalwart-project-card.scss";
+import "./project-card.scss";
 
 dayjs.extend(relativeTime);
 
-interface StalwartProjectCardProps extends ProjectData {
+interface ProjectCardProps extends ProjectData {
   /**
    * Optional animation delay when card enters.
    */
@@ -34,7 +34,7 @@ export interface ProjectChainInfo {
   withdrawnAmount: number;
 }
 
-const StalwartProjectCard: React.FC<StalwartProjectCardProps> = ({
+const ProjectCard: React.FC<ProjectCardProps> = ({
   name,
   createdAt,
   description,
@@ -190,4 +190,4 @@ const StalwartProjectCard: React.FC<StalwartProjectCardProps> = ({
   );
 };
 
-export default StalwartProjectCard;
+export default ProjectCard;

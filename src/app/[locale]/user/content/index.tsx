@@ -9,9 +9,9 @@ import { useWalletNFTs } from '@/hooks/useWalletNFTs';
 import { NFT } from '@/components/nft-list';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 
-const StalwartUserDashboard = () => {
+const UserDashboard = () => {
   const { address, isConnected } = useAccount();
   const t = useTranslations('user');
   const { nfts, loading, hasMore, error, loadMore, refresh, totalCount } = useWalletNFTs({
@@ -317,7 +317,7 @@ const StalwartUserDashboard = () => {
                     <p className="text-white/70 mb-8 leading-relaxed">
                       {t('nfts.empty.description')}
                     </p>
-                    <StalwartConnectButton />
+                    <ConnectButton />
                   </div>
                 </motion.div>
               ) : (
@@ -343,4 +343,4 @@ const StalwartUserDashboard = () => {
   );
 };
 
-export default StalwartUserDashboard;
+export default UserDashboard;

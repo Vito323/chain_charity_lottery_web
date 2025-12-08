@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { formatCurrency } from '@/utils/currency';
 
 // Token detail interface
@@ -125,7 +125,7 @@ const defaultTokenDetails: TokenDetail[] = [
   },
 ];
 
-const StalwartTokenDetails: React.FC = () => {
+const TokenDetails: React.FC = () => {
   const t = useTranslations('user.tokenDetails');
   const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
@@ -204,7 +204,7 @@ const StalwartTokenDetails: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connect.description')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -330,5 +330,5 @@ const StalwartTokenDetails: React.FC = () => {
   );
 };
 
-export default StalwartTokenDetails;
+export default TokenDetails;
 

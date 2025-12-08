@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import StalwartHeader from "@/components/stalwart-header";
-import StalwartLotteryContent from "./content";
-import StalwartLotteryHistory from "./history";
-import StalwartFooter from "@/components/stalwart-footer";
+import Header from "@/components/header";
+import LotteryContent from "./content";
+import LotteryHistory from "./history";
+import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 
-export default function StalwartLotteryPage() {
+export default function LotteryPage() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -15,20 +15,20 @@ export default function StalwartLotteryPage() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-[#0b1020] pt-24"
     >
-      <StalwartHeader />
+      <Header />
       
       {/* Lottery Content Section */}
       <div id="lottery-content">
-        <StalwartLotteryContent />
+        <LotteryContent />
       </div>
 
       {/* Lottery History Section */}
       <div id="lottery-history">
-        <StalwartLotteryHistory />
+        <LotteryHistory />
       </div>
 
       {/* Footer */}
-      <StalwartFooter />
+      <Footer />
 
       {/* Scroll to Top Button */}
       <ScrollToTop />

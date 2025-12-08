@@ -1,6 +1,6 @@
-import StalwartWinningDetail, { WinningType } from './content';
-import StalwartHeader from '@/components/stalwart-header';
-import StalwartFooter from '@/components/stalwart-footer';
+import WinningDetail, { WinningType } from './content';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 
 interface WinningDetailPageProps {
@@ -12,21 +12,21 @@ interface WinningDetailPageProps {
   }>;
 }
 
-const StalwartWinningDetailPage = async ({ params, searchParams }: WinningDetailPageProps) => {
+const WinningDetailPage = async ({ params, searchParams }: WinningDetailPageProps) => {
   const { id } = await params;
   const { type = 'lottery' } = await searchParams;
 
   return (
     <>
-      <StalwartHeader />
+      <Header />
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-        <StalwartWinningDetail winningId={id} type={type as WinningType} />
+        <WinningDetail winningId={id} type={type as WinningType} />
       </div>
-      <StalwartFooter />
+      <Footer />
       <ScrollToTop />
     </>
   );
 };
 
-export default StalwartWinningDetailPage;
+export default WinningDetailPage;
 

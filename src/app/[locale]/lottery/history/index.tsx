@@ -53,7 +53,7 @@ const defaultHistoryData: LotteryHistoryItem[] = [
   }
 ];
 
-const StalwartLotteryHistory = () => {
+const LotteryHistory = () => {
   const t = useTranslations('lottery.history');
   const tCommon = useTranslations('common');
   const [historyData] = useState<LotteryHistoryItem[]>(defaultHistoryData);
@@ -358,4 +358,4 @@ const StalwartLotteryHistory = () => {
   );
 };
 
-export default StalwartLotteryHistory;
+export default LotteryHistory;

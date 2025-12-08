@@ -5,7 +5,7 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
-const StalwartRoadmap = () => {
+const Roadmap = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const t = useTranslations('roadmap');
@@ -166,4 +166,4 @@ const StalwartRoadmap = () => {
   );
 };
 
-export default StalwartRoadmap;
+export default Roadmap;

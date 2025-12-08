@@ -9,8 +9,8 @@ import useGlobalStore from "@/store";
 import { CategoryData } from "@/service/project";
 import { useFundPoolManager } from "@/hooks/useFundPoolManager";
 import { useTranslations } from 'next-intl';
-import StalwartProjectList from "../stalwart-project-list";
-import "./stalwart-projects-content.scss";
+import ProjectList from "../project-list";
+import "./projects-content.scss";
 
 dayjs.extend(relativeTime);
 
@@ -95,7 +95,7 @@ const MOCK_DONATION_ACTIVITY: DonationActivityItem[] = [
   },
 ];
 
-const StalwartProjectsContent = () => {
+const ProjectsContent = () => {
   const {
     isLoading,
     error,
@@ -211,7 +211,7 @@ const StalwartProjectsContent = () => {
                 tabBar={displayCategories.map((item) => ({ label: item.name }))}
               >
                 {displayCategories.map((category, index) => (
-                  <StalwartProjectList
+                  <ProjectList
                     key={index}
                     activeTab={activeTab}
                     index={index}
@@ -289,4 +289,4 @@ const StalwartProjectsContent = () => {
   );
 };
 
-export default StalwartProjectsContent;
+export default ProjectsContent;

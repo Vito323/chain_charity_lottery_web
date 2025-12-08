@@ -1,20 +1,20 @@
-import StalwartTransactionRecords from './content';
-import StalwartHeader from '@/components/stalwart-header';
-import StalwartFooter from '@/components/stalwart-footer';
+import TransactionRecords from './content';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 
-const StalwartTransactionRecordsPage = () => {
+const TransactionRecordsPage = () => {
   return (
     <>
-      <StalwartHeader />
+      <Header />
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-        <StalwartTransactionRecords />
+        <TransactionRecords />
       </div>
-      <StalwartFooter />
+      <Footer />
       <ScrollToTop />
     </>
   );
 };
 
-export default StalwartTransactionRecordsPage;
+export default TransactionRecordsPage;
 

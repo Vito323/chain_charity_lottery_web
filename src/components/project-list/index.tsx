@@ -3,9 +3,9 @@
 import React from "react";
 import { TabPanel } from "@/components/tab";
 import { ProjectData, queryProjects } from "@/service/project";
-import StalwartProjectCard from "../stalwart-project-card";
+import ProjectCard from "../project-card";
 
-interface StalwartProjectListProps {
+interface ProjectListProps {
   activeTab: number;
   index: number;
   categoryId: string;
@@ -54,7 +54,7 @@ const MOCK_PROJECTS: ProjectData[] = [
   },
 ];
 
-const StalwartProjectList = ({ activeTab, index, categoryId }: StalwartProjectListProps) => {
+const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState<ProjectData[]>([]);
   const [error, setError] = React.useState<string | null>(null);
@@ -147,7 +147,7 @@ const StalwartProjectList = ({ activeTab, index, categoryId }: StalwartProjectLi
       {!loading && !error && list.length > 0 && (
         <div className="stalwart-projects-grid">
           {list.map((project, index) => (
-            <StalwartProjectCard
+            <ProjectCard
               key={project.id}
               {...project}
               animationDelay={index * 0.1}
@@ -159,4 +159,4 @@ const StalwartProjectList = ({ activeTab, index, categoryId }: StalwartProjectLi
   );
 };
 
-export default StalwartProjectList;
+export default ProjectList;

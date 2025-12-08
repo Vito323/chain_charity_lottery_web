@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import StalwartHeader from "@/components/stalwart-header";
-import StalwartProjectsContent from "@/components/stalwart-projects-content";
-import StalwartFooter from "@/components/stalwart-footer";
+import Header from "@/components/header";
+import ProjectsContent from "@/components/projects-content";
+import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 
-export default function StalwartProjectsPage() {
+export default function ProjectsPage() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -14,15 +14,15 @@ export default function StalwartProjectsPage() {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-[#0b1020] pt-24"
     >
-      <StalwartHeader />
+      <Header />
       
       {/* Projects Section */}
       <div id="projects">
-        <StalwartProjectsContent />
+        <ProjectsContent />
       </div>
 
       {/* Footer */}
-      <StalwartFooter />
+      <Footer />
 
       {/* Scroll to Top Button */}
       <ScrollToTop />

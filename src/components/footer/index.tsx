@@ -8,7 +8,7 @@ import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
-const StalwartFooter = () => {
+const Footer = () => {
   const t = useTranslations('footer');
   const tNav = useTranslations('navigation');
   const tCommon = useTranslations('common');
@@ -278,4 +278,4 @@ const StalwartFooter = () => {
   );
 };
 
-export default StalwartFooter;
+export default Footer;

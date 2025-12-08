@@ -6,10 +6,10 @@ import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
-import StalwartHeader from '@/components/stalwart-header';
-import StalwartFooter from '@/components/stalwart-footer';
+import Header from '@/components/header';
+import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 
 type NodeTierId = 'genesis' | 'super' | 'standard';
 
@@ -91,7 +91,7 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   });
 
-const StalwartNetworkPage: React.FC = () => {
+const NetworkPage: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('network');
 
@@ -100,7 +100,7 @@ const StalwartNetworkPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      <StalwartHeader />
+      <Header />
 
       <main className="pt-28 md:pt-36 pb-20">
         <section className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 space-y-10 md:space-y-14">
@@ -146,7 +146,7 @@ const StalwartNetworkPage: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex-shrink-0">
-                  <StalwartConnectButton />
+                  <ConnectButton />
                 </div>
               </div>
             ) : !hasNodes ? (
@@ -337,7 +337,7 @@ const StalwartNetworkPage: React.FC = () => {
         </section>
       </main>
 
-      <StalwartFooter />
+      <Footer />
       <ScrollToTop />
     </div>
   );
@@ -412,6 +412,6 @@ const GenesisTierCard: React.FC = () => {
   );
 };
 
-export default StalwartNetworkPage;
+export default NetworkPage;
 
 

@@ -1,14 +1,14 @@
-import StalwartHeader from "@/components/stalwart-header";
-import StalwartFooter from "@/components/stalwart-footer";
-import Stalwart404 from "@/components/stalwart-404";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import NotFound404 from "@/components/404-not-found";
 import ScrollToTop from "@/components/scroll-to-top";
 
 const ErrorPage = () => {
   return (
     <>
-      <StalwartHeader />
-      <Stalwart404 />
-      <StalwartFooter />
+      <Header />
+      <NotFound404 />
+      <Footer />
       <ScrollToTop />
     </>
   );

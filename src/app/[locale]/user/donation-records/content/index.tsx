@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { formatCurrency } from '@/utils/currency';
 
 // Donation record interface
@@ -108,7 +108,7 @@ const defaultDonationRecords: DonationRecord[] = [
   },
 ];
 
-const StalwartDonationRecords: React.FC = () => {
+const DonationRecords: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('donationRecords');
   const tCommon = useTranslations('common');
@@ -187,7 +187,7 @@ const StalwartDonationRecords: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connectDescription')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -324,5 +324,5 @@ const StalwartDonationRecords: React.FC = () => {
   );
 };
 
-export default StalwartDonationRecords;
+export default DonationRecords;
 

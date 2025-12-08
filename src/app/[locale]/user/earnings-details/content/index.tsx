@@ -4,12 +4,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
-import StalwartConnectButton from '@/components/custom-connect-button/StalwartConnectButton';
+import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import EarningsOverview from './components/EarningsOverview';
 import EarningsDistribution from './components/EarningsDistribution';
 import DailyEarningsDetails from './components/DailyEarningsDetails';
 
-const StalwartEarningsDetails: React.FC = () => {
+const EarningsDetails: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('earningsDetails');
 
@@ -82,7 +82,7 @@ const StalwartEarningsDetails: React.FC = () => {
             <p className="text-white/70 mb-6 max-w-md mx-auto">
               {t('connectDescription')}
             </p>
-            <StalwartConnectButton />
+            <ConnectButton />
           </motion.div>
         )}
 
@@ -103,5 +103,5 @@ const StalwartEarningsDetails: React.FC = () => {
   );
 };
 
-export default StalwartEarningsDetails;
+export default EarningsDetails;
 

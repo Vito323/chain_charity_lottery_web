@@ -1,5 +1,5 @@
-import Stalwart404 from '@/components/stalwart-404';
+import NotFound404 from '@/components/404-not-found';
 
-export default function Stalwart404Page() {
-  return <Stalwart404 />;
+export default function NotFound404Page() {
+  return <NotFound404 />;
 }
