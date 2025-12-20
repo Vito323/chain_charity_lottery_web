@@ -16,8 +16,8 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "ChainCharity Lottery",
-  description: "ChainCharity Lottery",
+  title: "Hawaiian Nation Charity",
+  description: "Hawaiian Nation Charity",
 };
 
 type Props = {
