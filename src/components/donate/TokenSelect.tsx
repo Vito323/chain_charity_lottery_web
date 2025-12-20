@@ -47,6 +47,7 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
   hideZeroBalance: propHideZeroBalance,
 }) => {
   const tCommon = useTranslations('common');
+  const tDonate = useTranslations('donate');
   const [searchInput, setSearchInput] = useState(propSearchTerm);
   const [hideZeroBalance, setHideZeroBalance] = useState(propHideZeroBalance);
   const chainId = useChainId();
@@ -234,7 +235,7 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
           <p className="!text-white/70 !text-sm !font-normal truncate leading-tight">{token.name}</p>
         </div>
         <div className="text-right">
-          <p className="!text-white/60 !text-xs !font-normal uppercase tracking-wide">Balance</p>
+          <p className="!text-white/60 !text-xs !font-normal uppercase tracking-wide">{tDonate('tokenSelect.balance')}</p>
           <p className="!text-white !text-sm !font-semibold leading-tight">{token.balance || "0.00"}</p>
         </div>
       </motion.div>
@@ -266,10 +267,11 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
         >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/10">
-            <h3 className="text-xl font-bold text-white">Select Token</h3>
+            <h3 className="text-xl font-bold text-white">{tDonate('tokenSelect.title')}</h3>
             <button
               onClick={onClose}
-              className="p-2 text-white/60 hover:text-white transition-colors"
+              className="p-2 text-white/60 hover:text-white transition-colors cursor-pointer"
+              aria-label={tCommon('accessibility.close')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -282,7 +284,7 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search name or paste an address"
+                placeholder={tDonate('tokenSelect.searchPlaceholder')}
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
@@ -325,7 +327,7 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
                   </div>
                 </div>
                 <span className="text-sm font-medium group-hover:text-white transition-colors">
-                  Hide 0 balance tokens
+                  {tDonate('tokenSelect.hideZeroBalance')}
                 </span>
               </label>
             </div>
@@ -348,15 +350,15 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
                   </svg>
                   <p className="text-white/60">
                     {searchInput 
-                      ? `No tokens found containing "${searchInput}"` 
-                      : "No tokens are currently available"}
+                      ? tDonate('tokenSelect.noTokensFound', { search: searchInput })
+                      : tDonate('tokenSelect.noTokensAvailable')}
                   </p>
                   {searchInput && (
                     <button 
                       className="mt-2 px-4 py-2 text-purple-400 hover:text-purple-300 transition-colors"
                       onClick={() => setSearchInput("")}
                     >
-                      Clear Search
+                      {tDonate('tokenSelect.clearSearch')}
                     </button>
                   )}
                 </div>
@@ -381,7 +383,7 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
               <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
-              <span>Select a token to continue with your donation</span>
+              <span>{tDonate('tokenSelect.footerHint')}</span>
             </div>
           </div>
         </motion.div>

@@ -11,49 +11,6 @@ interface ProjectListProps {
   categoryId: string;
 }
 
-// Mock 开关：在本地开发 / 服务器不可用时开启，用于 UI 调试
-const MOCK_MODE = true;
-
-// 本地 Mock 项目数据（仅用于 UI 调试）
-const MOCK_PROJECTS: ProjectData[] = [
-  {
-    id: "mock-project-1",
-    name: "Clean Water Initiative",
-    description: "Providing safe and clean drinking water to remote communities.",
-    image: [
-      "/images/mock/projects/water-1.jpg",
-      "/images/mock/projects/water-2.jpg",
-    ],
-    createdAt: "2024-01-10T00:00:00Z",
-    donationCount: 128,
-    totalDonated: 25000,
-  },
-  {
-    id: "mock-project-2",
-    name: "Future of Education",
-    description: "Supporting digital learning tools for children in underserved regions.",
-    image: [
-      "/images/mock/projects/education-1.jpg",
-      "/images/mock/projects/education-2.jpg",
-    ],
-    createdAt: "2024-02-05T00:00:00Z",
-    donationCount: 96,
-    totalDonated: 18000,
-  },
-  {
-    id: "mock-project-3",
-    name: "Green Earth Campaign",
-    description: "Reforestation and environmental protection across urban areas.",
-    image: [
-      "/images/mock/projects/green-1.jpg",
-      "/images/mock/projects/green-2.jpg",
-    ],
-    createdAt: "2024-03-18T00:00:00Z",
-    donationCount: 72,
-    totalDonated: 32000,
-  },
-];
-
 const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState<ProjectData[]>([]);
@@ -63,13 +20,6 @@ const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
   const getList = React.useCallback(async () => {
     setLoading(true);
     setError(null);
-
-    // 当处于 MOCK_MODE 时，直接使用本地 mock 数据，不发起真实请求
-    if (MOCK_MODE) {
-      setList(MOCK_PROJECTS);
-      setLoading(false);
-      return;
-    }
 
     try {
       const response = await queryProjects(categoryId);

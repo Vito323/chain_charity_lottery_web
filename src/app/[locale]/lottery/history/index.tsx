@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { formatCurrency } from '@/utils/currency';
 import { useTranslations } from 'next-intl';
@@ -198,10 +199,10 @@ const LotteryHistory = () => {
                       {tCommon('labels.transactionHash')}
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      {t('table.winningDNA')}
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
                       {t('table.prizePool')}
+                    </th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-white/80 uppercase tracking-wider">
+                      {t('table.detail')}
                     </th>
                   </tr>
                 </thead>
@@ -277,21 +278,20 @@ const LotteryHistory = () => {
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex gap-2">
-                          {item.winningDNA.split(' ').map((number, idx) => (
-                            <span
-                              key={idx}
-                              className="w-8 h-8 bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/20 rounded-full flex items-center justify-center text-sm font-bold text-white"
-                            >
-                              {number}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-lg font-bold text-white">
                           {item.prizeAmount}
                         </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <Link href={`/lottery/winning/${item.id}`}>
+                          <motion.button
+                            className="px-4 py-2 cursor-pointer bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 rounded-lg text-sm font-medium text-white hover:from-purple-500/30 hover:to-pink-500/30 hover:border-white/30 transition-all duration-200"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            {t('table.detail')}
+                          </motion.button>
+                        </Link>
                       </td>
                     </motion.tr>
                   ))}

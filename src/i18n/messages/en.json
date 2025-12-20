@@ -256,8 +256,8 @@
       "loading": "Loading lottery history...",
       "table": {
         "drawDate": "Draw Date",
-        "winningDNA": "Winning DNA",
-        "prizePool": "Prize Pool"
+        "prizePool": "Prize Pool",
+        "detail": "Detail"
       },
       "empty": {
         "title": "No Lottery History Available",
@@ -405,6 +405,16 @@
       "salePrice": "Sale Price",
       "purchase": "Purchase",
       "buyNow": "Buy Now"
+    },
+    "empty": {
+      "new": {
+        "title": "No New Lottery Tickets",
+        "description": "There are currently no new lottery tickets available. Check back later for new opportunities."
+      },
+      "market": {
+        "title": "No Market Listings",
+        "description": "There are currently no lottery tickets listed on the market. Be the first to list yours!"
+      }
     }
   },
   "network": {
@@ -727,7 +737,17 @@
     "amount": "Amount",
     "totalDonation": "Total Donation",
     "donateNow": "Donate Now",
-    "donationSuccessful": "Donation Successful!"
+    "donationSuccessful": "Donation Successful!",
+    "tokenSelect": {
+      "title": "Select Token",
+      "searchPlaceholder": "Search name or paste an address",
+      "hideZeroBalance": "Hide 0 balance tokens",
+      "balance": "Balance",
+      "noTokensFound": "No tokens found containing \"{search}\"",
+      "noTokensAvailable": "No tokens are currently available",
+      "clearSearch": "Clear Search",
+      "footerHint": "Select a token to continue with your donation"
+    }
   },
   "myTickets": {
     "badge": "My Tickets",

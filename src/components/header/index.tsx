@@ -13,7 +13,7 @@ const navItems = [
   { key: 'lottery', href: '/lottery' },
   { key: 'nftMarket', href: '/nft-market' },
   { key: 'nodes', href: '/network' },
-  { key: 'dao', href: '/dao' },
+  // { key: 'dao', href: '/dao' },
 ];
 
 function Header() {

@@ -178,8 +178,8 @@
       "loading": "加载抽奖历史...",
       "table": {
         "drawDate": "开奖日期",
-        "winningDNA": "中奖号码",
-        "prizePool": "奖池"
+        "prizePool": "奖池",
+        "detail": "详情"
       },
       "empty": {
         "title": "暂无抽奖历史",
@@ -327,6 +327,16 @@
       "salePrice": "售价",
       "purchase": "购买",
       "buyNow": "立即购买"
+    },
+    "empty": {
+      "new": {
+        "title": "暂无新彩票",
+        "description": "当前没有可用的新彩票。请稍后再查看新的机会。"
+      },
+      "market": {
+        "title": "暂无市场列表",
+        "description": "当前市场上没有列出的彩票。成为第一个列出您的彩票的人！"
+      }
     }
   },
   "network": {
@@ -649,7 +659,17 @@
     "amount": "金额",
     "totalDonation": "总捐赠额",
     "donateNow": "立即捐赠",
-    "donationSuccessful": "捐赠成功！"
+    "donationSuccessful": "捐赠成功！",
+    "tokenSelect": {
+      "title": "选择代币",
+      "searchPlaceholder": "搜索名称或粘贴地址",
+      "hideZeroBalance": "隐藏零余额代币",
+      "balance": "余额",
+      "noTokensFound": "未找到包含 \"{search}\" 的代币",
+      "noTokensAvailable": "当前没有可用的代币",
+      "clearSearch": "清除搜索",
+      "footerHint": "选择一个代币以继续您的捐赠"
+    }
   },
   "myTickets": {
     "badge": "我的彩票",

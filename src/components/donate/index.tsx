@@ -40,36 +40,44 @@ const Donate = ({ uid, name }: DonateProps) => {
 
   const { selectedToken, amount, searchTerm, hideZeroBalance } = formState;
 
-  const getWhiteTokenList = async () => {
+  const getWhiteTokenList = React.useCallback(async () => {
     try {
       setTokenListLoading(true);
       const response = await queryWhiteTokenList();
-      if (response.ok) {
-        setWhiteTokenList(response.data || []);
+      if (response.ok && response.data) {
+        // 确保返回的是数组格式
+        const tokenList = Array.isArray(response.data) ? response.data : [];
+        setWhiteTokenList(tokenList);
+        console.log('White token list loaded:', tokenList);
+      } else {
+        console.warn('Failed to load white token list:', response.msg || 'Unknown error');
+        setWhiteTokenList([]);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error loading white token list:', error);
+      setWhiteTokenList([]);
     } finally {
       setTokenListLoading(false);
     }
-  };
+  }, []);
 
   React.useEffect(() => {
     if (isConnected && chainId) {
       getWhiteTokenList();
+    } else {
+      // 如果未连接钱包，清空列表
+      setWhiteTokenList([]);
     }
-  }, [isConnected, chainId]);
+  }, [isConnected, chainId, getWhiteTokenList]);
 
   const targetTokenList = React.useMemo(() => {
     if (whiteTokenList.length > 0) {
-      return whiteTokenList.map((item) => ({ address: item }));
+      return whiteTokenList
+        .filter((item) => item && typeof item === 'string' && item.trim() !== '')
+        .map((item) => ({ address: item.trim() }));
     }
     return [];
   }, [whiteTokenList]);
-
-  React.useEffect(() => {
-    getWhiteTokenList();
-  }, []);
 
   // 处理返回上一页的逻辑
   const handleReturnToPreviousPage = React.useCallback(() => {

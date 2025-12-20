@@ -140,7 +140,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             transition={{ duration: 0.25 }}
           >
             <Link
-              href={`/project/${id}/${name}`}
+              href={`/project/${id}`}
               className="stalwart-donate-btn-inline"
               onClick={handleButtonClick}
             >
