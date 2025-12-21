@@ -47,7 +47,7 @@ const FundraisingCard: React.FC<FundraisingCardProps> = ({
     router.push(`/project/${id}`);
   };
 
-  const [currentProjectInfo, setCurrentProjectFundInfo] =
+  const [, setCurrentProjectFundInfo] =
     React.useState<ProjectChainInfo | null>(null);
 
   const handleButtonClick = (e: React.MouseEvent) => {

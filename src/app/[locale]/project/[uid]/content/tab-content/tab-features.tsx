@@ -5,11 +5,7 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
-interface TabFeaturesProps {
-  projectInfo?: any;
-}
-
-const TabFeatures = ({ projectInfo }: TabFeaturesProps) => {
+const TabFeatures = () => {
   const t = useTranslations('projectDetail.features');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });

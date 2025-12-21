@@ -5,11 +5,7 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
-interface TabTechnologyProps {
-  projectInfo?: any;
-}
-
-const TabTechnology = ({ projectInfo }: TabTechnologyProps) => {
+const TabTechnology = () => {
   const t = useTranslations('projectDetail.technology');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -117,7 +113,7 @@ const TabTechnology = ({ projectInfo }: TabTechnologyProps) => {
 
       {/* 技术分类 */}
       <motion.div variants={containerVariants} className="space-y-8">
-        {categories.map((category, categoryIndex) => (
+        {categories.map((category) => (
           <motion.div key={category} variants={itemVariants}>
             <h3 className="text-xl font-bold text-white mb-6 flex items-center">
               <span className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mr-3"></span>
@@ -126,7 +122,7 @@ const TabTechnology = ({ projectInfo }: TabTechnologyProps) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {technologies
                 .filter(tech => tech.category === category)
-                .map((tech, techIndex) => (
+                .map((tech) => (
                   <motion.div
                     key={tech.name}
                     variants={itemVariants}

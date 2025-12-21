@@ -18,20 +18,6 @@ const TabContent = ({ projectInfo, currentProjectInfo, uid }: { projectInfo?: Pr
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const TABS = [
-    {
-      label: t('about'),
-    },
-    {
-      label: t('donations'),
-      badge: 0,
-    },
-    {
-      label: t('updates'),
-      badge: 0,
-    },
-  ];
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -57,6 +43,20 @@ const TabContent = ({ projectInfo, currentProjectInfo, uid }: { projectInfo?: Pr
 
   // 计算带 badge 的标签数据
   const targetTabs = React.useMemo(() => {
+    const TABS = [
+      {
+        label: t('about'),
+      },
+      {
+        label: t('donations'),
+        badge: 0,
+      },
+      {
+        label: t('updates'),
+        badge: 0,
+      },
+    ];
+
     return TABS.map((item) => {
       if(item.label === t('updates')) {
         return {

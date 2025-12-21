@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import dayjs from 'dayjs';
 
-interface DailyEarningsDetailsProps {}
+type DailyEarningsDetailsProps = Record<string, never>;
 
 interface NodeEarnings {
   type: string;

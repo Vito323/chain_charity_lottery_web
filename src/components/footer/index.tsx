@@ -6,11 +6,9 @@ import { subscribeEmail } from '@/service/general';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
 
 const Footer = () => {
   const t = useTranslations('footer');
-  const tNav = useTranslations('navigation');
   const tCommon = useTranslations('common');
   const [email, setEmail] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -29,7 +27,7 @@ const Footer = () => {
         setEmailError(tCommon('validation.emailInvalid'));
       }
     }, 300),
-    []
+    [tCommon]
   );
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,15 +77,6 @@ const Footer = () => {
       setIsLoading(false);
     }
   };
-
-  const footerLinks = {
-    useful: [
-      { name: tNav('home'), href: '/' },
-      { name: tNav('projects'), href: '/project' },
-      { name: tNav('lottery'), href: '/lottery' },
-    ],
-  };
-
 
   return (
     <footer className="bg-gradient-to-b from-slate-900 to-slate-950 text-white">
@@ -204,8 +193,9 @@ const Footer = () => {
             </motion.div>
           </div>
           <div className="lg:col-span-1"></div>
+          <div className="lg:col-span-1"></div>
           {/* Useful Links Section */}
-          <div className="lg:col-span-1">
+          {/* <div className="lg:col-span-1">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -228,7 +218,7 @@ const Footer = () => {
                 ))}
               </ul>
             </motion.div>
-          </div>
+          </div> */}
 
           {/* Contact Us Section */}
           <div className="lg:col-span-1">

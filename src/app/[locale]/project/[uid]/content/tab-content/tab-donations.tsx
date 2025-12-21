@@ -21,7 +21,7 @@ interface TabDonationsProps {
   uid: string;
 }
 
-const TabDonations = ({ projectInfo, currentProjectInfo, uid }: TabDonationsProps) => {
+const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) => {
   const t = useTranslations('projectDetail.donations');
   const tCommon = useTranslations('common');
   const ref = useRef(null);
