@@ -24,7 +24,7 @@ export declare type ActionExector<D> = (opt: ActionOption) => Promise<D>;
 
 export const provider = axios.create({
   timeout: (process.env.NEXT_PUBLIC_API_TIMEOUT ? parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT) : 30) * 1000,
-  baseURL: '/api'
+  baseURL: (process.env.NEXT_PUBLIC_API_HOST ?? '') + '/api'
 });
 
 provider.interceptors.request.use(async (request) => {

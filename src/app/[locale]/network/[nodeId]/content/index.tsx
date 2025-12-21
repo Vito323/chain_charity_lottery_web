@@ -202,6 +202,36 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ nodeId }) => {
             </p>
           </motion.div>
 
+          {/* NFT Certificates Section */}
+          {isGenesis && (
+            <motion.section variants={itemVariants} className="space-y-3 sm:space-y-4">
+              {/* <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white text-center px-4">
+                {t('certificates.title')}
+              </h2> */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+                {certificates.map((cert, index) => (
+                  <motion.div
+                    key={cert.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: index * 0.1 }}
+                    className={`relative rounded-xl sm:rounded-2xl border-2 ${cert.borderColor} bg-gradient-to-br ${cert.gradient} p-3 sm:p-4 md:p-6 aspect-[3/4] flex flex-col justify-between shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer`}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 rounded-xl sm:rounded-2xl" />
+                    <div className="relative z-10">
+                      <h3 className="text-[10px] xs:text-xs sm:text-sm font-bold text-white/90 mb-2 leading-tight break-words">
+                        {cert.title}
+                      </h3>
+                      {cert.subtitle && (
+                        <p className="text-[10px] xs:text-xs text-white/70 break-words">{cert.subtitle}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.section>
+          )}
+
           {/* Investment Limit & Total Stats */}
           <motion.section variants={itemVariants} className="relative">
             <div className="relative rounded-xl sm:rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 p-3 sm:p-4 md:p-5 shadow-xl overflow-hidden">
@@ -314,36 +344,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ nodeId }) => {
               </div>
             </div>
           </motion.section>
-
-          {/* NFT Certificates Section */}
-          {isGenesis && (
-            <motion.section variants={itemVariants} className="space-y-3 sm:space-y-4">
-              <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white text-center px-4">
-                {t('certificates.title')}
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-                {certificates.map((cert, index) => (
-                  <motion.div
-                    key={cert.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: index * 0.1 }}
-                    className={`relative rounded-xl sm:rounded-2xl border-2 ${cert.borderColor} bg-gradient-to-br ${cert.gradient} p-3 sm:p-4 md:p-6 aspect-[3/4] flex flex-col justify-between shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer`}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 rounded-xl sm:rounded-2xl" />
-                    <div className="relative z-10">
-                      <h3 className="text-[10px] xs:text-xs sm:text-sm font-bold text-white/90 mb-2 leading-tight break-words">
-                        {cert.title}
-                      </h3>
-                      {cert.subtitle && (
-                        <p className="text-[10px] xs:text-xs text-white/70 break-words">{cert.subtitle}</p>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section>
-          )}
 
           {/* Investment Returns & Price Advantage Section - Combined for PC */}
           {(isGenesis || isStandard || isSuper) && (
