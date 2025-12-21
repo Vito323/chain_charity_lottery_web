@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 type PeriodType = 'day' | 'week' | 'month' | 'year';
 type DisplayFormat = 'currency' | 'percentage';
 
-interface EarningsDistributionProps {}
+interface EarningsDistributionProps {""}
 
 // Mock data for daily earnings in August 2025
 const dailyEarningsData: Record<string, number> = {

@@ -7,7 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 type ChartType = 'yield' | 'amount';
 
-interface EarningsOverviewProps {}
+interface EarningsOverviewProps {""}
 
 // Mock data for yield rate curve
 const yieldRateData = [
