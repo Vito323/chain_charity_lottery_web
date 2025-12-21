@@ -211,7 +211,7 @@ const CustomConnectButton = () => {
                   >
                     {tCommon('wallet.winningRecords')}
                   </button>
-                  <button 
+                  {/* <button 
                     className="menu-item"
                     onClick={() => {
                       router.push("/user/token-details");
@@ -219,7 +219,7 @@ const CustomConnectButton = () => {
                     }}
                   >
                     {tCommon('wallet.tokenDetails')}
-                  </button>
+                  </button> */}
                   <button 
                     className="menu-item"
                     onClick={() => {

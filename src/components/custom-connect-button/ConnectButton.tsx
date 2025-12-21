@@ -165,7 +165,7 @@ const CustomConnectButton = () => {
           >
             {tCommon('wallet.winningRecords')}
           </button>
-          <button 
+          {/* <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
             onClick={() => {
               router.push("/user/token-details");
@@ -173,7 +173,7 @@ const CustomConnectButton = () => {
             }}
           >
             {tCommon('wallet.tokenDetails')}
-          </button>
+          </button> */}
           <button 
             className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
             onClick={() => {
