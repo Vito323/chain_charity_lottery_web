@@ -249,7 +249,7 @@ const Donate = ({ uid, name }: DonateProps) => {
             </div>
 
             {/* Wallet Connection */}
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <div className="flex items-center gap-4 p-5 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
                 <div className="w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
                   <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -266,7 +266,7 @@ const Donate = ({ uid, name }: DonateProps) => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Token Selection */}
             <div className="mb-6">

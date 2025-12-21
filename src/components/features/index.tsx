@@ -68,14 +68,14 @@ const Features = () => {
             <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
             {t('badge')}
           </motion.div>
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <motion.h2
               variants={itemVariants}
               className="text-3xl md:text-5xl font-extrabold text-white tracking-tight text-center"
             >
               {t('title')}
             </motion.h2>
-          </div>
+          </div> */}
         </motion.div>
 
         <motion.div
