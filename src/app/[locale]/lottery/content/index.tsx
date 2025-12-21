@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
-import { useWalletNFTs } from "@/hooks/useWalletNFTs";
 import { getLotteryConfig, LotteryConfig } from "@/service/lottery";
 import { useTranslations } from 'next-intl';
 
@@ -17,14 +16,7 @@ interface CountdownTime {
 const LotteryContent: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('lottery');
-  const tCommon = useTranslations('common');
   const tTime = useTranslations('common.time');
-
-  const {
-    nfts,
-    loading: nftsLoading,
-    error: nftsError,
-  } = useWalletNFTs({ pageSize: 20 });
 
   // 彩票配置状态
   const [lotteryConfig, setLotteryConfig] = useState<LotteryConfig>({
@@ -76,14 +68,6 @@ const LotteryContent: React.FC = () => {
     return () => clearInterval(timer);
   }, [calculateCountdown]);
 
-  // 过滤彩票NFT
-  const lotteryNFTs = nfts.filter(
-    (nft) =>
-      nft.collectionName?.toLowerCase().includes("lottery") ||
-      nft.collectionName?.toLowerCase().includes("ticket") ||
-      nft.name?.toLowerCase().includes("lottery") ||
-      nft.name?.toLowerCase().includes("ticket")
-  );
 
   // 格式化时间显示
   const formatTime = (value: number): string => {

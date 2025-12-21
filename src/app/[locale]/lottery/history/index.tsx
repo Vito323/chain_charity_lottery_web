@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
-import { formatCurrency } from '@/utils/currency';
 import { useTranslations } from 'next-intl';
 
 // 历史开奖结果数据类型
@@ -17,41 +16,41 @@ interface LotteryHistoryItem {
 
 // 缺省数据
 const defaultHistoryData: LotteryHistoryItem[] = [
-  {
-    id: '1',
-    drawDate: '2025-10-03T20:30:00Z',
-    txHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-    winningDNA: '05 12 23 31 45 50',
-    prizeAmount: formatCurrency(1050200)
-  },
-  {
-    id: '2',
-    drawDate: '2025-09-29T15:45:00Z',
-    txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-    winningDNA: '11 19 28 33 41 49',
-    prizeAmount: formatCurrency(980500)
-  },
-  {
-    id: '3',
-    drawDate: '2025-09-24T22:15:00Z',
-    txHash: '0x567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234',
-    winningDNA: '02 08 15 29 38 44',
-    prizeAmount: formatCurrency(1530000)
-  },
-  {
-    id: '4',
-    drawDate: '2025-09-22T18:00:00Z',
-    txHash: '0xdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abc',
-    winningDNA: '07 14 21 35 42 48',
-    prizeAmount: formatCurrency(2100000)
-  },
-  {
-    id: '5',
-    drawDate: '2025-09-18T14:20:00Z',
-    txHash: '0x7890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
-    winningDNA: '03 16 24 37 43 46',
-    prizeAmount: formatCurrency(850750)
-  }
+  // {
+  //   id: '1',
+  //   drawDate: '2025-10-03T20:30:00Z',
+  //   txHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+  //   winningDNA: '05 12 23 31 45 50',
+  //   prizeAmount: formatCurrency(1050200)
+  // },
+  // {
+  //   id: '2',
+  //   drawDate: '2025-09-29T15:45:00Z',
+  //   txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+  //   winningDNA: '11 19 28 33 41 49',
+  //   prizeAmount: formatCurrency(980500)
+  // },
+  // {
+  //   id: '3',
+  //   drawDate: '2025-09-24T22:15:00Z',
+  //   txHash: '0x567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234',
+  //   winningDNA: '02 08 15 29 38 44',
+  //   prizeAmount: formatCurrency(1530000)
+  // },
+  // {
+  //   id: '4',
+  //   drawDate: '2025-09-22T18:00:00Z',
+  //   txHash: '0xdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abc',
+  //   winningDNA: '07 14 21 35 42 48',
+  //   prizeAmount: formatCurrency(2100000)
+  // },
+  // {
+  //   id: '5',
+  //   drawDate: '2025-09-18T14:20:00Z',
+  //   txHash: '0x7890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
+  //   winningDNA: '03 16 24 37 43 46',
+  //   prizeAmount: formatCurrency(850750)
+  // }
 ];
 
 const LotteryHistory = () => {

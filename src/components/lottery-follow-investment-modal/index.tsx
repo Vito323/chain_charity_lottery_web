@@ -20,7 +20,6 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
   onClose,
   ticketId,
   redemptionCost,
-  maxPrize = '$1,000',
   onConfirmFollow,
   mockMode = false,
 }) => {

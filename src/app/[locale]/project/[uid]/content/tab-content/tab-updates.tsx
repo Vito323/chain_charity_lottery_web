@@ -13,7 +13,7 @@ interface TabUpdatesProps {
   uid: string;
 }
 
-const TabUpdates = ({ projectInfo, currentProjectInfo, uid }: TabUpdatesProps) => {
+const TabUpdates = ({ projectInfo }: TabUpdatesProps) => {
   const t = useTranslations('projectDetail.updates');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });

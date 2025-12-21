@@ -101,7 +101,7 @@ const Features = () => {
               
               {/* Icon image */}
               <div className="relative z-10 w-20 h-20 md:w-24 md:h-24 flex items-center justify-center overflow-hidden mb-6 group-hover:scale-105 transition-transform duration-300">
-                <Image src={feature.img} alt={feature.title} width={80} height={80} className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                <Image src={feature.img} alt={feature.key} width={80} height={80} className="w-16 h-16 md:w-20 md:h-20 object-contain" />
               </div>
 
               {/* Content */}
