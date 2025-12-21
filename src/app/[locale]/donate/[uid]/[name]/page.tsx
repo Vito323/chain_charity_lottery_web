@@ -1,7 +1,7 @@
-import Footer from "@/components/footer";
 import Header from "@/components/header";
-import Scrollbar from "@/components/scrollbar";
-import Content from "../../content";
+import Footer from "@/components/footer";
+import Donate from "@/components/donate";
+import ScrollToTop from "@/components/scroll-to-top";
 
 interface DonatePageProps {
   params: Promise<{
@@ -15,16 +15,13 @@ const DonatePage = async ({ params }: DonatePageProps) => {
   const { uid, name } = await params;
   
   return (
-    <>
+    <div className="min-h-screen bg-slate-900">
       <Header />
-      {/* <PageTitle pageTitle={"Donate Now"} pagePrevs={[
-        {label: "Project", href: `/project`},
-        {label: name, href: `/project/${uid}`}
-      ]} pagesub={'Donate Now'} /> */}
-      <Content uid={uid} name={name} />
+      <Donate uid={uid} name={name} />
       <Footer />
-      <Scrollbar />
-    </>
+      <ScrollToTop />
+    </div>
   );
 };
+
 export default DonatePage;

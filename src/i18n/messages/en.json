@@ -1,5 +1,976 @@
 {
   "home": {
     "hello": "Hello World"
+  },
+  "navigation": {
+    "home": "Home",
+    "projects": "Projects",
+    "lottery": "Lottery",
+    "nftMarket": "NFT Market",
+    "nodes": "Nodes",
+    "dao": "DAO",
+    "connectWallet": "Connect Wallet",
+    "language": "Language"
+  },
+  "hero": {
+    "badge": "Connecting the world with Kindness",
+    "titlePart1": "Connecting the world with",
+    "titlePart2": "Kindness",
+    "subtitle": "Protecting our home with action.",
+    "viewProject": "View project",
+    "donation": "Donation",
+    "fundRaised": "Fund Raised",
+    "volunteers": "Volunteers",
+    "projects": "Projects"
+  },
+  "about": {
+    "badge": "What We Do?",
+    "title": "We Are In A Mission To Help The Helpless",
+    "description1": "Every life deserves a chance, and every person deserves dignity. Our mission is built on a simple, yet profound principle: to be the reliable bridge between urgent need and effective action. We stand in the gap, committing our resources, time, and heart to the most vulnerable communities—from providing essential medical care and educational support to delivering immediate disaster relief.",
+    "description2": "The scale of global challenges is vast, but so is the power of collective generosity. We can't do this alone. By joining our mission, whether through donation, volunteering, or spreading the word, you become an indispensable force in this change.",
+    "donateNow": "Donate Now",
+    "watchVideo": "Watch Our Video"
+  },
+  "features": {
+    "badge": "What We Do?",
+    "title": "We Are In A Mission To Help The Helpless",
+    "items": {
+      "educational": {
+        "title": "Educational support",
+        "description": "Provide essential resources to underprivileged students. makes their dreams a reality."
+      },
+      "medical": {
+        "title": "Medical assistance",
+        "description": "Provide timely aid and health security to communities and individuals lacking medical resources. Let compassion be the best medicine."
+      },
+      "environmental": {
+        "title": "Environmental Protection",
+        "description": "Join our initiatives, from planting trees to cleaning water sources, to secure the green future we depend on."
+      },
+      "disaster": {
+        "title": "Disaster relief",
+        "description": "When disaster strikes, we move fast to provide critical relief like food, shelter, and medical care to help victims rebuild their lives."
+      }
+    }
+  },
+  "footer": {
+    "newsletterTitle": "Stay in the Loop",
+    "newsletterDescription": "Follow us for further information",
+    "emailPlaceholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "brandDescription": "Connecting the world with kindness, protecting our home with action.",
+    "usefulLinks": "Useful Links",
+    "contactUs": "Contact Us",
+    "copyright": "© 2025 Hawaiian Nation Charity. All rights reserved"
+  },
+  "products": {
+    "title": "Our Products",
+    "subtitle": "Choose from our range of AI-powered solutions designed to meet your specific needs and scale with your business.",
+    "mostPopular": "Most Popular",
+    "perMonth": "per month",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "customSolution": {
+      "title": "Need a Custom Solution?",
+      "description": "Our team can create a tailored AI solution that perfectly fits your unique requirements.",
+      "contactSales": "Contact Sales"
+    },
+    "items": {
+      "assistant": {
+        "title": "AI Assistant Pro",
+        "description": "Intelligent virtual assistant that understands context and provides personalized responses.",
+        "features": {
+          "0": "Natural Language Processing",
+          "1": "Context Awareness",
+          "2": "Multi-language Support"
+        },
+        "price": "$99/month"
+      },
+      "enterprise": {
+        "title": "Enterprise AI Suite",
+        "description": "Comprehensive AI solution for large organizations with advanced analytics and automation.",
+        "features": {
+          "0": "Advanced Analytics",
+          "1": "Process Automation",
+          "2": "Custom Integrations",
+          "3": "24/7 Support"
+        },
+        "price": "$499/month"
+      },
+      "developer": {
+        "title": "AI Developer Kit",
+        "description": "Complete toolkit for developers to build and deploy AI-powered applications.",
+        "features": {
+          "0": "SDK & APIs",
+          "1": "Documentation",
+          "2": "Code Examples",
+          "3": "Community Support"
+        },
+        "price": "$199/month"
+      }
+    }
+  },
+  "faq": {
+    "title": "Got Questions? We've Got Answers",
+    "subtitle": "Crypto FAQ, AI-Powered for Speed & Clarity",
+    "searchPlaceholder": "Ask anything",
+    "items": {
+      "0": {
+        "question": "What is Web3?",
+        "answer": "Web3 is the next evolution of the internet, built on blockchain technology. It enables decentralized applications, digital ownership, and peer-to-peer interactions without intermediaries."
+      },
+      "1": {
+        "question": "What can I own in Web3?",
+        "answer": "You can own digital assets like NFTs (art, music, collectibles), cryptocurrency, virtual land, in-game items, and even your digital identity. Everything is verifiable and truly yours."
+      },
+      "2": {
+        "question": "How do I get started?",
+        "answer": "Getting started is easy! First, set up a crypto wallet like MetaMask, then connect it to our platform. You can then browse, purchase, or create digital assets."
+      },
+      "3": {
+        "question": "Do I need technical knowledge?",
+        "answer": "No technical knowledge required! Our platform is designed to be user-friendly. We provide guides and support to help you navigate the Web3 space easily."
+      },
+      "4": {
+        "question": "Are my assets safe?",
+        "answer": "Yes! Your assets are secured by blockchain technology and smart contracts. Only you have access to your wallet and assets through your private keys."
+      },
+      "5": {
+        "question": "Can I use my assets outside this site?",
+        "answer": "Absolutely! Your digital assets are yours and can be used across different platforms, marketplaces, and applications that support the same blockchain standards."
+      }
+    }
+  },
+  "roadmap": {
+    "title": "Our Impact Journey",
+    "subtitle": "Follow our journey as we build a better world through compassion and action, one milestone at a time.",
+    "status": {
+      "completed": "Achieved",
+      "current": "Active",
+      "upcoming": "Planned"
+    },
+    "items": {
+      "q1_2024": {
+        "quarter": "Q1 2024",
+        "title": "Foundation & Core Mission",
+        "description": "Established our charitable foundation with core humanitarian programs and community outreach.",
+        "features": [
+          "Emergency Relief Programs",
+          "Educational Support Initiatives",
+          "Medical Aid Distribution",
+          "Volunteer Network Building"
+        ]
+      },
+      "q2_2024": {
+        "quarter": "Q2 2024",
+        "title": "Community Impact",
+        "description": "Expanded our reach with enhanced community programs and disaster response capabilities.",
+        "features": [
+          "Disaster Relief Operations",
+          "Environmental Protection Projects",
+          "Healthcare Access Programs",
+          "Digital Donation Platform"
+        ]
+      },
+      "q3_2024": {
+        "quarter": "Q3 2024",
+        "title": "Global Partnerships",
+        "description": "Forged strategic partnerships with international organizations and local communities.",
+        "features": [
+          "International NGO Partnerships",
+          "Corporate Social Responsibility",
+          "Government Collaboration",
+          "Transparency & Accountability"
+        ]
+      },
+      "q4_2024": {
+        "quarter": "Q4 2024",
+        "title": "Digital Innovation",
+        "description": "Building a comprehensive digital ecosystem for charitable giving and impact tracking.",
+        "features": [
+          "Blockchain Transparency",
+          "Impact Measurement Tools",
+          "Mobile Donation App",
+          "Real-time Project Updates"
+        ]
+      },
+      "q1_2025": {
+        "quarter": "Q1 2025",
+        "title": "Global Expansion",
+        "description": "Expanding our humanitarian efforts globally with multi-regional operations and local partnerships.",
+        "features": [
+          "Multi-country Operations",
+          "Local Community Centers",
+          "Cultural Adaptation Programs",
+          "Regional Leadership Teams"
+        ]
+      },
+      "q2_2025": {
+        "quarter": "Q2 2025",
+        "title": "Sustainable Impact",
+        "description": "Focusing on long-term sustainable solutions and systemic change for lasting impact.",
+        "features": [
+          "Sustainable Development Goals",
+          "Capacity Building Programs",
+          "Policy Advocacy",
+          "Social Innovation Labs"
+        ]
+      }
+    }
+  },
+  "team": {
+    "badge": "Our Team",
+    "title": "Meet The People Behind Our Mission",
+    "subtitle": "They possess the secret knowledge and interesting experience of creating a digital product that makes a real difference in people's lives."
+  },
+  "projects": {
+    "badge": "Our Projects",
+    "title": "Discover Our",
+    "titleHighlight": "Impactful",
+    "titleSuffix": "Initiatives",
+    "description": "Explore our diverse range of charitable projects and initiatives that are making a real difference in communities around the world. Each project is carefully selected and verified to ensure maximum impact and transparency.",
+    "donationActivity": {
+      "title": "kind-hearted donors have contributed so far",
+      "subtitle": "Recent on-chain donations from our global community.",
+      "donated": "Donated"
+    }
+  },
+  "lottery": {
+    "badge": "Next Draw Countdown",
+    "title": "Charity",
+    "titleHighlight": "Lottery",
+    "subtitle": "Join the community lottery and support charitable causes while having a chance to win amazing prizes.",
+    "countdown": {
+      "title": "Next Draw In"
+    },
+    "jackpot": {
+      "title": "Current Jackpot",
+      "description": "Prize pool grows with each ticket purchase",
+      "connectWallet": "Connect Wallet"
+    },
+    "history": {
+      "badge": "Historical Results",
+      "title": "Lottery",
+      "titleHighlight": "History",
+      "subtitle": "Track all previous lottery draws and winning numbers. Verify results on the blockchain.",
+      "loading": "Loading lottery history...",
+      "table": {
+        "drawDate": "Draw Date",
+        "prizePool": "Prize Pool",
+        "detail": "Detail"
+      },
+      "empty": {
+        "title": "No Lottery History Available",
+        "description": "Check back later for the latest draw results"
+      },
+      "verify": {
+        "title": "How to Verify Results",
+        "description": "All lottery results are recorded on the blockchain. Click on any transaction hash to copy it and verify the results on a blockchain explorer.",
+        "transparent": "Transparent & Verifiable",
+        "secured": "Blockchain Secured",
+        "fair": "Fair & Random"
+      }
+    },
+    "winningDetail": {
+      "badge": {
+        "lottery": "My Lottery Ticket",
+        "follow": "My Follow-bet"
+      },
+      "followBetAmount": "Follow-bet Amount",
+      "winningAmount": "Winning Amount",
+      "drawInformation": "Draw Information",
+      "drawTime": "Draw Time",
+      "digitalMatrix": "Digital Matrix",
+      "colorGenes": "Color Genes",
+      "imageSymbols": "Image Symbols",
+      "timestamp": "Timestamp:"
+    },
+    "winningRecords": {
+      "badge": "Winning Records",
+      "title": "Lottery",
+      "titleHighlight": "Winning History",
+      "subtitle": "View all your lottery winnings and track your success across different draws.",
+      "connect": {
+        "title": "Connect Your Wallet",
+        "description": "Connect your wallet to view your winning records and prize history."
+      },
+      "cumulativeWinnings": "Cumulative Winnings",
+      "loading": "Loading winning records...",
+      "empty": {
+        "title": "No Winning Records Found",
+        "description": "You haven't won any prizes yet. Keep trying and good luck on your next draw!",
+        "browseLottery": "Browse Lottery"
+      },
+      "navigation": {
+        "tokenDetails": "Token Details",
+        "donationRecords": "Donation Records"
+      },
+      "card": {
+        "lotteryWon": "Lottery Ticket Won",
+        "followWon": "Follow-bet Won",
+        "drawNumber": "Draw Number",
+        "prize": "Prize",
+        "winningTime": "Winning Time"
+      }
+    },
+    "modals": {
+      "redemption": {
+        "title": {
+          "purchase": "Lottery Ticket Purchase",
+          "redemption": "Lottery Ticket Redemption"
+        },
+        "salePrice": "Lottery Sale Price:",
+        "redemptionPrice": "New Lottery Ticket Redemption Price:",
+        "actualPaymentPrice": "Actual Payment Price:",
+        "confirmPurchase": "Confirm Purchase",
+        "confirmRedemption": "Confirm Redemption"
+      },
+      "sell": {
+        "title": "List Ticket for Sale",
+        "salePrice": "Sale Price:",
+        "saleDuration": "Sale Duration:",
+        "days": "Days",
+        "handlingFee": "Handling Fee:",
+        "serviceFee": "Service Fee",
+        "creatorFee": "Creator Fee",
+        "processing": "Processing...",
+        "confirmSubmission": "Confirm Submission"
+      },
+      "delist": {
+        "title": "Confirm Delist?",
+        "description": "After delisting, it can be relisted for sale.",
+        "processing": "Processing..."
+      },
+      "success": {
+        "title": {
+          "sell": "Lottery Ticket Listed Successfully",
+          "purchase": "Lottery Purchase Successful",
+          "follow": "Lottery Follow Investment Successful",
+          "redemption": "Lottery Redemption Successful"
+        },
+        "description": {
+          "sell": "This is your {ordinal} time selling a lottery ticket",
+          "purchase": "This is your {ordinal} purchased lottery ticket",
+          "follow": "This is your {ordinal} follow-on investment lottery ticket",
+          "redemption": "This is your {ordinal} redeemed lottery ticket"
+        },
+        "info": {
+          "sell": "After the transaction is completed, the income, after deducting fees, will be automatically deposited into your logged-in wallet",
+          "drawResults": "Please pay attention to the 4 daily draw results",
+          "marketplace": "You can also sell the lottery ticket in the marketplace"
+        },
+        "viewTickets": {
+          "listed": "View my listed lottery tickets",
+          "follow": "View my follow-on investments",
+          "default": "View my lottery tickets"
+        },
+        "buttons": {
+          "marketplace": "NFT Marketplace",
+          "continueSell": "Continue Selling",
+          "continuePurchase": "Continue Purchase",
+          "continueFollow": "Continue Follow Investment",
+          "continueRedemption": "Continue Redemption"
+        }
+      },
+      "follow": {
+        "title": "Follow Investment",
+        "redemptionCost": "Lottery Redemption Cost:",
+        "numberOfShares": "Number of Shares:",
+        "actualPaymentPrice": "Actual Payment Price:",
+        "rewardFormula": "If you win, you will receive a bonus = lottery bonus × investment amount / lottery redemption cost",
+        "processing": "Processing...",
+        "confirm": "Confirm Follow Investment"
+      }
+    }
+  },
+  "nftMarket": {
+    "badge": "Chain Charity Lottery",
+    "title": "NFT",
+    "titleHighlight": "Marketplace",
+    "subtitle": "Discover and collect unique lottery tickets with different rarities and win rates",
+    "tabs": {
+      "new": "New Lottery",
+      "market": "Lottery Market"
+    },
+    "sort": {
+      "latest": "Latest",
+      "price": "Price",
+      "rarity": "Rarity",
+      "follow": "Follow"
+    },
+    "card": {
+      "basicWinRate": "Basic Win Rate",
+      "maxPrize": "Max Prize",
+      "redemptionCost": "Redemption Cost",
+      "salePrice": "Sale Price",
+      "purchase": "Purchase",
+      "buyNow": "Buy Now"
+    },
+    "empty": {
+      "new": {
+        "title": "No New Lottery Tickets",
+        "description": "There are currently no new lottery tickets available. Check back later for new opportunities."
+      },
+      "market": {
+        "title": "No Market Listings",
+        "description": "There are currently no lottery tickets listed on the market. Be the first to list yours!"
+      }
+    }
+  },
+  "network": {
+    "badge": "Node Staking",
+    "title": "My Nodes",
+    "subtitle": "Track your node assets and discover different node tiers tailored to your risk profile.",
+    "connect": {
+      "title": "Connect your wallet to view node assets",
+      "description": "Once connected, you will see your total node assets, daily rewards, and detailed node breakdown here."
+    },
+    "noNodes": {
+      "title": "No nodes found in your wallet",
+      "description": "You have not purchased any nodes yet. Browse the node tiers below and start earning yield with flexible entry options.",
+      "features": {
+        "multiTier": "Multi-tier node products",
+        "transparent": "On-chain yield, transparent rewards"
+      },
+      "totalAssets": "Total node assets (USDT)",
+      "yesterdayRewards": "Yesterday's rewards",
+      "rewardsDetail": "Rewards detail will appear after purchase",
+      "genesisNodes": "Genesis nodes",
+      "superNodes": "Super nodes",
+      "standardNodes": "Standard nodes"
+    },
+    "portfolio": {
+      "title": "My node portfolio",
+      "description": "Overview of your node positions and daily reward performance.",
+      "totalAssets": "Total node assets (USDT)",
+      "yesterdayRewards": "Yesterday's rewards",
+      "rewardsDetails": "Rewards details"
+    },
+    "buyNodes": {
+      "title": "Buy Nodes",
+      "description": "Choose a node tier that matches your investment horizon and risk appetite. All yields are indicative APR ranges.",
+      "guide": "Node investment guide"
+    },
+    "nodeTiers": {
+      "genesis": {
+        "name": "Genesis Node",
+        "description": "Flagship node tier offering higher potential yield for long-term supporters.",
+        "highlight": "3-year projected return"
+      },
+      "super": {
+        "name": "Super Node",
+        "description": "Designed for experienced investors."
+      },
+      "standard": {
+        "name": "Standard Node",
+        "description": "Accessible entry for everyday investors."
+      },
+      "annualizedYield": "Annualized yield",
+      "globalLimit": "Global limit",
+      "nodePrice": "Node price",
+      "viewDetails": "View Details"
+    },
+    "myNodes": {
+      "badge": "My Node Holdings",
+      "title": "Node",
+      "titleHighlight": "Portfolio",
+      "subtitle": "Track your node investments, daily earnings, and accumulated returns in one place.",
+      "connect": {
+        "title": "Connect Your Wallet",
+        "description": "Connect your wallet to view your node holdings and track your earnings."
+      },
+      "summary": {
+        "totalPurchaseCost": "Total Purchase Cost",
+        "acrossAllNodes": "Across all nodes",
+        "yesterdayEarnings": "Yesterday's Earnings",
+        "totalDailyReturn": "Total daily return",
+        "accumulatedEarnings": "Accumulated Earnings",
+        "totalReturnsToDate": "Total returns to date"
+      },
+      "loading": "Loading node holdings...",
+      "table": {
+        "node": "Node",
+        "purchaseCost": "Purchase Cost",
+        "yesterdayEarnings": "Yesterday's Earnings",
+        "accumulatedEarnings": "Accumulated Earnings"
+      },
+      "empty": {
+        "title": "No Node Holdings Found",
+        "description": "You don't have any nodes yet. Start by purchasing a node to begin earning rewards.",
+        "browseNodeTiers": "Browse Node Tiers"
+      }
+    },
+    "purchaseHistory": {
+      "badge": "Purchase History",
+      "title": "Node",
+      "titleHighlight": "Purchase Records",
+      "subtitle": "View your complete history of node purchases with detailed transaction information.",
+      "connect": {
+        "title": "Connect Your Wallet",
+        "description": "Connect your wallet to view your node purchase history and transaction records."
+      },
+      "summary": {
+        "totalPurchaseCost": "Total Purchase Cost",
+        "acrossAllPurchases": "Across all purchases",
+        "totalNodesPurchased": "Total Nodes Purchased",
+        "totalPurchaseCount": "Total purchase count"
+      },
+      "loading": "Loading purchase history...",
+      "table": {
+        "node": "Node",
+        "purchaseCost": "Purchase Cost",
+        "purchaseTime": "Purchase Time"
+      },
+      "empty": {
+        "title": "No Purchase Records Found",
+        "description": "You don't have any purchase records yet. Start by purchasing a node to see your transaction history.",
+        "browseNodeTiers": "Browse Node Tiers"
+      }
+    }
+  },
+  "user": {
+    "title": "My Dashboard",
+    "subtitle": "Manage your digital assets and track your contributions",
+    "stats": {
+      "totalNFTs": {
+        "label": "Total NFTs",
+        "description": "Digital assets in your wallet"
+      },
+      "collections": {
+        "label": "Collections",
+        "description": "Unique collections owned"
+      },
+      "walletAddress": {
+        "label": "Wallet Address",
+        "description": "Your wallet identifier"
+      },
+      "status": {
+        "label": "Status",
+        "active": "Active",
+        "disconnected": "Disconnected",
+        "description": "Connection status"
+      },
+      "notConnected": "Not Connected"
+    },
+    "nfts": {
+      "title": "My NFTs",
+      "empty": {
+        "title": "No NFTs Found",
+        "description": "Connect your wallet to view your NFT collection"
+      },
+      "loading": "Loading NFTs...",
+      "refresh": "Refresh"
+    },
+    "tokenDetails": {
+      "badge": "Token Details",
+      "title": "Token",
+      "titleHighlight": "Portfolio",
+      "subtitle": "View your token balances and track your portfolio value across different assets.",
+      "connect": {
+        "title": "Connect Your Wallet",
+        "description": "Connect your wallet to view your token balances and portfolio details."
+      },
+      "totalPortfolioValue": "Total Portfolio Value",
+      "loading": "Loading token details...",
+      "empty": {
+        "title": "No Tokens Found",
+        "description": "You don't have any tokens in your wallet yet."
+      }
+    },
+    "transactionRecords": {
+      "badge": "Transaction Records",
+      "title": "Transaction",
+      "titleHighlight": "History",
+      "subtitle": "View all your lottery ticket transaction records including purchases, sales, and follow investments.",
+      "connect": {
+        "title": "Connect Your Wallet",
+        "description": "Connect your wallet to view your transaction records and trading history."
+      },
+      "loading": "Loading transaction records...",
+      "transactionTypes": {
+        "buy": "Buy",
+        "sell": "Sell",
+        "follow": "Follow"
+      },
+      "empty": {
+        "title": "No Transaction Records Found",
+        "description": "You haven't made any transactions yet. Start trading lottery tickets to see your transaction history!",
+        "browseLottery": "Browse Lottery"
+      }
+    }
+  },
+  "projectDetail": {
+    "badge": "Active Project",
+    "title": "Our Project",
+    "tabs": {
+      "about": "About",
+      "donations": "Donations",
+      "updates": "Updates"
+    },
+    "donations": {
+      "title": "Donations",
+      "table": {
+        "donatedAt": "Donated at",
+        "donor": "Donor",
+        "hashTx": "Hash Tx",
+        "amount": "Amount",
+        "viewTransactionDetails": "View transaction details",
+        "invalidDate": "Invalid Date"
+      },
+      "empty": {
+        "title": "No Donations Yet",
+        "description": "No one has donated to this project yet. Be the first supporter!"
+      },
+      "sidebar": {
+        "allTimeDonations": "All time donations received",
+        "beFirstToGive": "Be the first to give!",
+        "projectRecipientAddress": "Project recipient address",
+        "noAddressAvailable": "No address available"
+      }
+    },
+    "fundraising": {
+      "totalAmountRaised": "Total amount raised",
+      "raisedFrom": "Raised from {contributors} contributors",
+      "projectId": "Project ID",
+      "donate": "Donate"
+    },
+    "about": {
+      "progress": "Progress",
+      "raised": "Raised",
+      "goal": "Goal",
+      "donors": "Donors"
+    },
+    "updates": {
+      "title": "Updates",
+      "untitledUpdate": "Untitled Update",
+      "empty": {
+        "title": "No Updates Yet",
+        "description": "Project updates will appear here as they become available."
+      }
+    },
+    "features": {
+      "title": "Key Features",
+      "subtitle": "Discover the comprehensive range of features and capabilities that make our platform stand out",
+      "items": {
+        "modernDesign": {
+          "title": "Modern Design",
+          "description": "Cutting-edge UI/UX design that captivates and engages users with intuitive interfaces and stunning visuals."
+        },
+        "highPerformance": {
+          "title": "High Performance",
+          "description": "Optimized for speed and efficiency across all devices, ensuring smooth user experiences and fast load times."
+        },
+        "scalableSolutions": {
+          "title": "Scalable Solutions",
+          "description": "Built to grow with your business needs and requirements, supporting everything from startups to enterprises."
+        },
+        "secureReliable": {
+          "title": "Secure & Reliable",
+          "description": "Enterprise-grade security and 99.9% uptime guarantee, ensuring your data and applications are always protected."
+        },
+        "crossPlatform": {
+          "title": "Cross-Platform",
+          "description": "Seamless experience across all platforms and devices, from desktop to mobile and everything in between."
+        },
+        "support": {
+          "title": "24/7 Support",
+          "description": "Round-the-clock support and maintenance, ensuring your project runs smoothly at all times."
+        }
+      },
+      "whyChoose": {
+        "title": "Why Choose Our Platform?",
+        "description": "Our platform combines cutting-edge technology with user-centric design to deliver exceptional experiences. We're committed to continuous innovation and excellence, ensuring that our users always have access to the best tools and features available."
+      }
+    },
+    "technology": {
+      "title": "Technology Stack",
+      "subtitle": "We leverage cutting-edge technologies to deliver exceptional results and maintain the highest standards of quality and performance.",
+      "categories": {
+        "frontend": "Frontend",
+        "framework": "Framework",
+        "language": "Language",
+        "styling": "Styling",
+        "animation": "Animation",
+        "backend": "Backend",
+        "database": "Database",
+        "devops": "DevOps"
+      },
+      "technologies": {
+        "react": "Modern UI library for building interactive user interfaces",
+        "nextjs": "Full-stack React framework for production-ready applications",
+        "typescript": "Type-safe JavaScript for scalable application development",
+        "tailwind": "Utility-first CSS framework for rapid UI development",
+        "framerMotion": "Production-ready motion library for React animations",
+        "nodejs": "JavaScript runtime for building scalable server-side applications",
+        "postgresql": "Advanced open-source relational database system",
+        "docker": "Containerization platform for consistent deployment"
+      },
+      "whyMatters": {
+        "title": "Why Our Technology Choice Matters",
+        "performance": {
+          "title": "Performance",
+          "description": "Optimized for speed and efficiency with modern web technologies"
+        },
+        "security": {
+          "title": "Security",
+          "description": "Built with security-first principles and best practices"
+        },
+        "scalability": {
+          "title": "Scalability",
+          "description": "Designed to grow with your business and user base"
+        }
+      }
+    },
+    "cover": {
+      "noImages": "No images available"
+    }
+  },
+  "donate": {
+    "badge": "Crypto Donation",
+    "title": "Support the",
+    "titleHighlight": "Project",
+    "subtitle": "Make a difference with your crypto donation",
+    "projectName": "Project Name",
+    "projectId": "Project ID",
+    "walletAddress": "Wallet Address",
+    "selectToken": "Select Token",
+    "amount": "Amount",
+    "totalDonation": "Total Donation",
+    "donateNow": "Donate Now",
+    "donationSuccessful": "Donation Successful!",
+    "tokenSelect": {
+      "title": "Select Token",
+      "searchPlaceholder": "Search name or paste an address",
+      "hideZeroBalance": "Hide 0 balance tokens",
+      "balance": "Balance",
+      "noTokensFound": "No tokens found containing \"{search}\"",
+      "noTokensAvailable": "No tokens are currently available",
+      "clearSearch": "Clear Search",
+      "footerHint": "Select a token to continue with your donation"
+    }
+  },
+  "myTickets": {
+    "badge": "My Tickets",
+    "title": "Lottery",
+    "titleHighlight": "Ticket Portfolio",
+    "subtitle": "View and manage your lottery ticket collection. Sell your tickets on the marketplace anytime.",
+    "connectTitle": "Connect Your Wallet",
+    "connectDescription": "Connect your wallet to view your lottery ticket collection and manage your assets.",
+    "tabs": {
+      "hold": "Hold",
+      "listed": "Listed"
+    },
+    "summary": {
+      "totalTickets": "Total Tickets",
+      "totalValue": "Total Value",
+      "inCollection": "In your collection",
+      "listedForSale": "Listed for sale",
+      "purchasePriceTotal": "Purchase price total"
+    },
+    "loading": "Loading your tickets...",
+    "empty": {
+      "noTicketsHeld": "No Tickets Held",
+      "noTicketsListed": "No Tickets Listed",
+      "noTicketsHeldDesc": "You don't have any tickets in your collection.",
+      "noTicketsListedDesc": "You don't have any tickets listed for sale.",
+      "noTicketsFound": "No Tickets Found",
+      "noTicketsFoundDesc": "You don't have any lottery tickets yet. Start by purchasing tickets to build your collection.",
+      "browseLottery": "Browse Lottery"
+    },
+    "card": {
+      "purchasePrice": "Purchase Price",
+      "sell": "Sell",
+      "delist": "Delist"
+    }
+  },
+  "donationRecords": {
+    "badge": "Donation Records",
+    "title": "Donation",
+    "titleHighlight": "History",
+    "subtitle": "View all your donation records and track your contributions to various projects.",
+    "connectTitle": "Connect Your Wallet",
+    "connectDescription": "Connect your wallet to view your donation records and contribution history.",
+    "totalDonations": "Total Donations",
+    "loading": "Loading donation records...",
+    "donated": "donated",
+    "empty": {
+      "title": "No Donation Records Found",
+      "description": "You haven't made any donations yet. Start contributing to projects you care about!",
+      "browseProjects": "Browse Projects"
+    }
+  },
+  "notFound": {
+    "badge": "Page Not Found",
+    "title": "Oops! Something went",
+    "titleHighlight": "wrong",
+    "description": "The page you're looking for seems to have vanished into the digital void. Don't worry, even the best explorers sometimes take a wrong turn.",
+    "backToHome": "Back to Home"
+  },
+  "earningsDetails": {
+    "badge": "Earnings Details",
+    "title": "Earnings",
+    "titleHighlight": "Overview",
+    "subtitle": "Track your earnings performance, distribution, and daily details across all your nodes.",
+    "connectTitle": "Connect Your Wallet",
+    "connectDescription": "Connect your wallet to view your earnings details and performance metrics.",
+    "overview": {
+      "title": "Earnings Overview",
+      "yesterdayEarnings": "Yesterday's Earnings (USDT)",
+      "yieldRate": "Yield Rate",
+      "yearToDateEarnings": "Year-to-date Earnings (USDT)",
+      "yieldRateCurve": "Yield Rate Curve",
+      "earningsAmountCurve": "Earnings Amount Curve",
+      "yieldRateLabel": "Yield Rate",
+      "earningsLabel": "Earnings"
+    },
+    "distribution": {
+      "title": "Earnings Distribution",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year",
+      "weekdays": {
+        "sun": "Sun",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
+      }
+    },
+    "daily": {
+      "title": "Daily Earnings Details",
+      "nodes": "nodes",
+      "nodeTypes": {
+        "genesis": "Genesis Nodes",
+        "super": "Super Nodes",
+        "regular": "Regular Nodes"
+      }
+    }
+  },
+  "nftDetail": {
+    "badge": "ChainCharity Lottery",
+    "tabs": {
+      "basicInfo": "Basic Info",
+      "history": "History"
+    },
+    "stats": {
+      "rarity": "Rarity",
+      "maxPrize": "Max Prize",
+      "baseWinRate": "Base Win Rate",
+      "winRate": "Win Rate",
+      "onSale": "On Sale",
+      "validUntil": "Valid Until",
+      "holder": "Holder"
+    },
+    "education": {
+      "title": "Education Support",
+      "partner": "Partner"
+    },
+    "instructions": {
+      "title": "NFT Lottery & Redemption Instructions",
+      "item1": "Use tokens to purchase a permanent DNA identity NFT, become an ecosystem member.",
+      "item2": "Draws 4 times a day, prizes automatically credited, with transparent winning probability.",
+      "item3": "The ticket and rights can be inherited by future generations."
+    },
+    "actions": {
+      "newLotteryRedemptionPrice": "New Lottery Redemption Price:",
+      "purchasePrice": "Purchase Price:",
+      "redeem": "Redeem",
+      "purchase": "Purchase",
+      "follow": "Follow Investment",
+      "sell": "Sell",
+      "delist": "Delist"
+    },
+    "history": {
+      "generation": "Generation",
+      "generationValue": "3rd",
+      "baseValue": "Base Value",
+      "baseValueAmount": "1,500 USDT",
+      "familyBadge": "Family Badge",
+      "premiumLineage": "Premium Lineage",
+      "purchaseRecords": "Purchase Records",
+      "winningRecords": "Winning Records",
+      "buyer": "Buyer",
+      "price": "Price",
+      "priceClt": "Price (CLT)",
+      "purchaseTime": "Purchase Time",
+      "winner": "Winner",
+      "prize": "Prize",
+      "winningTime": "Winning Time",
+      "noWinningRecords": "No winning records yet"
+    }
+  },
+  "nodeDetail": {
+    "stats": {
+      "limit": "Limit",
+      "sold": "Sold",
+      "remaining": "Remaining",
+      "progress": "Progress",
+      "total": "Total"
+    },
+    "purchase": {
+      "title": "Purchase Node",
+      "connectWallet": "Connect Wallet to Purchase",
+      "price": "Price",
+      "exclusivePrice": "Exclusive Price"
+    },
+    "certificates": {
+      "title": "NFT Certificates",
+      "certificateOfOwnership": "CERTIFICATE OF OWNERSHIP",
+      "ownerName": "OWNER NAME",
+      "genesisCertificate": "CHAINCHARITY LOTTERY GENESIS NODE OWNER CERTIFICATE",
+      "genesisNodeCertificate": "GENESIS NODE OWNER CERTIFICATE"
+    },
+    "security": {
+      "title": "Security Assurance",
+      "protection": {
+        "title": "Four-fold Protection Mechanism",
+        "item1": "$45 million protection funds (46% of total financing)",
+        "item2": "Four-level price protection barrier",
+        "item3": "Ensure long-term stable growth of token prices",
+        "item4": "Automatically intervene to protect investor rights during market fluctuations"
+      },
+      "technical": {
+        "title": "Technical Security Assurance",
+        "item1": "Based on Ethereum mainnet, decentralized management",
+        "item2": "Multi-signature wallet, segregated fund custody",
+        "item3": "8 third-party security audits ensure code security",
+        "item4": "Chainlink VRF verified random numbers ensure fair lottery draws"
+      },
+      "transparency": {
+        "title": "100% Transparency",
+        "item1": "All transactions are traceable on-chain, permanently recorded",
+        "item2": "Platform monthly financial reports are publicly transparent",
+        "item3": "DAO community supervision, user co-governance",
+        "item4": "Third-party independent audit, authoritative certification"
+      },
+      "insurance": {
+        "title": "Insurance Fund Escort",
+        "item1": "Three-level risk buffering mechanism fully covered",
+        "item2": "Professional insurance company fund custody",
+        "item3": "User fund security is always paramount",
+        "item4": "Blockchain technology ensures every transaction is secure and reliable"
+      }
+    }
+  },
+  "nodePurchaseModal": {
+    "salePrice": "Sale Price",
+    "perShare": "per share",
+    "exclusivePrice": "Node Investor Exclusive Price:",
+    "selectCertificate": "Select Your Node Certificate",
+    "purchaseQuantity": "Purchase Quantity",
+    "sharesRemaining": "shares remaining",
+    "actualPaymentPrice": "Actual Payment Price:",
+    "processing": "Processing...",
+    "confirmPurchase": "Confirm Purchase",
+    "success": {
+      "title": "Node Purchase Successful",
+      "description": "This is your {count}{ordinal} node",
+      "viewNodes": "View my nodes",
+      "returnHome": "Return to Homepage",
+      "continuePurchase": "Continue Purchase"
+    }
   }
 }

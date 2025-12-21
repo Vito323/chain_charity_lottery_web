@@ -1,0 +1,430 @@
+.stalwart-projects {
+  padding: 120px 0;
+  background: linear-gradient(135deg, #0b1020 0%, #1a1a2e 50%, #16213e 100%);
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.stalwart-projects::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.stalwart-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.stalwart-projects-content {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.stalwart-projects-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stalwart-projects-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.stalwart-projects-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 50px;
+  padding: 8px 24px;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.stalwart-projects-badge span {
+  color: #6366f1;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stalwart-projects-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.stalwart-highlight {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stalwart-projects-description {
+  font-size: 1.2rem;
+  color: #b0b0b0;
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stalwart-projects-main {
+  margin-top: 3rem;
+}
+
+// Donation activity section
+.stalwart-donation-activity {
+  margin-top: 3rem;
+  padding: 24px 24px 22px;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background:
+    radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98)),
+    linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(129, 140, 248, 0.18));
+  box-shadow: 0 18px 55px rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(18px);
+}
+
+.stalwart-donation-activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.stalwart-donation-activity-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stalwart-donation-activity-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.stalwart-donation-activity-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #22c55e 0%, #38bdf8 40%, #6366f1 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stalwart-donation-activity-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.stalwart-donation-activity-list {
+  margin-top: 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(31, 41, 55, 0.9);
+  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 1));
+  overflow: hidden;
+}
+
+.stalwart-donation-activity-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.stalwart-donation-activity-item.is-last {
+  border-bottom: none;
+}
+
+.stalwart-donation-activity-item:nth-child(odd) {
+  background: radial-gradient(circle at 0% 0%, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.96));
+}
+
+.stalwart-donation-activity-address {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.stalwart-donation-activity-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: conic-gradient(from 180deg, #38bdf8, #a855f7, #22c55e, #38bdf8);
+  padding: 2px;
+  position: relative;
+}
+
+.stalwart-donation-activity-avatar::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at top left, #020617, #020617);
+}
+
+.stalwart-donation-activity-hash {
+  font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stalwart-donation-activity-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stalwart-donation-activity-amount-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.stalwart-donation-activity-amount-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.stalwart-donation-activity-time {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-align: right;
+  white-space: nowrap;
+}
+
+// Skeleton Loading Styles
+.stalwart-skeleton-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stalwart-skeleton-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stalwart-skeleton-tab {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stalwart-skeleton-text {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.stalwart-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.stalwart-skeleton-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stalwart-skeleton-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Error and Empty States
+.stalwart-error-state,
+.stalwart-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.stalwart-error-icon,
+.stalwart-empty-icon {
+  color: #6366f1;
+  opacity: 0.6;
+  margin-bottom: 1.5rem;
+}
+
+.stalwart-error-icon svg,
+.stalwart-empty-icon svg {
+  width: 64px;
+  height: 64px;
+}
+
+.stalwart-error-title,
+.stalwart-empty-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.stalwart-error-message,
+.stalwart-empty-message {
+  color: #b0b0b0;
+  margin-bottom: 2rem;
+  max-width: 400px;
+}
+
+.stalwart-retry-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.stalwart-retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.stalwart-retry-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .stalwart-projects-title {
+    font-size: 3rem;
+  }
+  
+  .stalwart-projects-description {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .stalwart-projects {
+    padding: 80px 0;
+  }
+  
+  .stalwart-projects-title {
+    font-size: 2.5rem;
+  }
+  
+  .stalwart-skeleton-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .stalwart-donation-activity {
+    margin-top: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .stalwart-projects {
+    padding: 60px 0;
+  }
+  
+  .stalwart-projects-title {
+    font-size: 2rem;
+  }
+  
+  .stalwart-projects-description {
+    font-size: 1rem;
+  }
+  
+  .stalwart-skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stalwart-skeleton-tabs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .stalwart-donation-activity {
+    padding: 18px 16px 16px;
+  }
+
+  .stalwart-donation-activity-item {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+    gap: 10px;
+  }
+
+  .stalwart-donation-activity-time {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+}
+
+@media (max-width: 576px) {
+  .stalwart-projects-title {
+    font-size: 1.8rem;
+  }
+  
+  .stalwart-projects-badge {
+    padding: 6px 20px;
+  }
+  
+  .stalwart-projects-badge span {
+    font-size: 0.8rem;
+  }
+}

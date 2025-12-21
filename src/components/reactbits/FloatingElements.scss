@@ -1,0 +1,83 @@
+.floating-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-item {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  .floating-icon {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+  }
+}
+
+// Add sparkle effects
+.floating-item::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: sparkle 4s ease-in-out infinite;
+  opacity: 0;
+}
+
+.floating-item:hover::before {
+  opacity: 1;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(180deg) scale(1.1);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .floating-item {
+    .floating-icon {
+      font-size: 18px;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

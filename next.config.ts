@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api.rhinecat.io/api/:path*',
+        destination: 'https://api.dahantech.app/api/:path*',
       },
     ];
   },

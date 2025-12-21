@@ -1,0 +1,154 @@
+{
+  "common": {
+    "actions": {
+      "connectWallet": "Connect Wallet",
+      "connectWalletFirst": "Please Connect Wallet First",
+      "connectYourWallet": "Connect Your Wallet",
+      "connectYourWalletDescription": "Connect your wallet to view your assets and manage your account.",
+      "processing": "Processing...",
+      "loading": "Loading...",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "refresh": "Refresh",
+      "donateNow": "Donate Now",
+      "viewDetails": "View Details",
+      "browseLottery": "Browse Lottery",
+      "browseProjects": "Browse Projects",
+      "browseNodeTiers": "Browse Node Tiers",
+      "returnHome": "Return to Homepage"
+    },
+    "status": {
+      "loading": "Loading...",
+      "processing": "Processing...",
+      "subscribing": "Subscribing...",
+      "active": "Active",
+      "disconnected": "Disconnected",
+      "notConnected": "Not Connected"
+    },
+    "errors": {
+      "failedToLoad": "Failed to Load",
+      "failedToLoadHistory": "Failed to Load History",
+      "failedToLoadWinningRecords": "Failed to Load Winning Records",
+      "failedToLoadNodeHoldings": "Failed to Load Node Holdings",
+      "failedToLoadPurchaseHistory": "Failed to Load Purchase History",
+      "failedToLoadTokenDetails": "Failed to Load Token Details",
+      "failedToLoadTransactionRecords": "Failed to Load Transaction Records",
+      "failedToLoadTickets": "Failed to Load Tickets",
+      "failedToLoadDonationRecords": "Failed to Load Donation Records",
+      "failedToLoadNFTs": "Failed to load NFTs",
+      "subscribeFailed": "Subscription failed. Please try again.",
+      "donationFailed": "Donation failed. Please try again.",
+      "transactionCancelled": "Transaction was cancelled by user",
+      "insufficientFunds": "Insufficient balance for this transaction",
+      "gasIssue": "Transaction failed due to gas issues"
+    },
+    "terms": {
+      "accept": "I have read and accepted the",
+      "service": "Terms of Service",
+      "and": "and",
+      "privacy": "Privacy Policy"
+    },
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary",
+      "mythic": "Mythic"
+    },
+    "nodeTypes": {
+      "genesis": "Genesis Node",
+      "super": "Super Node",
+      "standard": "Standard Node",
+      "node": "Node"
+    },
+    "empty": {
+      "noDataFound": "No Data Found",
+      "noRecordsFound": "No Records Found",
+      "noItemsFound": "No Items Found",
+      "checkBackLater": "Check back later for updates"
+    },
+    "time": {
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
+    },
+    "validation": {
+      "emailRequired": "Please enter your email address",
+      "emailInvalid": "Please enter a valid email address",
+      "pleaseConnectWallet": "Please connect your wallet",
+      "pleaseSelectToken": "Please select a token",
+      "pleaseEnterAmount": "Please enter a valid amount"
+    },
+    "success": {
+      "subscribeSuccess": "Subscription successful! Thank you for your attention",
+      "donationSuccess": "Donation successful! Thank you for your support.",
+      "donationSuccessful": "Donation Successful!",
+      "copied": "Copied!",
+      "delistSuccess": "Ticket delisted successfully"
+    },
+    "labels": {
+      "price": "Price",
+      "amount": "Amount",
+      "total": "Total",
+      "progress": "Progress",
+      "timestamp": "Timestamp:",
+      "purchaseTime": "Purchase Time",
+      "purchasePrice": "Purchase Price",
+      "salePrice": "Sale Price",
+      "actualPaymentPrice": "Actual Payment Price:",
+      "projectId": "Project ID",
+      "walletAddress": "Wallet Address",
+      "transactionHash": "Transaction Hash"
+    },
+    "wallet": {
+      "wrongNetwork": "Wrong Network",
+      "switchNetwork": "Switch Network",
+      "wallet": "WALLET",
+      "network": "Network",
+      "walletMenu": "Wallet Menu",
+      "userCenter": "User Center",
+      "holdNodes": "Hold Nodes",
+      "nodeEarnings": "Node Earnings",
+      "nodePurchaseRecords": "Node Purchase Records",
+      "holdLottery": "Hold Lottery",
+      "winningRecords": "Winning Records",
+      "tokenDetails": "Token Details",
+      "donationRecords": "Donation Records",
+      "transactionRecords": "Transaction Records",
+      "earningsDetails": "Earnings Details",
+      "disconnect": "Disconnect",
+      "copyFullAddress": "Copy full address",
+      "close": "Close"
+    },
+    "accessibility": {
+      "closeMenu": "Close menu",
+      "openMenu": "Open menu",
+      "toggleMenu": "Toggle Menu",
+      "close": "Close",
+      "decreaseShares": "Decrease shares",
+      "increaseShares": "Increase shares",
+      "scrollToTop": "Scroll to top",
+      "playVideo": "Play video",
+      "decreaseQuantity": "Decrease quantity",
+      "increaseQuantity": "Increase quantity"
+    },
+    "nft": {
+      "noCollection": "No NFT Collection",
+      "noCollectionDescription": "You don't have any NFT collections yet. Start exploring the digital art world!",
+      "allLoaded": "All NFTs loaded"
+    },
+    "tokens": {
+      "loadingTokens": "Loading tokens..."
+    },
+    "images": {
+      "aboutUs": "About us",
+      "genesisNodeCertificate": "Genesis Node Certificate",
+      "lotteryTicket": "Lottery Ticket",
+      "winningTicket": "Winning Ticket",
+      "projectImage": "Project Image",
+      "chain": "Chain"
+    }
+  }
+}
+

@@ -3,10 +3,12 @@ import { defineRouting } from "next-intl/routing";
 export const LNG_LIST = [
   {
     label: "English",
+    shortLabel: "En",
     value: "en",
   },
   {
     label: "简体中文",
+    shortLabel: "Zh",
     value: "zh",
   },
 ];

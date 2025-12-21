@@ -1,0 +1,43 @@
+.typewriter-effect {
+  display: inline-block;
+  position: relative;
+  
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    border-radius: 1px;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  }
+
+  &.complete .cursor {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+}
+
+// Add glow effect for completed text
+.typewriter-effect.complete {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

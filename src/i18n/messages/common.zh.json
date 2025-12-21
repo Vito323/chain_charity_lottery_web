@@ -1,0 +1,154 @@
+{
+  "common": {
+    "actions": {
+      "connectWallet": "连接钱包",
+      "connectWalletFirst": "请先连接钱包",
+      "connectYourWallet": "连接您的钱包",
+      "connectYourWalletDescription": "连接您的钱包以查看您的资产并管理您的账户。",
+      "processing": "处理中...",
+      "loading": "加载中...",
+      "cancel": "取消",
+      "confirm": "确认",
+      "refresh": "刷新",
+      "donateNow": "立即捐赠",
+      "viewDetails": "查看详情",
+      "browseLottery": "浏览抽奖",
+      "browseProjects": "浏览项目",
+      "browseNodeTiers": "浏览节点层级",
+      "returnHome": "返回首页"
+    },
+    "status": {
+      "loading": "加载中...",
+      "processing": "处理中...",
+      "subscribing": "订阅中...",
+      "active": "已连接",
+      "disconnected": "未连接",
+      "notConnected": "未连接"
+    },
+    "errors": {
+      "failedToLoad": "加载失败",
+      "failedToLoadHistory": "加载历史失败",
+      "failedToLoadWinningRecords": "加载中奖记录失败",
+      "failedToLoadNodeHoldings": "加载节点持仓失败",
+      "failedToLoadPurchaseHistory": "加载购买历史失败",
+      "failedToLoadTokenDetails": "加载代币详情失败",
+      "failedToLoadTransactionRecords": "加载交易记录失败",
+      "failedToLoadTickets": "加载彩票失败",
+      "failedToLoadDonationRecords": "加载捐赠记录失败",
+      "failedToLoadNFTs": "加载 NFT 失败",
+      "subscribeFailed": "订阅失败，请重试。",
+      "donationFailed": "捐赠失败。请重试。",
+      "transactionCancelled": "用户取消了交易",
+      "insufficientFunds": "余额不足，无法完成此交易",
+      "gasIssue": "交易因 Gas 问题失败"
+    },
+    "terms": {
+      "accept": "我已阅读并接受",
+      "service": "服务条款",
+      "and": "和",
+      "privacy": "隐私政策"
+    },
+    "rarity": {
+      "common": "普通",
+      "rare": "稀有",
+      "epic": "史诗",
+      "legendary": "传说",
+      "mythic": "神话"
+    },
+    "nodeTypes": {
+      "genesis": "创世节点",
+      "super": "超级节点",
+      "standard": "标准节点",
+      "node": "节点"
+    },
+    "empty": {
+      "noDataFound": "未找到数据",
+      "noRecordsFound": "未找到记录",
+      "noItemsFound": "未找到项目",
+      "checkBackLater": "请稍后再查看更新"
+    },
+    "time": {
+      "days": "天",
+      "hours": "小时",
+      "minutes": "分钟",
+      "seconds": "秒"
+    },
+    "validation": {
+      "emailRequired": "请输入您的邮箱地址",
+      "emailInvalid": "请输入有效的邮箱地址",
+      "pleaseConnectWallet": "请连接您的钱包",
+      "pleaseSelectToken": "请选择代币",
+      "pleaseEnterAmount": "请输入有效金额"
+    },
+    "success": {
+      "subscribeSuccess": "订阅成功！感谢您的关注",
+      "donationSuccess": "捐赠成功！感谢您的支持。",
+      "donationSuccessful": "捐赠成功！",
+      "copied": "已复制！",
+      "delistSuccess": "下架成功"
+    },
+    "labels": {
+      "price": "价格",
+      "amount": "金额",
+      "total": "总计",
+      "progress": "进度",
+      "timestamp": "时间戳：",
+      "purchaseTime": "购买时间",
+      "purchasePrice": "购买价格",
+      "salePrice": "售价",
+      "actualPaymentPrice": "实际支付价格：",
+      "projectId": "项目ID",
+      "walletAddress": "钱包地址",
+      "transactionHash": "交易哈希"
+    },
+    "wallet": {
+      "wrongNetwork": "网络错误",
+      "switchNetwork": "切换网络",
+      "wallet": "钱包",
+      "network": "网络",
+      "walletMenu": "钱包菜单",
+      "userCenter": "用户中心",
+      "holdNodes": "持有节点",
+      "nodeEarnings": "节点收益",
+      "nodePurchaseRecords": "节点购买记录",
+      "holdLottery": "持有彩票",
+      "winningRecords": "中奖记录",
+      "tokenDetails": "代币详情",
+      "donationRecords": "捐赠记录",
+      "transactionRecords": "交易记录",
+      "earningsDetails": "收益详情",
+      "disconnect": "断开连接",
+      "copyFullAddress": "复制完整地址",
+      "close": "关闭"
+    },
+    "accessibility": {
+      "closeMenu": "关闭菜单",
+      "openMenu": "打开菜单",
+      "toggleMenu": "切换菜单",
+      "close": "关闭",
+      "decreaseShares": "减少份数",
+      "increaseShares": "增加份数",
+      "scrollToTop": "滚动到顶部",
+      "playVideo": "播放视频",
+      "decreaseQuantity": "减少数量",
+      "increaseQuantity": "增加数量"
+    },
+    "nft": {
+      "noCollection": "暂无 NFT 收藏",
+      "noCollectionDescription": "您还没有任何 NFT 收藏。开始探索数字艺术世界吧！",
+      "allLoaded": "已加载所有 NFT"
+    },
+    "tokens": {
+      "loadingTokens": "加载代币中..."
+    },
+    "images": {
+      "aboutUs": "关于我们",
+      "genesisNodeCertificate": "创世节点证书",
+      "lotteryTicket": "彩票",
+      "winningTicket": "中奖彩票",
+      "projectImage": "项目图片",
+      "chain": "链"
+    }
+  }
+}
+

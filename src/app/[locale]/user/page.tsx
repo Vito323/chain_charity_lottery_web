@@ -1,22 +1,19 @@
+'use client';
+
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import Scrollbar from "@/components/scrollbar"
-import UserCenter from "./content"
-
-
+import ScrollToTop from "@/components/scroll-to-top"
+import UserDashboard from "./content"
 
 const UserPage = () => {
   return (
-    <>
-        <Header />
-        {/* <PageTitle pageTitle={"User Center"} pagesub={"User Center"} /> */}
-        <UserCenter />
-        <Footer />
-        <Scrollbar />
-    </>
-
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      <Header />
+      <UserDashboard />
+      <Footer />
+      <ScrollToTop />
+    </div>
   )
 }
-
 
 export default UserPage;

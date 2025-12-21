@@ -1,5 +1,5 @@
-/* @import "tailwindcss"; */
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "tailwindcss";
+/* Removed Bootstrap; using Tailwind only */
 /* @import '/css/font-awesome.min.css'; */
 /* @import '/css/themify-icons.css'; */
 
@@ -29,16 +29,24 @@
 --------------------------------------------------------------*/
 html {
   font-size: 16px;
+  /* 使用纯色底色避免快速滚动时的浏览器回退底色闪烁 */
+  background-color: #0b1020; /* 与页面深色主题接近 */
+  min-height: 100%;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none; /* 禁止边缘回弹导致的白边 */
 }
 
 body {
   font-family: "Open Sans", sans-serif!important;
-  background-color: #fff;
+  /* 先给纯色基底，避免复合层切换时透出白色 */
+  background-color: #0b1020;
   font-size: 16px;
   font-size: 1rem;
   color: #525252;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overscroll-behavior: none; /* 阻止滚动链到视口引起的闪白 */
 }
 
 
@@ -63,12 +71,12 @@ h4,
 h5,
 h6 {
   font-family: 'Rubik', sans-serif!important;
-  color: #062265;
+  color: #fff;
   font-weight: 600!important;
 }
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif!important;
-  color: #062265;
+  color: #fff;
   font-weight: 600!important;
 }
 
@@ -97,6 +105,9 @@ img {
 .App{
   overflow: hidden;
   position: relative;
+  /* 统一纯色背景，页面内部可继续使用渐变容器 */
+  background-color: #0b1020;
+  min-height: 100vh;
 }
 
 @media (min-width: 1400px) {
@@ -452,4 +463,14 @@ img {
 
 .cBtnTheme {
   background: #08cc7f;
+}
+
+/* Hide scrollbar for mobile horizontal scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }

@@ -82,7 +82,18 @@ export function useTokenInfoList(tokenAddresses: string[]): UseTokenInfoListResu
   const [error, setError] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
-    if (!client || !userAddress || tokenAddresses.length === 0) return
+    if (!client || !userAddress) {
+      setData([])
+      setIsLoading(false)
+      return
+    }
+    
+    if (tokenAddresses.length === 0) {
+      setData([])
+      setIsLoading(false)
+      setError(null)
+      return
+    }
 
     setIsLoading(true)
     setError(null)

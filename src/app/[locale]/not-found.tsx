@@ -1,17 +1,15 @@
-import Footer from "@/components/footer";
 import Header from "@/components/header";
-import PageTitle from "@/components/page-title";
-import Scrollbar from "@/components/scrollbar";
-import Error from "./404";
+import Footer from "@/components/footer";
+import NotFound404 from "@/components/404-not-found";
+import ScrollToTop from "@/components/scroll-to-top";
 
 const ErrorPage = () => {
   return (
     <>
       <Header />
-      <PageTitle pageTitle={"404"} pagesub={"404"} />
-      <Error />
+      <NotFound404 />
       <Footer />
-      <Scrollbar />
+      <ScrollToTop />
     </>
   );
 };

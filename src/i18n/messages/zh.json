@@ -1,5 +1,911 @@
 {
   "home": {
     "hello": "你好，世界"
+  },
+  "navigation": {
+    "home": "首页",
+    "projects": "项目",
+    "lottery": "抽奖",
+    "nftMarket": "NFT 市场",
+    "nodes": "节点",
+    "dao": "DAO",
+    "connectWallet": "连接钱包",
+    "language": "语言"
+  },
+  "hero": {
+    "badge": "用善意连接世界",
+    "titlePart1": "用",
+    "titlePart2": "善意",
+    "subtitle": "用行动守护我们的家园。",
+    "viewProject": "查看项目",
+    "donation": "捐赠",
+    "fundRaised": "筹集资金",
+    "volunteers": "志愿者",
+    "projects": "项目"
+  },
+  "about": {
+    "badge": "我们在做什么？",
+    "title": "我们的使命是帮助无助的人们",
+    "description1": "每个生命都值得拥有机会，每个人都值得拥有尊严。我们的使命建立在一个简单而深刻的原则之上：成为紧急需求与有效行动之间的可靠桥梁。我们站在缺口处，将我们的资源、时间和心血投入到最脆弱的社区——从提供基本医疗保健和教育支持，到提供即时灾难救援。",
+    "description2": "全球挑战的规模是巨大的，但集体慷慨的力量也是如此。我们无法独自完成这项使命。通过加入我们的使命，无论是通过捐赠、志愿服务还是传播信息，您都成为这一变革中不可或缺的力量。",
+    "donateNow": "立即捐赠",
+    "watchVideo": "观看视频"
+  },
+  "features": {
+    "badge": "我们在做什么？",
+    "title": "我们的使命是帮助无助的人们",
+    "items": {
+      "educational": {
+        "title": "教育支持",
+        "description": "为贫困学生提供必要的资源，让他们的梦想成为现实。"
+      },
+      "medical": {
+        "title": "医疗援助",
+        "description": "为缺乏医疗资源的社区和个人提供及时的援助和健康保障。让同情心成为最好的良药。"
+      },
+      "environmental": {
+        "title": "环境保护",
+        "description": "加入我们的倡议，从植树到清洁水源，确保我们赖以生存的绿色未来。"
+      },
+      "disaster": {
+        "title": "灾难救援",
+        "description": "当灾难来临时，我们迅速行动，提供食物、住所和医疗护理等关键救援，帮助受害者重建生活。"
+      }
+    }
+  },
+  "footer": {
+    "newsletterTitle": "保持联系",
+    "newsletterDescription": "关注我们获取更多信息",
+    "emailPlaceholder": "请输入您的邮箱",
+    "subscribe": "订阅",
+    "brandDescription": "用善意连接世界，用行动守护我们的家园。",
+    "usefulLinks": "有用链接",
+    "contactUs": "联系我们",
+    "copyright": "© 2025 Hawaiian Nation Charity. 保留所有权利"
+  },
+  "roadmap": {
+    "title": "我们的影响之旅",
+    "subtitle": "跟随我们的旅程，通过同情心和行动建设更美好的世界，一次一个里程碑。",
+    "status": {
+      "completed": "已完成",
+      "current": "进行中",
+      "upcoming": "计划中"
+    },
+    "items": {
+      "q1_2024": {
+        "quarter": "2024年第一季度",
+        "title": "基金会与核心使命",
+        "description": "建立我们的慈善基金会，开展核心人道主义项目和社区外展。",
+        "features": [
+          "紧急救援项目",
+          "教育支持倡议",
+          "医疗援助分发",
+          "志愿者网络建设"
+        ]
+      },
+      "q2_2024": {
+        "quarter": "2024年第二季度",
+        "title": "社区影响",
+        "description": "通过增强的社区项目和灾难响应能力扩大我们的覆盖范围。",
+        "features": [
+          "灾难救援行动",
+          "环境保护项目",
+          "医疗保健获取计划",
+          "数字捐赠平台"
+        ]
+      },
+      "q3_2024": {
+        "quarter": "2024年第三季度",
+        "title": "全球合作伙伴关系",
+        "description": "与国际组织和当地社区建立战略合作伙伴关系。",
+        "features": [
+          "国际非政府组织合作伙伴关系",
+          "企业社会责任",
+          "政府合作",
+          "透明度与问责制"
+        ]
+      },
+      "q4_2024": {
+        "quarter": "2024年第四季度",
+        "title": "数字创新",
+        "description": "构建全面的数字生态系统，用于慈善捐赠和影响跟踪。",
+        "features": [
+          "区块链透明度",
+          "影响测量工具",
+          "移动捐赠应用",
+          "实时项目更新"
+        ]
+      },
+      "q1_2025": {
+        "quarter": "2025年第一季度",
+        "title": "全球扩张",
+        "description": "通过多区域运营和当地合作伙伴关系，在全球范围内扩展我们的人道主义努力。",
+        "features": [
+          "多国运营",
+          "当地社区中心",
+          "文化适应计划",
+          "区域领导团队"
+        ]
+      },
+      "q2_2025": {
+        "quarter": "2025年第二季度",
+        "title": "可持续影响",
+        "description": "专注于长期可持续解决方案和系统性变革，以实现持久影响。",
+        "features": [
+          "可持续发展目标",
+          "能力建设计划",
+          "政策倡导",
+          "社会创新实验室"
+        ]
+      }
+    }
+  },
+  "team": {
+    "badge": "我们的团队",
+    "title": "认识我们使命背后的人们",
+    "subtitle": "他们拥有创造真正改变人们生活的数字产品的秘密知识和有趣经验。"
+  },
+  "projects": {
+    "badge": "我们的项目",
+    "title": "发现我们的",
+    "titleHighlight": "有影响力",
+    "titleSuffix": "倡议",
+    "description": "探索我们多样化的慈善项目和倡议，这些项目和倡议正在为世界各地的社区带来真正的改变。每个项目都经过精心挑选和验证，以确保最大的影响力和透明度。",
+    "donationActivity": {
+      "title": "位善良的捐赠者已参与贡献",
+      "subtitle": "来自我们全球社区的近期链上捐赠。",
+      "donated": "捐赠了"
+    }
+  },
+  "lottery": {
+    "badge": "下次开奖倒计时",
+    "title": "慈善",
+    "titleHighlight": "抽奖",
+    "subtitle": "加入社区抽奖，支持慈善事业，同时有机会赢得丰厚奖品。",
+    "countdown": {
+      "title": "下次开奖时间"
+    },
+    "jackpot": {
+      "title": "当前奖池",
+      "description": "每张彩票的购买都会增加奖池金额",
+      "connectWallet": "连接钱包"
+    },
+    "history": {
+      "badge": "历史结果",
+      "title": "抽奖",
+      "titleHighlight": "历史",
+      "subtitle": "追踪所有之前的抽奖结果和中奖号码。在区块链上验证结果。",
+      "loading": "加载抽奖历史...",
+      "table": {
+        "drawDate": "开奖日期",
+        "prizePool": "奖池",
+        "detail": "详情"
+      },
+      "empty": {
+        "title": "暂无抽奖历史",
+        "description": "请稍后再查看最新的开奖结果"
+      },
+      "verify": {
+        "title": "如何验证结果",
+        "description": "所有抽奖结果都记录在区块链上。点击任何交易哈希可复制并在区块链浏览器上验证结果。",
+        "transparent": "透明且可验证",
+        "secured": "区块链保障",
+        "fair": "公平随机"
+      }
+    },
+    "winningDetail": {
+      "badge": {
+        "lottery": "我的彩票",
+        "follow": "我的跟投"
+      },
+      "followBetAmount": "跟投金额",
+      "winningAmount": "中奖金额",
+      "drawInformation": "开奖信息",
+      "drawTime": "开奖时间",
+      "digitalMatrix": "数字矩阵",
+      "colorGenes": "颜色基因",
+      "imageSymbols": "图像符号",
+      "timestamp": "时间戳："
+    },
+    "winningRecords": {
+      "badge": "中奖记录",
+      "title": "抽奖",
+      "titleHighlight": "中奖历史",
+      "subtitle": "查看您的所有彩票中奖记录，追踪您在不同开奖中的成功。",
+      "connect": {
+        "title": "连接您的钱包",
+        "description": "连接您的钱包以查看您的中奖记录和奖金历史。"
+      },
+      "cumulativeWinnings": "累计中奖",
+      "loading": "加载中奖记录中...",
+      "empty": {
+        "title": "未找到中奖记录",
+        "description": "您还没有中过任何奖品。继续尝试，祝您下次开奖好运！",
+        "browseLottery": "浏览抽奖"
+      },
+      "navigation": {
+        "tokenDetails": "代币详情",
+        "donationRecords": "捐赠记录"
+      },
+      "card": {
+        "lotteryWon": "彩票中奖",
+        "followWon": "跟投中奖",
+        "drawNumber": "开奖号码",
+        "prize": "奖金",
+        "winningTime": "中奖时间"
+      }
+    },
+    "modals": {
+      "redemption": {
+        "title": {
+          "purchase": "彩票购买",
+          "redemption": "彩票兑换"
+        },
+        "salePrice": "彩票售价：",
+        "redemptionPrice": "新彩票兑换价格：",
+        "actualPaymentPrice": "实际支付价格：",
+        "confirmPurchase": "确认购买",
+        "confirmRedemption": "确认兑换"
+      },
+      "sell": {
+        "title": "上架出售",
+        "salePrice": "售价：",
+        "saleDuration": "出售时长：",
+        "days": "天",
+        "handlingFee": "手续费：",
+        "serviceFee": "服务费",
+        "creatorFee": "创作者费",
+        "processing": "处理中...",
+        "confirmSubmission": "确认提交"
+      },
+      "delist": {
+        "title": "确认下架？",
+        "description": "下架后，可以重新上架出售。",
+        "processing": "处理中..."
+      },
+      "success": {
+        "title": {
+          "sell": "彩票上架成功",
+          "purchase": "彩票购买成功",
+          "follow": "彩票跟投成功",
+          "redemption": "彩票兑换成功"
+        },
+        "description": {
+          "sell": "这是您第 {ordinal} 次出售彩票",
+          "purchase": "这是您第 {ordinal} 张购买的彩票",
+          "follow": "这是您第 {ordinal} 张跟投的彩票",
+          "redemption": "这是您第 {ordinal} 张兑换的彩票"
+        },
+        "info": {
+          "sell": "交易完成后，扣除手续费后的收入将自动存入您登录的钱包",
+          "drawResults": "请注意每日 4 次开奖结果",
+          "marketplace": "您也可以在市场上出售彩票"
+        },
+        "viewTickets": {
+          "listed": "查看我的上架彩票",
+          "follow": "查看我的跟投",
+          "default": "查看我的彩票"
+        },
+        "buttons": {
+          "marketplace": "NFT 市场",
+          "continueSell": "继续出售",
+          "continuePurchase": "继续购买",
+          "continueFollow": "继续跟投",
+          "continueRedemption": "继续兑换"
+        }
+      },
+      "follow": {
+        "title": "跟投",
+        "redemptionCost": "彩票兑换成本：",
+        "numberOfShares": "份数：",
+        "actualPaymentPrice": "实际支付价格：",
+        "rewardFormula": "如果中奖，您将获得奖金 = 彩票奖金 × 投资金额 / 彩票兑换成本",
+        "processing": "处理中...",
+        "confirm": "确认跟投"
+      }
+    }
+  },
+  "nftMarket": {
+    "badge": "链慈善抽奖",
+    "title": "NFT",
+    "titleHighlight": "市场",
+    "subtitle": "发现并收集具有不同稀有度和中奖率的独特彩票",
+    "tabs": {
+      "new": "新彩票",
+      "market": "彩票市场"
+    },
+    "sort": {
+      "latest": "最新",
+      "price": "价格",
+      "rarity": "稀有度",
+      "follow": "关注"
+    },
+    "card": {
+      "basicWinRate": "基础中奖率",
+      "maxPrize": "最高奖金",
+      "redemptionCost": "兑换成本",
+      "salePrice": "售价",
+      "purchase": "购买",
+      "buyNow": "立即购买"
+    },
+    "empty": {
+      "new": {
+        "title": "暂无新彩票",
+        "description": "当前没有可用的新彩票。请稍后再查看新的机会。"
+      },
+      "market": {
+        "title": "暂无市场列表",
+        "description": "当前市场上没有列出的彩票。成为第一个列出您的彩票的人！"
+      }
+    }
+  },
+  "network": {
+    "badge": "节点质押",
+    "title": "我的节点",
+    "subtitle": "追踪您的节点资产，发现适合您风险偏好的不同节点层级。",
+    "connect": {
+      "title": "连接钱包以查看节点资产",
+      "description": "连接后，您将在此处看到您的总节点资产、每日奖励和详细的节点分解。"
+    },
+    "noNodes": {
+      "title": "钱包中未找到节点",
+      "description": "您尚未购买任何节点。浏览下面的节点层级，开始通过灵活的入场选项赚取收益。",
+      "features": {
+        "multiTier": "多层级节点产品",
+        "transparent": "链上收益，透明奖励"
+      },
+      "totalAssets": "总节点资产 (USDT)",
+      "yesterdayRewards": "昨日奖励",
+      "rewardsDetail": "购买后将显示奖励详情",
+      "genesisNodes": "创世节点",
+      "superNodes": "超级节点",
+      "standardNodes": "标准节点"
+    },
+    "portfolio": {
+      "title": "我的节点组合",
+      "description": "您的节点持仓和每日奖励表现的概览。",
+      "totalAssets": "总节点资产 (USDT)",
+      "yesterdayRewards": "昨日奖励",
+      "rewardsDetails": "奖励详情"
+    },
+    "buyNodes": {
+      "title": "购买节点",
+      "description": "选择符合您投资期限和风险偏好的节点层级。所有收益率均为指示性 APR 范围。",
+      "guide": "节点投资指南"
+    },
+    "nodeTiers": {
+      "genesis": {
+        "name": "创世节点",
+        "description": "旗舰节点层级，为长期支持者提供更高的潜在收益。",
+        "highlight": "3年预期回报"
+      },
+      "super": {
+        "name": "超级节点",
+        "description": "专为经验丰富的投资者设计。"
+      },
+      "standard": {
+        "name": "标准节点",
+        "description": "适合日常投资者的入门选择。"
+      },
+      "annualizedYield": "年化收益率",
+      "globalLimit": "全球限额",
+      "nodePrice": "节点价格",
+      "viewDetails": "查看详情"
+    },
+    "myNodes": {
+      "badge": "我的节点持仓",
+      "title": "节点",
+      "titleHighlight": "投资组合",
+      "subtitle": "在一个地方追踪您的节点投资、每日收益和累计回报。",
+      "connect": {
+        "title": "连接您的钱包",
+        "description": "连接您的钱包以查看节点持仓并追踪您的收益。"
+      },
+      "summary": {
+        "totalPurchaseCost": "总购买成本",
+        "acrossAllNodes": "所有节点总计",
+        "yesterdayEarnings": "昨日收益",
+        "totalDailyReturn": "每日总回报",
+        "accumulatedEarnings": "累计收益",
+        "totalReturnsToDate": "累计总回报"
+      },
+      "loading": "加载节点持仓中...",
+      "table": {
+        "node": "节点",
+        "purchaseCost": "购买成本",
+        "yesterdayEarnings": "昨日收益",
+        "accumulatedEarnings": "累计收益"
+      },
+      "empty": {
+        "title": "未找到节点持仓",
+        "description": "您还没有任何节点。开始购买节点以赚取奖励。",
+        "browseNodeTiers": "浏览节点层级"
+      }
+    },
+    "purchaseHistory": {
+      "badge": "购买历史",
+      "title": "节点",
+      "titleHighlight": "购买记录",
+      "subtitle": "查看您的完整节点购买历史，包含详细的交易信息。",
+      "connect": {
+        "title": "连接您的钱包",
+        "description": "连接您的钱包以查看您的节点购买历史和交易记录。"
+      },
+      "summary": {
+        "totalPurchaseCost": "总购买成本",
+        "acrossAllPurchases": "所有购买总计",
+        "totalNodesPurchased": "已购买节点总数",
+        "totalPurchaseCount": "总购买次数"
+      },
+      "loading": "加载购买历史中...",
+      "table": {
+        "node": "节点",
+        "purchaseCost": "购买成本",
+        "purchaseTime": "购买时间"
+      },
+      "empty": {
+        "title": "未找到购买记录",
+        "description": "您还没有任何购买记录。开始购买节点以查看您的交易历史。",
+        "browseNodeTiers": "浏览节点层级"
+      }
+    }
+  },
+  "user": {
+    "title": "我的仪表板",
+    "subtitle": "管理您的数字资产并追踪您的贡献",
+    "stats": {
+      "totalNFTs": {
+        "label": "NFT 总数",
+        "description": "钱包中的数字资产"
+      },
+      "collections": {
+        "label": "收藏",
+        "description": "拥有的独特收藏"
+      },
+      "walletAddress": {
+        "label": "钱包地址",
+        "description": "您的钱包标识符"
+      },
+      "status": {
+        "label": "状态",
+        "active": "已连接",
+        "disconnected": "未连接",
+        "description": "连接状态"
+      },
+      "notConnected": "未连接"
+    },
+    "nfts": {
+      "title": "我的 NFT",
+      "empty": {
+        "title": "未找到 NFT",
+        "description": "连接您的钱包以查看您的 NFT 收藏"
+      },
+      "loading": "加载 NFT...",
+      "refresh": "刷新"
+    },
+    "tokenDetails": {
+      "badge": "代币详情",
+      "title": "代币",
+      "titleHighlight": "投资组合",
+      "subtitle": "查看您的代币余额并追踪不同资产的组合价值。",
+      "connect": {
+        "title": "连接您的钱包",
+        "description": "连接您的钱包以查看您的代币余额和投资组合详情。"
+      },
+      "totalPortfolioValue": "投资组合总价值",
+      "loading": "加载代币详情中...",
+      "empty": {
+        "title": "未找到代币",
+        "description": "您的钱包中还没有任何代币。"
+      }
+    },
+    "transactionRecords": {
+      "badge": "交易记录",
+      "title": "交易",
+      "titleHighlight": "历史",
+      "subtitle": "查看您的所有彩票交易记录，包括购买、出售和跟投。",
+      "connect": {
+        "title": "连接您的钱包",
+        "description": "连接您的钱包以查看您的交易记录和交易历史。"
+      },
+      "loading": "加载交易记录中...",
+      "transactionTypes": {
+        "buy": "购买",
+        "sell": "出售",
+        "follow": "跟投"
+      },
+      "empty": {
+        "title": "未找到交易记录",
+        "description": "您还没有进行任何交易。开始交易彩票以查看您的交易历史！",
+        "browseLottery": "浏览抽奖"
+      }
+    }
+  },
+  "projectDetail": {
+    "badge": "进行中项目",
+    "title": "我们的项目",
+    "tabs": {
+      "about": "关于",
+      "donations": "捐赠",
+      "updates": "更新"
+    },
+    "donations": {
+      "title": "捐赠记录",
+      "table": {
+        "donatedAt": "捐赠时间",
+        "donor": "捐赠者",
+        "hashTx": "交易哈希",
+        "amount": "金额",
+        "viewTransactionDetails": "查看交易详情",
+        "invalidDate": "无效日期"
+      },
+      "empty": {
+        "title": "暂无捐赠",
+        "description": "目前还没有人为该项目捐赠。成为第一个支持者吧！"
+      },
+      "sidebar": {
+        "allTimeDonations": "累计收到捐赠",
+        "beFirstToGive": "成为第一个捐赠者！",
+        "projectRecipientAddress": "项目收款地址",
+        "noAddressAvailable": "暂无地址"
+      }
+    },
+    "fundraising": {
+      "totalAmountRaised": "总筹集金额",
+      "raisedFrom": "来自 {contributors} 位捐赠者的筹集",
+      "projectId": "项目ID",
+      "donate": "捐赠"
+    },
+    "about": {
+      "progress": "进度",
+      "raised": "已筹集",
+      "goal": "目标",
+      "donors": "捐赠者"
+    },
+    "updates": {
+      "title": "项目更新",
+      "untitledUpdate": "未命名更新",
+      "empty": {
+        "title": "暂无更新",
+        "description": "项目更新将在此处显示。"
+      }
+    },
+    "features": {
+      "title": "核心功能",
+      "subtitle": "探索我们平台脱颖而出的全面功能和特性",
+      "items": {
+        "modernDesign": {
+          "title": "现代设计",
+          "description": "前沿的 UI/UX 设计，通过直观的界面和精美的视觉效果吸引并吸引用户。"
+        },
+        "highPerformance": {
+          "title": "高性能",
+          "description": "针对所有设备的速度和效率进行优化，确保流畅的用户体验和快速的加载时间。"
+        },
+        "scalableSolutions": {
+          "title": "可扩展解决方案",
+          "description": "构建以适应您的业务需求和需求，支持从初创公司到企业的所有规模。"
+        },
+        "secureReliable": {
+          "title": "安全可靠",
+          "description": "企业级安全性和 99.9% 的正常运行时间保证，确保您的数据和应用程序始终受到保护。"
+        },
+        "crossPlatform": {
+          "title": "跨平台",
+          "description": "在所有平台和设备上提供无缝体验，从桌面到移动设备以及介于两者之间的一切。"
+        },
+        "support": {
+          "title": "24/7 支持",
+          "description": "全天候支持和维护，确保您的项目始终平稳运行。"
+        }
+      },
+      "whyChoose": {
+        "title": "为什么选择我们的平台？",
+        "description": "我们的平台将前沿技术与以用户为中心的设计相结合，提供卓越的体验。我们致力于持续创新和卓越，确保我们的用户始终能够使用最好的工具和功能。"
+      }
+    },
+    "technology": {
+      "title": "技术栈",
+      "subtitle": "我们利用前沿技术提供卓越成果，并保持最高的质量和性能标准。",
+      "categories": {
+        "frontend": "前端",
+        "framework": "框架",
+        "language": "语言",
+        "styling": "样式",
+        "animation": "动画",
+        "backend": "后端",
+        "database": "数据库",
+        "devops": "运维"
+      },
+      "technologies": {
+        "react": "用于构建交互式用户界面的现代 UI 库",
+        "nextjs": "用于生产就绪应用程序的全栈 React 框架",
+        "typescript": "用于可扩展应用程序开发的类型安全 JavaScript",
+        "tailwind": "用于快速 UI 开发的实用优先 CSS 框架",
+        "framerMotion": "用于 React 动画的生产就绪运动库",
+        "nodejs": "用于构建可扩展服务器端应用程序的 JavaScript 运行时",
+        "postgresql": "先进的开源关系数据库系统",
+        "docker": "用于一致部署的容器化平台"
+      },
+      "whyMatters": {
+        "title": "为什么我们的技术选择很重要",
+        "performance": {
+          "title": "性能",
+          "description": "使用现代 Web 技术优化速度和效率"
+        },
+        "security": {
+          "title": "安全性",
+          "description": "采用安全优先原则和最佳实践构建"
+        },
+        "scalability": {
+          "title": "可扩展性",
+          "description": "设计为随您的业务和用户群增长"
+        }
+      }
+    },
+    "cover": {
+      "noImages": "暂无图片"
+    }
+  },
+  "donate": {
+    "badge": "加密捐赠",
+    "title": "支持",
+    "titleHighlight": "项目",
+    "subtitle": "用您的加密捐赠带来改变",
+    "projectName": "项目名称",
+    "projectId": "项目ID",
+    "walletAddress": "钱包地址",
+    "selectToken": "选择代币",
+    "amount": "金额",
+    "totalDonation": "总捐赠额",
+    "donateNow": "立即捐赠",
+    "donationSuccessful": "捐赠成功！",
+    "tokenSelect": {
+      "title": "选择代币",
+      "searchPlaceholder": "搜索名称或粘贴地址",
+      "hideZeroBalance": "隐藏零余额代币",
+      "balance": "余额",
+      "noTokensFound": "未找到包含 \"{search}\" 的代币",
+      "noTokensAvailable": "当前没有可用的代币",
+      "clearSearch": "清除搜索",
+      "footerHint": "选择一个代币以继续您的捐赠"
+    }
+  },
+  "myTickets": {
+    "badge": "我的彩票",
+    "title": "彩票",
+    "titleHighlight": "票券组合",
+    "subtitle": "查看和管理您的彩票收藏。随时在市场上出售您的彩票。",
+    "connectTitle": "连接您的钱包",
+    "connectDescription": "连接您的钱包以查看您的彩票收藏并管理您的资产。",
+    "tabs": {
+      "hold": "持有",
+      "listed": "已上架"
+    },
+    "summary": {
+      "totalTickets": "总票数",
+      "totalValue": "总价值",
+      "inCollection": "在您的收藏中",
+      "listedForSale": "已上架出售",
+      "purchasePriceTotal": "购买价格总计"
+    },
+    "loading": "加载您的彩票...",
+    "empty": {
+      "noTicketsHeld": "未持有彩票",
+      "noTicketsListed": "未上架彩票",
+      "noTicketsHeldDesc": "您的收藏中没有任何彩票。",
+      "noTicketsListedDesc": "您没有上架任何待售的彩票。",
+      "noTicketsFound": "未找到彩票",
+      "noTicketsFoundDesc": "您还没有任何彩票。开始购买彩票来建立您的收藏吧。",
+      "browseLottery": "浏览抽奖"
+    },
+    "card": {
+      "purchasePrice": "购买价格",
+      "sell": "出售",
+      "delist": "下架"
+    }
+  },
+  "donationRecords": {
+    "badge": "捐赠记录",
+    "title": "捐赠",
+    "titleHighlight": "历史",
+    "subtitle": "查看您的所有捐赠记录并追踪您对各个项目的贡献。",
+    "connectTitle": "连接您的钱包",
+    "connectDescription": "连接您的钱包以查看您的捐赠记录和贡献历史。",
+    "totalDonations": "总捐赠额",
+    "loading": "加载捐赠记录...",
+    "donated": "捐赠了",
+    "empty": {
+      "title": "未找到捐赠记录",
+      "description": "您还没有进行任何捐赠。开始为您关心的项目做出贡献吧！",
+      "browseProjects": "浏览项目"
+    }
+  },
+  "notFound": {
+    "badge": "页面未找到",
+    "title": "糟糕！出了点",
+    "titleHighlight": "问题",
+    "description": "您要查找的页面似乎消失在数字空间中。别担心，即使是最好的探索者有时也会走错路。",
+    "backToHome": "返回首页"
+  },
+  "earningsDetails": {
+    "badge": "收益详情",
+    "title": "收益",
+    "titleHighlight": "概览",
+    "subtitle": "追踪您所有节点的收益表现、分布和每日详情。",
+    "connectTitle": "连接您的钱包",
+    "connectDescription": "连接您的钱包以查看您的收益详情和表现指标。",
+    "overview": {
+      "title": "收益概览",
+      "yesterdayEarnings": "昨日收益 (USDT)",
+      "yieldRate": "收益率",
+      "yearToDateEarnings": "年初至今收益 (USDT)",
+      "yieldRateCurve": "收益率曲线",
+      "earningsAmountCurve": "收益金额曲线",
+      "yieldRateLabel": "收益率",
+      "earningsLabel": "收益"
+    },
+    "distribution": {
+      "title": "收益分布",
+      "day": "日",
+      "week": "周",
+      "month": "月",
+      "year": "年",
+      "weekdays": {
+        "sun": "日",
+        "mon": "一",
+        "tue": "二",
+        "wed": "三",
+        "thu": "四",
+        "fri": "五",
+        "sat": "六"
+      }
+    },
+    "daily": {
+      "title": "每日收益详情",
+      "nodes": "个节点",
+      "nodeTypes": {
+        "genesis": "创世节点",
+        "super": "超级节点",
+        "regular": "普通节点"
+      }
+    }
+  },
+  "nftDetail": {
+    "badge": "链慈善抽奖",
+    "tabs": {
+      "basicInfo": "基本信息",
+      "history": "历史记录"
+    },
+    "stats": {
+      "rarity": "稀有度",
+      "maxPrize": "最高奖金",
+      "baseWinRate": "基础中奖率",
+      "winRate": "中奖率",
+      "onSale": "在售",
+      "validUntil": "有效期至",
+      "holder": "持有者"
+    },
+    "education": {
+      "title": "教育支持",
+      "partner": "合作伙伴"
+    },
+    "instructions": {
+      "title": "NFT 抽奖与兑换说明",
+      "item1": "使用代币购买永久 DNA 身份 NFT，成为生态系统成员。",
+      "item2": "每天抽奖 4 次，奖金自动到账，中奖概率透明。",
+      "item3": "票券和权益可传承给后代。"
+    },
+    "actions": {
+      "newLotteryRedemptionPrice": "新彩票兑换价格：",
+      "purchasePrice": "购买价格：",
+      "redeem": "兑换",
+      "purchase": "购买",
+      "follow": "跟投",
+      "sell": "出售",
+      "delist": "下架"
+    },
+    "history": {
+      "generation": "世代",
+      "generationValue": "第三代",
+      "baseValue": "基础价值",
+      "baseValueAmount": "1,500 USDT",
+      "familyBadge": "家族徽章",
+      "premiumLineage": "优质血统",
+      "purchaseRecords": "购买记录",
+      "winningRecords": "中奖记录",
+      "buyer": "购买者",
+      "price": "价格",
+      "priceClt": "价格 (CLT)",
+      "purchaseTime": "购买时间",
+      "winner": "中奖者",
+      "prize": "奖金",
+      "winningTime": "中奖时间",
+      "noWinningRecords": "暂无中奖记录"
+    }
+  },
+  "nodeDetail": {
+    "stats": {
+      "limit": "限额",
+      "sold": "已售",
+      "remaining": "剩余",
+      "progress": "进度",
+      "total": "总计"
+    },
+    "purchase": {
+      "title": "购买节点",
+      "connectWallet": "连接钱包购买",
+      "price": "价格",
+      "exclusivePrice": "专属价格",
+      "nodePrice": "节点价格",
+      "publicPrice": "公开价格",
+      "publicOffering": "公开发行",
+      "advantage": "优势",
+      "advantageDescription": "节点投资者获得 14.6 倍价格优势",
+      "investmentReturns": "投资收益",
+      "initial": "初始",
+      "threeYearReturn": "3年回报",
+      "year1": "第1年",
+      "year2": "第2年",
+      "year3": "第3年",
+      "totalReturnRate": "总回报率",
+      "priceAdvantage": "价格优势",
+      "footerNote": "所有节点售完为止，永不增发 | 节点持有者享有永久平台分红权益"
+    },
+    "certificates": {
+      "title": "NFT 证书",
+      "certificateOfOwnership": "所有权证书",
+      "ownerName": "所有者姓名",
+      "genesisCertificate": "链慈善抽奖创世节点所有者证书",
+      "genesisNodeCertificate": "创世节点所有者证书"
+    },
+    "security": {
+      "title": "安全保障",
+      "protection": {
+        "title": "四重保护机制",
+        "item1": "4500 万美元保护基金（占总融资的 46%）",
+        "item2": "四级价格保护屏障",
+        "item3": "确保代币价格长期稳定增长",
+        "item4": "市场波动时自动干预保护投资者权益"
+      },
+      "technical": {
+        "title": "技术安全保障",
+        "item1": "基于以太坊主网，去中心化管理",
+        "item2": "多重签名钱包，资金隔离托管",
+        "item3": "8 次第三方安全审计确保代码安全",
+        "item4": "Chainlink VRF 验证随机数确保抽奖公平"
+      },
+      "transparency": {
+        "title": "100% 透明度",
+        "item1": "所有交易链上可追溯，永久记录",
+        "item2": "平台月度财务报告公开透明",
+        "item3": "DAO 社区监督，用户共治",
+        "item4": "第三方独立审计，权威认证"
+      },
+      "insurance": {
+        "title": "保险基金护航",
+        "item1": "三级风险缓冲机制全覆盖",
+        "item2": "专业保险公司资金托管",
+        "item3": "用户资金安全始终至上",
+        "item4": "区块链技术确保每笔交易安全可靠"
+      }
+    }
+  },
+  "nodePurchaseModal": {
+    "salePrice": "售价",
+    "perShare": "每股",
+    "exclusivePrice": "节点投资者专享价格：",
+    "selectCertificate": "选择您的节点证书",
+    "purchaseQuantity": "购买数量",
+    "sharesRemaining": "股剩余",
+    "actualPaymentPrice": "实际支付价格：",
+    "confirmPurchase": "确认购买",
+    "success": {
+      "title": "节点购买成功",
+      "description": "这是您的第 {count} 个节点",
+      "viewNodes": "查看我的节点",
+      "returnHome": "返回首页",
+      "continuePurchase": "继续购买"
+    }
   }
 }

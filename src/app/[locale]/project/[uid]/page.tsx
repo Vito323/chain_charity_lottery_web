@@ -1,26 +1,25 @@
-import Footer from "@/components/footer";
+import Showcase from "./content";
 import Header from "@/components/header";
-// import PageTitle from "@/components/page-title";
-import Scrollbar from "@/components/scrollbar";
-import CaseSingle from "./content";
+import Footer from "@/components/footer";
+import ScrollToTop from "@/components/scroll-to-top";
 
-interface CaseSinglePageProps {
+interface ShowcasePageProps {
   params: Promise<{
     uid: string;
   }>;
 }
 
-const CaseSinglePage = async ({ params }: CaseSinglePageProps) => {
+const ShowcasePage = async ({ params }: ShowcasePageProps) => {
   const { uid } = await params;
   
   return (
     <>
       <Header />
-      <CaseSingle uid={uid} />
+      <Showcase uid={uid} />
       <Footer />
-      <Scrollbar />
+      <ScrollToTop />
     </>
   );
 };
 
-export default CaseSinglePage;
+export default ShowcasePage;

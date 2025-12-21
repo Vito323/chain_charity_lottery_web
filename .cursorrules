@@ -1,0 +1,46 @@
+Always responds in 中文
+
+项目技术栈：本项目是一个Next.js + Typescript + Tailwind CSS + React 19 + Framer Motion + React Bootstrap + React Markdown + React Modal Video + React Slick + React Toastify + Rehype Highlight + Remark GFM + Slick Carousel + Swiper + Three.js + Viem + Wagmi + Zustand开发脚手架
+
+
+Tailwind 适配到手机端
+
+项目涉及到的文案一律为英文
+
+设计风格：
+- 深色主题
+- 渐变色彩
+- 圆角卡片设计
+- 悬停动画
+- 流畅动画
+- 响应式设计
+- 自适应文字大小
+
+必须：TypeScript 强类型、状态管理、条件编译处理平台差异。
+
+设计规范：风格统一，不要出现不和谐的配色和设计
+
+1.Bug修复：
+-在提出解决方案之前，彻底分析问题
+-提供精确、有针对性的解决方案
+-解释错误的根本原因
+2.保持简单：
+-优先考虑可读性和可维护性
+-避免过度工程化的解决方案
+-尽可能使用标准库和模式
+3.代码更改：
+-在做出改变之前，提出一个明确的计划
+-一次将所有修改应用于单个文件
+-不要更改无关的文件
+4.沟通：
+-解释时要注意清楚
+-对复杂逻辑使用代码注释
+-提供所做更改的简要摘要
+5.最佳做法：
+-遵循特定语言的惯例和风格指南
+-在适当的时候提出优化建议
+-鼓励为新代码编写测试
+6.学习
+-如果被问到，请解释概念
+-在相关情况下为进一步学习提供资源
+记住要始终考虑每个项目的背景和具体要求。

@@ -1,0 +1,315 @@
+.stalwart-footer {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 80px 0 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stalwart-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.stalwart-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.stalwart-footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.stalwart-footer-main {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+}
+
+.stalwart-footer-brand {
+  max-width: 400px;
+}
+
+.stalwart-footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stalwart-logo-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.stalwart-logo-text {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.stalwart-footer-description {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.stalwart-footer-social {
+  display: flex;
+  gap: 1rem;
+}
+
+.stalwart-social-link {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.stalwart-social-link:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+.stalwart-social-icon {
+  font-size: 1.2rem;
+}
+
+.stalwart-footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.stalwart-footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.stalwart-footer-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.stalwart-footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.stalwart-footer-link {
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.stalwart-footer-link:hover {
+  color: #6366f1;
+}
+
+.stalwart-footer-contact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stalwart-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stalwart-contact-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.stalwart-contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stalwart-contact-link {
+  color: #6366f1;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.stalwart-contact-link:hover {
+  color: #8b5cf6;
+}
+
+.stalwart-newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stalwart-newsletter-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.stalwart-newsletter-description {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.stalwart-newsletter-form {
+  display: flex;
+  gap: 1rem;
+  max-width: 400px;
+}
+
+.stalwart-newsletter-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.stalwart-newsletter-input::placeholder {
+  color: #666;
+}
+
+.stalwart-newsletter-input:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stalwart-newsletter-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.stalwart-newsletter-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+.stalwart-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.stalwart-footer-legal {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stalwart-footer-copyright {
+  color: #b0b0b0;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.stalwart-footer-legal-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.stalwart-legal-link {
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.3s ease;
+}
+
+.stalwart-legal-link:hover {
+  color: #6366f1;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .stalwart-footer {
+    padding: 60px 0 30px;
+  }
+  
+  .stalwart-footer-main {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .stalwart-footer-links {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .stalwart-footer-contact {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .stalwart-newsletter-form {
+    flex-direction: column;
+  }
+  
+  .stalwart-footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stalwart-footer-legal {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
