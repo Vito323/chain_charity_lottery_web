@@ -146,10 +146,10 @@
     "subtitle": "他们拥有创造真正改变人们生活的数字产品的秘密知识和有趣经验。"
   },
   "projects": {
-    "badge": "我们的项目",
-    "title": "发现我们的",
-    "titleHighlight": "有影响力",
-    "titleSuffix": "倡议",
+    "badge": "使命&愿景",
+    "title": "支持我们的",
+    "titleHighlight": "倡议",
+    "titleSuffix": "",
     "description": "探索我们多样化的慈善项目和倡议，这些项目和倡议正在为世界各地的社区带来真正的改变。每个项目都经过精心挑选和验证，以确保最大的影响力和透明度。",
     "donationActivity": {
       "title": "位善良的捐赠者已参与贡献",
