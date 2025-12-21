@@ -304,7 +304,7 @@ const NetworkPage: React.FC = () => {
                           {tier.name}
                         </h3>
                         <p className="mt-1 text-xs text-white/60">
-                          {t('nodeTiers.annualizedYield')}: {tier.aprRange[0]}–{tier.aprRange[1]}%
+                          {t('nodeTiers.annualizedYield')}: {tier.aprRange[0]}-{tier.aprRange[1]}%
                         </p>
                         <p className="mt-1 text-xs text-white/50">
                           {t('nodeTiers.globalLimit')}: {tier.globalLimit.toLocaleString()} nodes
@@ -373,7 +373,7 @@ const GenesisTierCard: React.FC = () => {
             <div className="flex flex-col">
               <span className="text-white/60">{t('nodeTiers.annualizedYield')}</span>
               <span className="font-semibold">
-                {genesis.aprRange[0]}–{genesis.aprRange[1]}%
+                {genesis.aprRange[0]}-{genesis.aprRange[1]}%
               </span>
             </div>
             <div className="flex flex-col">
