@@ -15,7 +15,7 @@ export default function HomePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-[#0b1020] pt-24"
+      className="min-h-screen bg-[#0b1020]"
     >
       <Header />
       {/* Hero Section */}

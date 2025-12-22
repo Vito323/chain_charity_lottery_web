@@ -5,7 +5,14 @@ import { useState, useEffect } from 'react';
 import { useCounterAnimation } from '@/hooks/useScrollAnimation';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-const Hero = () => {
+import BoostifyBackground from './BoostifyBackground';
+import SyncoraBackground from './SyncoraBackground';
+
+interface HeroProps {
+  backgroundScheme?: 'boostify' | 'syncora';
+}
+
+const Hero = ({ backgroundScheme = 'boostify' }: HeroProps) => {
   const t = useTranslations('hero');
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -43,7 +50,12 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 md:pt-40">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-62 md:pt-62" style={{
+       backgroundImage: 'url(/assets/images/hero-bg.png)',
+       backgroundSize: 'cover',
+       backgroundPosition: 'center',
+       backgroundRepeat: 'no-repeat',
+    }}>
       {/* Main Content */}
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-6 md:px-8 text-center"
