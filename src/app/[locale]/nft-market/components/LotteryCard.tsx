@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { LotteryTicket, RarityType } from '../types';
+import { useRouter } from 'next/navigation';
 
 interface LotteryCardProps {
   ticket: LotteryTicket;
@@ -45,6 +46,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
   const t = useTranslations('nftMarket');
   const tCommon = useTranslations('common');
   const rarityStyle = rarityConfig[ticket.rarity];
+  const router = useRouter();
 
   return (
     <motion.div
@@ -55,7 +57,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
         delay: animationDelay,
         ease: 'easeOut',
       }}
-      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-slate-900/90 via-slate-950/95 to-slate-950/95 backdrop-blur-md shadow-lg shadow-black/40 will-change-transform"
+      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-b from-slate-900/90 via-slate-950/95 to-slate-950/95 backdrop-blur-md shadow-lg shadow-black/40 will-change-transform"
       style={{
         transform: 'translateZ(0)',
         transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease',
@@ -71,7 +73,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
     >
       {/* Glow effect */}
       <div
-        className={`pointer-events-none absolute inset-x-[-40%] top-[-40%] h-40 bg-gradient-to-r ${rarityStyle.bgGradient} opacity-0 blur-3xl transition-opacity duration-200 group-hover:opacity-40`}
+        className={`pointer-events-none absolute inset-x-[-40%] top-[-40%] h-40 bg-linear-to-r ${rarityStyle.bgGradient} opacity-0 blur-3xl transition-opacity duration-200 group-hover:opacity-40`}
         style={{ willChange: 'opacity' }}
       />
 
@@ -79,8 +81,8 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
       <div className="relative p-3 sm:p-4 md:p-5">
         {/* Image Container - Clickable Link */}
         <Link href={`/nft-market/${ticket.id}?type=${type}`} className="block">
-          <div className="relative mb-3 md:mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 cursor-pointer">
-            <div className="aspect-[3/4] relative">
+          <div className="relative mb-3 md:mb-4 rounded-xl overflow-hidden bg-linear-to-br from-slate-800 to-slate-900 cursor-pointer">
+            <div className="aspect-3/4 relative">
               <Image
                 src={ticket.image}
                 alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
@@ -93,7 +95,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
                   target.src = '/images/placeholder-all.png';
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
             </div>
           </div>
         </Link>
@@ -158,7 +160,10 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
 
         {/* Action Button */}
         <button
-          className={`w-full mt-3 md:mt-4 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm lg:text-base bg-gradient-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor} text-white transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98]`}
+          onClick={() => {
+            router.push(`/nft-market/${ticket.id}?type=${type}`);
+          }}  
+          className={`w-full mt-3 md:mt-4 py-2 md:py-2.5 rounded-xl cursor-pointer font-semibold text-xs md:text-sm lg:text-base bg-linear-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor} text-white transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98]`}
           style={{ willChange: 'transform' }}
         >
           {type === 'new' ? t('card.purchase') : t('card.buyNow')}
