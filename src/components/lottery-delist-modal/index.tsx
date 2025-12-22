@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { isMockMode, requireRealCall } from '@/utils/mock';
 
 interface LotteryDelistModalProps {
   isOpen: boolean;
@@ -39,9 +40,18 @@ const LotteryDelistModal: React.FC<LotteryDelistModalProps> = ({
     setIsProcessing(true);
 
     try {
+      // 模拟加载过程
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // In mock mode, require real API call or wallet transaction
+      if (isMockMode()) {
+        requireRealCall(`Lottery delist for ticket ${ticketId}`, 'server');
+        setIsProcessing(false);
+        return;
+      }
+
       // Mock下架流程 - 模拟异步操作
       console.log('Processing delist for ticket:', ticketId);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // 关闭Modal
       onClose();

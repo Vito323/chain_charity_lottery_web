@@ -14,7 +14,7 @@ const Footer = () => {
   const pathname = usePathname();
   
   // 判断是否为首页：路径为 '/' 或 '/[locale]'
-  const isHomePage = pathname === '/' || pathname.split('/').filter(Boolean).length <= 1;
+  const isHomePage = pathname === '/'
   const [email, setEmail] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>('');
@@ -189,7 +189,7 @@ const Footer = () => {
               viewport={{ once: true }}
             >
               <div className="flex items-center mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
+                <div className="w-10 h-10 bg-linear-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
                   <span className="text-white font-bold text-xl">H</span>
                 </div>
                 <span className="text-xl font-bold">Hawaiian Nation Charity</span>

@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { isMockMode, requireRealCall } from '@/utils/mock';
 
 export type WinningType = 'lottery' | 'follow';
 
@@ -66,6 +67,13 @@ const mockFollowWinningData: WinningDetailData = {
 };
 
 const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
+  // In mock mode, require real API call to fetch winning data
+  React.useEffect(() => {
+    if (isMockMode()) {
+      // This should be replaced with actual API call
+      requireRealCall(`Fetch winning detail for winningId: ${winningId}, type: ${type}`, 'network');
+    }
+  }, [winningId, type]);
   const t = useTranslations('lottery.winningDetail');
   const tCommon = useTranslations('common');
   // In production, fetch data by winningId

@@ -40,7 +40,9 @@
       "donationFailed": "Donation failed. Please try again.",
       "transactionCancelled": "Transaction was cancelled by user",
       "insufficientFunds": "Insufficient balance for this transaction",
-      "gasIssue": "Transaction failed due to gas issues"
+      "gasIssue": "Transaction failed due to gas issues",
+      "networkError": "Network error",
+      "serverError": "Server error"
     },
     "terms": {
       "accept": "I have read and accepted the",

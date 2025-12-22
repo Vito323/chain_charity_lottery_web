@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { formatCurrency } from '@/utils/currency';
+import { isMockMode, requireRealCall } from '@/utils/mock';
 
 // Donation record interface
 interface DonationRecord {
@@ -112,6 +113,14 @@ const DonationRecords: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('donationRecords');
   const tCommon = useTranslations('common');
+  
+  // In mock mode, require real API call to fetch donation records
+  useEffect(() => {
+    if (isMockMode()) {
+      requireRealCall('Fetch donation records', 'network');
+    }
+  }, []);
+  
   const [donationRecords] = useState<DonationRecord[]>(defaultDonationRecords);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ import LotterySellModal from '@/components/lottery-sell-modal';
 import LotteryDelistModal from '@/components/lottery-delist-modal';
 import { DetailTab, LotteryTicket, PurchaseRecord, WinningRecord } from './types';
 import { LotteryTicket as MarketLotteryTicket } from '@/app/[locale]/nft-market/types';
+import { isMockMode, requireRealCall } from '@/utils/mock';
 
 interface LotteryTicketDetailProps {
   ticketId: string;
@@ -93,6 +94,15 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
   // In production, fetch ticket by ticketId
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _ticketId = ticketId; // Reserved for future API integration
+  
+  // In mock mode, require real API call to fetch ticket data
+  useEffect(() => {
+    if (isMockMode()) {
+      // This should be replaced with actual API call
+      requireRealCall(`Fetch lottery ticket detail for ticketId: ${ticketId}`, 'network');
+    }
+  }, [ticketId]);
+  
   const ticket = mockTicketData;
   const [activeTab, setActiveTab] = React.useState<DetailTab>('basic');
   const [tabKey, setTabKey] = React.useState(0);

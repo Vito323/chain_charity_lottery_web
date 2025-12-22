@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
+import { isMockMode, requireRealCall } from '@/utils/mock';
 
 interface LotteryFollowInvestmentModalProps {
   isOpen: boolean;
@@ -69,9 +70,18 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
     setIsProcessing(true);
 
     try {
+      // 模拟加载过程
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // In mock mode, require real API call or wallet transaction
+      if (isMockMode()) {
+        requireRealCall(`Lottery follow investment for ticket ${ticketId} with ${shares} shares`, 'server');
+        setIsProcessing(false);
+        return;
+      }
+
       // Mock跟投流程 - 模拟异步操作
       console.log('Processing follow investment for ticket:', ticketId, 'shares:', shares);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // 关闭Modal
       onClose();

@@ -40,7 +40,9 @@
       "donationFailed": "捐赠失败。请重试。",
       "transactionCancelled": "用户取消了交易",
       "insufficientFunds": "余额不足，无法完成此交易",
-      "gasIssue": "交易因 Gas 问题失败"
+      "gasIssue": "交易因 Gas 问题失败",
+      "networkError": "网络错误",
+      "serverError": "服务器错误"
     },
     "terms": {
       "accept": "我已阅读并接受",

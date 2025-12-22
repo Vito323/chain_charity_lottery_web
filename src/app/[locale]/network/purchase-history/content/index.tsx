@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatCurrency } from '@/utils/currency';
 import ConnectButton from '@/components/custom-connect-button/ConnectButton';
+import { isMockMode, requireRealCall } from '@/utils/mock';
 
 // Node purchase record interface
 interface NodePurchaseRecord {
@@ -99,6 +100,14 @@ const PurchaseHistory: React.FC = () => {
   const t = useTranslations('network.purchaseHistory');
   const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
+  
+  // In mock mode, require real API call to fetch purchase history
+  useEffect(() => {
+    if (isMockMode()) {
+      requireRealCall('Fetch node purchase history', 'network');
+    }
+  }, []);
+  
   const [purchaseRecords] = useState<NodePurchaseRecord[]>(defaultPurchaseRecords);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);
