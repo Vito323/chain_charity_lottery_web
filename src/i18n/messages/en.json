@@ -543,7 +543,7 @@
       "titleHighlight": "Details",
       "subtitle": "Manage your nodes, view earnings, and track purchase history",
       "tabs": {
-        "myNodes": "My Nodes",
+        "myNodes": "Hold Nodes",
         "earningsDetails": "Earnings Details",
         "purchaseHistory": "Purchase History"
       }

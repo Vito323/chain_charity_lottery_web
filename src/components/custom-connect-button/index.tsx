@@ -169,13 +169,13 @@ const CustomConnectButton = () => {
                   <button 
                     className="menu-item"
                     onClick={() => {
-                      router.push("/network/my-nodes");
+                      router.push("/network/detail?tab=nodes");
                       setShowDropdown(false);
                     }}
                   >
                     {tCommon('wallet.holdNodes')}
                   </button>
-                  <button 
+                  {/* <button 
                     className="menu-item"
                     onClick={() => {
                       router.push("/network");
@@ -192,7 +192,7 @@ const CustomConnectButton = () => {
                     }}
                   >
                     {tCommon('wallet.nodePurchaseRecords')}
-                  </button>
+                  </button> */}
                   <button 
                     className="menu-item"
                     onClick={() => {
