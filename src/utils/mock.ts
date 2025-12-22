@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
  * Check if mock mode is enabled
  */
 export const isMockMode = (): boolean => {
-  return process.env.NEXT_PUBLIC_DEBUGGER_ENABLED === 'enabled';
+  return process.env.NEXT_PUBLIC_DEBUGGER_ENABLED === '1';
 };
 
 /**
