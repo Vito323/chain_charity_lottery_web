@@ -660,6 +660,11 @@
     "totalDonation": "总捐赠额",
     "donateNow": "立即捐赠",
     "donationSuccessful": "捐赠成功！",
+    "ranking": {
+      "exceeds": "您当前的捐赠金额超越了{percentage}%的用户",
+      "getTokens": "获得代币",
+      "expectedReward": "您的捐赠金额预计将获得 **{amount}** CLT 代币"
+    },
     "tokenSelect": {
       "title": "选择代币",
       "searchPlaceholder": "搜索名称或粘贴地址",
@@ -829,6 +834,7 @@
       "limit": "限额",
       "sold": "已售",
       "remaining": "剩余",
+      "remainingLowercase": "剩余",
       "progress": "进度",
       "total": "总计"
     },
@@ -849,6 +855,9 @@
       "year2": "第2年",
       "year3": "第3年",
       "totalReturnRate": "总回报率",
+      "genesisReturnDescription": "创世节点：$100K → $2.4M（3年）",
+      "standardReturnDescription": "标准节点：100K USDT → 200K USDT（3年）",
+      "superReturnDescription": "超级节点：$50K → $600K（3年）",
       "priceAdvantage": "价格优势",
       "footerNote": "所有节点售完为止，永不增发 | 节点持有者享有永久平台分红权益"
     },

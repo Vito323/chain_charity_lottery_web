@@ -92,7 +92,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
   return (
     <>
       {/* Page Title Section - Stalwart 风格 */}
-      <section className="relative py-32 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+      <section className="relative py-32 bg-linear-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           {/* Animated Background Shapes */}
@@ -169,7 +169,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
       </section>
 
       {/* Main Content Section - 延用 case-hero-layout 的布局逻辑 */}
-      <section className="py-20 bg-gradient-to-b from-slate-950 to-slate-900">
+      <section className="py-20 bg-linear-to-b from-slate-950 to-slate-900">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-stretch">
             {/* 图片轮播容器 - 延用 case-swiper-container 逻辑 */}

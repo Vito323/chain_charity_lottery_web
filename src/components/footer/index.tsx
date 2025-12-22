@@ -6,10 +6,15 @@ import { subscribeEmail } from '@/service/general';
 import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
+import { usePathname } from '@/i18n/navigation';
 
 const Footer = () => {
   const t = useTranslations('footer');
   const tCommon = useTranslations('common');
+  const pathname = usePathname();
+  
+  // 判断是否为首页：路径为 '/' 或 '/[locale]'
+  const isHomePage = pathname === '/' || pathname.split('/').filter(Boolean).length <= 1;
   const [email, setEmail] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>('');
@@ -79,8 +84,9 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-b from-slate-900 to-slate-950 text-white">
-      {/* Newsletter Section */}
+    <footer className="bg-linear-to-b from-slate-900 to-slate-950 text-white">
+      {/* Newsletter Section - 仅在首页显示 */}
+      {isHomePage && (
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <motion.div
@@ -169,6 +175,7 @@ const Footer = () => {
           </motion.div>
         </div>
       </div>
+      )}
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

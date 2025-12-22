@@ -20,10 +20,37 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
   const tCommon = useTranslations('common');
   const swiperRef = useRef<SwiperType | null>(null);
   const [imageLoadStates, setImageLoadStates] = useState<boolean[]>([]);
+  const loadTimeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
   // 初始化图片加载状态
   useEffect(() => {
+    // 清除之前的超时
+    loadTimeoutsRef.current.forEach(timer => clearTimeout(timer));
+    loadTimeoutsRef.current = [];
+
+    // 初始化所有图片为未加载状态
     setImageLoadStates(new Array(images.length).fill(false));
+
+    // 为每个图片设置fallback超时（如果onLoadingComplete没有触发）
+    images.forEach((_, index) => {
+      const timer = setTimeout(() => {
+        setImageLoadStates(prev => {
+          // 如果图片还没有标记为加载完成，强制显示（避免永久隐藏）
+          if (prev[index] === false) {
+            const newStates = [...prev];
+            newStates[index] = true;
+            return newStates;
+          }
+          return prev;
+        });
+      }, 1500); // 1.5秒后强制显示
+      loadTimeoutsRef.current.push(timer);
+    });
+
+    return () => {
+      loadTimeoutsRef.current.forEach(timer => clearTimeout(timer));
+      loadTimeoutsRef.current = [];
+    };
   }, [images]);
 
   useEffect(() => {
@@ -40,9 +67,20 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
     return () => clearTimeout(timer);
   }, [images]);
 
-  // 处理图片加载完成
-  const handleImageLoad = (index: number) => {
+  // 处理图片加载完成（使用Next.js的onLoadingComplete）
+  const handleImageLoadComplete = (index: number) => {
+    // 清除对应的超时定时器
+    const timeout = loadTimeoutsRef.current[index];
+    if (timeout) {
+      clearTimeout(timeout);
+      delete loadTimeoutsRef.current[index];
+    }
+    
     setImageLoadStates(prev => {
+      // 如果已经标记为加载完成，不需要更新
+      if (prev[index] === true) {
+        return prev;
+      }
       const newStates = [...prev];
       newStates[index] = true;
       return newStates;
@@ -51,7 +89,18 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
 
   // 处理图片加载错误
   const handleImageError = (index: number) => {
+    // 清除对应的超时定时器
+    const timeout = loadTimeoutsRef.current[index];
+    if (timeout) {
+      clearTimeout(timeout);
+      delete loadTimeoutsRef.current[index];
+    }
+    
     setImageLoadStates(prev => {
+      // 即使加载错误，也显示图片（避免永久隐藏）
+      if (prev[index] === true) {
+        return prev;
+      }
       const newStates = [...prev];
       newStates[index] = true;
       return newStates;
@@ -148,7 +197,7 @@ const Covers = ({ images, isLoading = false }: CoversProps) => {
                   }}
                   priority={index === 0}
                   unoptimized
-                  onLoad={() => handleImageLoad(index)}
+                  onLoadingComplete={() => handleImageLoadComplete(index)}
                   onError={() => handleImageError(index)}
                 />
                 

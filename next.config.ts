@@ -34,14 +34,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://api.dahantech.app/api/:path*',
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/:path*',
+  //       destination: 'https://api.dahantech.app/api/:path*',
+  //     },
+  //   ];
+  // },
 };
  
 const withNextIntl = createNextIntlPlugin();

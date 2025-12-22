@@ -17,9 +17,181 @@ const NFTMarketPage = () => {
   const [sortBy, setSortBy] = useState<'latest' | 'price' | 'rarity' | 'follow'>('latest');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   
-  // Data state - 留出接口位置
-  const [newLotteryTickets] = useState<LotteryTicket[]>([]);
-  const [marketLotteryTickets] = useState<LotteryTicket[]>([]);
+  // Data state - 测试数据
+  const [newLotteryTickets] = useState<LotteryTicket[]>([
+    {
+      id: 'ticket-001',
+      image: '/images/placeholder-all.png',
+      rarity: 'common',
+      rarityLabel: 'Common',
+      basicWinRate: '5.5%',
+      maxPrize: '1,000 USDT',
+      redemptionCost: '100',
+      currency: 'USDT',
+    },
+    {
+      id: 'ticket-002',
+      image: '/images/placeholder-all.png',
+      rarity: 'rare',
+      rarityLabel: 'Rare',
+      basicWinRate: '8.2%',
+      maxPrize: '2,500 USDT',
+      redemptionCost: '250',
+      currency: 'USDT',
+    },
+    {
+      id: 'ticket-003',
+      image: '/images/placeholder-all.png',
+      rarity: 'epic',
+      rarityLabel: 'Epic',
+      basicWinRate: '12.5%',
+      maxPrize: '5,000 USDT',
+      redemptionCost: '500',
+      currency: 'USDT',
+    },
+    {
+      id: 'ticket-004',
+      image: '/images/placeholder-all.png',
+      rarity: 'legendary',
+      rarityLabel: 'Legendary',
+      basicWinRate: '18.0%',
+      maxPrize: '10,000 USDT',
+      redemptionCost: '1,000',
+      currency: 'USDT',
+    },
+    {
+      id: 'ticket-005',
+      image: '/images/placeholder-all.png',
+      rarity: 'mythic',
+      rarityLabel: 'Mythic',
+      basicWinRate: '25.0%',
+      maxPrize: '25,000 USDT',
+      redemptionCost: '2,500',
+      currency: 'USDT',
+    },
+    {
+      id: 'ticket-006',
+      image: '/images/placeholder-all.png',
+      rarity: 'rare',
+      rarityLabel: 'Rare',
+      basicWinRate: '7.8%',
+      maxPrize: '2,200 USDT',
+      redemptionCost: '220',
+      currency: 'USDT',
+    },
+    {
+      id: 'ticket-007',
+      image: '/images/placeholder-all.png',
+      rarity: 'common',
+      rarityLabel: 'Common',
+      basicWinRate: '5.2%',
+      maxPrize: '950 USDT',
+      redemptionCost: '95',
+      currency: 'USDT',
+    },
+    {
+      id: 'ticket-008',
+      image: '/images/placeholder-all.png',
+      rarity: 'epic',
+      rarityLabel: 'Epic',
+      basicWinRate: '13.5%',
+      maxPrize: '5,500 USDT',
+      redemptionCost: '550',
+      currency: 'USDT',
+    },
+  ]);
+  const [marketLotteryTickets] = useState<LotteryTicket[]>([
+    {
+      id: 'market-001',
+      image: '/images/placeholder-all.png',
+      rarity: 'rare',
+      rarityLabel: 'Rare',
+      salePrice: '280',
+      redemptionCost: '250',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-002',
+      image: '/images/placeholder-all.png',
+      rarity: 'epic',
+      rarityLabel: 'Epic',
+      salePrice: '580',
+      redemptionCost: '500',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-003',
+      image: '/images/placeholder-all.png',
+      rarity: 'legendary',
+      rarityLabel: 'Legendary',
+      salePrice: '1,150',
+      redemptionCost: '1,000',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-004',
+      image: '/images/placeholder-all.png',
+      rarity: 'common',
+      rarityLabel: 'Common',
+      salePrice: '110',
+      redemptionCost: '100',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-005',
+      image: '/images/placeholder-all.png',
+      rarity: 'mythic',
+      rarityLabel: 'Mythic',
+      salePrice: '2,800',
+      redemptionCost: '2,500',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-006',
+      image: '/images/placeholder-all.png',
+      rarity: 'rare',
+      rarityLabel: 'Rare',
+      salePrice: '270',
+      redemptionCost: '220',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-007',
+      image: '/images/placeholder-all.png',
+      rarity: 'epic',
+      rarityLabel: 'Epic',
+      salePrice: '600',
+      redemptionCost: '550',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-008',
+      image: '/images/placeholder-all.png',
+      rarity: 'legendary',
+      rarityLabel: 'Legendary',
+      salePrice: '1,200',
+      redemptionCost: '1,000',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-009',
+      image: '/images/placeholder-all.png',
+      rarity: 'common',
+      rarityLabel: 'Common',
+      salePrice: '105',
+      redemptionCost: '95',
+      currency: 'USDT',
+    },
+    {
+      id: 'market-010',
+      image: '/images/placeholder-all.png',
+      rarity: 'rare',
+      rarityLabel: 'Rare',
+      salePrice: '290',
+      redemptionCost: '250',
+      currency: 'USDT',
+    },
+  ]);
 
   // TODO: 接口调用位置
   // 示例代码：
@@ -113,8 +285,7 @@ const NFTMarketPage = () => {
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight mb-6">
               {t('title')}
-              <br />
-              <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
                 {t('titleHighlight')}
               </span>
             </h1>

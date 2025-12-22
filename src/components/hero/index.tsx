@@ -74,9 +74,8 @@ const Hero = () => {
             >
               {t('titlePart1')}{' '}
             </motion.span>
-            <br className="hidden md:block" />
             <motion.span
-              className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent"
+              className="bg-linear-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent"
               style={{ backgroundSize: '200% 100%' }}
               initial={{ backgroundPositionX: '0%' }}
               whileInView={{ backgroundPositionX: '100%' }}

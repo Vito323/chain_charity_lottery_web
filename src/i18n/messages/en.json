@@ -738,6 +738,11 @@
     "totalDonation": "Total Donation",
     "donateNow": "Donate Now",
     "donationSuccessful": "Donation Successful!",
+    "ranking": {
+      "exceeds": "Your current donation exceeds {percentage}% of users",
+      "getTokens": "Get tokens",
+      "expectedReward": "Your donation amount is expected to receive **{amount}** CLT tokens"
+    },
     "tokenSelect": {
       "title": "Select Token",
       "searchPlaceholder": "Search name or paste an address",
@@ -907,6 +912,7 @@
       "limit": "Limit",
       "sold": "Sold",
       "remaining": "Remaining",
+      "remainingLowercase": "remaining",
       "progress": "Progress",
       "total": "Total"
     },
@@ -914,7 +920,24 @@
       "title": "Purchase Node",
       "connectWallet": "Connect Wallet to Purchase",
       "price": "Price",
-      "exclusivePrice": "Exclusive Price"
+      "exclusivePrice": "Exclusive Price",
+      "nodePrice": "Node Price",
+      "publicPrice": "Public Price",
+      "publicOffering": "Public Offering",
+      "advantage": "Advantage",
+      "advantageDescription": "Node investors get 14.6x price advantage",
+      "investmentReturns": "Investment Returns",
+      "initial": "Initial",
+      "threeYearReturn": "3-Year Return",
+      "year1": "Year 1",
+      "year2": "Year 2",
+      "year3": "Year 3",
+      "totalReturnRate": "Total Return Rate",
+      "genesisReturnDescription": "Genesis Nodes: $100K → $2.4M in 3 years",
+      "standardReturnDescription": "Standard Node: 100K USDT → 200K USDT in 3 years",
+      "superReturnDescription": "Super Node: $50K → $600K in 3 years",
+      "priceAdvantage": "Price Advantage",
+      "footerNote": "All nodes sold out, never increase issuance | Node holders enjoy permanent platform dividend rights"
     },
     "certificates": {
       "title": "NFT Certificates",

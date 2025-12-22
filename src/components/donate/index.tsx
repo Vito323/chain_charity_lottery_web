@@ -157,7 +157,7 @@ const Donate = ({ uid, name }: DonateProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -170,7 +170,7 @@ const Donate = ({ uid, name }: DonateProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full max-w-md"
+          className="w-full max-w-lg"
         >
           {/* Header Section */}
           <div className="text-center mb-12">
@@ -191,7 +191,7 @@ const Donate = ({ uid, name }: DonateProps) => {
               className="text-4xl md:text-5xl font-bold text-white mb-4"
             >
               {t('title')}  
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 {t('titleHighlight')}
               </span>
             </motion.h1>
@@ -331,6 +331,81 @@ const Donate = ({ uid, name }: DonateProps) => {
                 </p>
               )}
             </div>
+
+            {/* Donation Ranking & Token Reward */}
+            {amount && selectedToken && parseFloat(amount) > 0 && (() => {
+              const numericAmount = parseFloat(amount);
+              const percentage = Math.min(95, Math.max(5, Math.floor(numericAmount * 10)));
+              const usdValueStr = calculateUSDValue(amount, selectedToken!.symbol);
+              const usdValue = parseFloat(usdValueStr) || 0;
+              const expectedCLT = Math.floor(usdValue * 1.2); // 简单计算：1 USD ≈ 1.2 CLT
+              
+              return (
+                <div className="mb-6">
+                  <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 space-y-4">
+                    {/* Ranking Text */}
+                    <div className="flex items-center justify-between">
+                      <p className="text-white/90! text-sm">
+                        {t('ranking.exceeds', { percentage })}
+                      </p>
+                    </div>
+                    
+                    {/* Progress Bar */}
+                    <div className="relative">
+                      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${percentage}%` }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                          className="h-full bg-linear-to-r from-purple-500 to-pink-500 rounded-full"
+                        />
+                      </div>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ 
+                          opacity: 1, 
+                          scale: 1,
+                        }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800/90 backdrop-blur-sm border border-white/20 rounded-md"
+                        style={{ left: `${percentage}%` }}
+                      >
+                        <span className="text-white text-xs font-semibold">
+                          {percentage}%
+                        </span>
+                      </motion.div>
+                    </div>
+
+                    {/* Get Tokens Section */}
+                    <div className="pt-2 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-white font-semibold text-base">
+                          {t('ranking.getTokens')}
+                        </h3>
+                        <div className="group relative">
+                          <svg 
+                            className="w-4 h-4 text-white/80 cursor-help" 
+                            fill="currentColor" 
+                            viewBox="0 0 20 20"
+                          >
+                            <path 
+                              fillRule="evenodd" 
+                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" 
+                              clipRule="evenodd" 
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      {/* Expected CLT Token Reward */}
+                      <p className="text-white/90! text-sm leading-relaxed">
+                        {t('ranking.expectedReward', { amount: expectedCLT })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Total Donation */}
             <div className="mb-8">
