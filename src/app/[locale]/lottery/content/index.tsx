@@ -207,7 +207,7 @@ const LotteryContent: React.FC = () => {
           </div>
 
           {/* Jackpot Section */}
-          <div className="text-center">
+          {/* <div className="text-center">
             <h3 className="text-xl md:text-2xl font-semibold text-white/80 mb-4">
               {t('jackpot.title')}
             </h3>
@@ -223,7 +223,7 @@ const LotteryContent: React.FC = () => {
             <p className="text-white/60 text-sm">
               {t('jackpot.description')}
             </p>
-          </div>
+          </div> */}
         </motion.div>
 
         {/* NFT Tickets Section */}

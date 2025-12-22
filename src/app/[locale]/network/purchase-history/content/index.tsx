@@ -215,7 +215,7 @@ const PurchaseHistory: React.FC = () => {
         animate="visible"
       >
         {/* Section Header */}
-        <motion.div variants={itemVariants} className="text-center mb-16">
+        {/* <motion.div variants={itemVariants} className="text-center mb-16">
           <motion.div
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-white/90 mb-6"
             initial={{ opacity: 0, y: 12 }}
@@ -233,7 +233,7 @@ const PurchaseHistory: React.FC = () => {
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             {t('subtitle')}
           </p>
-        </motion.div>
+        </motion.div> */}
 
         {/* Connect Wallet Prompt */}
         {!isConnected && (

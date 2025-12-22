@@ -159,7 +159,7 @@ const TokenDetails: React.FC = () => {
   const totalPortfolioValue = tokenDetails.reduce((sum, token) => sum + token.value, 0);
 
   return (
-    <section className="relative py-20 md:py-32">
+    <section className="relative py-20 pt-32 md:py-32 md:pt-52">
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-6 md:px-8"
         variants={containerVariants}

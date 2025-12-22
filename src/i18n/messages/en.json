@@ -259,6 +259,15 @@
         "prizePool": "Prize Pool",
         "detail": "Detail"
       },
+      "status": {
+        "upcoming": "Upcoming",
+        "won": "Congratulations",
+        "lost": "Not Won"
+      },
+      "drawTime": "Draw Time",
+      "prizeUnit": "10K USDT",
+      "drawPeriod": "",
+      "drawNumberFormat": "Draw {number}",
       "empty": {
         "title": "No Lottery History Available",
         "description": "Check back later for the latest draw results"
@@ -421,6 +430,7 @@
     "badge": "Node Staking",
     "title": "My Nodes",
     "subtitle": "Track your node assets and discover different node tiers tailored to your risk profile.",
+    "nodeDetail": "Node Details",
     "connect": {
       "title": "Connect your wallet to view node assets",
       "description": "Once connected, you will see your total node assets, daily rewards, and detailed node breakdown here."
@@ -525,6 +535,17 @@
         "title": "No Purchase Records Found",
         "description": "You don't have any purchase records yet. Start by purchasing a node to see your transaction history.",
         "browseNodeTiers": "Browse Node Tiers"
+      }
+    },
+    "detail": {
+      "badge": "Node Management",
+      "title": "Node ",
+      "titleHighlight": "Details",
+      "subtitle": "Manage your nodes, view earnings, and track purchase history",
+      "tabs": {
+        "myNodes": "My Nodes",
+        "earningsDetails": "Earnings Details",
+        "purchaseHistory": "Purchase History"
       }
     }
   },

@@ -56,7 +56,7 @@ const MyNodesList: React.FC = () => {
         transition={{ duration: 0.3 }}
       >
         {/* Section Header */}
-        <SectionHeader variants={itemVariants} />
+        {/* <SectionHeader variants={itemVariants} /> */}
 
         {/* Loading/Error State - Show first if loading or error */}
         {isLoading || error ? (

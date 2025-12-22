@@ -62,14 +62,28 @@ const NetworkPage: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
             className="flex flex-col md:flex-row md:items-end md:justify-between gap-4"
           >
-            <div>
+            <div className="flex-1">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-xs text-white/80">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>{t('badge')}</span>
               </div>
-              <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-                {t('title')}
-              </h1>
+              <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+                  {t('title')}
+                </h1>
+                <Link href="/network/detail?tab=nodes">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center cursor-pointer gap-2 rounded-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 whitespace-nowrap self-start sm:self-center"
+                  >
+                    <span>{t('nodeDetail')}</span>
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </motion.button>
+                </Link>
+              </div>
               <p className="mt-3 text-sm sm:text-base text-white/70 max-w-xl">
                 {t('subtitle')}
               </p>

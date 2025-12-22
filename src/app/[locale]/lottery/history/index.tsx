@@ -8,49 +8,56 @@ import { useTranslations } from 'next-intl';
 // 历史开奖结果数据类型
 interface LotteryHistoryItem {
   id: string;
-  drawDate: string;
-  txHash: string;
-  winningDNA: string;
-  prizeAmount: string;
+  drawNumber: number; // 期号
+  status: 'upcoming' | 'won' | 'lost'; // 状态
+  drawTime: string; // 开奖时间，格式：2025-08-08 12:00
+  prizeAmount: number; // 奖金金额（万 USDT）
 }
 
 // 缺省数据
 const defaultHistoryData: LotteryHistoryItem[] = [
-  // {
-  //   id: '1',
-  //   drawDate: '2025-10-03T20:30:00Z',
-  //   txHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-  //   winningDNA: '05 12 23 31 45 50',
-  //   prizeAmount: formatCurrency(1050200)
-  // },
-  // {
-  //   id: '2',
-  //   drawDate: '2025-09-29T15:45:00Z',
-  //   txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-  //   winningDNA: '11 19 28 33 41 49',
-  //   prizeAmount: formatCurrency(980500)
-  // },
-  // {
-  //   id: '3',
-  //   drawDate: '2025-09-24T22:15:00Z',
-  //   txHash: '0x567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234',
-  //   winningDNA: '02 08 15 29 38 44',
-  //   prizeAmount: formatCurrency(1530000)
-  // },
-  // {
-  //   id: '4',
-  //   drawDate: '2025-09-22T18:00:00Z',
-  //   txHash: '0xdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abc',
-  //   winningDNA: '07 14 21 35 42 48',
-  //   prizeAmount: formatCurrency(2100000)
-  // },
-  // {
-  //   id: '5',
-  //   drawDate: '2025-09-18T14:20:00Z',
-  //   txHash: '0x7890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
-  //   winningDNA: '03 16 24 37 43 46',
-  //   prizeAmount: formatCurrency(850750)
-  // }
+  {
+    id: '1',
+    drawNumber: 386,
+    status: 'upcoming',
+    drawTime: '2025-08-08 12:00',
+    prizeAmount: 385
+  },
+  {
+    id: '2',
+    drawNumber: 385,
+    status: 'won',
+    drawTime: '2025-08-08 9:00',
+    prizeAmount: 365
+  },
+  {
+    id: '3',
+    drawNumber: 384,
+    status: 'lost',
+    drawTime: '2025-08-07 20:00',
+    prizeAmount: 355
+  },
+  {
+    id: '4',
+    drawNumber: 383,
+    status: 'lost',
+    drawTime: '2025-08-07 16:00',
+    prizeAmount: 345
+  },
+  {
+    id: '5',
+    drawNumber: 382,
+    status: 'lost',
+    drawTime: '2025-08-07 12:00',
+    prizeAmount: 325
+  },
+  {
+    id: '6',
+    drawNumber: 381,
+    status: 'lost',
+    drawTime: '2025-08-07 8:00',
+    prizeAmount: 322
+  }
 ];
 
 const LotteryHistory = () => {
@@ -59,25 +66,24 @@ const LotteryHistory = () => {
   const [historyData] = useState<LotteryHistoryItem[]>(defaultHistoryData);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);
-  const [copiedHash, setCopiedHash] = useState<string | null>(null);
 
-  // 截断交易哈希显示
-  const truncateTxHash = (hash: string) => {
-    if (hash.length <= 20) return hash;
-    return `${hash.slice(0, 10)}...${hash.slice(-10)}`;
+  // 获取状态文本
+  const getStatusText = (status: 'upcoming' | 'won' | 'lost') => {
+    switch (status) {
+      case 'upcoming':
+        return t('status.upcoming');
+      case 'won':
+        return t('status.won');
+      case 'lost':
+        return t('status.lost');
+      default:
+        return '';
+    }
   };
 
-  // 复制交易哈希到剪贴板
-  const copyTxHash = async (txHash: string) => {
-    try {
-      await navigator.clipboard.writeText(txHash);
-      setCopiedHash(txHash);
-      setTimeout(() => {
-        setCopiedHash(null);
-      }, 2000);
-    } catch (err) {
-      console.error('Copy failed:', err);
-    }
+  // 格式化奖金显示
+  const formatPrizeAmount = (amount: number) => {
+    return `${amount}${t('prizeUnit')}`;
   };
 
   const containerVariants = {
@@ -104,7 +110,7 @@ const LotteryHistory = () => {
   };
 
   return (
-    <section className="relative py-20 md:py-32">
+    <section className="relative py-20 md:py-24">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <motion.div
@@ -181,122 +187,66 @@ const LotteryHistory = () => {
           </motion.div>
         )}
 
-        {/* History Table */}
+        {/* History List */}
         {!isLoading && !error && historyData.length > 0 && (
           <motion.div
             variants={itemVariants}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
+            className="flex flex-col gap-3 md:gap-4"
           >
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-white/5 border-b border-white/10">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      {t('table.drawDate')}
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      {tCommon('labels.transactionHash')}
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      {t('table.prizePool')}
-                    </th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-white/80 uppercase tracking-wider">
-                      {t('table.detail')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/10">
-                  {historyData.map((item, index) => (
-                    <motion.tr
-                      key={item.id}
-                      className="hover:bg-white/5 transition-all duration-200"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      whileHover={{ scale: 1.01 }}
+            {historyData.map((item, index) => (
+              <Link key={item.id} href={`/lottery/winning/${item.id}`}>
+                <motion.div
+                  className="flex items-center justify-between bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-4 md:p-5 hover:bg-white/10 transition-all duration-200 cursor-pointer"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.01 }}
+                >
+                  {/* 左侧内容 */}
+                  <div className="flex flex-col flex-1 min-w-0 pr-2 sm:pr-3">
+                    {/* 第一行：期号和状态 */}
+                    <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2 flex-wrap">
+                      <span className="text-sm sm:text-base md:text-lg font-bold text-white">
+                        {t('drawNumberFormat', { number: item.drawNumber })}
+                      </span>
+                      {item.status === 'won' ? (
+                        <span className="px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 rounded-lg bg-white/20 text-white text-xs sm:text-sm font-medium whitespace-nowrap">
+                          {getStatusText(item.status)}
+                        </span>
+                      ) : (
+                        <span className="text-xs sm:text-sm text-white/60 whitespace-nowrap">
+                          {getStatusText(item.status)}
+                        </span>
+                      )}
+                    </div>
+                    {/* 第二行：开奖时间 */}
+                    <div className="text-xs sm:text-sm text-white/60 break-words">
+                      {t('drawTime')}: {item.drawTime}
+                    </div>
+                  </div>
+
+                  {/* 右侧内容：奖金和箭头 */}
+                  <div className="flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0">
+                    <span className="text-sm sm:text-base md:text-lg font-bold text-white text-right whitespace-nowrap">
+                      {formatPrizeAmount(item.prizeAmount)}
+                    </span>
+                    <svg
+                      className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white/60 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-white">
-                          {new Date(item.drawDate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
-                        </div>
-                        <div className="text-xs text-white/60">
-                          {new Date(item.drawDate).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </div>
-                      </td>
-                      <td 
-                        className="px-6 py-4 whitespace-nowrap cursor-pointer group"
-                        onClick={() => copyTxHash(item.txHash)}
-                        title={item.txHash}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-mono text-white/80 group-hover:text-white transition-colors">
-                            {truncateTxHash(item.txHash)}
-                          </span>
-                          {copiedHash === item.txHash ? (
-                            <motion.svg
-                              className="w-4 h-4 text-emerald-400"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <path d="M20 6L9 17l-5-5"/>
-                            </motion.svg>
-                          ) : (
-                            <svg
-                              className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                            </svg>
-                          )}
-                        </div>
-                        {copiedHash === item.txHash && (
-                          <motion.div
-                            className="text-xs text-emerald-400 mt-1"
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            {tCommon('success.copied')}
-                          </motion.div>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-lg font-bold text-white">
-                          {item.prizeAmount}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <Link href={`/lottery/winning/${item.id}`}>
-                          <motion.button
-                            className="px-4 py-2 cursor-pointer bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-white/20 rounded-lg text-sm font-medium text-white hover:from-purple-500/30 hover:to-pink-500/30 hover:border-white/30 transition-all duration-200"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            {t('table.detail')}
-                          </motion.button>
-                        </Link>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </motion.div>
+              </Link>
+            ))}
           </motion.div>
         )}
 

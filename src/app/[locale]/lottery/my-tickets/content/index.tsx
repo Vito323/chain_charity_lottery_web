@@ -144,7 +144,7 @@ const MyTickets: React.FC = () => {
   const totalValue = filteredTickets.reduce((sum, ticket) => sum + ticket.purchasePrice, 0);
 
   return (
-    <section className="relative py-20 md:py-32">
+    <section className="relative py-20 pt-32 md:py-32 md:pt-52">
       {/* Background Elements */}
 
       <motion.div

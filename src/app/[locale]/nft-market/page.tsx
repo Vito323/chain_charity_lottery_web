@@ -237,7 +237,7 @@ const NFTMarketPage = () => {
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       <Header />
       {/* Hero Section */}
-      <section className="relative pt-32 md:pt-40 pb-12 md:pb-20 overflow-hidden">
+      <section className="relative pt-32 md:pt-52 pb-12 md:pb-20 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-950/80 to-slate-950" />
@@ -284,7 +284,7 @@ const NFTMarketPage = () => {
             </motion.div>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight tracking-tight mb-6">
-              {t('title')}
+              {t('title')}{' '}
               <span className="bg-linear-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
                 {t('titleHighlight')}
               </span>

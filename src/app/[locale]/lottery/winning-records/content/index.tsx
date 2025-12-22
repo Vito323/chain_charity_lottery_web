@@ -10,42 +10,42 @@ import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 
 // Mock data based on the image
 const defaultWinningRecords: WinningRecord[] = [
-  {
-    id: '1',
-    ticketImage: '/images/placeholder-all.png',
-    drawNumber: '386',
-    winningType: 'lottery',
-    prizeAmount: 818266,
-    prizeCurrency: 'CLT',
-    winningTime: '2025-08-08 18:18',
-  },
-  {
-    id: '2',
-    ticketImage: '/images/placeholder-all.png',
-    drawNumber: '385',
-    winningType: 'lottery',
-    prizeAmount: 25656,
-    prizeCurrency: 'CLT',
-    winningTime: '2025-08-08 18:18',
-  },
-  {
-    id: '3',
-    ticketImage: '/images/placeholder-all.png',
-    drawNumber: '366',
-    winningType: 'follow',
-    prizeAmount: 118266,
-    prizeCurrency: 'CLT',
-    winningTime: '2025-08-08 18:18',
-  },
-  {
-    id: '4',
-    ticketImage: '/images/placeholder-all.png',
-    drawNumber: '356',
-    winningType: 'follow',
-    prizeAmount: 95818266,
-    prizeCurrency: 'CLT',
-    winningTime: '2025-08-08 18:18',
-  },
+  // {
+  //   id: '1',
+  //   ticketImage: '/images/placeholder-all.png',
+  //   drawNumber: '386',
+  //   winningType: 'lottery',
+  //   prizeAmount: 818266,
+  //   prizeCurrency: 'CLT',
+  //   winningTime: '2025-08-08 18:18',
+  // },
+  // {
+  //   id: '2',
+  //   ticketImage: '/images/placeholder-all.png',
+  //   drawNumber: '385',
+  //   winningType: 'lottery',
+  //   prizeAmount: 25656,
+  //   prizeCurrency: 'CLT',
+  //   winningTime: '2025-08-08 18:18',
+  // },
+  // {
+  //   id: '3',
+  //   ticketImage: '/images/placeholder-all.png',
+  //   drawNumber: '366',
+  //   winningType: 'follow',
+  //   prizeAmount: 118266,
+  //   prizeCurrency: 'CLT',
+  //   winningTime: '2025-08-08 18:18',
+  // },
+  // {
+  //   id: '4',
+  //   ticketImage: '/images/placeholder-all.png',
+  //   drawNumber: '356',
+  //   winningType: 'follow',
+  //   prizeAmount: 95818266,
+  //   prizeCurrency: 'CLT',
+  //   winningTime: '2025-08-08 18:18',
+  // },
 ];
 
 const WinningRecords: React.FC = () => {
@@ -83,7 +83,7 @@ const WinningRecords: React.FC = () => {
   const displayTotalUSDT = 3657890;
 
   return (
-    <section className="relative py-20 md:py-32">
+    <section className="relative py-20 pt-32 md:py-32 md:pt-52">
       {/* Background Elements */}
 
       <motion.div
