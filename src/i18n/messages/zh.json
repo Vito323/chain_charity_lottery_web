@@ -663,7 +663,7 @@
     "ranking": {
       "exceeds": "您当前的捐赠金额超越了{percentage}%的用户",
       "getTokens": "获得代币",
-      "expectedReward": "您的捐赠金额预计将获得 **{amount}** CLT 代币"
+      "expectedReward": "您的捐赠金额预计将获得 {amount} CLT 代币"
     },
     "tokenSelect": {
       "title": "选择代币",
@@ -909,6 +909,12 @@
     "sharesRemaining": "股剩余",
     "actualPaymentPrice": "实际支付价格：",
     "confirmPurchase": "确认购买",
+    "selectedNode": "已选节点",
+    "stats": {
+      "limit": "限额",
+      "sold": "已售",
+      "remaining": "剩余"
+    },
     "success": {
       "title": "节点购买成功",
       "description": "这是您的第 {count} 个节点",

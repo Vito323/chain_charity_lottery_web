@@ -244,6 +244,8 @@ const TokenSelect: React.FC<TokenSelectProps> = ({
 
   if (!isOpen) return null;
 
+  console.log('filteredTokens', JSON.stringify(filteredTokens, null, 2));
+
   return (
     <AnimatePresence>
       <motion.div

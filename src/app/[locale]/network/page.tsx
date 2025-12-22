@@ -10,58 +10,9 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 import ConnectButton from '@/components/custom-connect-button/ConnectButton';
+import { getNodeTiers, type NodeTier } from '@/constants/nodes';
 
-type NodeTierId = 'genesis' | 'super' | 'standard';
-
-interface NodeTier {
-  id: NodeTierId;
-  name: string;
-  price: number;
-  currency: string;
-  aprRange: [number, number];
-  globalLimit: number;
-  description: string;
-  highlight?: string;
-  accentFrom: string;
-  accentTo: string;
-}
-
-const NODE_TIERS: NodeTier[] = [
-  {
-    id: 'genesis',
-    name: 'Genesis Node',
-    price: 100_000,
-    currency: 'USDT',
-    aprRange: [25, 35],
-    globalLimit: 50,
-    description: 'High yield node for early supporters.',
-    highlight: '3-year projected return',
-    accentFrom: 'from-purple-500',
-    accentTo: 'to-pink-500',
-  },
-  {
-    id: 'super',
-    name: 'Super Node',
-    price: 50_000,
-    currency: 'USDT',
-    aprRange: [20, 30],
-    globalLimit: 600,
-    description: 'Designed for experienced investors.',
-    accentFrom: 'from-blue-500',
-    accentTo: 'to-cyan-500',
-  },
-  {
-    id: 'standard',
-    name: 'Standard Node',
-    price: 10_000,
-    currency: 'USDT',
-    aprRange: [15, 25],
-    globalLimit: 5_000,
-    description: 'Accessible entry for everyday investors.',
-    accentFrom: 'from-emerald-500',
-    accentTo: 'to-teal-500',
-  },
-];
+const NODE_TIERS = getNodeTiers();
 
 const containerVariants = {
   hidden: { opacity: 0, y: 24 },
@@ -99,7 +50,7 @@ const NetworkPage: React.FC = () => {
   const hasNodes = false;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
       <Header />
 
       <main className="pt-28 md:pt-36 pb-20">
@@ -130,7 +81,7 @@ const NetworkPage: React.FC = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 px-5 py-6 sm:px-7 sm:py-7 md:px-10 md:py-8 shadow-xl shadow-black/40 overflow-hidden"
+            className="relative rounded-3xl border border-white/10 bg-linear-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 px-5 py-6 sm:px-7 sm:py-7 md:px-10 md:py-8 shadow-xl shadow-black/40 overflow-hidden"
           >
             <div className="pointer-events-none absolute -top-32 -right-24 w-72 h-72 bg-purple-500/30 blur-3xl opacity-40" />
             <div className="pointer-events-none absolute -bottom-32 -left-24 w-80 h-80 bg-pink-500/20 blur-3xl opacity-40" />
@@ -145,7 +96,7 @@ const NetworkPage: React.FC = () => {
                     {t('connect.description')}
                   </p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <ConnectButton />
                 </div>
               </div>
@@ -402,7 +353,7 @@ const GenesisTierCard: React.FC = () => {
           </div>
           <Link
             href="/network/genesis"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-600 hover:to-pink-600 transition-colors duration-200 cursor-pointer"
+            className="inline-flex items-center justify-center rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-600 hover:to-pink-600 transition-colors duration-200 cursor-pointer"
           >
             {t('nodeTiers.viewDetails')}
           </Link>

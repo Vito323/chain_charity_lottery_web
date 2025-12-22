@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { RarityType } from '@/app/[locale]/nft-market/types';
+import { useRouter } from 'next/navigation';
 
 interface OwnedLotteryTicket {
   id: string;
@@ -63,31 +64,14 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
   const tCommon = useTranslations('common');
   const rarityStyle = rarityConfig[ticket.rarity];
   const [isProcessing, setIsProcessing] = useState(false);
+  const router = useRouter();
 
   const handleSell = async () => {
-    if (isProcessing) return;
-    
-    setIsProcessing(true);
-    try {
-      if (onSell) {
-        await onSell(ticket.id);
-      }
-    } finally {
-      setIsProcessing(false);
-    }
+    router.push(`/nft-market/${ticket.id}?type=sell`);
   };
 
   const handleDelist = async () => {
-    if (isProcessing) return;
-    
-    setIsProcessing(true);
-    try {
-      if (onDelist) {
-        await onDelist(ticket.id);
-      }
-    } finally {
-      setIsProcessing(false);
-    }
+    router.push(`/nft-market/${ticket.id}?type=delist`);
   };
 
   return (

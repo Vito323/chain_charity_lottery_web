@@ -741,7 +741,7 @@
     "ranking": {
       "exceeds": "Your current donation exceeds {percentage}% of users",
       "getTokens": "Get tokens",
-      "expectedReward": "Your donation amount is expected to receive **{amount}** CLT tokens"
+      "expectedReward": "Your donation amount is expected to receive {amount} CLT tokens"
     },
     "tokenSelect": {
       "title": "Select Token",
@@ -988,6 +988,12 @@
     "actualPaymentPrice": "Actual Payment Price:",
     "processing": "Processing...",
     "confirmPurchase": "Confirm Purchase",
+    "selectedNode": "Selected Node",
+    "stats": {
+      "limit": "Limit",
+      "sold": "Sold",
+      "remaining": "Remaining"
+    },
     "success": {
       "title": "Node Purchase Successful",
       "description": "This is your {count}{ordinal} node",
