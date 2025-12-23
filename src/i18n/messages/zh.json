@@ -465,7 +465,7 @@
       "titleHighlight": "详情",
       "subtitle": "管理您的节点，查看收益并追踪购买历史",
       "tabs": {
-        "myNodes": "我的节点",
+        "myNodes": "持有节点",
         "earningsDetails": "收益详情",
         "purchaseHistory": "购买历史"
       }
