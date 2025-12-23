@@ -75,10 +75,10 @@ const Tabs = ({ tabBar, children, activeTab, onTabChange }: TabsProps) => {
                   className={`
                     relative px-5 py-3 rounded-full font-medium text-sm uppercase tracking-wide
                     transition-all duration-300 ease-out overflow-hidden group cursor-pointer
-                    flex items-center gap-2.5 whitespace-nowrap flex-shrink-0
+                    flex items-center gap-2.5 whitespace-nowrap shrink-0
                     ${
                       _i === activeTab
-                        ? "text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25 scale-105"
+                        ? "text-white bg-linear-to-r from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25 scale-105"
                         : "text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20"
                     }
                   `}

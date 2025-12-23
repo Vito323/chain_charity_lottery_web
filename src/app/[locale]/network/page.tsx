@@ -71,7 +71,7 @@ const NetworkPage: React.FC = () => {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
                   {t('title')}
                 </h1>
-                <Link href="/network/detail?tab=nodes">
+                <Link href="/user/network?tab=nodes">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}

@@ -5,9 +5,9 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { Tabs, TabPanel } from '@/components/tab';
-import MyNodesList from '@/app/[locale]/network/my-nodes/content';
+import MyNodesList from '@/app/[locale]/user/my-nodes/content';
 import EarningsDetails from '@/app/[locale]/user/earnings-details/content';
-import PurchaseHistory from '@/app/[locale]/network/purchase-history/content';
+import PurchaseHistory from '@/app/[locale]/user/purchase-history/content';
 
 const NetworkDetail: React.FC = () => {
   const t = useTranslations('network.detail');

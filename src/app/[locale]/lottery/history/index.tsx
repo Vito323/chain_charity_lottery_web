@@ -110,7 +110,7 @@ const LotteryHistory = () => {
   };
 
   return (
-    <section className="relative py-20 md:py-24">
+    <section className="relative py-20">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <motion.div
@@ -220,7 +220,7 @@ const LotteryHistory = () => {
                       )}
                     </div>
                     {/* 第二行：开奖时间 */}
-                    <div className="text-xs sm:text-sm text-white/60 break-words">
+                    <div className="text-xs sm:text-sm text-white/60 wrap-break-word">
                       {t('drawTime')}: {item.drawTime}
                     </div>
                   </div>

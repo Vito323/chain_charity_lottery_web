@@ -109,7 +109,7 @@ const LotteryContent: React.FC = () => {
   };
 
   return (
-    <section className="relative py-20 md:py-32">
+    <section className="relative py-20 pb-0">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         {/* Animated Background Shapes */}
