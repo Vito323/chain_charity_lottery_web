@@ -7,12 +7,13 @@ import { toast } from 'react-toastify';
 import { debounce } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { usePathname } from '@/i18n/navigation';
+import useGlobalStore from '@/store';
 
 const Footer = () => {
   const t = useTranslations('footer');
   const tCommon = useTranslations('common');
   const pathname = usePathname();
-  
+  const config = useGlobalStore((state) => state.config);
   // 判断是否为首页：路径为 '/' 或 '/[locale]'
   const isHomePage = pathname === '/'
   const [email, setEmail] = useState<string>('');
@@ -240,16 +241,16 @@ const Footer = () => {
               </h4>
               <div className="space-y-3">
                 <div className="flex items-center text-gray-300">
-                  <i className="fi flaticon-pin mr-2 text-white before:!text-lg"></i>
-                  <span className="text-sm">1 Street, 2 City, Singapore</span>
+                  <i className="fi flaticon-pin mr-2 text-white before:text-lg!"></i>
+                  <span className="text-sm">{config?.address}</span>
                 </div>
                 <div className="flex items-center text-gray-300">
-                  <i className="fi flaticon-call mr-2 text-white before:!text-lg"></i>
-                  <span className="text-sm">+1234567890</span>
+                  <i className="fi flaticon-call mr-2 text-white before:text-lg!"></i>
+                  <span className="text-sm">{config?.contact}</span>
                 </div>
                 <div className="flex items-center text-gray-300">
-                  <i className="fi flaticon-envelope mr-2 text-white before:!text-lg"></i>
-                  <span className="text-sm">support@chaincharity.com</span>
+                  <i className="fi flaticon-envelope mr-2 text-white before:text-lg!"></i>
+                  <span className="text-sm">{config?.email}</span>
                 </div>
               </div>
             </motion.div>
