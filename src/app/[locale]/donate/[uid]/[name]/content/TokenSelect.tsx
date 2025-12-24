@@ -18,6 +18,7 @@ const TOKEN_ICONS: Record<string, string> = {
   ETH: "fa-ethereum",
   POL: "fa-polygon",
   MATIC: "fa-polygon",
+  BNB: "fa-bnb",
   USDC: "fa-circle",
   USDT: "fa-circle",
   DAI: "fa-circle",

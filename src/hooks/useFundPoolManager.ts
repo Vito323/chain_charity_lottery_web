@@ -4,6 +4,8 @@ import { ethers } from "ethers";
 import { useState, useCallback, useMemo } from "react";
 // 导入 ABI 文件，确保路径正确
 import fundPoolManagerArtifact from "../artifacts/fund_pool_manager.sol/FundPoolManager.json";
+import { useChainId } from "wagmi";
+import { getContractAddress, isChainSupported } from "@/lib/chain-contracts";
 
 // 从 ABI 文件中获取合约地址和 ABI
 const contractABI = fundPoolManagerArtifact.abi;
@@ -45,8 +47,9 @@ interface TokenFundStats {
 export const useFundPoolManager = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const chainId = useChainId();
 
-  // 1. 初始化合约实例的辅助函数 (使用 useMemo 避免重复创建)
+  // 1. 初始化合约实例的辅助函数 (使用 useMemo 根据链ID动态创建)
   const contractInstance = useMemo(() => {
     // 检查是否在浏览器环境中
     if (typeof window === "undefined") {
@@ -58,12 +61,22 @@ export const useFundPoolManager = () => {
       return null;
     }
 
+    // 检查链是否支持
+    if (!isChainSupported(chainId)) {
+      console.warn(`链ID ${chainId} 不支持或未配置合约地址`);
+      return null;
+    }
+
+    // 根据当前链ID获取合约地址
+    const contractAddress = getContractAddress(chainId);
+    if (!contractAddress) {
+      console.warn(`链ID ${chainId} 的合约地址未配置`);
+      return null;
+    }
+
     try {
       // MetaMask Provider
       const provider = new ethers.BrowserProvider(window.ethereum);
-
-      const chainId = process.env.NEXT_PUBLIC_CHAIN_ID!;
-      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
 
       console.log(`使用合约地址: ${contractAddress} (链ID: ${chainId})`);
 
@@ -73,7 +86,7 @@ export const useFundPoolManager = () => {
       console.error("初始化合约失败:", e);
       return null;
     }
-  }, []); // 依赖项为空数组，只在组件初次渲染时创建
+  }, [chainId]); // 依赖链ID，当链切换时重新创建合约实例
 
   // 通用错误处理函数
   const handleError = useCallback((e: unknown, defaultMessage: string) => {

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount, useChainId } from 'wagmi';
-import { mainnet, polygon } from 'wagmi/chains';
+import { mainnet, polygon, bsc } from 'wagmi/chains';
 
 // 代币信息接口
 interface TokenInfo {
@@ -11,7 +11,7 @@ interface TokenInfo {
   decimals: number;
   balance: string;
   icon: string;
-  isNative: boolean; // 是否为原生代币（ETH/MATIC等）
+  isNative: boolean; // 是否为原生代币（ETH/POL/BNB等）
 }
 
 // 各链的主货币配置
@@ -26,7 +26,13 @@ const NATIVE_TOKENS = {
     symbol: "POL",
     name: "Polygon",
     icon: "fa-polygon",
-    address: "0x0000000000000000000000000000000000000000", // MATIC使用零地址表示
+    address: "0x0000000000000000000000000000000000000000", // POL使用零地址表示
+  },
+  [bsc.id]: {
+    symbol: "BNB",
+    name: "BNB",
+    icon: "fa-bnb",
+    address: "0x0000000000000000000000000000000000000000", // BNB使用零地址表示
   },
 };
 
@@ -40,7 +46,9 @@ const TOKEN_ICONS: Record<string, string> = {
   UNI: "fa-circle",
   WBTC: "fa-circle",
   MATIC: "fa-polygon",
+  POL: "fa-polygon",
   ETH: "fa-ethereum",
+  BNB: "fa-bnb",
 };
 
 export const useTokenList = (
