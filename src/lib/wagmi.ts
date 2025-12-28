@@ -5,11 +5,12 @@ import {
   mainnet,
   polygon,
   polygonAmoy,
+  bsc,
 } from 'wagmi/chains';
 import { defineChain } from 'viem';
 import { createConfig, http } from 'wagmi';
 
-const appName = 'ChainCharity';
+const appName = 'Hawaiian Nation ChainCharity';
 const projectId = 'YOUR_PROJECT_ID';
 
 const localhost = defineChain({
@@ -31,7 +32,7 @@ const localhost = defineChain({
   testnet: true,
 });
 
-const chains = [mainnet, polygon, polygonAmoy, localhost] as const;
+const chains = [mainnet, polygon, polygonAmoy, bsc, localhost] as const;
 
 const { wallets } = getDefaultWallets();
 

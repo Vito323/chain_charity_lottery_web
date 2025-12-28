@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useAccount, useBalance, useReadContract, useChainId } from 'wagmi';
-import { mainnet, polygon, polygonAmoy } from 'wagmi/chains';
+import { mainnet, polygon, polygonAmoy, bsc } from 'wagmi/chains';
 
 // 代币合约地址配置
 const TOKEN_ADDRESSES = {
@@ -31,6 +31,15 @@ const TOKEN_ADDRESSES = {
     LINK: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
     UNI: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
     WBTC: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",
+  },
+  [bsc.id]: {
+    USDC: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+    USDT: "0x55d398326f99059fF775485246999027B3197955",
+    DAI: "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
+    AAVE: "0xfb6115445Bff7b52FeB98650C87f44907E58f802",
+    LINK: "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
+    UNI: "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1",
+    WBTC: "0x7130d2A12B9BCbFAe4f2634d864A1E1C3E8D4D3B",
   },
   [31337]: {
     USDC: "0x0000000000000000000000000000000000000000",
@@ -134,8 +143,9 @@ export const useTokenBalances = () => {
     if (account.isConnected && ethBalance) {
       const balances: TokenBalances = {};
 
-      // ETH余额
-      balances.ETH = (Number(ethBalance.value) / Math.pow(10, 18)).toFixed(6);
+      // 原生代币余额（ETH/POL/BNB）
+      const nativeSymbol = chainId === bsc.id ? 'BNB' : chainId === polygon.id ? 'POL' : 'ETH';
+      balances[nativeSymbol] = (Number(ethBalance.value) / Math.pow(10, 18)).toFixed(6);
 
       // 代币余额
       if (usdcBalance.data) {
@@ -165,6 +175,7 @@ export const useTokenBalances = () => {
     }
   }, [
     account.isConnected,
+    chainId,
     ethBalance,
     usdcBalance.data,
     usdtBalance.data,

@@ -11,8 +11,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { queryCategories } from "@/service/project";
 import useGlobalStore from "@/store";
-import { polygon } from "wagmi/chains";
 import { projectConfig } from "@/service/common";
+import { getChainById } from "@/lib/chain-config";
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -51,7 +51,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
-          initialChain={polygon}
+          initialChain={getChainById(Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID))}
           locale={currentLocale as Locale}
           theme={lightTheme({
             accentColor: "#08cc7f",

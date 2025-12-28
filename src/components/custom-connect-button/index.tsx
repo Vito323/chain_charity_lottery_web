@@ -38,6 +38,7 @@ const CustomConnectButton = () => {
     const fallbackChains: { [key: number]: string } = {
       1: '⟠',
       137: '∞',
+      56: '◉',
     };
     return fallbackChains[chainId] || '?';
   };

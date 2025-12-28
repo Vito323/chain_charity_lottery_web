@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { useChainId } from 'wagmi';
 import { ProjectDetailData, DonorData } from '@/service/project';
 import { ProjectChainInfo } from '@/components/case-cards';
-import { SCAN_URL } from '@/constants/enum';
+import { getChainInfo, getScanUrl } from '@/utils/chain-info';
 
 interface NetworkAddress {
   name: string;
@@ -24,15 +26,20 @@ interface TabDonationsProps {
 const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) => {
   const t = useTranslations('projectDetail.donations');
   const tCommon = useTranslations('common');
+  const chainId = useChainId();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
+  // 根据当前链动态获取网络信息
+  const chainInfo = getChainInfo(chainId);
+  const scanUrl = getScanUrl(chainId);
+
   const networkAddresses: NetworkAddress[] = [
     {
-      name: "Polygon",
+      name: chainInfo.name,
       address: currentProjectInfo?.beneficiary || "",
-      icon: "fa-circle",
-      color: "#8247E5",
+      icon: chainInfo.tokenSymbol, // 使用tokenSymbol来获取SVG路径
+      color: chainInfo.color,
     },
   ];
 
@@ -110,7 +117,7 @@ const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) =>
                           </span>
                           <span 
                             className="text-white/40 hover:text-white/80 cursor-pointer transition-colors duration-200"
-                            onClick={() => window.open(`${SCAN_URL.POLYGON}${hash}`, "_blank")}
+                            onClick={() => window.open(`${scanUrl}${hash}`, "_blank")}
                             title={t('table.viewTransactionDetails')}
                           >
                             <i className="fa fa-external-link text-xs"></i>
@@ -127,7 +134,7 @@ const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) =>
                 <motion.tr variants={itemVariants}>
                   <td colSpan={4} className="py-12 text-center">
                     <div className="flex flex-col items-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mb-4">
+                      <div className="w-16 h-16 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mb-4">
                         <i className="ti-heart text-2xl text-purple-400"></i>
                       </div>
                       <h3 className="text-xl font-semibold text-white mb-2">
@@ -163,10 +170,16 @@ const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) =>
               <div key={index} className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <div className="flex items-center gap-3">
                   <div 
-                    className="w-6 h-6 rounded-full flex items-center justify-center"
+                    className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden"
                     style={{ backgroundColor: network.color }}
                   >
-                    <i className={`fa ${network.icon} text-white text-xs`}></i>
+                    <Image
+                      src={`/icons/tokens/${network.icon}.svg`}
+                      alt={network.name}
+                      width={20}
+                      height={20}
+                      className="w-5 h-5"
+                    />
                   </div>
                   <div>
                     <div className="text-white font-semibold">{network.name}</div>

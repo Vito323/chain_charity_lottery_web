@@ -236,7 +236,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
       </section>
 
       {/* 标签页内容 - 延用 TabContent 的布局逻辑 */}
-      <section className="py-20 bg-gradient-to-b from-slate-900 to-slate-950">
+      <section className="py-20 bg-linear-to-b from-slate-900 to-slate-950">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <TabContent 
             projectInfo={detail} 
