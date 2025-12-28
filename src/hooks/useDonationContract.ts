@@ -1,0 +1,125 @@
+"use client";
+
+import { ethers } from "ethers";
+import { useState, useCallback, useMemo } from "react";
+// 导入 ABI 文件，确保路径正确
+import DonationContractArtifact from "../artifacts/donation_contract.sol/DonationContract.json";
+
+// 从 ABI 文件中获取合约地址和 ABI
+const contractABI = DonationContractArtifact.abi;
+
+export const useDonationContract = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // 1. 初始化合约实例的辅助函数 (使用 useMemo 避免重复创建)
+  const contractInstance = useMemo(() => {
+    // 检查是否在浏览器环境中
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    if (typeof window.ethereum === "undefined") {
+      console.warn("MetaMask 未安装或未检测到");
+      return null;
+    }
+
+    try {
+      // MetaMask Provider
+      const provider = new ethers.BrowserProvider(window.ethereum);
+
+      const chainId = process.env.NEXT_PUBLIC_CHAIN_ID!;
+      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+
+      console.log(`使用合约地址: ${contractAddress} (链ID: ${chainId})`);
+
+      // 创建只读合约实例
+      return new ethers.Contract(contractAddress, contractABI, provider);
+    } catch (e) {
+      console.error("初始化合约失败:", e);
+      return null;
+    }
+  }, []); // 依赖项为空数组，只在组件初次渲染时创建
+
+  // 通用错误处理函数
+  const handleError = useCallback((e: unknown, defaultMessage: string) => {
+    console.error("Contract error:", e);
+    const error = e as Error;
+    const errorMessage = error.message?.includes("user rejected")
+      ? "用户拒绝了交易"
+      : error.message?.includes("insufficient funds")
+      ? "余额不足"
+      : defaultMessage;
+    setError(errorMessage);
+    setIsLoading(false);
+    throw e;
+  }, []);
+
+  // 获取Signer的辅助函数
+  const getSigner = useCallback(async () => {
+    if (typeof window === "undefined") {
+      throw new Error("服务端环境无法获取签名者");
+    }
+    if (!contractInstance) throw new Error("合约未初始化或钱包未连接");
+    const provider = contractInstance.runner
+      ?.provider as ethers.BrowserProvider;
+    if (!provider) throw new Error("未找到Provider");
+    const signer = await provider.getSigner();
+    if (!signer) throw new Error("未找到签名者");
+    return contractInstance.connect(signer);
+  }, [contractInstance]);
+
+  // ==================== 只读函数 (View Functions) ====================
+
+  // 获取版本号
+  const getVersion = useCallback(async (): Promise<number> => {
+    if (!contractInstance) return 0;
+    try {
+      const result = await contractInstance.VERSION();
+      return Number(result);
+    } catch (e: any) {
+      handleError(e, "获取版本号失败");
+      return 0;
+    }
+  }, [contractInstance, handleError]);
+
+  // 代币捐赠
+  const donate = useCallback(
+    async (
+      projectId: string,
+      token: string,
+      tokenDecimals: number,
+      amount: string
+    ): Promise<string> => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const contractWithSigner = await getSigner();
+        const tx = await (contractWithSigner as any).donate(
+          projectId,
+          ethers.parseUnits(amount, tokenDecimals)
+        );
+        await tx.wait();
+        setIsLoading(false);
+        return tx.hash;
+      } catch (e: unknown) {
+        handleError(e, "代币捐赠失败");
+        throw e;
+      }
+    },
+    [getSigner, handleError]
+  );
+
+  return {
+    // 状态
+    isLoading,
+    error,
+    contractAddress: contractInstance?.target,
+
+    // 只读函数 - 基础信息
+    getVersion,
+
+    // 写入函数 - 捐赠
+    donate,
+  };
+};

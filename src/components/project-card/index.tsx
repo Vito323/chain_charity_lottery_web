@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/navigation";
 import { ProjectData } from "@/service/project";
-import { useFundPoolManager } from "@/hooks/useFundPoolManager";
+import { useFundPoolManager } from "@/hooks/useDonationContract";
 import { useAccount, useChainId } from "wagmi";
 import { formatCurrency } from "@/utils/currency";
 import "./project-card.scss";

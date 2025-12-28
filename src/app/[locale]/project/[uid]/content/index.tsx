@@ -10,7 +10,7 @@ import TabContent from "./tab-content/index";
 import Covers from "./cover/index";
 import Fundraising from "./fundraising/index";
 import { projectDetail, ProjectDetailData } from "@/service/project";
-import { useFundPoolManager } from "@/hooks/useFundPoolManager";
+import { useFundPoolManager } from "@/hooks/useDonationContract";
 import { ProjectChainInfo } from "@/components/case-cards";
 import { useAccount, useChainId } from "wagmi";
 

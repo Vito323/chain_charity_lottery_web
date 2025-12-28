@@ -6,7 +6,7 @@ import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useDonationForm } from "@/hooks/useDonationForm";
 import { useAccount, useChainId } from "wagmi";
 import { queryWhiteTokenList } from "@/service/contract";
-import { useFundPoolManager } from "@/hooks/useFundPoolManager";
+import { useFundPoolManager } from "@/hooks/useDonationContract";
 import TokenSelect from "./TokenSelect";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { toast } from "react-toastify";
