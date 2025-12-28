@@ -5,11 +5,9 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProjectDetailData, TracksData } from '@/service/project';
-import { ProjectChainInfo } from '@/components/case-cards';
 
 interface TabUpdatesProps {
   projectInfo?: ProjectDetailData;
-  currentProjectInfo?: ProjectChainInfo | null;
   uid: string;
 }
 

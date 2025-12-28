@@ -80,7 +80,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                   </div>
                   <div className="hidden sm:block text-right">
                     <div className="text-xs sm:text-sm font-medium text-white/80">{record.priceClt}</div>
-                    <div className="text-[10px] sm:text-xs text-white/50">CLT</div>
+                    <div className="text-[10px] sm:text-xs text-white/50">CCT</div>
                   </div>
                   <div className="text-right">
                     <div className="text-[10px] sm:text-xs text-white/70">{record.time}</div>

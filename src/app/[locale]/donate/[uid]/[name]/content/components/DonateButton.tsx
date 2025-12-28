@@ -8,7 +8,6 @@ interface DonateButtonProps {
   isProcessing: boolean;
   donationLoading: boolean;
   donationSuccess: boolean;
-  selectedToken: any;
   amount: string;
   onClick: () => void;
 }
@@ -18,14 +17,13 @@ export const DonateButton: React.FC<DonateButtonProps> = ({
   isProcessing,
   donationLoading,
   donationSuccess,
-  selectedToken,
   amount,
   onClick,
 }) => {
   const t = useTranslations('donate');
   const tCommon = useTranslations('common');
 
-  const isDisabled = isProcessing || donationLoading || (isConnected && (!selectedToken || !amount || parseFloat(amount) <= 0));
+  const isDisabled = isProcessing || donationLoading || (isConnected && (!amount || parseFloat(amount) <= 0));
 
   return (
     <motion.button
@@ -36,8 +34,8 @@ export const DonateButton: React.FC<DonateButtonProps> = ({
           ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 cursor-not-allowed'
           : donationSuccess
           ? 'bg-green-500/20 text-green-400 border border-green-500/30 cursor-default'
-          : isConnected && selectedToken && amount && parseFloat(amount) > 0
-          ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-purple-500/25'
+          : isConnected && amount && parseFloat(amount) > 0
+          ? 'bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-purple-500/25'
           : 'bg-white/10 text-white/60 border border-white/20 cursor-not-allowed'
       }`}
       onClick={onClick}

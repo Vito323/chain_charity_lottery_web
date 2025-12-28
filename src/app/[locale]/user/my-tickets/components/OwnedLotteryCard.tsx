@@ -13,7 +13,7 @@ interface OwnedLotteryTicket {
   image: string;
   rarity: RarityType;
   rarityLabel: string;
-  purchasePrice: number; // Purchase price in CLT
+  purchasePrice: number; // Purchase price in CCT
   currency: string;
 }
 

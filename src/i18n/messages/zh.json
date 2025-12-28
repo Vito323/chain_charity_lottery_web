@@ -684,7 +684,7 @@
     "ranking": {
       "exceeds": "您当前的捐赠金额超越了{percentage}%的用户",
       "getTokens": "获得代币",
-      "expectedReward": "您的捐赠金额预计将获得 {amount} CLT 代币"
+      "expectedReward": "您的捐赠金额预计将获得 {amount} {ecosystemToken} 代币"
     },
     "tokenSelect": {
       "title": "选择代币",
@@ -842,7 +842,7 @@
       "winningRecords": "中奖记录",
       "buyer": "购买者",
       "price": "价格",
-      "priceClt": "价格 (CLT)",
+      "priceClt": "价格 (CCT)",
       "purchaseTime": "购买时间",
       "winner": "中奖者",
       "prize": "奖金",

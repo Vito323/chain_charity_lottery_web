@@ -8,7 +8,7 @@ import MasterContractArtifact from "../artifacts/master_contract.sol/MasterContr
 // 从 ABI 文件中获取合约地址和 ABI
 const contractABI = MasterContractArtifact.abi;
 
-export const useDonationContract = () => {
+export const useMasterContract = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,8 +28,8 @@ export const useDonationContract = () => {
       // MetaMask Provider
       const provider = new ethers.BrowserProvider(window.ethereum);
 
-      const chainId = process.env.NEXT_PUBLIC_CHAIN_ID!;
-      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+      const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID!;
+      const contractAddress = process.env.NEXT_PUBLIC_MASTER_CONTRACT_ADDRESS!;
 
       console.log(`使用合约地址: ${contractAddress} (链ID: ${chainId})`);
 
@@ -117,11 +117,15 @@ export const useDonationContract = () => {
   }, [contractInstance, handleError]);
 
   const getEcosystemTokenDecimals = useCallback(async (): Promise<number> => {
+    console.log("getEcosystemTokenDecimals11122", contractInstance);
+    console.log(!contractInstance);
     if (!contractInstance) return 0;
     try {
       const result = await contractInstance.ecosystemTokenDecimals();
+      console.log("getEcosystemTokenDecimals11122", result);
       return Number(result);
     } catch (e: any) {
+      console.log("getEcosystemTokenDecimals11122", e);
       handleError(e, "获取生态系统代币小数位失败");
       return 0;
     }
@@ -136,19 +140,17 @@ export const useDonationContract = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const contractWithSigner = await getSigner();
-        const tx = await (contractWithSigner as any).calculateExchangeAmount(
+        if (!contractInstance) throw new Error("合约未初始化");
+        const result = await contractInstance.calculateExchangeAmount(
           ethers.parseUnits(amount, tokenDecimals)
         );
-        await tx.wait();
-        setIsLoading(false);
-        return tx.hash;
+        return result;
       } catch (e: unknown) {
         handleError(e, "代币捐赠失败");
         throw e;
       }
     },
-    [getSigner, handleError]
+    [contractInstance, handleError]
   );
 
   return {

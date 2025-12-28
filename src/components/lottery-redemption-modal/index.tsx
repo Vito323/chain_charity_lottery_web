@@ -10,7 +10,7 @@ interface LotteryRedemptionModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticketId: string;
-  redemptionPrice: number; // 兑换价格或售价（CLT）
+  redemptionPrice: number; // 兑换价格或售价（CCT）
   onConfirmRedemption?: () => void;
   mockMode?: boolean; // 允许在未连接钱包时测试
   type?: 'redemption' | 'purchase'; // 类型：兑换或购买
@@ -127,7 +127,7 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
                   {isPurchaseType ? t('salePrice') : t('redemptionPrice')}
                 </div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {redemptionPrice.toLocaleString()} CLT
+                  {redemptionPrice.toLocaleString()} CCT
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
               <div className="flex items-center justify-between">
                 <div className="text-sm sm:text-base text-white/70">{t('actualPaymentPrice')}</div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {redemptionPrice.toLocaleString()} CLT
+                  {redemptionPrice.toLocaleString()} CCT
                 </div>
               </div>
             </div>

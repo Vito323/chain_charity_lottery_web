@@ -101,7 +101,8 @@
       "actualPaymentPrice": "Actual Payment Price:",
       "projectId": "Project ID",
       "walletAddress": "Wallet Address",
-      "transactionHash": "Transaction Hash"
+      "transactionHash": "Transaction Hash",
+      "balance": "Balance: {balance} {symbol}"
     },
     "wallet": {
       "wrongNetwork": "Wrong Network",

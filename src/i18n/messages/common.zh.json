@@ -101,7 +101,8 @@
       "actualPaymentPrice": "实际支付价格：",
       "projectId": "项目ID",
       "walletAddress": "钱包地址",
-      "transactionHash": "交易哈希"
+      "transactionHash": "交易哈希",
+      "balance": "余额：{balance} {symbol}"
     },
     "wallet": {
       "wrongNetwork": "网络错误",

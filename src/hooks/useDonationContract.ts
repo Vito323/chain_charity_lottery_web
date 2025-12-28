@@ -28,8 +28,8 @@ export const useDonationContract = () => {
       // MetaMask Provider
       const provider = new ethers.BrowserProvider(window.ethereum);
 
-      const chainId = process.env.NEXT_PUBLIC_CHAIN_ID!;
-      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+      const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID!;
+      const contractAddress = process.env.NEXT_PUBLIC_DONATION_CONTRACT_ADDRESS!;
 
       console.log(`使用合约地址: ${contractAddress} (链ID: ${chainId})`);
 
@@ -83,13 +83,15 @@ export const useDonationContract = () => {
     }
   }, [contractInstance, handleError]);
 
+
+
+
   // 代币捐赠
   const donate = useCallback(
     async (
       projectId: string,
-      token: string,
-      tokenDecimals: number,
-      amount: string
+      amount: string,
+      tokenDecimals?: number,
     ): Promise<string> => {
       setIsLoading(true);
       setError(null);
@@ -97,7 +99,7 @@ export const useDonationContract = () => {
         const contractWithSigner = await getSigner();
         const tx = await (contractWithSigner as any).donate(
           projectId,
-          ethers.parseUnits(amount, tokenDecimals)
+          ethers.parseUnits(amount, tokenDecimals || 6)
         );
         await tx.wait();
         setIsLoading(false);

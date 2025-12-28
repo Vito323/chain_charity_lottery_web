@@ -16,7 +16,7 @@ const defaultWinningRecords: WinningRecord[] = [
   //   drawNumber: '386',
   //   winningType: 'lottery',
   //   prizeAmount: 818266,
-  //   prizeCurrency: 'CLT',
+  //   prizeCurrency: 'CCT',
   //   winningTime: '2025-08-08 18:18',
   // },
   // {
@@ -25,7 +25,7 @@ const defaultWinningRecords: WinningRecord[] = [
   //   drawNumber: '385',
   //   winningType: 'lottery',
   //   prizeAmount: 25656,
-  //   prizeCurrency: 'CLT',
+  //   prizeCurrency: 'CCT',
   //   winningTime: '2025-08-08 18:18',
   // },
   // {
@@ -34,7 +34,7 @@ const defaultWinningRecords: WinningRecord[] = [
   //   drawNumber: '366',
   //   winningType: 'follow',
   //   prizeAmount: 118266,
-  //   prizeCurrency: 'CLT',
+  //   prizeCurrency: 'CCT',
   //   winningTime: '2025-08-08 18:18',
   // },
   // {
@@ -43,7 +43,7 @@ const defaultWinningRecords: WinningRecord[] = [
   //   drawNumber: '356',
   //   winningType: 'follow',
   //   prizeAmount: 95818266,
-  //   prizeCurrency: 'CLT',
+  //   prizeCurrency: 'CCT',
   //   winningTime: '2025-08-08 18:18',
   // },
 ];

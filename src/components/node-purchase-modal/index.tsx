@@ -12,7 +12,7 @@ interface NodePurchaseModalProps {
   onClose: () => void;
   nodeType: 'genesis' | 'super' | 'standard';
   nodePrice: number; // 节点价格（美元或USDT）
-  exclusivePrice: number; // 专享价格（美元/CLT）
+  exclusivePrice: number; // 专享价格（美元/CCT）
   remaining?: number; // 剩余数量（仅普通节点需要）
   onPurchaseSuccess?: (nodeType: 'genesis' | 'super' | 'standard', certificateId?: number) => void;
 }
@@ -47,7 +47,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
     }
   }, [isOpen]);
 
-  // 计算实付价（CLT）- 使用当前节点数据
+  // 计算实付价（CCT）- 使用当前节点数据
   const actualPaymentCLT = currentNode 
     ? Math.floor((currentNode.price * quantity) / exclusivePrice)
     : Math.floor((nodePrice * quantity) / exclusivePrice);
@@ -271,7 +271,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
               <div className="flex items-center justify-between">
                 <div className="text-sm text-white/70">{t('actualPaymentPrice')}</div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {actualPaymentCLT.toLocaleString()} CLT
+                  {actualPaymentCLT.toLocaleString()} CCT
                 </div>
               </div>
             </div>

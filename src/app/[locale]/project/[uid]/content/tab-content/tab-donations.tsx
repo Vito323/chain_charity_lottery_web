@@ -15,15 +15,15 @@ interface NetworkAddress {
   address: string;
   icon: string;
   color: string;
+  backgroundColor: string;
 }
 
 interface TabDonationsProps {
   projectInfo?: ProjectDetailData;
-  currentProjectInfo?: ProjectChainInfo | null;
   uid: string;
 }
 
-const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) => {
+const TabDonations = ({ projectInfo }: TabDonationsProps) => {
   const t = useTranslations('projectDetail.donations');
   const tCommon = useTranslations('common');
   const chainId = useChainId();
@@ -34,12 +34,17 @@ const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) =>
   const chainInfo = getChainInfo(chainId);
   const scanUrl = getScanUrl(chainId);
 
+
+  console.log('chainInfo', chainInfo);
+
+
   const networkAddresses: NetworkAddress[] = [
     {
       name: chainInfo.name,
-      address: currentProjectInfo?.beneficiary || "",
-      icon: chainInfo.tokenSymbol, // 使用tokenSymbol来获取SVG路径
+      address: projectInfo?.beneficiary || "",
+      icon: chainInfo.icon, // 使用tokenSymbol来获取SVG路径
       color: chainInfo.color,
+      backgroundColor: chainInfo.backgroundColor,
     },
   ];
 
@@ -171,10 +176,10 @@ const TabDonations = ({ projectInfo, currentProjectInfo }: TabDonationsProps) =>
                 <div className="flex items-center gap-3">
                   <div 
                     className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden"
-                    style={{ backgroundColor: network.color }}
+                    // style={{ backgroundColor: network.backgroundColor }}
                   >
                     <Image
-                      src={`/icons/tokens/${network.icon}.svg`}
+                      src={network.icon}
                       alt={network.name}
                       width={20}
                       height={20}

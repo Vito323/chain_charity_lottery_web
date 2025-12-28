@@ -69,7 +69,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ nodeId }) => {
   // 节点价格配置
   const nodePriceConfig = {
     price: currentNode.price,
-    exclusivePrice: 0.17, // 美元/CLT
+    exclusivePrice: 0.17, // 美元/CCT
   };
 
   // 处理 NFT 切换

@@ -11,11 +11,10 @@ import { ProjectChainInfo } from "@/components/case-cards";
 
 interface TabAboutProps {
   projectInfo?: ProjectDetailData;
-  currentProjectInfo?: ProjectChainInfo | null;
   uid: string;
 }
 
-const TabAbout = ({ projectInfo, currentProjectInfo, uid }: TabAboutProps) => {
+const TabAbout = ({ projectInfo, uid }: TabAboutProps) => {
   const t = useTranslations('projectDetail.about');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
@@ -37,7 +36,6 @@ const TabAbout = ({ projectInfo, currentProjectInfo, uid }: TabAboutProps) => {
   
   // 使用 uid 参数（可以在未来用于数据获取）
   console.log('Project UID:', uid);
-  console.log('Current Project Info:', currentProjectInfo);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -83,7 +81,7 @@ const TabAbout = ({ projectInfo, currentProjectInfo, uid }: TabAboutProps) => {
           </div>
           <div className="w-full bg-white/10 rounded-full h-3 mb-4">
             <motion.div 
-              className="bg-gradient-to-r from-purple-600 to-pink-600 h-3 rounded-full transition-all duration-1000"
+              className="bg-linear-to-r from-purple-600 to-pink-600 h-3 rounded-full transition-all duration-1000"
               style={{ width: `${progress}%` }}
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}

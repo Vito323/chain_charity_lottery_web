@@ -67,7 +67,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                     {formatCurrency(node.purchaseCost.usd)}
                   </div>
                   <div className="text-xs text-white/60">
-                    {node.purchaseCost.clt.toLocaleString()} CLT
+                    {node.purchaseCost.clt.toLocaleString()} CCT
                   </div>
                 </td>
                 <td className="px-6 py-4">
@@ -114,7 +114,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                   {formatCurrency(node.purchaseCost.usd)}
                 </div>
                 <div className="text-white/60 text-xs">
-                  {node.purchaseCost.clt.toLocaleString()} CLT
+                  {node.purchaseCost.clt.toLocaleString()} CCT
                 </div>
               </div>
               

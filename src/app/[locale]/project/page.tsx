@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Header from "@/components/header";
-import ProjectsContent from "@/components/projects-content";
+import ProjectsContent from "./projects-content";
 import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 

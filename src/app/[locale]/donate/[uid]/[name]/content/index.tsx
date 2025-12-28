@@ -3,16 +3,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from 'next-intl';
 import { useTokenPrices } from "@/hooks/useTokenPrices";
-import { useDonationForm } from "@/hooks/useDonationForm";
+import { TokenInfo } from "@/hooks/useDonationForm";
 import { useAccount, useChainId } from "wagmi";
-import { queryWhiteTokenList } from "@/service/contract";
-import { useFundPoolManager } from "@/hooks/useDonationContract";
-import TokenSelect from "./TokenSelect";
+import { useDonationContract } from "@/hooks/useDonationContract";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { currencyInfo } from "@/service/common";
 import { useDebounce } from "@/hooks/useDebounce";
 import { ProjectInfo } from "./components/ProjectInfo";
 import { TokenSelection } from "./components/TokenSelection";
@@ -21,6 +18,8 @@ import { RewardDisplay } from "./components/RewardDisplay";
 import { TotalDonation } from "./components/TotalDonation";
 import { DonateButton } from "./components/DonateButton";
 import BigNumber from "bignumber.js";
+import { useMasterContract } from "@/hooks/useMasterContract";
+import { formatUnits } from "ethers";
 
 interface DonateProps {
   uid: string;
@@ -30,25 +29,36 @@ interface DonateProps {
 const Donate = ({ uid, name }: DonateProps) => {
   const t = useTranslations('donate');
   const tCommon = useTranslations('common');
-  const chainId = useChainId();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showTokenModal, setShowTokenModal] = React.useState(false);
-  const { donateToken, donate, isLoading: donationLoading } = useFundPoolManager();
+  const { donate, isLoading: donationLoading } = useDonationContract();
+  const { calculateExchangeAmount, isLoading: isLoadingMasterContract, getEcosystemTokenDecimals, getDonationTokenDecimals } = useMasterContract();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
-  const { tokenPrices, calculateUSDValue } = useTokenPrices();
-  const [tokenListLoading, setTokenListLoading] = React.useState(false);
-  const [whiteTokenList, setWhiteTokenList] = React.useState<string[]>([]);
+  // const { calculateUSDValue } = useTokenPrices();
   const { address } = useAccount();
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [donationSuccess, setDonationSuccess] = React.useState(false);
-  const { formState, handleTokenSelect, handleAmountChange } = useDonationForm();
+  
+  // 本地状态管理
+  const [amount, setAmount] = React.useState<string>("");
+  const [selectedToken, setSelectedToken] = React.useState<TokenInfo | null>(null);
   const [selectedQuickAmount, setSelectedQuickAmount] = React.useState<number | null>(null);
-  const [rewardInfo, setRewardInfo] = React.useState<{ address: string; symbol: string; value: number } | null>(null);
+  const [rewardAmount, setRewardAmount] = React.useState<string | null>(null);
   const [isLoadingReward, setIsLoadingReward] = React.useState(false);
+  const [amountChanged, setAmountChanged] = React.useState(false);
+  const [ecosystemTokenDecimals, setEcosystemTokenDecimals] = React.useState<number | null>(null);
 
-  const { selectedToken, amount, searchTerm, hideZeroBalance } = formState;
+  // 处理USDT代币变化（支持null）
+  const handleTokenChange = ((token: TokenInfo | null) => {
+    setSelectedToken(token);
+  });
+
+  // 处理金额变化
+  const handleAmountChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(e.target.value);
+    setAmountChanged(true);
+  }, []);
 
   // 快速金额选项
   const quickAmounts = [10, 20, 50, 100, 200, 500];
@@ -56,39 +66,77 @@ const Donate = ({ uid, name }: DonateProps) => {
   // 处理快速金额选择
   const handleQuickAmountSelect = (value: number) => {
     setSelectedQuickAmount(value);
-    handleAmountChange({ target: { value: value.toString() } } as React.ChangeEvent<HTMLInputElement>);
+    setAmount(value.toString());
+    setAmountChanged(true);
   };
 
-  // 使用防抖处理金额和代币选择
-  const debouncedAmount = useDebounce(amount, 800);
-  const debouncedToken = useDebounce(selectedToken, 300);
+  // 获取 ecosystemToken decimals
+  React.useEffect(() => {
+    const fetchDecimals = async () => {
+      try {
+        console.log("[fetchDecimals] 开始获取 decimals");
+        const decimals = await getEcosystemTokenDecimals();
+        console.log("[fetchDecimals] 获取到的 decimals:", decimals, "类型:", typeof decimals);
+        
+        if (decimals && decimals > 0) {
+          console.log("[fetchDecimals] 设置 decimals:", decimals);
+          setEcosystemTokenDecimals(decimals);
+        } else {
+          console.warn("[fetchDecimals] decimals 无效:", decimals);
+          // 如果返回 0，可能是合约未初始化，尝试重试
+          const retryTimeout = setTimeout(() => {
+            console.log("[fetchDecimals] 重试获取 decimals");
+            fetchDecimals();
+          }, 2000);
+          return () => clearTimeout(retryTimeout);
+        }
+      } catch (error) {
+        console.error("[fetchDecimals] 获取 ecosystemToken decimals 失败:", error);
+      }
+    };
+    
+    // 延迟执行，确保合约实例已初始化
+    const timeout = setTimeout(() => {
+      fetchDecimals();
+    }, 100);
+    
+    return () => clearTimeout(timeout);
+  }, [getEcosystemTokenDecimals]);
 
-  // 调用 currencyInfo 接口进行奖励计算
-  const fetchRewardInfo = React.useCallback(async () => {
-    if (!debouncedToken || !debouncedAmount || parseFloat(debouncedAmount) <= 0) {
-      setRewardInfo(null);
+  // 使用防抖处理金额
+  const debouncedAmount = useDebounce(amount, 800);
+
+  // 计算奖励金额（实时计算，带防抖）
+  const calculateReward = React.useCallback(async () => {
+    // 如果没有有效的金额，清除奖励并返回
+    if (!debouncedAmount || parseFloat(debouncedAmount) <= 0) {
+      setRewardAmount(null);
+      setAmountChanged(false);
       return;
     }
 
+    // 如果 ecosystemTokenDecimals 还未获取，不执行计算
+
     try {
       setIsLoadingReward(true);
-      const response = await currencyInfo();
-      if (response.ok && response.data) {
-        setRewardInfo(response.data);
-      } else {
-        setRewardInfo(null);
-      }
+      const result = await calculateExchangeAmount(debouncedAmount, 6);
+      const rewardValue = formatUnits(result, ecosystemTokenDecimals ?? 18);
+      const rewardBN = new BigNumber(rewardValue);
+      const formattedReward = rewardBN.decimalPlaces(6, BigNumber.ROUND_DOWN).toString();
+      setRewardAmount(formattedReward);
     } catch (error) {
-      setRewardInfo(null);
+      console.error("计算奖励失败:", error);
+      setRewardAmount(null);
     } finally {
       setIsLoadingReward(false);
+      setAmountChanged(false);
     }
-  }, [debouncedToken, debouncedAmount]);
+  }, [debouncedAmount, ecosystemTokenDecimals, calculateExchangeAmount]);
 
-  // 当防抖后的代币或金额变化时，调用接口计算奖励
+  // 当防抖后的金额变化或 ecosystemTokenDecimals 获取完成时，计算奖励
   React.useEffect(() => {
-    fetchRewardInfo();
-  }, [fetchRewardInfo]);
+    calculateReward();
+  }, [calculateReward]);
 
   // 当输入框值变化时，如果不在快速金额列表中，清除选中状态
   React.useEffect(() => {
@@ -98,44 +146,16 @@ const Donate = ({ uid, name }: DonateProps) => {
     }
   }, [amount, selectedQuickAmount]);
 
-  const getWhiteTokenList = React.useCallback(async () => {
-    try {
-      setTokenListLoading(true);
-      const response = await queryWhiteTokenList();
-      if (response.ok && response.data) {
-        // 确保返回的是数组格式
-        const tokenList = Array.isArray(response.data) ? response.data : [];
-        setWhiteTokenList(tokenList);
-        console.log('White token list loaded:', tokenList);
-      } else {
-        console.warn('Failed to load white token list:', response.msg || 'Unknown error');
-        setWhiteTokenList([]);
-      }
-    } catch (error) {
-      console.error('Error loading white token list:', error);
-      setWhiteTokenList([]);
-    } finally {
-      setTokenListLoading(false);
-    }
-  }, []);
-
+  // 当链切换时重置表单
+  const chainId = useChainId();
   React.useEffect(() => {
-    if (isConnected && chainId) {
-      getWhiteTokenList();
-    } else {
-      // 如果未连接钱包，清空列表
-      setWhiteTokenList([]);
-    }
-  }, [isConnected, chainId, getWhiteTokenList]);
+    setAmount("");
+    setSelectedToken(null);
+    setSelectedQuickAmount(null);
+    setRewardAmount(null);
+    setAmountChanged(false);
+  }, [chainId]);
 
-  const targetTokenList = React.useMemo(() => {
-    if (whiteTokenList.length > 0) {
-      return whiteTokenList
-        .filter((item) => item && typeof item === 'string' && item.trim() !== '')
-        .map((item) => ({ address: item.trim() }));
-    }
-    return [];
-  }, [whiteTokenList]);
 
   // 处理返回上一页的逻辑
   const handleReturnToPreviousPage = React.useCallback(() => {
@@ -165,23 +185,18 @@ const Donate = ({ uid, name }: DonateProps) => {
   const handleConnectWallet = async () => {
     if (isConnected) {
       // 验证输入
-      if (!selectedToken) {
-        toast.error(tCommon('validation.pleaseSelectToken'));
-        return;
-      }
-      
       if (!amount || parseFloat(amount) <= 0) {
         toast.error(tCommon('validation.pleaseEnterAmount'));
         return;
       }
 
       // 检查余额是否足够
-      if (selectedToken.balance) {
+      if (selectedToken?.balance) {
         const balanceBN = new BigNumber(selectedToken.balance);
         const amountBN = new BigNumber(amount);
         
         if (amountBN.isGreaterThan(balanceBN)) {
-          toast.error(`Insufficient balance. Maximum: ${balanceBN.toFixed()} ${selectedToken.symbol}`);
+          toast.error(`Insufficient balance. Maximum: ${balanceBN.toFixed()} USDT`);
           return;
         }
       }
@@ -191,15 +206,16 @@ const Donate = ({ uid, name }: DonateProps) => {
         setIsProcessing(true);
         setDonationSuccess(false);
         
-        const result = selectedToken.isNative 
-          ? (await donate(uid, amount)) 
-          : (await donateToken(uid, selectedToken.address!, amount));
+        const result = await donate(uid, amount);
           
         if (result) {
           setDonationSuccess(true);
           toast.success(tCommon('success.donationSuccess'));
           // 重置表单
-          handleAmountChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
+          setAmount("");
+          setSelectedQuickAmount(null);
+          setRewardAmount(null);
+          setAmountChanged(false);
         } else {
           toast.error(tCommon('errors.donationFailed'));
         }
@@ -224,6 +240,8 @@ const Donate = ({ uid, name }: DonateProps) => {
       openConnectModal?.();
     }
   };
+
+  console.log("selectedToken11122", selectedToken);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
@@ -307,24 +325,17 @@ const Donate = ({ uid, name }: DonateProps) => {
 
             {/* Token Selection */}
             <TokenSelection
-              selectedToken={selectedToken}
-              isConnected={isConnected}
-              onSelectClick={() => {
-                if (isConnected) {
-                  setShowTokenModal(true);
-                }
-              }}
+              onTokenChange={handleTokenChange}
             />
 
             {/* Amount Input */}
             <AmountInput
-              selectedToken={selectedToken}
+              usdtBalance={selectedToken?.balance || null}
               amount={amount}
               selectedQuickAmount={selectedQuickAmount}
               quickAmounts={quickAmounts}
               isConnected={isConnected}
               isProcessing={isProcessing}
-              tokenPrices={tokenPrices}
               onAmountChange={handleAmountChange}
               onQuickAmountSelect={handleQuickAmountSelect}
             />
@@ -332,17 +343,19 @@ const Donate = ({ uid, name }: DonateProps) => {
             {/* Donation Ranking & Token Reward */}
             <RewardDisplay
               amount={amount}
-              selectedToken={selectedToken}
-              rewardInfo={rewardInfo}
+              rewardAmount={rewardAmount}
               isLoadingReward={isLoadingReward}
-              calculateUSDValue={calculateUSDValue}
+              // calculateUSDValue={calculateUSDValue}
+              calculateExchangeAmount={calculateExchangeAmount}
+              ecosystemTokenDecimals={ecosystemTokenDecimals ?? undefined}
+              amountChanged={amountChanged}
+              onRewardUpdate={setRewardAmount}
             />
 
             {/* Total Donation */}
             <TotalDonation
               amount={amount}
-              selectedToken={selectedToken}
-              calculateUSDValue={calculateUSDValue}
+              // calculateUSDValue={calculateUSDValue}
             />
 
             {/* Donate Button */}
@@ -351,23 +364,12 @@ const Donate = ({ uid, name }: DonateProps) => {
               isProcessing={isProcessing}
               donationLoading={donationLoading}
               donationSuccess={donationSuccess}
-              selectedToken={selectedToken}
               amount={amount}
               onClick={handleConnectWallet}
             />
           </motion.div>
         </motion.div>
       </div>
-
-      <TokenSelect
-        isOpen={showTokenModal}
-        onClose={() => setShowTokenModal(false)}
-        onSelect={handleTokenSelect}
-        tokenList={targetTokenList}
-        isLoading={tokenListLoading}
-        searchTerm={searchTerm}
-        hideZeroBalance={hideZeroBalance}
-      />
     </div>
   );
 };

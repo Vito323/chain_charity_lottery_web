@@ -34,7 +34,7 @@ const mockTicketData: LotteryTicket = {
   maxPrize: '$1,000',
   basicWinRate: '1/2,000',
   redemptionCost: '500',
-  currency: 'CLT',
+  currency: 'CCT',
   salePrice: '818,266',
   validUntil: '2025-10-10 18:18:18',
   holderAddress: '0x6F7A8B9CDD1E2F3A4B5C6D7E8F9A0B1C2D3E4F5',

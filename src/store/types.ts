@@ -7,4 +7,3 @@ export interface StoreTypes {
   config: Config | null;
   setConfig: (state: Config) => void;
 }
-

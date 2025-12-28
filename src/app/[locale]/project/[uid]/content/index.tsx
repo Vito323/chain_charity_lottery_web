@@ -10,7 +10,6 @@ import TabContent from "./tab-content/index";
 import Covers from "./cover/index";
 import Fundraising from "./fundraising/index";
 import { projectDetail, ProjectDetailData } from "@/service/project";
-import { useFundPoolManager } from "@/hooks/useDonationContract";
 import { ProjectChainInfo } from "@/components/case-cards";
 import { useAccount, useChainId } from "wagmi";
 
@@ -21,7 +20,6 @@ interface ShowcaseProps {
 const Showcase = ({ uid }: ShowcaseProps) => {
   const router = useRouter();
   const t = useTranslations('projectDetail');
-  const { getProject } = useFundPoolManager();
   const { isConnected } = useAccount();
   const chainId = useChainId();
   const ref = useRef(null);
@@ -50,21 +48,6 @@ const Showcase = ({ uid }: ShowcaseProps) => {
   useEffect(() => {
     getDetail();
   }, [getDetail]);
-
-  // 获取项目筹款统计 - 延用原有逻辑
-  const queryProjectFundStats = useCallback(async () => {
-    const response = await getProject(uid);
-    console.log(response, "response112");
-    if (response) {
-      setCurrentProjectFundInfo(response);
-    }
-  }, [getProject, uid]);
-
-  useEffect(() => {
-    if (uid && isConnected && chainId) {
-      queryProjectFundStats();
-    }
-  }, [queryProjectFundStats, uid, isConnected, chainId]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -185,7 +168,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
 
                 {/* Floating decorative elements */}
                 <motion.div
-                  className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-xl"
+                  className="absolute -top-4 -right-4 w-20 h-20 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-xl"
                   animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.3, 0.6, 0.3],
@@ -197,7 +180,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
                   }}
                 />
                 <motion.div
-                  className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"
+                  className="absolute -bottom-6 -left-6 w-32 h-32 bg-linear-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"
                   animate={{
                     scale: [1.2, 1, 1.2],
                     opacity: [0.4, 0.7, 0.4],
@@ -240,7 +223,6 @@ const Showcase = ({ uid }: ShowcaseProps) => {
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <TabContent 
             projectInfo={detail} 
-            currentProjectInfo={currentProjectInfo}
             uid={uid} 
           />
         </div>

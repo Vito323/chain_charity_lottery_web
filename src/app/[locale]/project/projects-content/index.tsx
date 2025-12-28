@@ -8,7 +8,7 @@ import { Tabs } from "@/components/tab";
 import useGlobalStore from "@/store";
 import { CategoryData } from "@/service/project";
 import { useTranslations } from 'next-intl';
-import ProjectList from "../project-list";
+import ProjectList from "@/components/project-list";
 import "./projects-content.scss";
 
 dayjs.extend(relativeTime);

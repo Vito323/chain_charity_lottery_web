@@ -762,7 +762,7 @@
     "ranking": {
       "exceeds": "Your current donation exceeds {percentage}% of users",
       "getTokens": "Get tokens",
-      "expectedReward": "Your donation amount is expected to receive {amount} CLT tokens"
+      "expectedReward": "Your donation amount is expected to receive {amount} {ecosystemToken} tokens"
     },
     "tokenSelect": {
       "title": "Select Token",
@@ -920,7 +920,7 @@
       "winningRecords": "Winning Records",
       "buyer": "Buyer",
       "price": "Price",
-      "priceClt": "Price (CLT)",
+      "priceClt": "Price (CCT)",
       "purchaseTime": "Purchase Time",
       "winner": "Winner",
       "prize": "Prize",

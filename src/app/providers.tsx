@@ -51,7 +51,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
-          initialChain={getChainById(Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID))}
+          initialChain={getChainById(
+            Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID)
+          )}
           locale={currentLocale as Locale}
           theme={lightTheme({
             accentColor: "#08cc7f",

@@ -10,7 +10,7 @@ interface LotteryFollowInvestmentModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticketId: string;
-  redemptionCost: number; // 彩票兑换成本（CLT）
+  redemptionCost: number; // 彩票兑换成本（CCT）
   maxPrize?: string; // 最大奖金（用于计算说明）
   onConfirmFollow?: (shares: number) => void;
   mockMode?: boolean; // 允许在未连接钱包时测试
@@ -42,7 +42,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
   }, [isOpen]);
 
   // 计算实付价
-  const actualPayment = shares * 10; // 每份10 CLT（根据图片显示）
+  const actualPayment = shares * 10; // 每份10 CCT（根据图片显示）
 
   // 处理份数变化
   const handleSharesChange = (delta: number) => {
@@ -143,7 +143,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
               <div className="flex items-center justify-between">
                 <div className="text-sm sm:text-base text-white/70">{t('redemptionCost')}</div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {redemptionCost.toLocaleString()} CLT
+                  {redemptionCost.toLocaleString()} CCT
                 </div>
               </div>
             </div>
@@ -188,7 +188,7 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
               <div className="flex items-center justify-between">
                 <div className="text-sm sm:text-base text-white/70">{t('actualPaymentPrice')}</div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {actualPayment.toLocaleString()} CLT
+                  {actualPayment.toLocaleString()} CCT
                 </div>
               </div>
             </div>

@@ -16,9 +16,6 @@ export interface TokenInfo {
 interface DonationFormState {
   selectedToken: TokenInfo | null;
   amount: string;
-  showTokenModal: boolean;
-  searchTerm: string;
-  hideZeroBalance: boolean;
 }
 
 export const useDonationForm = () => {
@@ -27,9 +24,6 @@ export const useDonationForm = () => {
   const [formState, setFormState] = useState<DonationFormState>({
     selectedToken: null,
     amount: '',
-    showTokenModal: false,
-    searchTerm: '',
-    hideZeroBalance: false,
   });
 
   // 重置表单状态
@@ -37,9 +31,6 @@ export const useDonationForm = () => {
     setFormState({
       selectedToken: null,
       amount: '',
-      showTokenModal: false,
-      searchTerm: '',
-      hideZeroBalance: false,
     });
   };
 
@@ -56,8 +47,7 @@ export const useDonationForm = () => {
   // 处理代币选择
   const handleTokenSelect = (token: TokenInfo) => {
     updateFormState({ 
-      selectedToken: token, 
-      showTokenModal: false 
+      selectedToken: token,
     });
   };
 

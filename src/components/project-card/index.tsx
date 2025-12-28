@@ -8,8 +8,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/navigation";
 import { ProjectData } from "@/service/project";
-import { useFundPoolManager } from "@/hooks/useDonationContract";
-import { useAccount, useChainId } from "wagmi";
 import { formatCurrency } from "@/utils/currency";
 import "./project-card.scss";
 
@@ -45,9 +43,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   animationDelay = 0,
 }) => {
   const router = useRouter();
-  const { isConnected } = useAccount();
-  const chainId = useChainId();
-  const { getProject } = useFundPoolManager();
 
   const [, setCurrentProjectFundInfo] =
     React.useState<ProjectChainInfo | null>(null);
@@ -69,22 +64,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     e.stopPropagation();
   };
 
-  const queryProjectFundStats = React.useCallback(async () => {
-    try {
-      const res = await getProject(id);
-      if (res) {
-        setCurrentProjectFundInfo(res);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [getProject, id]);
 
-  React.useEffect(() => {
-    if (isConnected) {
-      queryProjectFundStats();
-    }
-  }, [isConnected, queryProjectFundStats, chainId]);
 
   return (
     <motion.div

@@ -79,7 +79,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
     rarityLabel: 'Rare',
     transactionType: 'buy',
     price: 818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     timestamp: '2025-08-08 18:18',
   },
   {
@@ -89,7 +89,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
     rarityLabel: 'Common',
     transactionType: 'buy',
     price: 256.56,
-    currency: 'CLT',
+    currency: 'CCT',
     timestamp: '2025-08-08 18:18',
   },
   {
@@ -99,7 +99,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
     rarityLabel: 'Common',
     transactionType: 'sell',
     price: 118.266,
-    currency: 'CLT',
+    currency: 'CCT',
     timestamp: '2025-08-08 18:18',
   },
   {
@@ -109,7 +109,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
     rarityLabel: 'Mythic',
     transactionType: 'sell',
     price: 95818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     timestamp: '2025-08-08 18:18',
   },
   {
@@ -119,7 +119,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
     rarityLabel: 'Epic',
     transactionType: 'follow',
     price: 1818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     timestamp: '2025-08-08 18:18',
   },
   {
@@ -129,7 +129,7 @@ const defaultTransactionRecords: TransactionRecord[] = [
     rarityLabel: 'Legendary',
     transactionType: 'follow',
     price: 8818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     timestamp: '2025-08-08 18:18',
   },
 ];

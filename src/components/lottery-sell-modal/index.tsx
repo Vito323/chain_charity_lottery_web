@@ -10,7 +10,7 @@ interface LotterySellModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticketId: string;
-  purchasePrice: number; // 购买价格（CLT）
+  purchasePrice: number; // 购买价格（CCT）
   onConfirmSell?: (salePrice: number, duration: number) => void;
   mockMode?: boolean; // 允许在未连接钱包时测试
 }
@@ -157,7 +157,7 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
                     placeholder="0"
                     className="flex-1 bg-transparent text-white text-lg sm:text-xl font-semibold outline-none placeholder:text-white/30"
                   />
-                  <span className="text-white/70 text-sm sm:text-base">CLT</span>
+                  <span className="text-white/70 text-sm sm:text-base">CCT</span>
                 </div>
               </div>
 

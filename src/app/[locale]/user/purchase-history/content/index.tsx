@@ -369,7 +369,7 @@ const PurchaseHistory: React.FC = () => {
                             {formatCurrency(record.purchaseCost.usd)}
                           </div>
                           <div className="text-xs text-white/60">
-                            {record.purchaseCost.clt.toLocaleString()} CLT
+                            {record.purchaseCost.clt.toLocaleString()} CCT
                           </div>
                         </td>
                         <td className="px-6 py-4 text-right whitespace-nowrap">
@@ -414,7 +414,7 @@ const PurchaseHistory: React.FC = () => {
                           {formatCurrency(record.purchaseCost.usd)}
                         </div>
                         <div className="text-white/60 text-xs">
-                          {record.purchaseCost.clt.toLocaleString()} CLT
+                          {record.purchaseCost.clt.toLocaleString()} CCT
                         </div>
                       </div>
                       

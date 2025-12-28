@@ -29,7 +29,7 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
     rarity: 'rare',
     rarityLabel: 'Rare',
     purchasePrice: 818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     isListed: false,
   },
   {
@@ -38,7 +38,7 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
     rarity: 'common',
     rarityLabel: 'Common',
     purchasePrice: 256.56,
-    currency: 'CLT',
+    currency: 'CCT',
     isListed: true,
   },
   {
@@ -47,7 +47,7 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
     rarity: 'common',
     rarityLabel: 'Common',
     purchasePrice: 118.266,
-    currency: 'CLT',
+    currency: 'CCT',
     isListed: false,
   },
   {
@@ -56,7 +56,7 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
     rarity: 'mythic',
     rarityLabel: 'Mythic',
     purchasePrice: 95818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     isListed: true,
   },
   {
@@ -65,7 +65,7 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
     rarity: 'epic',
     rarityLabel: 'Epic',
     purchasePrice: 1818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     isListed: false,
   },
   {
@@ -74,7 +74,7 @@ const defaultOwnedTickets: OwnedLotteryTicket[] = [
     rarity: 'legendary',
     rarityLabel: 'Legendary',
     purchasePrice: 8818.266,
-    currency: 'CLT',
+    currency: 'CCT',
     isListed: true,
   },
 ];
@@ -250,7 +250,7 @@ const MyTickets: React.FC = () => {
                 {totalValue.toLocaleString(undefined, {
                   minimumFractionDigits: 3,
                   maximumFractionDigits: 3,
-                })} CLT
+                })} CCT
               </div>
               <div className="text-xs text-white/50">{t('summary.purchasePriceTotal')}</div>
             </motion.div>

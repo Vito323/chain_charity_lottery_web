@@ -110,9 +110,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Price advantage
     priceAdvantage: {
-      nodePrice: '$0.17/CLT',
+      nodePrice: '$0.17/CCT',
       exclusivePrice: 'Exclusive pre-sale price',
-      publicPrice: '$2.5/CLT',
+      publicPrice: '$2.5/CCT',
       publicOffering: 'Public offering price',
       advantage: '14.6x',
       advantageDescription: 'Genesis node holders enjoy a 14.6x price advantage compared to public offering.',
@@ -156,9 +156,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Price advantage
     priceAdvantage: {
-      nodePrice: '$0.17/CLT',
+      nodePrice: '$0.17/CCT',
       exclusivePrice: 'Exclusive pre-sale price',
-      publicPrice: '$2.5/CLT',
+      publicPrice: '$2.5/CCT',
       publicOffering: 'Public offering price',
       advantage: '14.6x',
       advantageDescription: 'Super node holders enjoy a 14.6x price advantage compared to public offering.',
@@ -202,9 +202,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Price advantage
     priceAdvantage: {
-      nodePrice: '$0.17/CLT',
+      nodePrice: '$0.17/CCT',
       exclusivePrice: 'Exclusive pre-sale price',
-      publicPrice: '$2.5/CLT',
+      publicPrice: '$2.5/CCT',
       publicOffering: 'Public offering price',
       advantage: '14.6x',
       advantageDescription: 'Standard node holders enjoy a 14.6x price advantage compared to public offering.',

@@ -13,6 +13,7 @@ export interface Config {
   address: string;
   email: string;
   contact: string;
+  ecosystemToken: string;
 }
 
 export const projectConfig = async () =>

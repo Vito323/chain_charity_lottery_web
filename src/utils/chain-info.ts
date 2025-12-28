@@ -10,6 +10,7 @@ export interface ChainInfo {
   tokenSymbol: string; // 用于获取token SVG图标
   color: string;
   scanUrl: string;
+  backgroundColor: string;
 }
 
 /**
@@ -23,6 +24,7 @@ export const getChainInfo = (chainId?: number): ChainInfo => {
         icon: '/icons/tokens/POL.svg',
         tokenSymbol: 'POL',
         color: '#8247E5',
+        backgroundColor: '#ffffff',
         scanUrl: SCAN_URL.POLYGON,
       };
     case bsc.id:
@@ -31,6 +33,7 @@ export const getChainInfo = (chainId?: number): ChainInfo => {
         icon: '/icons/tokens/BNB.svg',
         tokenSymbol: 'BNB',
         color: '#F3BA2F',
+        backgroundColor: '#ffffff',
         scanUrl: SCAN_URL.BSC,
       };
     default:
@@ -40,6 +43,7 @@ export const getChainInfo = (chainId?: number): ChainInfo => {
         icon: '/icons/tokens/POL.svg',
         tokenSymbol: 'POL',
         color: '#8247E5',
+        backgroundColor: '#ffffff',
         scanUrl: SCAN_URL.POLYGON,
       };
   }
