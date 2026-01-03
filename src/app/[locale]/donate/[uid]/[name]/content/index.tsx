@@ -6,6 +6,7 @@ import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { TokenInfo } from "@/hooks/useDonationForm";
 import { useAccount, useChainId } from "wagmi";
 import { useDonationContract } from "@/hooks/useDonationContract";
+import { getChainById } from "@/lib/chain-config";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ const Donate = ({ uid, name }: DonateProps) => {
   const searchParams = useSearchParams();
   const { donate, isLoading: donationLoading } = useDonationContract();
   const { calculateExchangeAmount, isLoading: isLoadingMasterContract, getEcosystemTokenDecimals, getDonationTokenDecimals } = useMasterContract();
-  const { isConnected } = useAccount();
+  const { isConnected, chain } = useAccount();
   const { openConnectModal } = useConnectModal();
   // const { calculateUSDValue } = useTokenPrices();
   const { address } = useAccount();
@@ -196,10 +197,45 @@ const Donate = ({ uid, name }: DonateProps) => {
         const amountBN = new BigNumber(amount);
         
         if (amountBN.isGreaterThan(balanceBN)) {
-          toast.error(`Insufficient balance. Maximum: ${balanceBN.toFixed()} USDT`);
+          toast.error(
+            tCommon('validation.insufficientBalanceMax', { max: balanceBN.toFixed() })
+          );
           return;
         }
       }
+
+      // 链ID验证和提示 - 在交易前明确显示当前连接的链信息
+      const expectedChainId = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID);
+      
+      // 验证当前链ID是否与预期链ID一致
+      if (chainId !== expectedChainId) {
+        const currentChainInfo = chain || getChainById(chainId);
+        const expectedChainInfo = getChainById(expectedChainId);
+        toast.error(
+          tCommon('wallet.wrongNetworkMessage', {
+            expectedName: expectedChainInfo.name,
+            expectedId: expectedChainId,
+            currentName: currentChainInfo.name,
+            currentId: chainId,
+          }),
+          {
+            autoClose: 5000,
+          }
+        );
+        return;
+      }
+
+      // 显示当前链信息（仅在链ID正确时）
+      const chainInfo = chain || getChainById(chainId);
+      toast.info(
+        tCommon('wallet.currentNetworkInfo', {
+          name: chainInfo.name,
+          id: chainId,
+        }),
+        {
+          autoClose: 3000,
+        }
+      );
 
       // 处理捐赠逻辑
       try {

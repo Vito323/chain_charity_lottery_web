@@ -1,17 +1,72 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslations } from 'next-intl';
-import ModalVideo from "react-modal-video";
-import "react-modal-video/scss/modal-video.scss";
+import ReactPlayer from 'react-player';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const VideoModal = () => {
+interface VideoModalProps {
+  videoId?: string;
+  videoUrl?: string;
+  channel?: 'youtube' | 'vimeo' | 'url';
+}
+
+const VideoModal: React.FC<VideoModalProps> = ({ 
+  videoId = "iSbzh0r9IV4",
+  videoUrl,
+  channel = 'youtube'
+}) => {
   const tCommon = useTranslations('common');
   const [isOpen, setIsOpen] = React.useState(false);
   
+  // 构建视频 URL
+  const getVideoUrl = (): string => {
+    if (videoUrl) return videoUrl;
+    if (channel === 'youtube') {
+      return `https://www.youtube.com/watch?v=${videoId}`;
+    }
+    if (channel === 'vimeo') {
+      return `https://vimeo.com/${videoId}`;
+    }
+    return videoUrl || '';
+  };
+
   const handleOpenModal = () => {
-    console.log('Opening video modal...'); // 调试日志
     setIsOpen(true);
   };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
+  // 阻止背景滚动
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  // 点击背景关闭
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      handleCloseModal();
+    }
+  };
+
+  // ESC 键关闭
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleCloseModal();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
   
   return (
     <div className="relative">
@@ -42,50 +97,71 @@ const VideoModal = () => {
         <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-fuchsia-600/20 blur-md"></div>
       </button>
       
-      {/* 视频模态框 */}
-      <ModalVideo
-        channel="youtube"
-        isOpen={isOpen}
-        videoId="iSbzh0r9IV4"
-        onClose={() => {
-          console.log('Closing video modal...'); // 调试日志
-          setIsOpen(false);
-        }}
-        allowFullScreen={true}
-        autoplay={true}
-      />
+      {/* 自定义视频模态框 */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* 背景遮罩 */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-9998"
+              onClick={handleBackdropClick}
+            />
+            
+            {/* 模态框内容 */}
+            <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="relative w-full max-w-5xl pointer-events-auto"
+              >
+                {/* 关闭按钮 */}
+                <button
+                  onClick={handleCloseModal}
+                  aria-label="Close video"
+                  className="absolute cursor-pointer -top-12 right-0 w-10 h-10 flex items-center justify-center rounded-full bg-linear-to-r from-purple-600/80 to-pink-600/80 hover:from-purple-600 hover:to-pink-600 text-white transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-500/50 z-10"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+
+                {/* 视频容器 */}
+                <div className="relative w-full bg-linear-to-br from-gray-900/90 to-black/90 rounded-2xl overflow-hidden shadow-2xl border border-purple-500/20">
+                  <div className="relative pt-[56.25%] bg-black rounded-t-2xl">
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    <ReactPlayer
+                      src={getVideoUrl()}
+                      playing={isOpen}
+                      controls={true}
+                      width="100%"
+                      height="100%"
+                      className="absolute top-0 left-0"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
-
-// class VideoModal extends React.Component {
-
-//   constructor () {
-//     super()
-//     this.state = {
-//       isOpen: false
-//     }
-//     this.openModal = this.openModal.bind(this)
-//   }
-
-//   openModal () {
-//     this.setState({isOpen: true})
-//   }
-
-//   render () {
-//     return (
-//       <div>
-//         <ModalVideo channel='youtube' isOpen={this.state.isOpen} videoId='iSbzh0r9IV4' onClose={() => this.setState({isOpen: false})} />
-//           <div className="video-btn">
-//               <ul>
-//                   <li>
-//                     <button className="wrap" onClick={this.openModal}><i className="fi flaticon-play-button-2" aria-hidden="true"></i></button>
-//                   </li>
-//               </ul>
-//           </div>
-//       </div>
-//     )
-//   }
-// }
 
 export default VideoModal;

@@ -80,7 +80,8 @@
       "emailInvalid": "请输入有效的邮箱地址",
       "pleaseConnectWallet": "请连接您的钱包",
       "pleaseSelectToken": "请选择代币",
-      "pleaseEnterAmount": "请输入有效金额"
+      "pleaseEnterAmount": "请输入有效金额",
+      "insufficientBalanceMax": "余额不足。最大金额: {max} USDT"
     },
     "success": {
       "subscribeSuccess": "订阅成功！感谢您的关注",
@@ -123,7 +124,9 @@
       "earningsDetails": "收益详情",
       "disconnect": "断开连接",
       "copyFullAddress": "复制完整地址",
-      "close": "关闭"
+      "close": "关闭",
+      "wrongNetworkMessage": "网络错误。请切换到 {expectedName} (链ID: {expectedId})。当前: {currentName} (链ID: {currentId})",
+      "currentNetworkInfo": "当前网络: {name} (链ID: {id})"
     },
     "accessibility": {
       "closeMenu": "关闭菜单",

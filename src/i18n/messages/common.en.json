@@ -80,7 +80,8 @@
       "emailInvalid": "Please enter a valid email address",
       "pleaseConnectWallet": "Please connect your wallet",
       "pleaseSelectToken": "Please select a token",
-      "pleaseEnterAmount": "Please enter a valid amount"
+      "pleaseEnterAmount": "Please enter a valid amount",
+      "insufficientBalanceMax": "Insufficient balance. Maximum: {max} USDT"
     },
     "success": {
       "subscribeSuccess": "Subscription successful! Thank you for your attention",
@@ -123,7 +124,9 @@
       "earningsDetails": "Earnings Details",
       "disconnect": "Disconnect",
       "copyFullAddress": "Copy full address",
-      "close": "Close"
+      "close": "Close",
+      "wrongNetworkMessage": "Wrong network. Please switch to {expectedName} (Chain ID: {expectedId}). Current: {currentName} (Chain ID: {currentId})",
+      "currentNetworkInfo": "Current Network: {name} (Chain ID: {id})"
     },
     "accessibility": {
       "closeMenu": "Close menu",

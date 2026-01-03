@@ -142,7 +142,7 @@ const CustomConnectButton = () => {
                           return <span className="chain-icon-text">{fallbackIcon}</span>;
                         })()}
                       </div>
-                      <span className="network-name">{chain.name}</span>
+                      <span className="network-name">{chain.name} (ID: {chain.id})</span>
                       <button 
                         className="switch-network"
                         onClick={() => {

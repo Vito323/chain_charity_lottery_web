@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';// 代码高亮样式
+import rehypeSanitize from 'rehype-sanitize'; 
 
 interface MarkdownRendererProps {
   content: string;
@@ -15,7 +16,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     <div className={`leading-relaxed text-gray-800 dark:text-gray-200 ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight]}
+        rehypePlugins={[rehypeSanitize, rehypeHighlight]}
         components={{
           // 自定义组件渲染
           h1: ({ children }) => (

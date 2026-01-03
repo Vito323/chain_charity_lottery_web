@@ -234,13 +234,13 @@ const NFTMarketPage = () => {
   const currentTickets = activeTab === 'new' ? newLotteryTickets : marketLotteryTickets;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
       <Header />
       {/* Hero Section */}
       <section className="relative pt-32 md:pt-52 pb-12 md:pb-20 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-950/80 to-slate-950" />
+          <div className="absolute inset-0 bg-linear-to-b from-slate-900/50 via-slate-950/80 to-slate-950" />
           
           {/* Animated Background Shapes */}
           <motion.div
@@ -376,21 +376,6 @@ const NFTMarketPage = () => {
                   </svg>
                 )}
               </button>
-              <button
-                onClick={() => handleSort('follow')}
-                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
-                  sortBy === 'follow'
-                    ? 'bg-white/10 text-white border border-white/20'
-                    : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
-                }`}
-              >
-                {t('sort.follow')}
-              </button>
-              <button className="flex-shrink-0 p-1.5 md:p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/5 border border-white/10 transition-all duration-300">
-                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-              </button>
             </div>
           </motion.div>
 
@@ -429,7 +414,7 @@ const NFTMarketPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
             >
               {currentTickets.map((ticket, index) => (
                 <LotteryCard

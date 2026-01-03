@@ -129,7 +129,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
                     ? 'border-white/5 bg-white/5 opacity-40 cursor-not-allowed'
                     : 'border-white/10 hover:bg-white/10 hover:border-white/20'
                 } ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}
-                title={isDisabled ? `Insufficient balance. Max: ${tokenBalance?.toFixed() || '0'} USDT` : ''}
+                title={isDisabled ? tCommon('validation.insufficientBalanceMax', { max: tokenBalance?.toFixed() || '0' }) : ''}
               >
                 <span className={`font-medium text-base ${isDisabled ? 'text-white/40' : 'text-white'}`}>
                   {quickAmount} USDT
@@ -179,7 +179,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
         )}
         {isAmountExceeded && tokenBalance && (
           <p className="mt-2 text-sm text-red-400">
-            Insufficient balance. Maximum: {tokenBalance.toFixed()} USDT
+            {tCommon('validation.insufficientBalanceMax', { max: tokenBalance.toFixed() })}
           </p>
         )}
       </div>
