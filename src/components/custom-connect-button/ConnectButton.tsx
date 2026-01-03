@@ -12,6 +12,8 @@ const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
   const [showDropdown, setShowDropdown] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const tCommon = useTranslations('common');
@@ -36,6 +38,18 @@ const CustomConnectButton = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showDropdown]);
+
+  useEffect(() => {
+    if (showTermsModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showTermsModal]);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -226,6 +240,23 @@ const CustomConnectButton = () => {
           (!authenticationStatus ||
             authenticationStatus === 'authenticated');
 
+        const handleConnectClick = () => {
+          setShowTermsModal(true);
+        };
+
+        const handleTermsAgree = () => {
+          if (acceptedTerms) {
+            setShowTermsModal(false);
+            setAcceptedTerms(false);
+            openConnectModal();
+          }
+        };
+
+        const handleTermsCancel = () => {
+          setShowTermsModal(false);
+          setAcceptedTerms(false);
+        };
+
         return (
           <div className="relative inline-block" ref={dropdownRef}>
             {(() => {
@@ -233,7 +264,7 @@ const CustomConnectButton = () => {
                 return (
                   <button
                     className="relative bg-gradient-to-br from-purple-600 via-pink-600 to-rose-500 text-white border-0 rounded-full px-7 py-3.5 text-base font-semibold cursor-pointer transition-all duration-300 ease-out font-inherit flex items-center gap-2 shadow-lg shadow-purple-600/25 overflow-hidden min-w-[140px] justify-center hover:from-purple-700 hover:via-pink-700 hover:to-rose-600 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-purple-600/35 active:translate-y-0 active:shadow-lg active:shadow-purple-600/25 focus:outline-none before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-500 hover:before:left-full"
-                    onClick={openConnectModal}
+                    onClick={handleConnectClick}
                   >
                     {tCommon('actions.connectWallet')}
                   </button>
@@ -331,6 +362,89 @@ const CustomConnectButton = () => {
                 </>
               )}
             </AnimatePresence>
+
+            {/* Terms Agreement Modal */}
+            {mounted && createPortal(
+              <AnimatePresence>
+                {showTermsModal && (
+                  <motion.div
+                    key="terms-modal"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+                    onClick={handleTermsCancel}
+                  >
+                    {/* Backdrop */}
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                    
+                    {/* Modal Content */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                      className="relative bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 rounded-2xl shadow-2xl border border-white/10 backdrop-blur-xl max-w-md w-full p-6 md:p-8"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Close Button */}
+                      <button
+                        onClick={handleTermsCancel}
+                        className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 transition-colors"
+                        aria-label={tCommon('wallet.close')}
+                      >
+                        <i className="fa fa-times text-white/80 text-sm"></i>
+                      </button>
+
+                      {/* Title */}
+                      <h2 className="text-xl md:text-2xl font-bold text-white mb-6 pr-8">
+                        {tCommon('actions.connectWallet')}
+                      </h2>
+
+                      {/* Terms Checkbox */}
+                      <div className="flex items-start gap-3 mb-6">
+                        <input
+                          type="checkbox"
+                          id="terms-checkbox-connect"
+                          checked={acceptedTerms}
+                          onChange={(e) => setAcceptedTerms(e.target.checked)}
+                          className="mt-1 w-5 h-5 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-2 focus:ring-purple-500/50 cursor-pointer flex-shrink-0"
+                        />
+                        <label htmlFor="terms-checkbox-connect" className="flex-1 text-sm md:text-base text-white/70 cursor-pointer">
+                          {tCommon('terms.accept')}{' '}
+                          <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                            {tCommon('terms.service')}
+                          </a>{' '}
+                          {tCommon('terms.and')}{' '}
+                          <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                            {tCommon('terms.privacy')}
+                          </a>
+                        </label>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3">
+                        <button
+                          onClick={handleTermsCancel}
+                          className="flex-1 px-6 py-3 bg-white/10 text-white border border-white/20 rounded-full font-medium cursor-pointer transition-all duration-200 hover:bg-white/15 hover:border-white/30 active:bg-white/20"
+                        >
+                          {tCommon('actions.cancel')}
+                        </button>
+                        <button
+                          onClick={handleTermsAgree}
+                          disabled={!acceptedTerms}
+                          className="flex-1 px-6 py-3 bg-gradient-to-br from-purple-600 to-pink-600 text-white border-0 rounded-full font-medium cursor-pointer transition-all duration-200 hover:from-purple-700 hover:to-pink-700 active:from-purple-800 active:to-pink-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-purple-600 disabled:hover:to-pink-600"
+                        >
+                          {tCommon('actions.confirm')}
+                        </button>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>,
+              document.body
+            )}
           </div>
         );
       }}

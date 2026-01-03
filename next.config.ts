@@ -68,23 +68,23 @@ const nextConfig: NextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
           },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js requires unsafe-eval and unsafe-inline
-              "style-src 'self' 'unsafe-inline'", // Tailwind CSS and React require unsafe-inline
-              "img-src 'self' data: blob: https://placehold.co https://picsum.photos https://ipfs.io https://gateway.pinata.cloud https://cloudflare-ipfs.com https://ipfs.alchemy.com",
-              "font-src 'self' data:",
-              "connect-src 'self' https://api.dahantech.app https://*.walletconnect.com https://*.walletconnect.org wss://*.walletconnect.com wss://*.walletconnect.org https://*.infura.io https://*.alchemyapi.io https://*.rpc.thirdweb.com",
-              "frame-src 'self' https://*.walletconnect.com https://*.walletconnect.org",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "frame-ancestors 'self'",
-              "upgrade-insecure-requests"
-            ].join('; ')
-          }
+          // {
+          //   key: 'Content-Security-Policy',
+          //   value: [
+          //     "default-src 'self'",
+          //     "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js requires unsafe-eval and unsafe-inline
+          //     "style-src 'self' 'unsafe-inline'", // Tailwind CSS and React require unsafe-inline
+          //     // "img-src 'self' data: blob: https://placehold.co https://picsum.photos https://ipfs.io https://gateway.pinata.cloud https://cloudflare-ipfs.com https://ipfs.alchemy.com",
+          //     "font-src 'self' data:",
+          //     // "connect-src 'self' https://api.dahantech.app https://*.walletconnect.com https://*.walletconnect.org wss://*.walletconnect.com wss://*.walletconnect.org https://*.infura.io https://*.alchemyapi.io https://*.rpc.thirdweb.com https://*.web3modal.org",
+          //     // "frame-src 'self' https://*.walletconnect.com https://*.walletconnect.org https://*.web3modal.org",
+          //     "object-src 'none'",
+          //     "base-uri 'self'",
+          //     "form-action 'self'",
+          //     "frame-ancestors 'self'",
+          //     "upgrade-insecure-requests"
+          //   ].join('; ')
+          // }
         ],
       },
     ];
