@@ -78,7 +78,7 @@ const CustomConnectButton = () => {
         <div>
           <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">{tCommon('wallet.network')}</div>
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-full flex items-center justify-center text-xs font-bold overflow-hidden">
+            <div className="w-5 h-5 bg-linear-to-br from-purple-600 to-pink-600 text-white rounded-full flex items-center justify-center text-xs font-bold overflow-hidden">
               {(() => {
                 if (chain.iconUrl) {
                   return (

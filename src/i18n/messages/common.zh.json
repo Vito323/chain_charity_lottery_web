@@ -33,7 +33,7 @@
       "failedToLoadPurchaseHistory": "加载购买历史失败",
       "failedToLoadTokenDetails": "加载代币详情失败",
       "failedToLoadTransactionRecords": "加载交易记录失败",
-      "failedToLoadTickets": "加载彩票失败",
+      "failedToLoadTickets": "加载NFT失败",
       "failedToLoadDonationRecords": "加载捐赠记录失败",
       "failedToLoadNFTs": "加载 NFT 失败",
       "subscribeFailed": "订阅失败，请重试。",
@@ -116,7 +116,7 @@
       "nodeEarnings": "节点收益",
       "nodePurchaseRecords": "节点购买记录",
       "myNodes": "我的节点",
-      "holdLottery": "我的彩票",
+      "holdLottery": "我的NFT",
       "winningRecords": "中奖记录",
       "tokenDetails": "代币详情",
       "donationRecords": "捐赠记录",
@@ -151,8 +151,8 @@
     "images": {
       "aboutUs": "关于我们",
       "genesisNodeCertificate": "创世节点证书",
-      "lotteryTicket": "彩票",
-      "winningTicket": "中奖彩票",
+      "lotteryTicket": "NFT",
+      "winningTicket": "中奖NFT",
       "projectImage": "项目图片",
       "chain": "链"
     }
