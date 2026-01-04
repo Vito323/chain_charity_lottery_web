@@ -27,6 +27,8 @@ export const TokenSelection: React.FC<TokenSelectionProps> = ({
       return null;
     }
 
+
+
     return {
       symbol: "USDT",
       name: "Tether USD",
@@ -40,10 +42,8 @@ export const TokenSelection: React.FC<TokenSelectionProps> = ({
 
   // 当USDT信息变化时，通知父组件
   useEffect(() => {
-    console.log("usdtTokenInfo11122", usdtTokenInfo);
     onTokenChange(usdtTokenInfo);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [usdtTokenInfo]);
+  }, [usdtTokenInfo, onTokenChange]);
 
   return (
     <div className="mb-6">

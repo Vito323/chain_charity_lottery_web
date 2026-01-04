@@ -684,7 +684,8 @@
     "ranking": {
       "exceeds": "您当前的捐赠金额超越了{percentage}%的用户",
       "getTokens": "获得代币",
-      "expectedReward": "您的捐赠金额预计将获得 {amount} {ecosystemToken} 代币"
+      "expectedReward": "您的捐赠金额预计将获得 {amount} {ecosystemToken} 代币",
+      "calculatingReward": "正在计算奖励..."
     },
     "tokenSelect": {
       "title": "选择代币",

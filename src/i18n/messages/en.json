@@ -762,7 +762,8 @@
     "ranking": {
       "exceeds": "Your current donation exceeds {percentage}% of users",
       "getTokens": "Get tokens",
-      "expectedReward": "Your donation amount is expected to receive {amount} {ecosystemToken} tokens"
+      "expectedReward": "Your donation amount is expected to receive {amount} {ecosystemToken} tokens",
+      "calculatingReward": "Calculating reward..."
     },
     "tokenSelect": {
       "title": "Select Token",

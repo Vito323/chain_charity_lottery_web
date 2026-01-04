@@ -21,6 +21,7 @@ import { DonateButton } from "./components/DonateButton";
 import BigNumber from "bignumber.js";
 import { useMasterContract } from "@/hooks/useMasterContract";
 import { formatUnits } from "ethers";
+import { queryProjectProportion, ProjectProportionData } from "@/service/project";
 
 interface DonateProps {
   uid: string;
@@ -49,16 +50,30 @@ const Donate = ({ uid, name }: DonateProps) => {
   const [isLoadingReward, setIsLoadingReward] = React.useState(false);
   const [amountChanged, setAmountChanged] = React.useState(false);
   const [ecosystemTokenDecimals, setEcosystemTokenDecimals] = React.useState<number | null>(null);
+  const [proportionData, setProportionData] = React.useState<ProjectProportionData | null>(null);
 
   // 处理USDT代币变化（支持null）
-  const handleTokenChange = ((token: TokenInfo | null) => {
-    setSelectedToken(token);
-  });
+  const handleTokenChange = React.useCallback((token: TokenInfo | null) => {
+    if (token) {
+      setSelectedToken({...token});
+    }
+  }, []);
 
   // 处理金额变化
   const handleAmountChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+    const newAmount = e.target.value;
+    setAmount(newAmount);
     setAmountChanged(true);
+    
+    // 如果输入了有效金额，立即显示 loading 状态
+    if (newAmount && parseFloat(newAmount) > 0) {
+      setIsLoadingReward(true);
+    } else {
+      // 如果金额无效，清除数据
+      setRewardAmount(null);
+      setProportionData(null);
+      setIsLoadingReward(false);
+    }
   }, []);
 
   // 快速金额选项
@@ -107,37 +122,59 @@ const Donate = ({ uid, name }: DonateProps) => {
   // 使用防抖处理金额
   const debouncedAmount = useDebounce(amount, 800);
 
-  // 计算奖励金额（实时计算，带防抖）
-  const calculateReward = React.useCallback(async () => {
-    // 如果没有有效的金额，清除奖励并返回
-    if (!debouncedAmount || parseFloat(debouncedAmount) <= 0) {
+  // 同时获取奖励金额和项目比例数据（使用 Promise.all）
+  const fetchRewardAndProportion = React.useCallback(async (amountToFetch: string) => {
+    // 如果没有有效的金额，清除数据并返回
+    if (!amountToFetch || parseFloat(amountToFetch) <= 0) {
       setRewardAmount(null);
+      setProportionData(null);
       setAmountChanged(false);
+      setIsLoadingReward(false);
       return;
     }
 
-    // 如果 ecosystemTokenDecimals 还未获取，不执行计算
+    // 如果 ecosystemTokenDecimals 还未获取，保持 loading 状态，等待 decimals 获取完成
+    if (!ecosystemTokenDecimals) {
+      // 保持 loading 状态，不执行计算
+      return;
+    }
 
     try {
+      // 确保 loading 状态已设置（可能在 handleAmountChange 中已设置）
       setIsLoadingReward(true);
-      const result = await calculateExchangeAmount(debouncedAmount, 6);
-      const rewardValue = formatUnits(result, ecosystemTokenDecimals ?? 18);
+      
+      // 使用 Promise.all 同时调用两个接口
+      const [exchangeResult, proportionResponse] = await Promise.all([
+        calculateExchangeAmount(amountToFetch, 6),
+        queryProjectProportion(uid, amountToFetch),
+      ]);
+
+      // 处理奖励金额
+      const rewardValue = formatUnits(exchangeResult, ecosystemTokenDecimals);
       const rewardBN = new BigNumber(rewardValue);
       const formattedReward = rewardBN.decimalPlaces(6, BigNumber.ROUND_DOWN).toString();
       setRewardAmount(formattedReward);
+
+      // 处理比例数据
+      if (proportionResponse.ok) {
+        setProportionData(proportionResponse.data);
+      } else {
+        setProportionData(null);
+      }
     } catch (error) {
-      console.error("计算奖励失败:", error);
+      console.error("获取奖励和比例数据失败:", error);
       setRewardAmount(null);
+      setProportionData(null);
     } finally {
       setIsLoadingReward(false);
       setAmountChanged(false);
     }
-  }, [debouncedAmount, ecosystemTokenDecimals, calculateExchangeAmount]);
+  }, [ecosystemTokenDecimals, calculateExchangeAmount, uid]);
 
-  // 当防抖后的金额变化或 ecosystemTokenDecimals 获取完成时，计算奖励
+  // 当防抖后的金额变化或 ecosystemTokenDecimals 获取完成时，获取数据
   React.useEffect(() => {
-    calculateReward();
-  }, [calculateReward]);
+    fetchRewardAndProportion(debouncedAmount);
+  }, [fetchRewardAndProportion, debouncedAmount]);
 
   // 当输入框值变化时，如果不在快速金额列表中，清除选中状态
   React.useEffect(() => {
@@ -149,12 +186,17 @@ const Donate = ({ uid, name }: DonateProps) => {
 
   // 当链切换时重置表单
   const chainId = useChainId();
+  const prevChainIdRef = React.useRef<number | undefined>(undefined);
   React.useEffect(() => {
-    setAmount("");
-    setSelectedToken(null);
-    setSelectedQuickAmount(null);
-    setRewardAmount(null);
-    setAmountChanged(false);
+    // 只在chainId真正变化时重置（不是初始化时）
+    if (prevChainIdRef.current !== undefined && prevChainIdRef.current !== chainId) {
+      setAmount("");
+      setSelectedToken(null);
+      setSelectedQuickAmount(null);
+      setRewardAmount(null);
+      setAmountChanged(false);
+    }
+    prevChainIdRef.current = chainId;
   }, [chainId]);
 
 
@@ -277,8 +319,6 @@ const Donate = ({ uid, name }: DonateProps) => {
     }
   };
 
-  console.log("selectedToken11122", selectedToken);
-
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
       {/* Background Elements */}
@@ -386,6 +426,9 @@ const Donate = ({ uid, name }: DonateProps) => {
               ecosystemTokenDecimals={ecosystemTokenDecimals ?? undefined}
               amountChanged={amountChanged}
               onRewardUpdate={setRewardAmount}
+              surpassedCount={proportionData?.surpassedCount ?? null}
+              totalDonors={proportionData?.totalDonors ?? null}
+              onRefreshData={fetchRewardAndProportion}
             />
 
             {/* Total Donation */}

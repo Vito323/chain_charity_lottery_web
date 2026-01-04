@@ -14,6 +14,9 @@ interface RewardDisplayProps {
   ecosystemTokenDecimals: number | undefined;
   amountChanged: boolean;
   onRewardUpdate?: (rewardAmount: string) => void;
+  surpassedCount: number | null;
+  totalDonors: number | null;
+  onRefreshData?: (amount: string) => Promise<void>;
 }
 
 export const RewardDisplay: React.FC<RewardDisplayProps> = ({
@@ -24,6 +27,9 @@ export const RewardDisplay: React.FC<RewardDisplayProps> = ({
   ecosystemTokenDecimals,
   amountChanged,
   onRewardUpdate,
+  surpassedCount,
+  totalDonors,
+  onRefreshData,
 }) => {
   const t = useTranslations('donate');
   const config = useGlobalStore(state => state.config);
@@ -37,8 +43,16 @@ export const RewardDisplay: React.FC<RewardDisplayProps> = ({
   // 检查 amount 是否有效（必须在所有 hooks 之后）
   const isValidAmount = amount && parseFloat(amount) > 0;
 
-  const numericAmount = parseFloat(amount);
-  const percentage = Math.min(95, Math.max(5, Math.floor(numericAmount * 10)));
+  // 计算 percentage：如果 surpassedCount 为 0 则为 100%，否则正常计算
+  const percentage = React.useMemo(() => {
+    if (surpassedCount === null || totalDonors === null || totalDonors === 0) {
+      return 0;
+    }
+    if (surpassedCount === 0) {
+      return 100;
+    }
+    return Math.min(100, Math.max(0, Math.round((surpassedCount / totalDonors) * 100)));
+  }, [surpassedCount, totalDonors]);
   
   // 使用 BigNumber 计算 USD 价值（USDT固定）
   // const usdValueStr = calculateUSDValue(amount, 'USDT');
@@ -117,21 +131,13 @@ export const RewardDisplay: React.FC<RewardDisplayProps> = ({
       setCountdown((prev) => {
         const newCountdown = prev <= 1 ? 60 : prev - 1;
         
-        // 倒计时结束时，调用 calculateExchangeAmount
+        // 倒计时结束时，调用 onRefreshData 同时刷新奖励和比例数据
         // 使用 stableAmountRef 来确保使用启动倒计时时的 amount
-        if (prev <= 1 && ecosystemTokenDecimals && stableAmountRef.current) {
+        if (prev <= 1 && stableAmountRef.current && onRefreshData) {
           const currentAmount = stableAmountRef.current;
-          calculateExchangeAmount(currentAmount, 6)
-            .then((result) => {
-              const rewardValue = formatUnits(result, ecosystemTokenDecimals);
-              const rewardBN = new BigNumber(rewardValue);
-              const formattedReward = rewardBN.decimalPlaces(6, BigNumber.ROUND_DOWN).toString();
-              // 通过回调更新父组件的 rewardAmount
-              onRewardUpdate?.(formattedReward);
-            })
-            .catch((error) => {
-              console.error("定时更新奖励失败:", error);
-            });
+          onRefreshData(currentAmount).catch((error) => {
+            console.error("定时刷新数据失败:", error);
+          });
         }
         
         return newCountdown;
@@ -159,7 +165,7 @@ export const RewardDisplay: React.FC<RewardDisplayProps> = ({
       }
       isCountingDownRef.current = false;
     };
-  }, [amount, ecosystemTokenDecimals, amountChanged, calculateExchangeAmount, onRewardUpdate, isValidAmount]);
+  }, [amount, ecosystemTokenDecimals, amountChanged, onRefreshData, isValidAmount]);
 
   // 如果 amount 无效，不渲染组件
   if (!isValidAmount) {
@@ -171,16 +177,19 @@ export const RewardDisplay: React.FC<RewardDisplayProps> = ({
   const circumference = 2 * Math.PI * radius; // 周长
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
+  // 判断是否应该显示 loading：正在加载 或 金额变化但还没有数据
+  const shouldShowLoading = isLoadingReward || (amountChanged && (!rewardAmount || surpassedCount === null));
+
   return (
     <div className="mb-6">
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 space-y-4">
-        {isLoadingReward ? (
+        {shouldShowLoading ? (
           <div className="flex items-center justify-center py-4">
             <svg className="w-5 h-5 animate-spin text-purple-400" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span className="ml-2 text-white/60 text-sm">Calculating reward...</span>
+            <span className="ml-2 text-white/60 text-sm">{t('ranking.calculatingReward')}</span>
           </div>
         ) : (
           <>

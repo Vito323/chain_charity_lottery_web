@@ -48,6 +48,12 @@ export interface TracksData {
   updatedAt: string;
 }
 
+export interface ProjectProportionData {
+  surpassedCount: number;
+  totalDonors: number;
+  userRank: number;
+}
+
 
 export const queryCategories = async () =>
   action<CategoryData[]>({
@@ -68,3 +74,13 @@ export const queryCategories = async () =>
         url: `/project/view/${id}`,
         method: "GET",
       });
+
+
+export const queryProjectProportion = async (id: string, amount: string) =>
+  action<ProjectProportionData>({
+    url: `/project/calculate-donation-proportion/${id}`,
+    method: "GET",
+    params: {
+      amount,
+    },
+  });

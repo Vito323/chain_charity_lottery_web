@@ -25,6 +25,9 @@ const LotteryContent: React.FC = () => {
     nextDrawTimestring: ''
   });
 
+  // 加载状态
+  const [loading, setLoading] = useState(true);
+
   // 倒计时状态
   const [countdown, setCountdown] = useState<CountdownTime>({
     days: 0,
@@ -34,10 +37,21 @@ const LotteryContent: React.FC = () => {
   });
 
   // 是否已开奖
-  const [, setIsDrawComplete] = useState(false);
+  const [isDrawComplete, setIsDrawComplete] = useState(false);
 
   // 直接使用 lotteryConfig.total 的值，不依赖动画
   const jackpotValue = parseFloat(lotteryConfig.total) || 0;
+
+  // 查询彩票配置
+  const queryLotteryConfig = useCallback(async () => {
+    setLoading(true);
+    const res = await getLotteryConfig();
+    if (res.ok) {
+      setLotteryConfig(res.data);
+      setIsDrawComplete(false);
+    }
+    setLoading(false);
+  }, []);
 
   // 计算倒计时
   const calculateCountdown = useCallback(() => {
@@ -45,8 +59,17 @@ const LotteryContent: React.FC = () => {
     const drawTime = lotteryConfig.nextDrawTime * 1000;
     const difference = drawTime - now;
     if (difference <= 0) {
-      setIsDrawComplete(true);
+      if (!isDrawComplete) {
+        setIsDrawComplete(true);
+        // 倒计时结束时，重新获取新的倒计时数据
+        queryLotteryConfig();
+      }
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
+
+    // 如果之前已开奖，但现在有新的倒计时，重置状态
+    if (isDrawComplete) {
+      setIsDrawComplete(false);
     }
 
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -57,7 +80,7 @@ const LotteryContent: React.FC = () => {
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
     return { days, hours, minutes, seconds };
-  }, [lotteryConfig.nextDrawTime]);
+  }, [lotteryConfig.nextDrawTime, isDrawComplete, queryLotteryConfig]);
 
   // 更新倒计时
   useEffect(() => {
@@ -74,16 +97,9 @@ const LotteryContent: React.FC = () => {
     return value.toString().padStart(2, "0");
   };
 
-  const queryLotteryConfig = async () => {
-    const res = await getLotteryConfig();
-    if (res.ok) {
-      setLotteryConfig(res.data);
-    }
-  };
-
   useEffect(() => {
     queryLotteryConfig();
-  }, []);
+  }, [queryLotteryConfig]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -160,7 +176,7 @@ const LotteryContent: React.FC = () => {
 
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
             <span>{t('title')} </span>
-            <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">
               {t('titleHighlight')}
             </span>
           </h1>
@@ -185,25 +201,31 @@ const LotteryContent: React.FC = () => {
               { value: countdown.hours, label: tTime('hours') },
               { value: countdown.minutes, label: tTime('minutes') },
               { value: countdown.seconds, label: tTime('seconds') },
-            ].map((item, index) => (
-              <motion.div
-                key={item.label}
-                className="text-center"
-                whileHover={{ scale: 1.05 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mb-3 mx-auto border border-white/10">
-                  <span className="text-2xl md:text-3xl font-bold text-white">
-                    {formatTime(item.value)}
-                  </span>
-                </div>
-                <p className="text-white/70 text-sm font-medium uppercase tracking-wider">
-                  {item.label}
-                </p>
-              </motion.div>
-            ))}
+            ].map((item, index) => {
+              // 当加载中、无数据或倒计时结束时，显示 --：--：-- 格式
+              const shouldShowPlaceholder = loading || lotteryConfig.nextDrawTime === 0 || isDrawComplete;
+              const displayValue = shouldShowPlaceholder ? '--' : formatTime(item.value);
+              
+              return (
+                <motion.div
+                  key={item.label}
+                  className="text-center"
+                  whileHover={{ scale: 1.05 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-linear-to-br from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mb-3 mx-auto border border-white/10">
+                    <span className="text-2xl md:text-3xl font-bold text-white">
+                      {displayValue}
+                    </span>
+                  </div>
+                  <p className="text-white/70 text-sm font-medium uppercase tracking-wider">
+                    {item.label}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* Jackpot Section */}
