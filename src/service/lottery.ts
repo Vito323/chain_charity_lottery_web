@@ -26,7 +26,7 @@ export interface LotteryConfig {
 }
 
 
-export interface PreMintInfo {
+export interface mintPending {
   dna: string;
   uri: string;
   amount: string;
@@ -47,8 +47,8 @@ export const getLotteryTickets = () => action<LotterySeries[]>({
 });
 
 
-export const preMintLotteryTicket = (seriesId: number, to: string) => action<PreMintInfo>({
-  url: `/lottery/pre-mint`,
+export const mintPending = (seriesId: number, to: string) => action<mintPending>({
+  url: `/lottery/mint-pending`,
   method: "POST",
   data: {
     seriesId,

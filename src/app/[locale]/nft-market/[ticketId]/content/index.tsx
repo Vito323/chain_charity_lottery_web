@@ -18,7 +18,7 @@ import LotterySellModal from '@/components/lottery-sell-modal';
 import LotteryDelistModal from '@/components/lottery-delist-modal';
 import { DetailTab, LotteryTicket, PurchaseRecord, WinningRecord } from './types';
 import { LotteryTicket as MarketLotteryTicket } from '@/app/[locale]/nft-market/types';
-import { LotterySeries, preMintLotteryTicket } from '@/service/lottery';
+import { LotterySeries, mintPending } from '@/service/lottery';
 import { useLotteryNFTContract } from '@/hooks/useLotteryNFTContract';
 import { getRarityPercentageFromRank, rankToRarity } from '@/utils/lottery';
 import { getChainById } from '@/lib/chain-config';
@@ -275,7 +275,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
       
       // 1. 调用 preMintLotteryTicket 获取签名信息
       toast.info(tCommon('actions.processing'));
-      const preMintResponse = await preMintLotteryTicket(lotterySeries.id, address);
+      const preMintResponse = await mintPending(lotterySeries.id, address);
       
       if (!preMintResponse.ok) {
         toast.error(preMintResponse.msg || tCommon('errors.failedToLoad'));
