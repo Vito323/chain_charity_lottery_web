@@ -22,6 +22,27 @@ export const rankToRarity = (rank: number): RarityType => {
 };
 
 /**
+ * Rarity to rank mapping (reverse of rankToRarity)
+ * rarity: common=1, rare=2, epic=3, legendary=4, mythic=5
+ */
+export const rarityToRank = (rarity: RarityType): number => {
+  switch (rarity) {
+    case 'common':
+      return 1;
+    case 'rare':
+      return 2;
+    case 'epic':
+      return 3;
+    case 'legendary':
+      return 4;
+    case 'mythic':
+      return 5;
+    default:
+      return 1;
+  }
+};
+
+/**
  * Get rarity label from rank (for display)
  * Returns the rarity key that can be used with i18n translations
  */

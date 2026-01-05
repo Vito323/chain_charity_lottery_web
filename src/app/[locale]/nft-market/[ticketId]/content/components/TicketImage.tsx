@@ -55,9 +55,9 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Left: NFT Image - 16:10 比例 */}
         <div 
-          className="relative rounded-xl overflow-hidden bg-slate-900/50 backdrop-blur-md shadow-xl"
+          className={`relative rounded-xl overflow-hidden bg-slate-900/50 backdrop-blur-md shadow-xl border-4`}
           style={{ 
-            border: `2px solid ${rarityStyle.borderColor}`,
+            borderColor: `${rarityStyle.borderColor}`,
           }}
         >
           <div 
@@ -93,7 +93,7 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
             )}
             
             {/* 黄金闪烁效果 - 仅在 mythic (rank 5) 时显示 */}
-            {isMythic && (
+            {isMythic && !isLoadingSvg && svgUrl && (
               <>
                 <style>{goldShimmerStyle}</style>
                 <div 
@@ -105,7 +105,7 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
                   <div 
                     className="absolute inset-0"
                     style={{
-                      background: 'linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.6) 30%, rgba(255, 223, 0, 0.9) 50%, rgba(255, 215, 0, 0.6) 70%, transparent 100%)',
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(255, 240, 120, 0.4) 30%, rgba(255, 250, 150, 0.6) 50%, rgba(255, 240, 120, 0.4) 70%, transparent 100%)',
                       animation: 'goldShimmer 3s ease-in-out infinite',
                       width: '50%',
                       height: '100%',

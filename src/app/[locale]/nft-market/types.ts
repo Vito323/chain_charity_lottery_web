@@ -5,6 +5,7 @@ export interface LotteryTicket {
   image: string;
   rarity: RarityType;
   rarityLabel: string;
+  rank?: number; // Optional rank field for styling
   // New lottery fields
   basicWinRate?: string;
   maxPrize?: string;

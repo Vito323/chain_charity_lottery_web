@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import { LotteryTicket } from '@/app/[locale]/nft-market/types';
+import { rarityConfig, goldShimmerStyle, rarityToRank } from '@/utils/lottery';
+import { renderTicket } from '@/service/asset';
 
 interface LotteryRedemptionSuccessModalProps {
   isOpen: boolean;
@@ -29,6 +31,34 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
   const isFollowType = type === 'follow';
   const isPurchaseType = type === 'purchase';
   const isSellType = type === 'sell';
+
+  // SVG 状态
+  const [svgUrl, setSvgUrl] = useState<string | null>(null);
+  const [isLoadingSvg, setIsLoadingSvg] = useState(true);
+  const [svgError, setSvgError] = useState(false);
+
+  // 获取 rank，优先使用 ticket.rank，否则从 rarity 反推
+  const rank = ticket.rank ?? rarityToRank(ticket.rarity);
+  const rarityStyle = rarityConfig[ticket.rarity];
+
+  // 调用 renderTicket 获取 SVG
+  useEffect(() => {
+    const fetchSvg = async () => {
+      try {
+        setIsLoadingSvg(true);
+        setSvgError(false);
+        const svgDataUrl = await renderTicket(ticket.id.toString());
+        setSvgUrl(svgDataUrl);
+      } catch (error) {
+        console.error('Failed to render ticket SVG:', error);
+        setSvgError(true);
+      } finally {
+        setIsLoadingSvg(false);
+      }
+    };
+
+    fetchSvg();
+  }, [ticket.id]);
 
   const handleViewTickets = () => {
     onClose();
@@ -76,7 +106,7 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[110] flex items-center justify-center p-4"
+        className="fixed inset-0 z-110 flex items-center justify-center p-4"
         onClick={onClose}
       >
         {/* Backdrop */}
@@ -88,7 +118,7 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: 'spring', duration: 0.4 }}
-          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 border border-white/10 rounded-3xl shadow-2xl overflow-hidden"
+          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-linear-to-b from-slate-900 via-slate-950 to-slate-900 border border-white/10 rounded-3xl shadow-2xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6 sm:p-8 space-y-6 text-center">
@@ -127,19 +157,68 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
               }}
               className="relative w-full max-w-lg mx-auto"
             >
-              <div className="relative rounded-2xl overflow-hidden border-2 border-yellow-500/50 shadow-2xl">
-                <div className="relative w-full aspect-[3/4]">
-                  <Image
-                    src={ticket.image}
-                    alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/images/placeholder-all.png';
-                    }}
-                  />
+              <div 
+                className="relative rounded-md overflow-hidden bg-linear-to-br from-slate-800 to-slate-900 shadow-2xl"
+                style={{ 
+                  border: `2px solid ${rarityStyle.borderColor}`,
+                }}
+              >
+                {/* 16:10 比例容器 */}
+                <div 
+                  className="relative w-full min-w-[280px] min-h-[176px]"
+                  style={{ aspectRatio: '16/10' }}
+                >
+                  {isLoadingSvg ? (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-800/50">
+                      <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    </div>
+                  ) : svgUrl && !svgError ? (
+                    <img
+                      src={svgUrl}
+                      alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
+                      className="w-full h-full object-cover"
+                      onError={() => {
+                        setSvgError(true);
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      src={ticket.image}
+                      alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 280px, (max-width: 1024px) 350px, 350px"
+                      unoptimized
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/images/placeholder-all.png';
+                      }}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+                  
+                  {/* 黄金闪烁效果 - 仅在 rank 5 (mythic) 时显示 */}
+                  {rank === 5 && !isLoadingSvg && svgUrl && (
+                    <>
+                      <style>{goldShimmerStyle}</style>
+                      <div 
+                        className="absolute inset-0 pointer-events-none overflow-hidden"
+                        style={{
+                          borderRadius: '0.375rem'
+                        }}
+                      >
+                        <div 
+                          className="absolute inset-0"
+                          style={{
+                            background: 'linear-gradient(90deg, transparent 0%, rgba(255, 240, 120, 0.4) 30%, rgba(255, 250, 150, 0.6) 50%, rgba(255, 240, 120, 0.4) 70%, transparent 100%)',
+                            animation: 'goldShimmer 3s ease-in-out infinite',
+                            width: '50%',
+                            height: '100%',
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>

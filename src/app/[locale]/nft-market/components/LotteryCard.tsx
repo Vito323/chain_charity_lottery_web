@@ -55,7 +55,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
   // 格式化数据
   const currency = 'CCT';
   const basicWinRate = `1/${ticket.rate}`;
-  const maxPrize = `${ticket.highest.toLocaleString()} ${currency}`;
+  const maxPrize = `${ticket.highest.toLocaleString()} USDT`;
   const redemptionCost = ticket.price.toString();
 
   return (
@@ -118,8 +118,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
                 <img
                   src={svgUrl}
                   alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
-                  className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  style={{ willChange: 'transform' }}
+                  className="w-full h-full object-cover"
                   onError={() => {
                     setSvgError(true);
                   }}
@@ -129,8 +128,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
                   src={ticket.src}
                   alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
                   fill
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                  style={{ willChange: 'transform' }}
+                  className="object-cover"
                   sizes="(max-width: 640px) 280px, (max-width: 1024px) 350px, 350px"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -141,7 +139,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               
               {/* 黄金闪烁效果 - 仅在 rank 5 (mythic) 时显示 */}
-              {ticket.rank === 5 && (
+              {ticket.rank === 5 && !isLoadingSvg && svgUrl && (
                 <>
                   <style>{goldShimmerStyle}</style>
                   <div 
@@ -153,7 +151,7 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
                     <div 
                       className="absolute inset-0"
                       style={{
-                        background: 'linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.6) 30%, rgba(255, 223, 0, 0.9) 50%, rgba(255, 215, 0, 0.6) 70%, transparent 100%)',
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(255, 240, 120, 0.4) 30%, rgba(255, 250, 150, 0.6) 50%, rgba(255, 240, 120, 0.4) 70%, transparent 100%)',
                         animation: 'goldShimmer 3s ease-in-out infinite',
                         width: '50%',
                         height: '100%',
