@@ -31,7 +31,7 @@ export interface PreMintInfo {
   uri: string;
   amount: string;
   nonce: number;
-  timestamp: number;
+  deadline: number;
   signature: string;
 }
 

@@ -318,7 +318,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
         preMintInfo.signature,
         preMintInfo.amount,
         preMintInfo.nonce,
-        preMintInfo.timestamp
+        preMintInfo.deadline
       );
       
       // 只有在成功时才关闭 modal 并显示成功模态
