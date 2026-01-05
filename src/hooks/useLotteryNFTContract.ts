@@ -72,19 +72,31 @@ export const useLotteryNFTContract = () => {
   // ==================== 写入函数 (Write Functions) ====================
 
   // Mint NFT
+  // 根据 ABI 定义: mint(bytes32 _dnaHash, string metadataURI, bytes signature, uint256 amount, uint256 nonce, uint256 deadline)
   const mint = useCallback(
     async (
-      dna: string,
-      uri: string,
+      dnaHash: string,
+      metadataURI: string,
       signature: string,
       amount: string,
       nonce: number,
-      timestamp: number
+      deadline: number
     ): Promise<string> => {
       setIsLoading(true);
       setError(null);
       try {
         const contractWithSigner = await getSigner();
+        
+        // 将 dnaHash 字符串转换为 bytes32
+        // 如果传入的是 hex 字符串，直接使用；如果是普通字符串，需要先 keccak256
+        let dnaHashBytes32: string;
+        if (dnaHash.startsWith("0x") && dnaHash.length === 66) {
+          // 已经是 32 字节的 hex 字符串
+          dnaHashBytes32 = dnaHash;
+        } else {
+          // 将字符串转换为 bytes32 (使用 keccak256 hash)
+          dnaHashBytes32 = ethers.keccak256(ethers.toUtf8Bytes(dnaHash));
+        }
         
         // 将 signature 字符串转换为 bytes
         const signatureBytes = ethers.getBytes(signature);
@@ -92,13 +104,17 @@ export const useLotteryNFTContract = () => {
         // 将 amount 转换为 BigNumber (假设是支付代币的数量，需要根据代币精度处理)
         const amountBN = ethers.parseUnits(amount, 18); // 默认18位小数，可根据实际情况调整
         
+        // 将 nonce 和 deadline 转换为 BigNumber
+        const nonceBN = BigInt(nonce);
+        const deadlineBN = BigInt(deadline);
+        
         const tx = await (contractWithSigner as any).mint(
-          dna,
-          uri,
+          dnaHashBytes32,
+          metadataURI,
           signatureBytes,
           amountBN,
-          nonce,
-          timestamp
+          nonceBN,
+          deadlineBN
         );
         await tx.wait();
         setIsLoading(false);
