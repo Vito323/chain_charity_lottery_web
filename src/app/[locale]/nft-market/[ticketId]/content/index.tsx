@@ -1,9 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
+import { useAccount, useChainId } from 'wagmi';
+import { useReadContract } from 'wagmi';
+import { formatUnits, parseUnits } from 'viem';
+import BigNumber from 'bignumber.js';
 import { TicketImage } from './components/TicketImage';
 import { BasicInfoTab } from './components/BasicInfoTab';
 import { HistoryTab } from './components/HistoryTab';
@@ -14,7 +18,10 @@ import LotterySellModal from '@/components/lottery-sell-modal';
 import LotteryDelistModal from '@/components/lottery-delist-modal';
 import { DetailTab, LotteryTicket, PurchaseRecord, WinningRecord } from './types';
 import { LotteryTicket as MarketLotteryTicket } from '@/app/[locale]/nft-market/types';
-import { isMockMode, requireRealCall } from '@/utils/mock';
+import { LotterySeries, preMintLotteryTicket } from '@/service/lottery';
+import { useLotteryNFTContract } from '@/hooks/useLotteryNFTContract';
+import { getRarityPercentageFromRank, rankToRarity } from '@/utils/lottery';
+import { getChainById } from '@/lib/chain-config';
 
 interface LotteryTicketDetailProps {
   ticketId: string;
@@ -30,7 +37,7 @@ const mockTicketData: LotteryTicket = {
   image: '/images/placeholder-all.png',
   rarity: 'rare',
   rarityLabel: 'Rare',
-  rarityPercentage: '25%',
+  rarityPercentage: `${getRarityPercentageFromRank(1)}%`,
   maxPrize: '$1,000',
   basicWinRate: '1/2,000',
   redemptionCost: '500',
@@ -88,22 +95,107 @@ const mockWinningRecords: WinningRecord[] = [
   },
 ];
 
+// CCT 代币地址
+const CCT_TOKEN_ADDRESS = '0x510c241672e6ff04b0Ad76211cb141716a27EE2e' as `0x${string}`;
+
+// ERC20 ABI (仅包含 balanceOf 和 decimals)
+const ERC20_ABI = [
+  {
+    constant: true,
+    inputs: [{ name: '_owner', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: 'balance', type: 'uint256' }],
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', type: 'uint8' }],
+    type: 'function',
+  },
+] as const;
+
+// Convert LotterySeries to LotteryTicket
+const convertLotterySeriesToTicket = (series: LotterySeries): LotteryTicket => {
+  const rarity = rankToRarity(series.rank);
+  return {
+    id: series.id.toString(),
+    series: series.seriesName || series.title,
+    level: series.template || 'STANDARD LEVEL',
+    title: series.title,
+    image: series.src || '/images/placeholder-all.png',
+    rarity,
+    rarityLabel: rarity.charAt(0).toUpperCase() + rarity.slice(1),
+    rarityPercentage: `${getRarityPercentageFromRank(series.rank)}%`,
+    maxPrize: `${series.highest.toLocaleString()} CCT`,
+    basicWinRate: `1/${series.rate}`,
+    redemptionCost: series.price.toString(),
+    currency: 'CCT',
+    educationPercentage: '55%',
+    educationPartner: series.cooperation || 'UNESCO',
+    educationDescription: series.description || 'This lottery ticket supports education initiatives',
+    educationPartnerFull: series.cooperation || 'UNESCO',
+    dnaId: series.id.toString(),
+    dnaAddress: '0x...',
+    rareLevel: `H.S${series.rank.toString().padStart(2, '0')}`,
+    opds: `1 in ${series.rate}`,
+    prize: `${series.highest.toLocaleString()} CCT`,
+    rights: 'Weekly Special Draws',
+    date: new Date(series.createdAt).toLocaleString(),
+    icons: ['graduation', 'music', 'books'],
+  };
+};
+
 const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, type }) => {
   const t = useTranslations('nftDetail');
   const tCommon = useTranslations('common');
-  // In production, fetch ticket by ticketId
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _ticketId = ticketId; // Reserved for future API integration
+  const { address, isConnected, chain } = useAccount();
+  const chainId = useChainId();
+  const { mint, isLoading: isMinting } = useLotteryNFTContract();
   
-  // In mock mode, require real API call to fetch ticket data
+  // 从本地存储读取 LotterySeries 数据
+  const [lotterySeries, setLotterySeries] = useState<LotterySeries | null>(null);
+  
   useEffect(() => {
-    if (isMockMode()) {
-      // This should be replaced with actual API call
-      requireRealCall(`Fetch lottery ticket detail for ticketId: ${ticketId}`, 'network');
+    const storageKey = `lottery_ticket_${ticketId}`;
+    const storedData = localStorage.getItem(storageKey);
+    if (storedData) {
+      try {
+        const series = JSON.parse(storedData) as LotterySeries;
+        setLotterySeries(series);
+      } catch (error) {
+        console.error('Failed to parse stored lottery series:', error);
+      }
     }
   }, [ticketId]);
   
-  const ticket = mockTicketData;
+  // 转换为 LotteryTicket 用于显示
+  const ticket = useMemo(() => {
+    if (lotterySeries) {
+      return convertLotterySeriesToTicket(lotterySeries);
+    }
+    return mockTicketData;
+  }, [lotterySeries]);
+  
+  // 查询 CCT 余额
+  const { data: cctBalance, refetch: refetchCCTBalance } = useReadContract({
+    address: CCT_TOKEN_ADDRESS,
+    abi: ERC20_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: isConnected && !!address,
+      refetchInterval: 10000,
+    },
+  });
+  
+  // 查询 CCT decimals
+  const { data: cctDecimals } = useReadContract({
+    address: CCT_TOKEN_ADDRESS,
+    abi: ERC20_ABI,
+    functionName: 'decimals',
+  });
   const [activeTab, setActiveTab] = React.useState<DetailTab>('basic');
   const [tabKey, setTabKey] = React.useState(0);
   
@@ -151,15 +243,101 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
     setIsRedemptionModalOpen(true);
   };
 
-  // Handle redemption confirmation
-  const handleRedemptionConfirm = () => {
-    setIsRedemptionModalOpen(false);
-    setSuccessModalType('redemption');
-    // Wait for redemption modal to close before showing success modal
-    setTimeout(() => {
-      setIsSuccessModalOpen(true);
-      setMockTicketCount(prev => prev + 1);
-    }, 300);
+  // Handle redemption confirmation - 实现完整的兑换流程
+  const handleRedemptionConfirm = async () => {
+    if (!isConnected || !address || !lotterySeries) {
+      toast.error(tCommon('errors.pleaseConnectWallet'));
+      return;
+    }
+
+    // 链ID验证 - 在交易前检查当前链是否匹配
+    const expectedChainId = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID);
+    
+    if (chainId !== expectedChainId) {
+      const currentChainInfo = chain || getChainById(chainId);
+      const expectedChainInfo = getChainById(expectedChainId);
+      toast.error(
+        tCommon('wallet.wrongNetworkMessage', {
+          expectedName: expectedChainInfo.name,
+          expectedId: expectedChainId,
+          currentName: currentChainInfo.name,
+          currentId: chainId,
+        }),
+        {
+          autoClose: 5000,
+        }
+      );
+      return;
+    }
+
+    try {
+      // 注意：不在这里关闭 modal，让 modal 在调用期间保持打开状态
+      
+      // 1. 调用 preMintLotteryTicket 获取签名信息
+      toast.info(tCommon('actions.processing'));
+      const preMintResponse = await preMintLotteryTicket(lotterySeries.id, address);
+      
+      if (!preMintResponse.ok) {
+        toast.error(preMintResponse.msg || tCommon('errors.failedToLoad'));
+        return;
+      }
+      
+      const preMintInfo = preMintResponse.data;
+      
+      // 2. 查询 CCT 余额
+      const balanceResult = await refetchCCTBalance();
+      const balance = balanceResult.data;
+      const decimals = (cctDecimals as number) || 18;
+      console.log('balance', balance, cctDecimals);
+      if (!balance) {
+        toast.error(tCommon('errors.failedToLoad'));
+        return;
+      }
+      const requiredAmountBigInt = BigInt(preMintInfo.amount);
+      const requiredAmountFormatted = formatUnits(requiredAmountBigInt, decimals);
+      
+      // 钱包余额是 bigint（原始值），转换为格式化值
+      const balanceBigInt = typeof balance === 'bigint' ? balance : BigInt(balance.toString());
+      const userBalanceFormatted = formatUnits(balanceBigInt, decimals);
+      
+      // 使用 BigNumber 进行比对（两者都是格式化值）
+      const requiredAmountBN = new BigNumber(requiredAmountFormatted);
+      const userBalanceBN = new BigNumber(userBalanceFormatted);
+      if (userBalanceBN.isLessThan(requiredAmountBN)) {
+        toast.error(tCommon('errors.insufficientFunds'));
+        return;
+      }
+
+      console.log('preMintInfo', preMintInfo);
+      
+      // 4. 调用 mint 方法
+      toast.info(tCommon('actions.processing'));
+      const txHash = await mint(
+        preMintInfo.dna,
+        preMintInfo.uri,
+        preMintInfo.signature,
+        preMintInfo.amount,
+        preMintInfo.nonce,
+        preMintInfo.timestamp
+      );
+      
+      // 只有在成功时才关闭 modal 并显示成功模态
+      setIsRedemptionModalOpen(false);
+      toast.success(tCommon('success.redemptionSuccess'));
+      
+      // 5. 显示成功模态
+      setSuccessModalType('redemption');
+      setTimeout(() => {
+        setIsSuccessModalOpen(true);
+        setMockTicketCount(prev => prev + 1);
+      }, 300);
+      
+    } catch (error: any) {
+      console.error('Redemption error:', error);
+      const errorMessage = error?.message || tCommon('errors.networkError');
+      toast.error(errorMessage);
+      // 错误情况下不关闭 modal，让用户可以重试
+    }
   };
 
   // Convert detail ticket to market ticket format for success modal
@@ -239,7 +417,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
       <main className="pt-28 md:pt-36 pb-20">
         <motion.div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
@@ -254,9 +432,13 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
               <span>{t('badge')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-2">
-              {ticket.series}
+              {ticket.title}
             </h1>
-            <p className="text-lg md:text-xl text-white/70">{ticket.level}</p>
+            {lotterySeries && (
+              <p className="text-lg md:text-xl text-white/70">
+                {tCommon(`rarity.${rankToRarity(lotterySeries.rank)}`)}
+              </p>
+            )}
           </motion.div>
 
           {/* Main Ticket Card - Image */}
@@ -322,7 +504,6 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
             ticketId={ticket.id}
             redemptionPrice={parseFloat(ticket.redemptionCost)}
             onConfirmRedemption={handleRedemptionConfirm}
-            mockMode={true}
           />
 
           {/* Success Modal */}
@@ -345,7 +526,6 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
             ticketId={ticket.id}
             purchasePrice={ticket.salePrice ? parseFloat(ticket.salePrice.replace(/,/g, '')) : parseFloat(ticket.redemptionCost)}
             onConfirmSell={handleSellConfirm}
-            mockMode={true}
           />
 
           {/* Success Modal */}
@@ -369,7 +549,6 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
             ticketId={ticket.id}
             redemptionPrice={ticket.salePrice ? parseFloat(ticket.salePrice.replace(/,/g, '')) : parseFloat(ticket.redemptionCost)}
             onConfirmRedemption={handlePurchaseConfirm}
-            mockMode={true}
             type="purchase"
           />
 
@@ -381,7 +560,6 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
             redemptionCost={parseFloat(ticket.redemptionCost)}
             maxPrize={ticket.maxPrize}
             onConfirmFollow={handleFollowConfirm}
-            mockMode={true}
           />
           
           {/* Success Modal */}

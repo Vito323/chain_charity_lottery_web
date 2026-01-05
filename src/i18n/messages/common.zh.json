@@ -51,11 +51,11 @@
       "privacy": "隐私政策"
     },
     "rarity": {
-      "common": "普通",
-      "rare": "稀有",
-      "epic": "史诗",
-      "legendary": "传说",
-      "mythic": "神话"
+      "common": "普通级",
+      "rare": "稀有级",
+      "epic": "史诗级",
+      "legendary": "传说级",
+      "mythic": "神话级"
     },
     "nodeTypes": {
       "genesis": "创世节点",
@@ -88,7 +88,8 @@
       "donationSuccess": "捐赠成功！感谢您的支持。",
       "donationSuccessful": "捐赠成功！",
       "copied": "已复制！",
-      "delistSuccess": "下架成功"
+      "delistSuccess": "下架成功",
+      "redemptionSuccess": "兑换成功！交易已完成。"
     },
     "labels": {
       "price": "价格",

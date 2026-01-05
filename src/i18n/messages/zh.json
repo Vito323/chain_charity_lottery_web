@@ -6,7 +6,7 @@
     "home": "首页",
     "projects": "项目",
     "lottery": "抽奖",
-    "nftMarket": "NFT 市场",
+    "nftMarket": "奖券",
     "nodes": "节点",
     "dao": "DAO",
     "connectWallet": "连接钱包",
@@ -316,12 +316,12 @@
   },
   "nftMarket": {
     "badge": "链慈善抽奖",
-    "title": "NFT",
-    "titleHighlight": "市场",
-    "subtitle": "发现并收集具有不同稀有度和中奖率的独特NFT",
+    "title": "抽奖",
+    "titleHighlight": "奖券",
+    "subtitle": "发现并收集不同稀有度和中奖率的独特奖券",
     "tabs": {
-      "new": "新NFT",
-      "market": "NFT市场"
+      "new": "铸造奖券",
+      "market": "奖券交易"
     },
     "sort": {
       "latest": "最新",

@@ -4,15 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
-import { isMockMode, requireRealCall } from '@/utils/mock';
 
 interface LotteryRedemptionModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticketId: string;
   redemptionPrice: number; // 兑换价格或售价（CCT）
-  onConfirmRedemption?: () => void;
-  mockMode?: boolean; // 允许在未连接钱包时测试
+  onConfirmRedemption?: () => void | Promise<void>;
   type?: 'redemption' | 'purchase'; // 类型：兑换或购买
 }
 
@@ -22,13 +20,11 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
   ticketId,
   redemptionPrice,
   onConfirmRedemption,
-  mockMode = false,
   type = 'redemption',
 }) => {
   const t = useTranslations('lottery.modals.redemption');
   const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
-  const canProceed = mockMode || isConnected;
   const isPurchaseType = type === 'purchase';
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -42,39 +38,23 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
   }, [isOpen]);
 
   const handleConfirmRedemption = async () => {
-    if (!canProceed || !acceptedTerms || isProcessing) {
+    if (!isConnected || !acceptedTerms || isProcessing) {
       return;
     }
 
     setIsProcessing(true);
 
     try {
-      // 模拟加载过程
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // In mock mode, require real API call or wallet transaction
-      if (isMockMode()) {
-        requireRealCall(`Lottery redemption/purchase for ticket ${ticketId}`, 'server');
-        setIsProcessing(false);
-        return;
-      }
-
-      // Mock兑换流程 - 模拟异步操作
-      console.log('Processing redemption for ticket:', ticketId);
-
-      // 关闭Modal
-      onClose();
-
-      // 触发成功回调（在Modal关闭后）
-      if (onConfirmRedemption) {
-        // 使用 setTimeout 确保 Modal 关闭动画完成后再触发成功回调
-        setTimeout(() => {
-          onConfirmRedemption();
-        }, 100);
-      }
+      // 调用真实的兑换函数
+      // 注意：不在这里关闭 modal，由父组件控制关闭时机
+      await onConfirmRedemption?.();
+      // 如果 onConfirmRedemption 成功执行且没有抛出错误，父组件会负责关闭 modal
+      // 如果抛出错误，则重置 processing 状态，保持 modal 打开
     } catch (error) {
       console.error('Redemption failed:', error);
       setIsProcessing(false);
+      // 错误处理由父组件的 onConfirmRedemption 负责，这里只重置 processing 状态
+      // 保持 modal 打开，让用户可以重试
     }
   };
 
@@ -86,7 +66,7 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+        className="fixed inset-0 z-100 flex items-center justify-center p-4"
         onClick={onClose}
       >
         {/* Backdrop */}
@@ -98,7 +78,7 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
           transition={{ type: 'spring', duration: 0.3 }}
-          className="relative w-full max-w-md bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 border border-white/10 rounded-3xl shadow-2xl"
+          className="relative w-full max-w-md bg-linear-to-b from-slate-900 via-slate-950 to-slate-900 border border-white/10 rounded-3xl shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6 sm:p-8 space-y-6 relative">
@@ -149,7 +129,7 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
                 id="terms-checkbox-redemption"
                 checked={acceptedTerms}
                 onChange={(e) => setAcceptedTerms(e.target.checked)}
-                className="mt-1 w-5 h-5 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-2 focus:ring-purple-500/50 cursor-pointer flex-shrink-0"
+                className="mt-1 w-5 h-5 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-2 focus:ring-purple-500/50 cursor-pointer shrink-0"
               />
               <label htmlFor="terms-checkbox-redemption" className="flex-1 text-sm sm:text-base text-white/70 cursor-pointer">
                 {tCommon('terms.accept')}{' '}
@@ -166,11 +146,11 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
             {/* Confirm Redemption Button */}
             <button
               onClick={handleConfirmRedemption}
-              disabled={!canProceed || !acceptedTerms || isProcessing}
+              disabled={!isConnected || !acceptedTerms || isProcessing}
               className={`w-full rounded-full py-4 px-6 text-base sm:text-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
-                !canProceed || !acceptedTerms || isProcessing
+                !isConnected || !acceptedTerms || isProcessing
                   ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/30 cursor-pointer'
+                  : 'bg-linear-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/30 cursor-pointer'
               }`}
             >
               {isProcessing ? (
@@ -181,7 +161,7 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
                   </svg>
                   {tCommon('actions.processing')}
                 </>
-              ) : !canProceed ? (
+              ) : !isConnected ? (
                 tCommon('actions.connectWalletFirst')
               ) : (
                 isPurchaseType ? t('confirmPurchase') : t('confirmRedemption')

@@ -51,11 +51,11 @@
       "privacy": "Privacy Policy"
     },
     "rarity": {
-      "common": "Common",
-      "rare": "Rare",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "mythic": "Mythic"
+      "common": "Common Level",
+      "rare": "Rare Level",
+      "epic": "Epic Level",
+      "legendary": "Legendary Level",
+      "mythic": "Mythic Level"
     },
     "nodeTypes": {
       "genesis": "Genesis Node",
@@ -88,7 +88,8 @@
       "donationSuccess": "Donation successful! Thank you for your support.",
       "donationSuccessful": "Donation Successful!",
       "copied": "Copied!",
-      "delistSuccess": "Ticket delisted successfully"
+      "delistSuccess": "Ticket delisted successfully",
+      "redemptionSuccess": "Redemption successful! Transaction completed."
     },
     "labels": {
       "price": "Price",

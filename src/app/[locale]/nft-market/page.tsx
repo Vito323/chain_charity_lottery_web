@@ -1,221 +1,115 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import ScrollToTop from '@/components/scroll-to-top';
 import LotteryCard from './components/LotteryCard';
-import { LotteryTicket } from './types';
+import { getLotteryTickets, LotterySeries } from '@/service/lottery';
 
 type TabType = 'new' | 'market';
 
 const NFTMarketPage = () => {
   const t = useTranslations('nftMarket');
+  const tCommon = useTranslations('common');
   const [activeTab, setActiveTab] = useState<TabType>('new');
   const [sortBy, setSortBy] = useState<'latest' | 'price' | 'rarity' | 'follow'>('latest');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   
-  // Data state - 测试数据
-  const [newLotteryTickets] = useState<LotteryTicket[]>([
-    {
-      id: 'ticket-001',
-      image: '/images/placeholder-all.png',
-      rarity: 'common',
-      rarityLabel: 'Common',
-      basicWinRate: '5.5%',
-      maxPrize: '1,000 USDT',
-      redemptionCost: '100',
-      currency: 'USDT',
-    },
-    {
-      id: 'ticket-002',
-      image: '/images/placeholder-all.png',
-      rarity: 'rare',
-      rarityLabel: 'Rare',
-      basicWinRate: '8.2%',
-      maxPrize: '2,500 USDT',
-      redemptionCost: '250',
-      currency: 'USDT',
-    },
-    {
-      id: 'ticket-003',
-      image: '/images/placeholder-all.png',
-      rarity: 'epic',
-      rarityLabel: 'Epic',
-      basicWinRate: '12.5%',
-      maxPrize: '5,000 USDT',
-      redemptionCost: '500',
-      currency: 'USDT',
-    },
-    {
-      id: 'ticket-004',
-      image: '/images/placeholder-all.png',
-      rarity: 'legendary',
-      rarityLabel: 'Legendary',
-      basicWinRate: '18.0%',
-      maxPrize: '10,000 USDT',
-      redemptionCost: '1,000',
-      currency: 'USDT',
-    },
-    {
-      id: 'ticket-005',
-      image: '/images/placeholder-all.png',
-      rarity: 'mythic',
-      rarityLabel: 'Mythic',
-      basicWinRate: '25.0%',
-      maxPrize: '25,000 USDT',
-      redemptionCost: '2,500',
-      currency: 'USDT',
-    },
-    {
-      id: 'ticket-006',
-      image: '/images/placeholder-all.png',
-      rarity: 'rare',
-      rarityLabel: 'Rare',
-      basicWinRate: '7.8%',
-      maxPrize: '2,200 USDT',
-      redemptionCost: '220',
-      currency: 'USDT',
-    },
-    {
-      id: 'ticket-007',
-      image: '/images/placeholder-all.png',
-      rarity: 'common',
-      rarityLabel: 'Common',
-      basicWinRate: '5.2%',
-      maxPrize: '950 USDT',
-      redemptionCost: '95',
-      currency: 'USDT',
-    },
-    {
-      id: 'ticket-008',
-      image: '/images/placeholder-all.png',
-      rarity: 'epic',
-      rarityLabel: 'Epic',
-      basicWinRate: '13.5%',
-      maxPrize: '5,500 USDT',
-      redemptionCost: '550',
-      currency: 'USDT',
-    },
-  ]);
-  const [marketLotteryTickets] = useState<LotteryTicket[]>([
-    {
-      id: 'market-001',
-      image: '/images/placeholder-all.png',
-      rarity: 'rare',
-      rarityLabel: 'Rare',
-      salePrice: '280',
-      redemptionCost: '250',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-002',
-      image: '/images/placeholder-all.png',
-      rarity: 'epic',
-      rarityLabel: 'Epic',
-      salePrice: '580',
-      redemptionCost: '500',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-003',
-      image: '/images/placeholder-all.png',
-      rarity: 'legendary',
-      rarityLabel: 'Legendary',
-      salePrice: '1,150',
-      redemptionCost: '1,000',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-004',
-      image: '/images/placeholder-all.png',
-      rarity: 'common',
-      rarityLabel: 'Common',
-      salePrice: '110',
-      redemptionCost: '100',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-005',
-      image: '/images/placeholder-all.png',
-      rarity: 'mythic',
-      rarityLabel: 'Mythic',
-      salePrice: '2,800',
-      redemptionCost: '2,500',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-006',
-      image: '/images/placeholder-all.png',
-      rarity: 'rare',
-      rarityLabel: 'Rare',
-      salePrice: '270',
-      redemptionCost: '220',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-007',
-      image: '/images/placeholder-all.png',
-      rarity: 'epic',
-      rarityLabel: 'Epic',
-      salePrice: '600',
-      redemptionCost: '550',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-008',
-      image: '/images/placeholder-all.png',
-      rarity: 'legendary',
-      rarityLabel: 'Legendary',
-      salePrice: '1,200',
-      redemptionCost: '1,000',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-009',
-      image: '/images/placeholder-all.png',
-      rarity: 'common',
-      rarityLabel: 'Common',
-      salePrice: '105',
-      redemptionCost: '95',
-      currency: 'USDT',
-    },
-    {
-      id: 'market-010',
-      image: '/images/placeholder-all.png',
-      rarity: 'rare',
-      rarityLabel: 'Rare',
-      salePrice: '290',
-      redemptionCost: '250',
-      currency: 'USDT',
-    },
-  ]);
+  // Data state - 拆分两个 tab 的数据源，严格按照 LotterySeries 类型
+  const [newLotteryTickets, setNewLotteryTickets] = useState<LotterySeries[]>([]);
+  const [marketLotteryTickets, setMarketLotteryTickets] = useState<LotterySeries[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  
+  // Fetch data for new tab
+  const fetchNewLotteryTickets = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await getLotteryTickets();
+      if (response.ok) {
+        setNewLotteryTickets(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch new lottery tickets:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  // TODO: 接口调用位置
-  // 示例代码：
-  // const [newLotteryTickets, setNewLotteryTickets] = useState<LotteryTicket[]>([]);
-  // const [marketLotteryTickets, setMarketLotteryTickets] = useState<LotteryTicket[]>([]);
-  // const [loading, setLoading] = useState<boolean>(false);
-  //
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       // 调用接口获取数据
-  //       // const newTickets = await fetchNewLotteryTickets();
-  //       // const marketTickets = await fetchMarketLotteryTickets();
-  //       // setNewLotteryTickets(newTickets);
-  //       // setMarketLotteryTickets(marketTickets);
-  //     } catch (error) {
-  //       console.error('Failed to fetch lottery tickets:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [activeTab, sortBy, sortOrder]);
+  // Fetch data for market tab
+  const fetchMarketLotteryTickets = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await getLotteryTickets();
+      if (response.ok) {
+        setMarketLotteryTickets(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch market lottery tickets:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Fetch data when tab changes
+  useEffect(() => {
+    if (activeTab === 'new') {
+      if (newLotteryTickets.length === 0) {
+        fetchNewLotteryTickets();
+      }
+    } else {
+      if (marketLotteryTickets.length === 0) {
+        fetchMarketLotteryTickets();
+      }
+    }
+  }, [activeTab, fetchNewLotteryTickets, fetchMarketLotteryTickets, newLotteryTickets.length, marketLotteryTickets.length]);
+
+  // Sort function - 严格按照 LotterySeries 类型
+  const sortTickets = useCallback((tickets: LotterySeries[]) => {
+    const sorted = [...tickets];
+    
+    switch (sortBy) {
+      case 'latest':
+        sorted.sort((a, b) => {
+          // Sort by createdAt (newest first) or id as fallback
+          if (a.createdAt && b.createdAt) {
+            const dateA = new Date(a.createdAt).getTime();
+            const dateB = new Date(b.createdAt).getTime();
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+          }
+          // Fallback to id
+          return sortOrder === 'desc' ? b.id - a.id : a.id - b.id;
+        });
+        break;
+      case 'price':
+        sorted.sort((a, b) => {
+          const priceA = a.price || 0;
+          const priceB = b.price || 0;
+          return sortOrder === 'desc' ? priceB - priceA : priceA - priceB;
+        });
+        break;
+      case 'rarity':
+        // Sort by rank (higher rank = higher rarity)
+        sorted.sort((a, b) => {
+          const rankA = a.rank || 0;
+          const rankB = b.rank || 0;
+          return sortOrder === 'desc' ? rankB - rankA : rankA - rankB;
+        });
+        break;
+      default:
+        break;
+    }
+    
+    return sorted;
+  }, [sortBy, sortOrder]);
+
+  // Get current tickets and apply sorting
+  const currentTickets = useMemo(() => {
+    const tickets = activeTab === 'new' ? newLotteryTickets : marketLotteryTickets;
+    return sortTickets(tickets);
+  }, [activeTab, newLotteryTickets, marketLotteryTickets, sortTickets]);
 
   const handleSort = (type: 'latest' | 'price' | 'rarity' | 'follow') => {
     if (sortBy === type) {
@@ -230,8 +124,6 @@ const NFTMarketPage = () => {
     { id: 'new' as TabType, label: t('tabs.new') },
     { id: 'market' as TabType, label: t('tabs.market') },
   ];
-
-  const currentTickets = activeTab === 'new' ? newLotteryTickets : marketLotteryTickets;
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
@@ -298,7 +190,7 @@ const NFTMarketPage = () => {
       </section>
 
       {/* Main Content */}
-      <section className="py-8 md:py-16 bg-gradient-to-b from-slate-950 to-slate-900">
+      <section className="py-8 md:py-16 bg-linear-to-b from-slate-950 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Tab Navigation */}
           <motion.div
@@ -315,7 +207,7 @@ const NFTMarketPage = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-2.5 rounded-xl font-semibold text-xs md:text-sm lg:text-base transition-all duration-300 ${
                     activeTab === tab.id
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
+                      ? 'bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
                       : 'text-white/70 hover:text-white hover:bg-white/5'
                   }`}
                 >
@@ -328,7 +220,7 @@ const NFTMarketPage = () => {
             <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
               <button
                 onClick={() => handleSort('latest')}
-                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                className={`shrink-0 px-3 cursor-pointer md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
                   sortBy === 'latest'
                     ? 'bg-white/10 text-white border border-white/20'
                     : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
@@ -338,7 +230,7 @@ const NFTMarketPage = () => {
               </button>
               <button
                 onClick={() => handleSort('price')}
-                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 whitespace-nowrap ${
+                className={`shrink-0 px-3 cursor-pointer md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 whitespace-nowrap ${
                   sortBy === 'price'
                     ? 'bg-white/10 text-white border border-white/20'
                     : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
@@ -358,7 +250,7 @@ const NFTMarketPage = () => {
               </button>
               <button
                 onClick={() => handleSort('rarity')}
-                className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 whitespace-nowrap ${
+                className={`shrink-0 px-3 cursor-pointer md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all duration-300 flex items-center gap-1 whitespace-nowrap ${
                   sortBy === 'rarity'
                     ? 'bg-white/10 text-white border border-white/20'
                     : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
@@ -379,15 +271,47 @@ const NFTMarketPage = () => {
             </div>
           </motion.div>
 
-          {/* Cards Grid or Empty State */}
-          {currentTickets.length === 0 ? (
+          {/* Cards Grid, Loading, or Empty State */}
+          {loading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
+            >
+              <div className="w-20 h-20 md:w-16 md:h-16 bg-linear-to-br from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg 
+                  className="w-10 h-10 md:w-8 md:h-8 text-white/60 animate-spin" 
+                  fill="none" 
+                  viewBox="0 0 24 24"
+                >
+                  <circle 
+                    className="opacity-25" 
+                    cx="12" 
+                    cy="12" 
+                    r="10" 
+                    stroke="currentColor" 
+                    strokeWidth="4"
+                  />
+                  <path 
+                    className="opacity-75" 
+                    fill="currentColor" 
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-2xl md:text-xl font-semibold text-white mb-3">
+                {tCommon('status.loading')}
+              </h3>
+            </motion.div>
+          ) : currentTickets.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
               className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
             >
-              <div className="w-20 h-20 md:w-16 md:h-16 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 md:w-16 md:h-16 bg-linear-to-br from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg 
                   className="w-10 h-10 md:w-8 md:h-8 text-white/60" 
                   fill="none" 
@@ -414,7 +338,7 @@ const NFTMarketPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
             >
               {currentTickets.map((ticket, index) => (
                 <LotteryCard

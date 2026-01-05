@@ -34,7 +34,7 @@ const Donate = ({ uid, name }: DonateProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { donate, isLoading: donationLoading } = useDonationContract();
-  const { calculateExchangeAmount, isLoading: isLoadingMasterContract, getEcosystemTokenDecimals, getDonationTokenDecimals } = useMasterContract();
+  const { calculateExchangeAmount, isLoading: isLoadingMasterContract, getEcosystemTokenDecimals, getEcosystemToken, getDonationToken } = useMasterContract();
   const { isConnected, chain } = useAccount();
   const { openConnectModal } = useConnectModal();
   // const { calculateUSDValue } = useTokenPrices();
@@ -92,6 +92,10 @@ const Donate = ({ uid, name }: DonateProps) => {
       try {
         console.log("[fetchDecimals] 开始获取 decimals");
         const decimals = await getEcosystemTokenDecimals();
+        const token = await getEcosystemToken();
+        const donationToken = await getDonationToken();
+        console.log("[fetchDecimals] 获取到的 token:", token, "类型:", typeof token);
+        console.log("[fetchDecimals] 获取到的 donationToken:", donationToken, "类型:", typeof donationToken);
         console.log("[fetchDecimals] 获取到的 decimals:", decimals, "类型:", typeof decimals);
         
         if (decimals && decimals > 0) {

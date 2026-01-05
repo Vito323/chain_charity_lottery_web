@@ -1,52 +1,62 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
-import { LotteryTicket, RarityType } from '../types';
 import { useRouter } from 'next/navigation';
+import { LotterySeries } from '@/service/lottery';
+import { RarityType } from '../types';
+import { rankToRarity, rarityConfig, goldShimmerStyle } from '@/utils/lottery';
+import { renderTicket } from '@/service/asset';
 
 interface LotteryCardProps {
-  ticket: LotteryTicket;
+  ticket: LotterySeries;
   type: 'new' | 'market';
   animationDelay?: number;
 }
 
-const rarityConfig: Record<RarityType, { color: string; bgGradient: string; borderColor: string }> = {
-  common: {
-    color: 'text-gray-400',
-    bgGradient: 'from-gray-500/10 to-gray-600/5',
-    borderColor: 'border-gray-500/30',
-  },
-  rare: {
-    color: 'text-blue-400',
-    bgGradient: 'from-blue-500/10 to-blue-600/5',
-    borderColor: 'border-blue-500/30',
-  },
-  epic: {
-    color: 'text-purple-400',
-    bgGradient: 'from-purple-500/10 to-purple-600/5',
-    borderColor: 'border-purple-500/30',
-  },
-  legendary: {
-    color: 'text-orange-400',
-    bgGradient: 'from-orange-500/10 to-orange-600/5',
-    borderColor: 'border-orange-500/30',
-  },
-  mythic: {
-    color: 'text-yellow-400',
-    bgGradient: 'from-yellow-500/10 to-yellow-600/5',
-    borderColor: 'border-yellow-500/30',
-  },
-};
-
 const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay = 0 }) => {
   const t = useTranslations('nftMarket');
   const tCommon = useTranslations('common');
-  const rarityStyle = rarityConfig[ticket.rarity];
   const router = useRouter();
+  
+  // SVG 状态
+  const [svgUrl, setSvgUrl] = useState<string | null>(null);
+  const [isLoadingSvg, setIsLoadingSvg] = useState(true);
+  const [svgError, setSvgError] = useState(false);
+  
+  // 根据 rank 转换为 rarity
+  const rarity = rankToRarity(ticket.rank);
+  const rarityStyle = rarityConfig[rarity];
+
+  console.log(rarity);
+  
+  // 调用 renderTicket 获取 SVG
+  useEffect(() => {
+    const fetchSvg = async () => {
+      try {
+        setIsLoadingSvg(true);
+        setSvgError(false);
+        const svgDataUrl = await renderTicket(ticket.id.toString());
+        setSvgUrl(svgDataUrl);
+      } catch (error) {
+        console.error('Failed to render ticket SVG:', error);
+        setSvgError(true);
+      } finally {
+        setIsLoadingSvg(false);
+      }
+    };
+
+    fetchSvg();
+  }, [ticket.id]);
+  
+  // 格式化数据
+  const currency = 'CCT';
+  const basicWinRate = `1/${ticket.rate}`;
+  const maxPrize = `${ticket.highest.toLocaleString()} ${currency}`;
+  const redemptionCost = ticket.price.toString();
 
   return (
     <motion.div
@@ -78,24 +88,80 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
       />
 
       {/* Card Content */}
-      <div className="relative p-3 sm:p-4 md:p-5">
+      <div className="relative p-4 md:p-3">
         {/* Image Container - Clickable Link */}
-        <Link href={`/nft-market/${ticket.id}?type=${type}`} className="block">
-          <div className="relative mb-3 md:mb-4 rounded-xl overflow-hidden bg-linear-to-br from-slate-800 to-slate-900 cursor-pointer">
-            <div className="aspect-3/4 relative">
-              <Image
-                src={ticket.image}
-                alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
-                fill
-                className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-                style={{ willChange: 'transform' }}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/images/placeholder-all.png';
-                }}
-              />
+        <Link 
+          href={`/nft-market/${ticket.id}?type=${type}`}
+          onClick={() => {
+            // 存储 LotterySeries 数据到本地存储
+            const storageKey = `lottery_ticket_${ticket.id}`;
+            localStorage.setItem(storageKey, JSON.stringify(ticket));
+          }}
+          className="block"
+        >
+          <div 
+            className="relative mb-3 md:mb-4 rounded-md overflow-hidden bg-linear-to-br from-slate-800 to-slate-900 cursor-pointer"
+            style={{ 
+              border: `2px solid ${rarityStyle.borderColor}`,
+            }}
+          >
+            {/* 16:10 比例容器，移动端最小尺寸 280x176，桌面端标准尺寸 350x220 */}
+            <div 
+              className="relative w-full min-w-[280px] min-h-[176px]"
+              style={{ aspectRatio: '16/10' }}
+            >
+              {isLoadingSvg ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-800/50">
+                  <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                </div>
+              ) : svgUrl && !svgError ? (
+                <img
+                  src={svgUrl}
+                  alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
+                  className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  style={{ willChange: 'transform' }}
+                  onError={() => {
+                    setSvgError(true);
+                  }}
+                />
+              ) : (
+                <Image
+                  src={ticket.src}
+                  alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
+                  fill
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  style={{ willChange: 'transform' }}
+                  sizes="(max-width: 640px) 280px, (max-width: 1024px) 350px, 350px"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/images/placeholder-all.png';
+                  }}
+                />
+              )}
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
+              
+              {/* 黄金闪烁效果 - 仅在 rank 5 (mythic) 时显示 */}
+              {ticket.rank === 5 && (
+                <>
+                  <style>{goldShimmerStyle}</style>
+                  <div 
+                    className="absolute inset-0 pointer-events-none overflow-hidden"
+                    style={{
+                      borderRadius: '0.75rem'
+                    }}
+                  >
+                    <div 
+                      className="absolute inset-0"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.6) 30%, rgba(255, 223, 0, 0.9) 50%, rgba(255, 215, 0, 0.6) 70%, transparent 100%)',
+                        animation: 'goldShimmer 3s ease-in-out infinite',
+                        width: '50%',
+                        height: '100%',
+                      }}
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </Link>
@@ -103,9 +169,9 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
         {/* Rarity Badge */}
         <div className="mb-3 md:mb-4">
           <span
-            className={`inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs md:text-sm font-semibold ${rarityStyle.color} bg-gradient-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor}`}
+            className={`inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs md:text-sm font-semibold ${rarityStyle.color} bg-linear-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor}`}
           >
-            {tCommon(`rarity.${ticket.rarity}`)}
+            {tCommon(`rarity.${rarity}`)}
           </span>
         </div>
 
@@ -113,26 +179,22 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
         {type === 'new' ? (
           <div className="space-y-2 md:space-y-3">
             {/* Basic Win Rate */}
-            {ticket.basicWinRate && (
-              <div className="flex items-center justify-between text-xs md:text-sm">
-                <span className="text-white/60">{t('card.basicWinRate')}</span>
-                <span className="text-white font-semibold">{ticket.basicWinRate}</span>
-              </div>
-            )}
+            <div className="flex items-center justify-between text-xs md:text-sm">
+              <span className="text-white/60">{t('card.basicWinRate')}</span>
+              <span className="text-white font-semibold">{basicWinRate}</span>
+            </div>
 
             {/* Max Prize */}
-            {ticket.maxPrize && (
-              <div className="flex items-center justify-between text-xs md:text-sm">
-                <span className="text-white/60">{t('card.maxPrize')}</span>
-                <span className="text-white font-semibold">{ticket.maxPrize}</span>
-              </div>
-            )}
+            <div className="flex items-center justify-between text-xs md:text-sm">
+              <span className="text-white/60">{t('card.maxPrize')}</span>
+              <span className="text-white font-semibold">{maxPrize}</span>
+            </div>
 
             {/* Redemption Cost */}
             <div className="flex items-center justify-between pt-2 border-t border-white/10">
               <span className="text-white/60 text-xs md:text-sm">{t('card.redemptionCost')}</span>
               <span className="text-white font-bold text-sm md:text-base">
-                {parseFloat(ticket.redemptionCost).toLocaleString()} {ticket.currency}
+                {parseFloat(redemptionCost).toLocaleString()} {currency}
               </span>
             </div>
           </div>
@@ -142,25 +204,26 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
             <div className="flex items-center justify-between text-xs md:text-sm">
               <span className="text-white/60">{t('card.redemptionCost')}</span>
               <span className="text-white font-semibold">
-                {parseFloat(ticket.redemptionCost).toLocaleString()} {ticket.currency}
+                {parseFloat(redemptionCost).toLocaleString()} {currency}
               </span>
             </div>
 
-            {/* Sale Price */}
-            {ticket.salePrice && (
-              <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                <span className="text-white/60 text-xs md:text-sm">{t('card.salePrice')}</span>
-                <span className="text-white font-bold text-sm md:text-base">
-                  {parseFloat(ticket.salePrice).toLocaleString()} {ticket.currency}
-                </span>
-              </div>
-            )}
+            {/* Sale Price - 目前使用 price 作为 salePrice，后续可根据实际需求调整 */}
+            <div className="flex items-center justify-between pt-2 border-t border-white/10">
+              <span className="text-white/60 text-xs md:text-sm">{t('card.salePrice')}</span>
+              <span className="text-white font-bold text-sm md:text-base">
+                {parseFloat(redemptionCost).toLocaleString()} {currency}
+              </span>
+            </div>
           </div>
         )}
 
         {/* Action Button */}
         <button
           onClick={() => {
+            // 存储 LotterySeries 数据到本地存储
+            const storageKey = `lottery_ticket_${ticket.id}`;
+            localStorage.setItem(storageKey, JSON.stringify(ticket));
             router.push(`/nft-market/${ticket.id}?type=${type}`);
           }}  
           className={`w-full mt-3 md:mt-4 py-2 md:py-2.5 rounded-xl cursor-pointer font-semibold text-xs md:text-sm lg:text-base bg-linear-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor} text-white transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98]`}

@@ -34,7 +34,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
       <div className="mb-8 md:mb-12">
         <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">
-            {ticket.series}
+            {ticket.title}
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">

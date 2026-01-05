@@ -6,7 +6,7 @@
     "home": "Home",
     "projects": "Projects",
     "lottery": "Lottery",
-    "nftMarket": "NFT Market",
+    "nftMarket": "Lottery Tickets",
     "nodes": "Nodes",
     "dao": "DAO",
     "connectWallet": "Connect Wallet",
@@ -394,11 +394,11 @@
   },
   "nftMarket": {
     "badge": "Chain Charity Lottery",
-    "title": "NFT",
-    "titleHighlight": "Marketplace",
-    "subtitle": "Discover and collect unique lottery tickets with different rarities and win rates",
+    "title": "Lottery ",
+    "titleHighlight": "Tickets",
+    "subtitle": "Discover and collect unique lottery tickets with different rarity and win rate",
     "tabs": {
-      "new": "New Lottery",
+      "new": "Mint Lottery",
       "market": "Lottery Market"
     },
     "sort": {

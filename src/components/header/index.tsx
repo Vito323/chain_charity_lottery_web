@@ -121,7 +121,7 @@ function Header() {
           <div className="flex items-center justify-between px-6 py-4 min-h-[64px]">
             {/* Logo */}
             <Link href="#" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-fuchsia-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
+              <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-500 via-pink-500 to-fuchsia-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <span className="text-white font-bold text-lg">H</span>
               </div>
               <span className="text-white font-bold text-xl tracking-tight">Hawaiian Nation Charity</span>
@@ -149,7 +149,7 @@ function Header() {
                     >
                       <span className="block">
                         {item.label}
-                        <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 ${
+                        <span className={`absolute -bottom-1 left-0 h-0.5 bg-linear-to-r from-purple-400 to-pink-400 transition-all duration-300 ${
                           isActive 
                             ? 'w-full' 
                             : 'w-0 group-hover:w-full'
