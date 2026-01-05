@@ -60,11 +60,11 @@ const NFTMarketPage = () => {
         fetchNewLotteryTickets();
       }
     } else {
-      if (marketLotteryTickets.length === 0) {
-        fetchMarketLotteryTickets();
-      }
+      // if (marketLotteryTickets.length === 0) {
+      //   fetchMarketLotteryTickets();
+      // }
     }
-  }, [activeTab, fetchNewLotteryTickets, fetchMarketLotteryTickets, newLotteryTickets.length, marketLotteryTickets.length]);
+  }, [activeTab, fetchNewLotteryTickets, newLotteryTickets.length]);
 
   // Sort function - 严格按照 LotterySeries 类型
   const sortTickets = useCallback((tickets: LotterySeries[]) => {
@@ -122,7 +122,7 @@ const NFTMarketPage = () => {
 
   const tabs = [
     { id: 'new' as TabType, label: t('tabs.new') },
-    { id: 'market' as TabType, label: t('tabs.market') },
+    // { id: 'market' as TabType, label: t('tabs.market') },
   ];
 
   return (
