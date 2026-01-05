@@ -309,8 +309,8 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
       }
 
       console.log('preMintInfo', preMintInfo);
+    
       
-      // 4. 调用 mint 方法
       toast.info(tCommon('actions.processing'));
       const txHash = await mint(
         preMintInfo.dna,
@@ -318,8 +318,11 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
         preMintInfo.signature,
         preMintInfo.amount,
         preMintInfo.nonce,
-        preMintInfo.deadline
+        preMintInfo.deadline,
+        decimals
       );
+
+      console.log(txHash);
       
       // 只有在成功时才关闭 modal 并显示成功模态
       setIsRedemptionModalOpen(false);
