@@ -16,6 +16,7 @@ import LotteryRedemptionSuccessModal from '@/components/lottery-redemption-succe
 import LotteryFollowInvestmentModal from '@/components/lottery-follow-investment-modal';
 import LotterySellModal from '@/components/lottery-sell-modal';
 import LotteryDelistModal from '@/components/lottery-delist-modal';
+import HoldTicketDetail from './HoldTicketDetail';
 import { DetailTab, LotteryTicket, PurchaseRecord, WinningRecord } from './types';
 import { LotteryTicket as MarketLotteryTicket } from '@/app/[locale]/nft-market/types';
 import { LotterySeries, mintLotteryTicket, mintPending } from '@/service/lottery';
@@ -148,6 +149,12 @@ const convertLotterySeriesToTicket = (series: LotterySeries): LotteryTicket => {
 };
 
 const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, type }) => {
+  // When type is 'hold', use the separate HoldTicketDetail component
+  // which fetches data from wallet instead of localStorage
+  if (type === 'hold') {
+    return <HoldTicketDetail ticketId={ticketId} />;
+  }
+
   const t = useTranslations('nftDetail');
   const tCommon = useTranslations('common');
   const { address, isConnected, chain } = useAccount();
@@ -205,13 +212,12 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [successModalType, setSuccessModalType] = useState<'redemption' | 'follow' | 'purchase' | 'sell'>('redemption');
   const [isFollowInvestmentModalOpen, setIsFollowInvestmentModalOpen] = useState(false);
-  const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [isDelistModalOpen, setIsDelistModalOpen] = useState(false);
   const [mockTicketCount, setMockTicketCount] = useState(8); // Mock ticket count
 
   // Determine which content to show
-  // For 'hold' and 'listed', show basic tab (similar to 'new' and 'market')
-  const currentTab: DetailTab = (type === 'new' || type === 'hold') ? 'basic' : activeTab;
+  // For 'new', show basic tab (similar to 'hold')
+  const currentTab: DetailTab = type === 'new' ? 'basic' : activeTab;
 
   // Update key when tab changes to force re-render
   React.useEffect(() => {
@@ -389,23 +395,6 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
     }, 300);
   };
 
-  // Handle sell functionality for hold tickets
-  const handleSell = () => {
-    setIsSellModalOpen(true);
-  };
-
-  // Handle sell confirmation
-  const handleSellConfirm = (salePrice: number, duration: number) => {
-    console.log('Selling ticket:', ticketId, 'Price:', salePrice, 'Duration:', duration);
-    // TODO: Implement actual sell API call
-    // After selling, update the ticket status or redirect
-    setSuccessModalType('sell');
-    setTimeout(() => {
-      setIsSuccessModalOpen(true);
-      setMockTicketCount(prev => prev + 1);
-    }, 300);
-  };
-
   // Handle delist functionality for listed tickets
   const handleDelist = () => {
     setIsDelistModalOpen(true);
@@ -484,7 +473,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
                   onRedeem={handleRedeem}
                   onPurchase={handlePurchase}
                   onFollow={handleFollow}
-                  onSell={type === 'hold' ? handleSell : undefined}
+                  onSell={undefined}
                   onDelist={type === 'listed' ? handleDelist : undefined}
                 />
               ) : currentTab === 'history' ? (
@@ -521,27 +510,6 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
         </>
       )}
 
-      {/* Sell Modal - Only for hold tickets */}
-      {type === 'hold' && (
-        <>
-          <LotterySellModal
-            isOpen={isSellModalOpen}
-            onClose={() => setIsSellModalOpen(false)}
-            ticketId={ticket.id}
-            purchasePrice={ticket.salePrice ? parseFloat(ticket.salePrice.replace(/,/g, '')) : parseFloat(ticket.redemptionCost)}
-            onConfirmSell={handleSellConfirm}
-          />
-
-          {/* Success Modal */}
-          <LotteryRedemptionSuccessModal
-            isOpen={isSuccessModalOpen}
-            onClose={() => setIsSuccessModalOpen(false)}
-            ticket={convertToMarketTicket()}
-            ticketCount={mockTicketCount}
-            type={successModalType}
-          />
-        </>
-      )}
 
       {/* Purchase Modal, Follow Investment Modal and Success Modal - Only for market lottery */}
       {type === 'market' && (

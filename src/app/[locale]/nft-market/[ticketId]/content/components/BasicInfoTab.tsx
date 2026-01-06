@@ -59,7 +59,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
           </div>
 
           {/* Education Support Section */}
-          <div className="bg-gradient-to-r from-emerald-900/30 to-emerald-800/20 rounded-xl p-4 sm:p-5 md:p-6 mb-4 sm:mb-6 border border-emerald-500/20">
+          <div className="bg-linear-to-r from-emerald-900/30 to-emerald-800/20 rounded-xl p-4 sm:p-5 md:p-6 mb-4 sm:mb-6 border border-emerald-500/20">
             <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3">{t('education.title')}</h3>
             <p className="text-white/80 text-xs sm:text-sm md:text-base mb-2 sm:mb-3 leading-relaxed">
               {ticket.educationDescription}

@@ -56,9 +56,10 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
         setIsLoadingSvg(false);
       }
     };
-
-    fetchSvg();
-  }, [ticket.id]);
+    if (isOpen) {
+      fetchSvg();
+    }
+  }, [ticket.id, isOpen]);
 
   const handleViewTickets = () => {
     onClose();

@@ -25,9 +25,24 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
   const rarity = (ticket.rarity?.toLowerCase() || 'common') as RarityType;
   const rarityStyle = rarityConfig[rarity] || rarityConfig.common;
   const isMythic = rarity === 'mythic';
+
+  console.log(ticket);
   
   // 调用 renderTicket 获取 SVG
   useEffect(() => {
+    // 对于 hold 类型，直接使用 ticket.image，不调用 fetchSvg
+    if (type === 'hold') {
+      setIsLoadingSvg(false);
+      setSvgUrl(ticket.image); 
+      setSvgError(false);
+      return;
+    }
+
+    // 对于其他类型，只有当 ticket.id 存在时才调用 fetchSvg
+    if (!ticket.id) {
+      return;
+    }
+
     const fetchSvg = async () => {
       try {
         setIsLoadingSvg(true);
@@ -41,9 +56,11 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
         setIsLoadingSvg(false);
       }
     };
-
+    
     fetchSvg();
-  }, [ticket.id]);
+  }, [ticket.id, ticket.image, type]);
+
+  console.log(type, 'typetype');
   
   return (
     <motion.div
