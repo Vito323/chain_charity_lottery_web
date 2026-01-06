@@ -45,7 +45,7 @@ const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
 
   // Content skeleton screen
   const ContentSkeleton = () => (
-    <div className="stalwart-projects-grid">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-8">
       {[1, 2, 3, 4, 5, 6].map((_, index) => (
         <div key={index} className="stalwart-skeleton-card"></div>
       ))}
@@ -95,7 +95,7 @@ const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
       {!loading && error && <ErrorState />}
       {!loading && !error && list.length === 0 && <EmptyState />}
       {!loading && !error && list.length > 0 && (
-        <div className="stalwart-projects-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-8">
           {list.map((project, index) => (
             <ProjectCard
               key={project.id}

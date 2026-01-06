@@ -66,7 +66,7 @@ const NetworkPage: React.FC = () => {
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
       <Header />
 
-      <main className="pt-28 md:pt-36 pb-20">
+      <main className="pt-28 md:pt-36 pb-20 relative">
         <section className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 space-y-10 md:space-y-14">
           {/* Page Title */}
           <motion.div
@@ -84,7 +84,7 @@ const NetworkPage: React.FC = () => {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
                   {t('title')}
                 </h1>
-                <Link href="/user/network?tab=nodes">
+                {/* <Link href="/user/network?tab=nodes">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -95,7 +95,7 @@ const NetworkPage: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </motion.button>
-                </Link>
+                </Link> */}
               </div>
               <p className="mt-3 text-sm sm:text-base text-white/70 max-w-xl">
                 {t('subtitle')}
@@ -239,12 +239,12 @@ const NetworkPage: React.FC = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative rounded-3xl border border-white/10 bg-linear-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 px-5 py-6 sm:px-7 sm:py-7 md:px-10 md:py-8 shadow-xl shadow-black/40 overflow-hidden"
+            className="fixed top-28 md:top-36 left-0 right-0 bottom-0 flex items-center justify-center bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 z-40"
           >
             <div className="pointer-events-none absolute -top-32 -right-24 w-72 h-72 bg-purple-500/30 blur-3xl opacity-40" />
             <div className="pointer-events-none absolute -bottom-32 -left-24 w-80 h-80 bg-pink-500/20 blur-3xl opacity-40" />
             
-            <div className="relative flex items-center justify-center min-h-[200px]">
+            <div className="relative flex items-center justify-center w-full h-full">
               <div className="text-center space-y-4">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -260,7 +260,7 @@ const NetworkPage: React.FC = () => {
           </motion.div>
 
           {/* Purchase Nodes Section */}
-          <motion.section
+          {/* <motion.section
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -280,10 +280,8 @@ const NetworkPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Genesis Node - primary card */}
             <GenesisTierCard />
 
-            {/* Remaining tiers as grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {NODE_TIERS.filter((tier) => tier.id !== 'genesis').map((tier, index) => (
                 <motion.div
@@ -335,7 +333,7 @@ const NetworkPage: React.FC = () => {
                 </motion.div>
               ))}
             </div>
-          </motion.section>
+          </motion.section> */}
         </section>
       </main>
 
@@ -345,7 +343,7 @@ const NetworkPage: React.FC = () => {
   );
 };
 
-const GenesisTierCard: React.FC = () => {
+/* const GenesisTierCard: React.FC = () => {
   const t = useTranslations('network');
   const genesis = NODE_TIERS.find((tier) => tier.id === 'genesis');
 
@@ -412,7 +410,7 @@ const GenesisTierCard: React.FC = () => {
       </div>
     </motion.div>
   );
-};
+}; */
 
 export default NetworkPage;
 
