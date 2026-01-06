@@ -35,6 +35,16 @@ export interface mintPending {
   signature: string;
 }
 
+export interface LotteryHistory {
+  id: number;
+  dna: string;
+  numbers: string;
+  colors: string;
+  total: number;
+  createdAt: string;
+  lotteryDrawTickets: LotterySeries[];
+}
+
 export const getLotteryConfig = () => action<LotteryConfig>({
   url: `/lottery`,
   method: "GET",
@@ -54,4 +64,20 @@ export const mintPending = (seriesId: number, to: string) => action<mintPending>
     seriesId,
     to,
   },
+});
+
+
+export const mintLotteryTicket = (dna: string, txHash: string) => action<void>({
+  url: `/lottery/mint`,
+  method: "POST",
+  data: {
+    dna,
+    txHash,
+  },
+});
+
+
+export const getLotteryHistory = () => action<LotteryHistory[]>({
+  url: `/lottery/history`,
+  method: "GET",
 });

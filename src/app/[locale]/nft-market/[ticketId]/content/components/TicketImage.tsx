@@ -55,7 +55,7 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Left: NFT Image - 16:10 比例 */}
         <div 
-          className={`relative rounded-xl overflow-hidden bg-slate-900/50 backdrop-blur-md shadow-xl border-4`}
+          className={`relative rounded-lg overflow-hidden bg-slate-900/50 backdrop-blur-md shadow-xl border-2`}
           style={{ 
             borderColor: `${rarityStyle.borderColor}`,
           }}

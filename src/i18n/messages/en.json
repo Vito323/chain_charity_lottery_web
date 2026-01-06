@@ -287,12 +287,15 @@
       },
       "followBetAmount": "Follow-bet Amount",
       "winningAmount": "Winning Amount",
+      "prizePoolAmount": "Prize Pool Amount",
       "drawInformation": "Draw Information",
       "drawTime": "Draw Time",
       "digitalMatrix": "Digital Matrix",
       "colorGenes": "Color Genes",
       "imageSymbols": "Image Symbols",
-      "timestamp": "Timestamp:"
+      "timestamp": "Timestamp:",
+      "unknownSeries": "Unknown Series",
+      "unknownLevel": "Unknown Level"
     },
     "winningRecords": {
       "badge": "Winning Records",

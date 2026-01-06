@@ -38,6 +38,10 @@ const LotteryContent: React.FC = () => {
 
   // 是否已开奖
   const [isDrawComplete, setIsDrawComplete] = useState(false);
+  
+  // 使用 ref 跟踪是否已经设置了刷新定时器，避免重复触发
+  const refreshTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const hasTriggeredRefreshRef = React.useRef(false);
 
   // 直接使用 lotteryConfig.total 的值，不依赖动画
   const jackpotValue = parseFloat(lotteryConfig.total) || 0;
@@ -63,6 +67,18 @@ const LotteryContent: React.FC = () => {
         setIsDrawComplete(true);
         // 倒计时结束时，重新获取新的倒计时数据
         queryLotteryConfig();
+        // 延迟2秒后触发刷新历史记录事件（只触发一次）
+        if (!hasTriggeredRefreshRef.current) {
+          hasTriggeredRefreshRef.current = true;
+          // 清理之前的定时器（如果存在）
+          if (refreshTimerRef.current) {
+            clearTimeout(refreshTimerRef.current);
+          }
+          refreshTimerRef.current = setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('lotteryDrawComplete'));
+            refreshTimerRef.current = null;
+          }, 2000);
+        }
       }
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
@@ -70,6 +86,13 @@ const LotteryContent: React.FC = () => {
     // 如果之前已开奖，但现在有新的倒计时，重置状态
     if (isDrawComplete) {
       setIsDrawComplete(false);
+      // 重置刷新标志，允许下次倒计时结束时再次触发
+      hasTriggeredRefreshRef.current = false;
+      // 清理之前的定时器
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
     }
 
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -100,6 +123,16 @@ const LotteryContent: React.FC = () => {
   useEffect(() => {
     queryLotteryConfig();
   }, [queryLotteryConfig]);
+
+  // 组件卸载时清理定时器
+  useEffect(() => {
+    return () => {
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },

@@ -18,7 +18,7 @@ import LotterySellModal from '@/components/lottery-sell-modal';
 import LotteryDelistModal from '@/components/lottery-delist-modal';
 import { DetailTab, LotteryTicket, PurchaseRecord, WinningRecord } from './types';
 import { LotteryTicket as MarketLotteryTicket } from '@/app/[locale]/nft-market/types';
-import { LotterySeries, mintPending } from '@/service/lottery';
+import { LotterySeries, mintLotteryTicket, mintPending } from '@/service/lottery';
 import { useLotteryNFTContract } from '@/hooks/useLotteryNFTContract';
 import { getRarityPercentageFromRank, rankToRarity } from '@/utils/lottery';
 import { getChainById } from '@/lib/chain-config';
@@ -274,16 +274,16 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
       // 注意：不在这里关闭 modal，让 modal 在调用期间保持打开状态
       
       // 1. 调用 preMintLotteryTicket 获取签名信息
-      toast.info(tCommon('actions.processing'));
+      toast.info(tCommon('actions.processing'), {
+        autoClose: 1000,
+      });
       const preMintResponse = await mintPending(lotterySeries.id, address);
       
       if (!preMintResponse.ok) {
         toast.error(preMintResponse.msg || tCommon('errors.failedToLoad'));
         return;
       }
-      
       const preMintInfo = preMintResponse.data;
-      
       // 2. 查询 CCT 余额
       const balanceResult = await refetchCCTBalance();
       const balance = balanceResult.data;
@@ -309,9 +309,6 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
       }
 
       console.log('preMintInfo', preMintInfo);
-    
-      
-      toast.info(tCommon('actions.processing'));
       const txHash = await mint(
         preMintInfo.dna,
         preMintInfo.uri,
@@ -321,13 +318,13 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
         preMintInfo.deadline,
         decimals
       );
-
       console.log(txHash);
-      
+      if (txHash) {
+        await mintLotteryTicket(preMintInfo.dna, txHash);
+      }
+
       // 只有在成功时才关闭 modal 并显示成功模态
       setIsRedemptionModalOpen(false);
-      toast.success(tCommon('success.redemptionSuccess'));
-      
       // 5. 显示成功模态
       setSuccessModalType('redemption');
       setTimeout(() => {
@@ -337,7 +334,11 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
       
     } catch (error: any) {
       console.error('Redemption error:', error);
-      const errorMessage = error?.message || tCommon('errors.networkError');
+      console.log('error', error.message);
+      let errorMessage = error?.message || tCommon('errors.networkError');
+      // 如果错误信息包含 "user rejected action"，只截取括号前面的部分
+      const bracketIndex = errorMessage.indexOf('(');
+      errorMessage = bracketIndex > -1 ? errorMessage.substring(0, bracketIndex).trim() : errorMessage;
       toast.error(errorMessage);
       // 错误情况下不关闭 modal，让用户可以重试
     }

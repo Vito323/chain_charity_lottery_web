@@ -52,9 +52,10 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
       // 如果抛出错误，则重置 processing 状态，保持 modal 打开
     } catch (error) {
       console.error('Redemption failed:', error);
-      setIsProcessing(false);
       // 错误处理由父组件的 onConfirmRedemption 负责，这里只重置 processing 状态
       // 保持 modal 打开，让用户可以重试
+    } finally {
+      setIsProcessing(false);
     }
   };
 

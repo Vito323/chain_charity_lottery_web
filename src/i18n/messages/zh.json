@@ -45,7 +45,7 @@
       },
       "environmental": {
         "title": "环境保护",
-        "description": "加入我们的倡议，从植树到清洁水源，确保我们赖以生存的绿色未来。"
+        "description": "加入我们的行动，从植树到清洁水源，确保我们赖以生存的绿色未来。"
       },
       "disaster": {
         "title": "灾难救援",
@@ -78,7 +78,7 @@
         "description": "建立我们的慈善基金会，开展核心人道主义项目和社区外展。",
         "features": [
           "紧急救援项目",
-          "教育支持倡议",
+          "教育支持行动",
           "医疗援助分发",
           "志愿者网络建设"
         ]
@@ -148,9 +148,9 @@
   "projects": {
     "badge": "使命&愿景",
     "title": "支持我们的",
-    "titleHighlight": "倡议",
+    "titleHighlight": "行动",
     "titleSuffix": "",
-    "description": "探索我们多样化的慈善项目和倡议，这些项目和倡议正在为世界各地的社区带来真正的改变。每个项目都经过精心挑选和验证，以确保最大的影响力和透明度。",
+    "description": "探索我们多样化的慈善项目和行动，这些项目和行动正在为世界各地的社区带来真正的改变。每个项目都经过精心挑选和验证，以确保最大的影响力和透明度。",
     "donationActivity": {
       "title": "位善良的捐赠者已参与贡献",
       "subtitle": "来自我们全球社区的近期链上捐赠。",
@@ -209,12 +209,15 @@
       },
       "followBetAmount": "跟投金额",
       "winningAmount": "中奖金额",
+      "prizePoolAmount": "奖池金额",
       "drawInformation": "开奖信息",
       "drawTime": "开奖时间",
       "digitalMatrix": "数字矩阵",
       "colorGenes": "颜色基因",
       "imageSymbols": "图像符号",
-      "timestamp": "时间戳："
+      "timestamp": "时间戳：",
+      "unknownSeries": "未知系列",
+      "unknownLevel": "未知等级"
     },
     "winningRecords": {
       "badge": "中奖记录",
@@ -700,8 +703,8 @@
   },
   "myTickets": {
     "badge": "我的NFT",
-    "title": "NFT",
-    "titleHighlight": "票券组合",
+    "title": "我的",
+    "titleHighlight": "奖券",
     "subtitle": "查看和管理您的NFT收藏。随时在市场上出售您的NFT。",
     "connectTitle": "连接您的钱包",
     "connectDescription": "连接您的钱包以查看您的NFT收藏并管理您的资产。",

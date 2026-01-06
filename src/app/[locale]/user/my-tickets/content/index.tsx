@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import OwnedLotteryCard from '../components/OwnedLotteryCard';
 import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { RarityType } from '@/app/[locale]/nft-market/types';
+import { useWalletNFTs, WalletNFT } from '@/hooks/useWalletNFTs';
+import { rankToRarity } from '@/utils/lottery';
 
 type FilterTab = 'hold' | 'listed';
 
@@ -21,100 +23,130 @@ interface OwnedLotteryTicket {
   isListed?: boolean; // Whether the ticket is listed for sale
 }
 
-// Mock data based on the image
-const defaultOwnedTickets: OwnedLotteryTicket[] = [
-  {
-    id: '1',
-    image: '/images/placeholder-all.png',
-    rarity: 'rare',
-    rarityLabel: 'Rare',
-    purchasePrice: 818.266,
+// Get lottery NFT contract address
+const getLotteryNFTContractAddress = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  return process.env.NEXT_PUBLIC_LOTTERY_NFT_CONTRACT_ADDRESS || null;
+};
+
+// Convert WalletNFT to OwnedLotteryTicket
+const convertWalletNFTToTicket = (nft: WalletNFT): OwnedLotteryTicket => {
+  // Extract rarity from metadata or default to common
+  let rarity: RarityType = 'common';
+  let rarityLabel = 'Common';
+  let purchasePrice = 0;
+
+  // Try to extract rarity from metadata
+  if (nft.metadata) {
+    const rank = (nft.metadata.rank as number) || (nft.metadata.rank as string);
+    if (rank) {
+      const rankNum = typeof rank === 'string' ? parseInt(rank, 10) : rank;
+      if (!isNaN(rankNum)) {
+        rarity = rankToRarity(rankNum);
+        rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+      }
+    }
+
+    // Try to extract purchase price from metadata
+    const price = (nft.metadata.price as number) || (nft.metadata.purchasePrice as number);
+    if (price) {
+      purchasePrice = typeof price === 'string' ? parseFloat(price) : price;
+    }
+  }
+
+  // Default purchase price if not found in metadata
+  if (purchasePrice === 0) {
+    // Use rarity-based default prices
+    switch (rarity) {
+      case 'mythic':
+        purchasePrice = 95818.266;
+        break;
+      case 'legendary':
+        purchasePrice = 8818.266;
+        break;
+      case 'epic':
+        purchasePrice = 1818.266;
+        break;
+      case 'rare':
+        purchasePrice = 818.266;
+        break;
+      default:
+        purchasePrice = 118.266;
+    }
+  }
+
+  return {
+    id: nft.id,
+    image: nft.image || '/images/placeholder-all.png',
+    rarity,
+    rarityLabel,
+    purchasePrice,
     currency: 'CCT',
-    isListed: false,
-  },
-  {
-    id: '2',
-    image: '/images/placeholder-all.png',
-    rarity: 'common',
-    rarityLabel: 'Common',
-    purchasePrice: 256.56,
-    currency: 'CCT',
-    isListed: true,
-  },
-  {
-    id: '3',
-    image: '/images/placeholder-all.png',
-    rarity: 'common',
-    rarityLabel: 'Common',
-    purchasePrice: 118.266,
-    currency: 'CCT',
-    isListed: false,
-  },
-  {
-    id: '4',
-    image: '/images/placeholder-all.png',
-    rarity: 'mythic',
-    rarityLabel: 'Mythic',
-    purchasePrice: 95818.266,
-    currency: 'CCT',
-    isListed: true,
-  },
-  {
-    id: '5',
-    image: '/images/placeholder-all.png',
-    rarity: 'epic',
-    rarityLabel: 'Epic',
-    purchasePrice: 1818.266,
-    currency: 'CCT',
-    isListed: false,
-  },
-  {
-    id: '6',
-    image: '/images/placeholder-all.png',
-    rarity: 'legendary',
-    rarityLabel: 'Legendary',
-    purchasePrice: 8818.266,
-    currency: 'CCT',
-    isListed: true,
-  },
-];
+    isListed: false, // All tickets from wallet are not listed by default
+  };
+};
 
 const MyTickets: React.FC = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
+  const chainId = useChainId();
   const t = useTranslations('myTickets');
   const tCommon = useTranslations('common');
-  const [ownedTickets, setOwnedTickets] = useState<OwnedLotteryTicket[]>(defaultOwnedTickets);
-  const [isLoading] = useState(false);
-  const [error] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<FilterTab>('hold');
+  
+  // Get lottery NFT contract address
+  const lotteryContractAddress = useMemo(() => getLotteryNFTContractAddress(), []);
+  
+  // Fetch NFTs from wallet
+  const { nfts, loading: nftsLoading, error: nftsError, refresh: refreshNFTs } = useWalletNFTs({
+    pageSize: 100,
+  });
+
+  // Filter and convert lottery NFTs
+  const ownedTickets = useMemo(() => {
+    if (!isConnected || !lotteryContractAddress || !nfts.length) {
+      return [];
+    }
+
+    // Filter NFTs that belong to the lottery contract
+    const lotteryNFTs = nfts.filter((nft) => {
+      if (!nft.contractAddress) return false;
+      // Compare addresses (case-insensitive)
+      return nft.contractAddress.toLowerCase() === lotteryContractAddress.toLowerCase();
+    });
+
+    // Convert to OwnedLotteryTicket format
+    return lotteryNFTs.map(convertWalletNFTToTicket);
+  }, [nfts, isConnected, lotteryContractAddress]);
+
+  // Note: useWalletNFTs hook already handles automatic loading when address/chainId changes
+  // No need to manually refresh here to avoid infinite loops
+
+  const isLoading = nftsLoading;
+  const error = nftsError;
 
   const handleSell = async (ticketId: string) => {
     // TODO: Implement sell functionality
     console.log('Selling ticket:', ticketId);
-    // Show sell modal or handle sale
-    // After selling, update the ticket's isListed status
-    setOwnedTickets(prev => 
-      prev.map(ticket => 
-        ticket.id === ticketId ? { ...ticket, isListed: true } : ticket
-      )
-    );
+    // After selling, refresh NFTs to get updated data
+    refreshNFTs();
   };
 
   const handleDelist = async (ticketId: string) => {
     // TODO: Implement delist functionality
     console.log('Delisting ticket:', ticketId);
-    // After delisting, update the ticket's isListed status
-    setOwnedTickets(prev => 
-      prev.map(ticket => 
-        ticket.id === ticketId ? { ...ticket, isListed: false } : ticket
-      )
-    );
+    // After delisting, refresh NFTs to get updated data
+    refreshNFTs();
   };
 
   // Filter tickets based on active tab
-  const filteredTickets = ownedTickets.filter(ticket => 
-    activeTab === 'hold' ? !ticket.isListed : ticket.isListed
-  );
+  // For 'listed' tab, return empty array as per requirement
+  const filteredTickets = useMemo(() => {
+    if (activeTab === 'listed') {
+      return []; // 已上架部分数据全部置空
+    }
+    // For 'hold' tab, return all tickets (all from wallet are not listed)
+    return ownedTickets;
+  }, [activeTab, ownedTickets]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -167,7 +199,7 @@ const MyTickets: React.FC = () => {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
+            {t('title')} <span className="bg-linear-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             {t('subtitle')}
@@ -196,7 +228,7 @@ const MyTickets: React.FC = () => {
         )}
 
         {/* Filter Tabs: Hold / Listed */}
-        { (
+        {isConnected && (
           <motion.div
             variants={itemVariants}
             className="mb-6 md:mb-8 flex justify-center"
@@ -221,12 +253,17 @@ const MyTickets: React.FC = () => {
         )}
 
         {/* Summary Cards */}
-        {isConnected && ownedTickets.length > 0 && (
+        {isConnected && (activeTab === 'hold' ? ownedTickets.length > 0 : true) && (
           <motion.div
             variants={itemVariants}
+            initial="hidden"
+            animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-12"
           >
             <motion.div
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6"
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.2 }}
@@ -241,6 +278,9 @@ const MyTickets: React.FC = () => {
             </motion.div>
 
             <motion.div
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6"
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ duration: 0.2 }}
@@ -290,10 +330,39 @@ const MyTickets: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Tickets Grid */}
-        {!isLoading && !error && isConnected && ownedTickets.length > 0 && (
+        {/* Tickets Grid or Empty State */}
+        {!isLoading && !error && isConnected && (
           <AnimatePresence mode="wait">
-            {filteredTickets.length > 0 ? (
+            {ownedTickets.length === 0 && activeTab === 'hold' ? (
+              // Empty State - No tickets at all (only show on hold tab)
+              <motion.div
+                key="empty-no-tickets"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.6 }}
+                className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
+              >
+                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-8 h-8 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  {t('empty.noTicketsFound')}
+                </h3>
+                <p className="text-white/60 mb-6">
+                  {t('empty.noTicketsFoundDesc')}
+                </p>
+                <Link
+                  href="/lottery"
+                  className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+                >
+                  {t('empty.browseLottery')}
+                </Link>
+              </motion.div>
+            ) : filteredTickets.length > 0 ? (
+              // Tickets Grid - Show tickets
               <motion.div
                 key={activeTab}
                 variants={itemVariants}
@@ -314,6 +383,7 @@ const MyTickets: React.FC = () => {
                 ))}
               </motion.div>
             ) : (
+              // Empty State - No tickets in current tab
               <motion.div
                 key={`empty-${activeTab}`}
                 initial={{ opacity: 0, y: 20 }}
@@ -338,34 +408,6 @@ const MyTickets: React.FC = () => {
               </motion.div>
             )}
           </AnimatePresence>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && !error && isConnected && ownedTickets.length === 0 && (
-          <motion.div
-            className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-8 h-8 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              {t('empty.noTicketsFound')}
-            </h3>
-            <p className="text-white/60 mb-6">
-              {t('empty.noTicketsFoundDesc')}
-            </p>
-            <Link
-              href="/lottery"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
-            >
-              {t('empty.browseLottery')}
-            </Link>
-          </motion.div>
         )}
       </motion.div>
     </section>

@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import { isMockMode, requireRealCall } from '@/utils/mock';
+import { useTranslations, useLocale } from 'next-intl';
+import { type LotteryHistory } from '@/service/lottery';
+import { renderTicketMetadata } from '@/service/asset';
 
 export type WinningType = 'lottery' | 'follow';
 
@@ -32,54 +33,109 @@ interface WinningDetailProps {
   type: WinningType;
 }
 
-// Mock data - in production, this would come from an API
-const mockLotteryWinningData: WinningDetailData = {
-  id: '1',
-  type: 'lottery',
-  ticketImage: '/images/placeholder-all.png',
-  series: 'BRUNO MARS SIGNATURE SERIES',
-  level: 'RARE LEVEL',
-  rarityLabel: 'Rare',
-  winningAmount: 3657890,
-  currency: 'USDT',
-  drawTime: '2025-08-08 9:00',
-  digitalMatrix: '234567-8901-34',
-  colorGenes: ['#FF6B35', '#4ECDC4', '#9B59B6', '#E0E0E0'],
-  imageSymbols: ['heart', 'knight', 'star'],
-  timestamp: '2025-01-15 14:30:25 #18,250,000',
-};
-
-const mockFollowWinningData: WinningDetailData = {
-  id: '2',
-  type: 'follow',
-  ticketImage: '/images/placeholder-all.png',
-  series: 'BRUNO MARS SIGNATURE SERIES',
-  level: 'BASIC LEVEL',
-  rarityLabel: 'Common',
-  winningAmount: 3657890,
-  currency: 'USDT',
-  drawTime: '2025-08-08 9:00',
-  digitalMatrix: '234567-8901-23',
-  colorGenes: ['#FF6B35', '#4ECDC4', '#9B59B6', '#E0E0E0'],
-  imageSymbols: ['heart', 'knight', 'star'],
-  timestamp: '2025-01-15 14:30:25 #18,250,000',
-  followBetAmount: 7890,
-};
+// 写死的颜色基因和图像符号
+const DEFAULT_COLOR_GENES = ['#FF6B35', '#4ECDC4', '#9B59B6', '#E0E0E0'];
+const DEFAULT_IMAGE_SYMBOLS = ['heart', 'knight', 'star'];
 
 const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
-  // In mock mode, require real API call to fetch winning data
-  React.useEffect(() => {
-    if (isMockMode()) {
-      // This should be replaced with actual API call
-      requireRealCall(`Fetch winning detail for winningId: ${winningId}, type: ${type}`, 'network');
-    }
-  }, [winningId, type]);
   const t = useTranslations('lottery.winningDetail');
   const tCommon = useTranslations('common');
-  // In production, fetch data by winningId
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _winningId = winningId; // Reserved for future API integration
-  const winningData = type === 'lottery' ? mockLotteryWinningData : mockFollowWinningData;
+  const locale = useLocale();
+  
+  // 从 localStorage 读取数据
+  const [lotteryHistory, setLotteryHistory] = useState<LotteryHistory | null>(null);
+  const [ticketImageUrl, setTicketImageUrl] = useState<string | null>(null);
+  const [isLoadingImage, setIsLoadingImage] = useState(true);
+  const [imageError, setImageError] = useState(false);
+
+  // 从 localStorage 读取数据
+  useEffect(() => {
+    try {
+      const storedData = localStorage.getItem(`lottery_history_${winningId}`);
+      if (storedData) {
+        const data = JSON.parse(storedData) as LotteryHistory;
+        setLotteryHistory(data);
+      }
+    } catch (error) {
+      console.error('Failed to load lottery history from localStorage:', error);
+    }
+  }, [winningId]);
+
+  // 根据 dna 获取 Ticket Image
+  // useEffect(() => {
+  //   if (lotteryHistory?.dna) {
+  //     const fetchImage = async () => {
+  //       try {
+  //         setIsLoadingImage(true);
+  //         setImageError(false);
+  //         const response = await renderTicketMetadata(lotteryHistory.dna);
+  //         if (response.data?.image) {
+  //           setTicketImageUrl(response.data.image);
+  //         } else {
+  //           setImageError(true);
+  //         }
+  //       } catch (error) {
+  //         console.error('Failed to fetch ticket metadata:', error);
+  //         setImageError(true);
+  //       } finally {
+  //         setIsLoadingImage(false);
+  //       }
+  //     };
+
+  //     fetchImage();
+  //   }
+  // }, [lotteryHistory?.dna]);
+
+  // 如果没有数据，返回 null 或显示错误
+  if (!lotteryHistory) {
+    return (
+      <section className="relative py-20 md:py-32">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-8">
+          <div className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl">
+            <p className="text-white/80">{tCommon('errors.failedToLoadHistory')}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 格式化当前时间戳（根据语言环境）
+  const localeMap: Record<string, string> = {
+    'en': 'en-US',
+    'zh': 'zh-CN',
+  };
+  const dateLocale = localeMap[locale] || 'en-US';
+  
+  const currentTimestamp = new Date().toLocaleString(dateLocale, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+
+  const winningData: WinningDetailData = {
+    id: String(lotteryHistory.id),
+    type: 'lottery',
+    ticketImage: ticketImageUrl || '/images/placeholder-all.png',
+    series: lotteryHistory.lotteryDrawTickets?.[0]?.seriesName || t('unknownSeries'),
+    level: lotteryHistory.lotteryDrawTickets?.[0]?.title || t('unknownLevel'),
+    rarityLabel: lotteryHistory.lotteryDrawTickets?.[0]?.title || 'Common',
+    winningAmount: lotteryHistory.total || 0,
+    currency: 'USDT',
+    drawTime: new Date(lotteryHistory.createdAt).toLocaleString(dateLocale, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+    digitalMatrix: lotteryHistory.numbers || '',
+    colorGenes: DEFAULT_COLOR_GENES, // 写死的颜色基因
+    imageSymbols: DEFAULT_IMAGE_SYMBOLS, // 写死的图像符号
+    timestamp: `${currentTimestamp} #${lotteryHistory.id}`, // 使用当前时间
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -141,29 +197,45 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
         </motion.div>
 
         {/* Ticket Image and Basic Info */}
-        <motion.div
+        {/* <motion.div
           variants={itemVariants}
           className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 mb-6 md:mb-8"
         >
           <div className="flex flex-col md:flex-row gap-6 md:gap-8">
-            {/* Ticket Image */}
-            <div className="flex-shrink-0 w-full md:w-auto">
-              <div className="relative w-full max-w-sm mx-auto md:max-w-none md:w-40 md:h-52 h-[60vh] rounded-xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900">
-                <Image
-                  src={winningData.ticketImage}
-                  alt={`${tCommon('images.winningTicket')} ${winningData.id}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 160px"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/placeholder-all.png';
-                  }}
-                />
+            <div className="shrink-0 w-full md:w-auto">
+              <div 
+                className="relative w-full max-w-sm mx-auto md:max-w-none rounded-xl overflow-hidden bg-linear-to-br from-slate-800 to-slate-900"
+                style={{ aspectRatio: '16/10' }}
+              >
+                {isLoadingImage ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-800/50">
+                    <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  </div>
+                ) : ticketImageUrl && !imageError ? (
+                  <img
+                    src={ticketImageUrl}
+                    alt={`${tCommon('images.winningTicket')} ${winningData.id}`}
+                    className="w-full h-full object-cover"
+                    onError={() => {
+                      setImageError(true);
+                    }}
+                  />
+                ) : (
+                  <Image
+                    src={winningData.ticketImage}
+                    alt={`${tCommon('images.winningTicket')} ${winningData.id}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/images/placeholder-all.png';
+                    }}
+                  />
+                )}
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               </div>
             </div>
-
-            {/* Basic Info */}
             <div className="flex-1 space-y-3 md:space-y-4">
               <div>
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">
@@ -184,17 +256,20 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
               )}
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
-        {/* Winning Amount */}
+        {/* Prize Pool Amount */}
         <motion.div
           variants={itemVariants}
-          className="bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8 mb-6 md:mb-8"
+          className="bg-linear-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8 mb-6 md:mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="text-white/70 text-base md:text-lg">{t('winningAmount')}</div>
+            <div className="text-white/70 text-base md:text-lg">{t('prizePoolAmount')}</div>
             <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-              {winningData.winningAmount.toLocaleString()} {winningData.currency}
+              {winningData.winningAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })} {winningData.currency}
             </div>
           </div>
         </motion.div>

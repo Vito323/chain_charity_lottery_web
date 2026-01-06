@@ -137,11 +137,11 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
                       ? t('title.follow') 
                       : t('title.redemption')}
               </h2>
-              <p className="text-sm sm:text-base text-white/70">
+              {/* <p className="text-sm sm:text-base text-white/70">
                 {isSellType
                   ? t('description.sell', { count: ticketCount, ordinal: locale === 'zh' ? '' : getOrdinalSuffix(ticketCount) })
                   : t(`description.${isPurchaseType ? 'purchase' : isFollowType ? 'follow' : 'redemption'}`, { count: ticketCount, ordinal: locale === 'zh' ? '' : getOrdinalSuffix(ticketCount) })}
-              </p>
+              </p> */}
             </motion.div>
 
             {/* Lottery Ticket NFT Card - Image Only */}

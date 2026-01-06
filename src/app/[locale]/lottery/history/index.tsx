@@ -1,71 +1,125 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { getLotteryHistory, type LotteryHistory } from '@/service/lottery';
 
-// 历史开奖结果数据类型
+// 历史开奖结果数据类型（用于UI展示）
 interface LotteryHistoryItem {
   id: string;
   drawNumber: number; // 期号
   status: 'upcoming' | 'won' | 'lost'; // 状态
   drawTime: string; // 开奖时间，格式：2025-08-08 12:00
-  prizeAmount: number; // 奖金金额（万 USDT）
+  prizeAmount: number; // 奖金金额（USDT）
 }
-
-// 缺省数据
-const defaultHistoryData: LotteryHistoryItem[] = [
-  {
-    id: '1',
-    drawNumber: 386,
-    status: 'upcoming',
-    drawTime: '2025-08-08 12:00',
-    prizeAmount: 385
-  },
-  {
-    id: '2',
-    drawNumber: 385,
-    status: 'won',
-    drawTime: '2025-08-08 9:00',
-    prizeAmount: 365
-  },
-  {
-    id: '3',
-    drawNumber: 384,
-    status: 'lost',
-    drawTime: '2025-08-07 20:00',
-    prizeAmount: 355
-  },
-  {
-    id: '4',
-    drawNumber: 383,
-    status: 'lost',
-    drawTime: '2025-08-07 16:00',
-    prizeAmount: 345
-  },
-  {
-    id: '5',
-    drawNumber: 382,
-    status: 'lost',
-    drawTime: '2025-08-07 12:00',
-    prizeAmount: 325
-  },
-  {
-    id: '6',
-    drawNumber: 381,
-    status: 'lost',
-    drawTime: '2025-08-07 8:00',
-    prizeAmount: 322
-  }
-];
 
 const LotteryHistory = () => {
   const t = useTranslations('lottery.history');
   const tCommon = useTranslations('common');
-  const [historyData] = useState<LotteryHistoryItem[]>(defaultHistoryData);
-  const [isLoading] = useState(false);
-  const [error] = useState<string | null>(null);
+  const [historyData, setHistoryData] = useState<LotteryHistoryItem[]>([]);
+  const [rawHistoryData, setRawHistoryData] = useState<LotteryHistory[]>([]); // 保存原始数据
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 格式化日期时间
+  const formatDateTime = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    } catch {
+      return dateString;
+    }
+  };
+
+  // 将接口数据转换为UI展示数据
+  const transformHistoryData = useCallback((data: LotteryHistory[]): LotteryHistoryItem[] => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return [];
+    }
+    
+    return data
+      .filter((item) => item && typeof item.id === 'number' && item.createdAt)
+      .map((item) => {
+        // 奖金金额：直接使用 total 字段
+        const prizeAmount = item.total || 0;
+        
+        // 格式化开奖时间
+        const drawTime = formatDateTime(item.createdAt);
+        
+        // 状态判断：已开奖的记录都视为 'lost'（已开奖但未中奖）
+        // 如果需要更精确的状态判断，可以根据实际业务逻辑调整
+        const status: 'upcoming' | 'won' | 'lost' = 'lost';
+        
+        return {
+          id: String(item.id),
+          drawNumber: item.id, // 使用 id 作为期号
+          status,
+          drawTime,
+          prizeAmount, // 直接使用 total 值
+        };
+      })
+      .sort((a, b) => b.drawNumber - a.drawNumber); // 按期号倒序排列
+  }, []);
+
+  // 获取历史开奖数据
+  const fetchLotteryHistory = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getLotteryHistory();
+      
+      if (response.ok) {
+        // 确保 response.data 存在且为数组
+        if (response.data && Array.isArray(response.data)) {
+          // 保存原始数据
+          setRawHistoryData(response.data);
+          const transformedData = transformHistoryData(response.data);
+          setHistoryData(transformedData);
+        } else {
+          // 数据格式不正确
+          console.warn('Invalid data format from lottery history API:', response.data);
+          setRawHistoryData([]);
+          setHistoryData([]);
+        }
+      } else {
+        // 接口返回错误
+        const errorMsg = response.msg || response.code || tCommon('errors.failedToLoadHistory');
+        console.error('Failed to fetch lottery history:', errorMsg);
+        setError(errorMsg);
+      }
+    } catch (err) {
+      // 网络错误或其他异常
+      console.error('Failed to fetch lottery history:', err);
+      setError(tCommon('errors.failedToLoadHistory'));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [transformHistoryData, tCommon]);
+
+  // 组件挂载时获取数据
+  useEffect(() => {
+    fetchLotteryHistory();
+  }, [fetchLotteryHistory]);
+
+  // 监听开奖完成事件，刷新历史记录
+  useEffect(() => {
+    const handleDrawComplete = () => {
+      fetchLotteryHistory();
+    };
+
+    window.addEventListener('lotteryDrawComplete', handleDrawComplete);
+
+    return () => {
+      window.removeEventListener('lotteryDrawComplete', handleDrawComplete);
+    };
+  }, [fetchLotteryHistory]);
 
   // 获取状态文本
   const getStatusText = (status: 'upcoming' | 'won' | 'lost') => {
@@ -81,9 +135,22 @@ const LotteryHistory = () => {
     }
   };
 
-  // 格式化奖金显示
+  // 格式化奖金显示：千分位逗号，保留两位小数
   const formatPrizeAmount = (amount: number) => {
-    return `${amount}${t('prizeUnit')}`;
+    return amount.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  // 处理跳转，保存数据到 localStorage
+  const handleHistoryItemClick = (itemId: string) => {
+    // 找到对应的原始数据
+    const rawData = rawHistoryData.find((item) => String(item.id) === itemId);
+    if (rawData) {
+      // 保存到 localStorage
+      localStorage.setItem(`lottery_history_${itemId}`, JSON.stringify(rawData));
+    }
   };
 
   const containerVariants = {
@@ -147,7 +214,7 @@ const LotteryHistory = () => {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
+            {t('title')} <span className="bg-linear-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             {t('subtitle')}
@@ -191,15 +258,23 @@ const LotteryHistory = () => {
         {!isLoading && !error && historyData.length > 0 && (
           <motion.div
             variants={itemVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
             className="flex flex-col gap-3 md:gap-4"
           >
             {historyData.map((item, index) => (
-              <Link key={item.id} href={`/lottery/winning/${item.id}`}>
+              <Link 
+                key={item.id} 
+                href={`/lottery/winning/${item.id}`}
+                onClick={() => handleHistoryItemClick(item.id)}
+              >
                 <motion.div
                   className="flex items-center justify-between bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-4 md:p-5 hover:bg-white/10 transition-all duration-200 cursor-pointer"
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: index * 0.1, duration: 0.6, ease: 'easeOut' }}
                   whileHover={{ scale: 1.01 }}
                 >
                   {/* 左侧内容 */}
@@ -228,7 +303,7 @@ const LotteryHistory = () => {
                   {/* 右侧内容：奖金和箭头 */}
                   <div className="flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0">
                     <span className="text-sm sm:text-base md:text-lg font-bold text-white text-right whitespace-nowrap">
-                      {formatPrizeAmount(item.prizeAmount)}
+                      {formatPrizeAmount(item.prizeAmount)} USDT
                     </span>
                     <svg
                       className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white/60 shrink-0"
