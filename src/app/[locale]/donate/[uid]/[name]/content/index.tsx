@@ -20,7 +20,7 @@ import { TotalDonation } from "./components/TotalDonation";
 import { DonateButton } from "./components/DonateButton";
 import BigNumber from "bignumber.js";
 import { useMasterContract } from "@/hooks/useMasterContract";
-import { formatUnits } from "ethers";
+import { formatUnits, ethers } from "ethers";
 import {
   queryProjectProportion,
   ProjectProportionData,
@@ -334,7 +334,23 @@ const Donate = ({ uid, name }: DonateProps) => {
         setIsProcessing(true);
         setDonationSuccess(false);
 
-        const result = await donate(uid, amount);
+        // 获取捐赠代币地址
+        let tokenAddress: string;
+        if (selectedToken?.address && !selectedToken.isNative) {
+          // 如果选择了 ERC20 代币，使用其地址
+          tokenAddress = selectedToken.address;
+        } else {
+          // 否则从 masterContract 获取默认捐赠代币地址
+          tokenAddress = await getDonationToken();
+          if (!tokenAddress || tokenAddress === ethers.ZeroAddress) {
+            throw new Error("捐赠代币地址未找到");
+          }
+        }
+
+        // 获取代币精度（优先使用 selectedToken 的 decimals，否则使用默认值 6）
+        const tokenDecimals = selectedToken?.decimals || 6;
+
+        const result = await donate(uid, amount, tokenAddress, tokenDecimals);
 
         if (result) {
           setDonationSuccess(true);
@@ -358,6 +374,8 @@ const Donate = ({ uid, name }: DonateProps) => {
           errorMessage = tCommon("errors.insufficientFunds");
         } else if (error.message?.includes("gas")) {
           errorMessage = tCommon("errors.gasIssue");
+        } else if (error.message?.includes("allowance") || error.message?.includes("approve")) {
+          errorMessage = "代币授权失败，请重试";
         }
 
         toast.error(errorMessage);

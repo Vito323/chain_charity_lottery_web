@@ -83,23 +83,95 @@ export const useDonationContract = () => {
     }
   }, [contractInstance, handleError]);
 
+  // 检查并处理 ERC20 代币授权
+  const checkAndApproveToken = useCallback(
+    async (
+      tokenAddress: string,
+      spenderAddress: string,
+      amount: bigint,
+      tokenDecimals: number = 18
+    ): Promise<void> => {
+      if (typeof window === "undefined") {
+        throw new Error("服务端环境无法处理授权");
+      }
 
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const userAddress = await signer.getAddress();
 
+      // ERC20 标准 ABI (仅包含 allowance 和 approve 函数)
+      const erc20ABI = [
+        "function allowance(address owner, address spender) external view returns (uint256)",
+        "function approve(address spender, uint256 amount) external returns (bool)",
+      ];
+
+      const tokenContract = new ethers.Contract(
+        tokenAddress,
+        erc20ABI,
+        signer
+      );
+
+      // 检查当前授权额度
+      const currentAllowance = await tokenContract.allowance(
+        userAddress,
+        spenderAddress
+      );
+
+      // 如果授权不足，请求授权
+      if (currentAllowance < amount) {
+        // 使用确定的金额值进行授权
+        const approveAmount = amount > ethers.MaxUint256 
+          ? ethers.MaxUint256 
+          : amount;
+        
+        console.log(
+          `授权不足，当前授权: ${ethers.formatUnits(currentAllowance, tokenDecimals)}, 需要: ${ethers.formatUnits(amount, tokenDecimals)}, 将授权: ${ethers.formatUnits(approveAmount, tokenDecimals)}`
+        );
+
+        const approveTx = await tokenContract.approve(
+          spenderAddress,
+          approveAmount
+        );
+        await approveTx.wait();
+        console.log("代币授权成功");
+      } else {
+        console.log("授权额度充足，无需重新授权");
+      }
+    },
+    []
+  );
 
   // 代币捐赠
   const donate = useCallback(
     async (
       projectId: string,
       amount: string,
+      tokenAddress: string,
       tokenDecimals?: number,
     ): Promise<string> => {
       setIsLoading(true);
       setError(null);
       try {
+        const contractAddress = contractInstance?.target;
+        if (!contractAddress) {
+          throw new Error("合约地址未找到");
+        }
+
+        // 将 amount 转换为 BigNumber
+        const amountBN = ethers.parseUnits(amount, tokenDecimals || 6);
+        
+        // 检查并处理代币授权（在捐赠之前）
+        await checkAndApproveToken(
+          tokenAddress,
+          contractAddress as string,
+          amountBN,
+          tokenDecimals || 6
+        );
+
         const contractWithSigner = await getSigner();
         const tx = await (contractWithSigner as any).donate(
           projectId,
-          ethers.parseUnits(amount, tokenDecimals || 6)
+          amountBN
         );
         await tx.wait();
         setIsLoading(false);
@@ -109,7 +181,7 @@ export const useDonationContract = () => {
         throw e;
       }
     },
-    [getSigner, handleError]
+    [getSigner, handleError, contractInstance, checkAndApproveToken]
   );
 
   return {
