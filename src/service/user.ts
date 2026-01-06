@@ -3,7 +3,7 @@ import { action } from "./provider";
 
 
 export const userConnect = async (address: string) =>
-  action({
+  action<boolean>({
     url: `/user/connect/${address}`,
     method: 'GET',
   });

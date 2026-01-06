@@ -6,7 +6,7 @@
     "home": "首页",
     "projects": "项目",
     "lottery": "抽奖",
-    "nftMarket": "奖券",
+    "nftMarket": "NFT",
     "nodes": "节点",
     "dao": "DAO",
     "connectWallet": "连接钱包",
@@ -320,11 +320,11 @@
   "nftMarket": {
     "badge": "链慈善抽奖",
     "title": "抽奖",
-    "titleHighlight": "奖券",
-    "subtitle": "发现并收集不同稀有度和中奖率的独特奖券",
+    "titleHighlight": "NFT",
+    "subtitle": "发现并收集不同稀有度和中奖率的独特NFT",
     "tabs": {
-      "new": "铸造奖券",
-      "market": "奖券交易"
+      "new": "铸造NFT",
+      "market": "NFT交易"
     },
     "sort": {
       "latest": "最新",
@@ -380,6 +380,10 @@
       "totalAssets": "总节点资产 (USDT)",
       "yesterdayRewards": "昨日奖励",
       "rewardsDetails": "奖励详情"
+    },
+    "comingSoon": {
+      "badge": "即将开放",
+      "date": "{date}开放"
     },
     "buyNodes": {
       "title": "购买节点",

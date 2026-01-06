@@ -125,7 +125,7 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
             </h2>
             <p className="text-base sm:text-lg text-white/70 mb-4">{tCommon(`rarity.${ticket.rarity}`)}</p>
             
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-4 mb-4">
               <div className="text-center">
                 <div className="text-lg sm:text-xl font-bold text-white mb-1">
                   {ticket.rarityPercentage}
@@ -138,12 +138,12 @@ export const TicketImage: React.FC<TicketImageProps> = ({ ticket, type }) => {
                 </div>
                 <div className="text-white/60 text-xs sm:text-sm">{t('maxPrize')}</div>
               </div>
-              <div className="text-center">
+              {/* <div className="text-center">
                 <div className="text-lg sm:text-xl font-bold text-white mb-1">
                   {ticket.basicWinRate}
                 </div>
                 <div className="text-white/60 text-xs sm:text-sm">{t('winRate')}</div>
-              </div>
+              </div> */}
             </div>
 
             {(type === 'market' || type === 'listed') && ticket.salePrice && ticket.validUntil && ticket.holderAddress && (

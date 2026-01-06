@@ -37,7 +37,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
             {ticket.title}
           </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
             <div className="text-center">
               <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">
                 {ticket.rarityPercentage}
@@ -50,12 +50,12 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
               </div>
               <div className="text-white/60 text-xs sm:text-sm md:text-base">{t('stats.maxPrize')}</div>
             </div>
-            <div className="text-center">
+            {/* <div className="text-center">
               <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">
                 {ticket.basicWinRate}
               </div>
               <div className="text-white/60 text-xs sm:text-sm md:text-base">{t('stats.baseWinRate')}</div>
-            </div>
+            </div> */}
           </div>
 
           {/* Education Support Section */}

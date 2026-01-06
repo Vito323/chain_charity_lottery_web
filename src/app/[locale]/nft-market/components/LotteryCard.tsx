@@ -177,10 +177,10 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
         {type === 'new' ? (
           <div className="space-y-2 md:space-y-3">
             {/* Basic Win Rate */}
-            <div className="flex items-center justify-between text-xs md:text-sm">
+            {/* <div className="flex items-center justify-between text-xs md:text-sm">
               <span className="text-white/60">{t('card.basicWinRate')}</span>
               <span className="text-white font-semibold">{basicWinRate}</span>
-            </div>
+            </div> */}
 
             {/* Max Prize */}
             <div className="flex items-center justify-between text-xs md:text-sm">

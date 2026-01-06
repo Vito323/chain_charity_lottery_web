@@ -9,7 +9,6 @@ import { TermsModal } from './TermsModal';
 import { MobileBottomSheet } from './MobileBottomSheet';
 import { DesktopDropdown } from './DesktopDropdown';
 import { userConnect } from '@/service/user';
-import dayjs from 'dayjs';
 
 const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
@@ -17,24 +16,40 @@ const CustomConnectButton = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [hasCalledConnect, setHasCalledConnect] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const hasCalledConnectRef = useRef<string | null>(null);
   const tCommon = useTranslations('common');
 
-  // 监听钱包连接状态，连接后调用 userConnect 接口
+  // 监听钱包连接状态，连接后调用 userConnect 接口验证
   useEffect(() => {
     if (isConnected && address) {
-      const lastConnected = localStorage.getItem('userConnected');
-      if (lastConnected) {
+      // 防止重复调用：如果当前地址已经调用过，则不再调用
+      if (hasCalledConnectRef.current === address) {
         return;
       }
-      userConnect(address).catch((error) => {
-        console.error('Failed to call userConnect:', error);
-      }).finally(() => {
-        localStorage.setItem('userConnected', dayjs().unix().toString());
-      });
-    } 
-  }, [isConnected, address]);
+
+      // 标记当前地址已开始调用
+      hasCalledConnectRef.current = address;
+
+      userConnect(address)
+        .then((result) => {
+          // 如果返回 false，则断开连接
+          if (!result) {
+            disconnect();
+            hasCalledConnectRef.current = null; // 重置，允许重试
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to call userConnect:', error);
+          // 出错时也断开连接
+          disconnect();
+          hasCalledConnectRef.current = null; // 重置，允许重试
+        });
+    } else {
+      // 如果断开连接，重置标记
+      hasCalledConnectRef.current = null;
+    }
+  }, [isConnected, address, disconnect]);
 
   // 处理点击外部关闭下拉菜单
   useEffect(() => {

@@ -59,19 +59,19 @@ const convertWalletNFTToTicket = (nft: WalletNFT): OwnedLotteryTicket => {
     // Use rarity-based default prices
     switch (rarity) {
       case 'mythic':
-        purchasePrice = 95818.266;
+        purchasePrice = 10000;
         break;
       case 'legendary':
-        purchasePrice = 8818.266;
+        purchasePrice = 5000;
         break;
       case 'epic':
-        purchasePrice = 1818.266;
+        purchasePrice = 1000;
         break;
       case 'rare':
-        purchasePrice = 818.266;
+        purchasePrice = 500;
         break;
       default:
-        purchasePrice = 118.266;
+        purchasePrice = 100;
     }
   }
 
@@ -174,6 +174,11 @@ const MyTickets: React.FC = () => {
   // Calculate totals based on filtered tickets
   const totalTickets = filteredTickets.length;
   const totalValue = filteredTickets.reduce((sum, ticket) => sum + ticket.purchasePrice, 0);
+
+  console.log(filteredTickets);
+  console.log(ownedTickets);
+  console.log(totalTickets);
+  console.log(totalValue);
 
   return (
     <section className="relative py-20 pt-32 md:py-32 md:pt-52">

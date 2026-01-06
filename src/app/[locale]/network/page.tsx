@@ -1,10 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import 'dayjs/locale/en';
 
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -45,9 +48,19 @@ const formatCurrency = (value: number) =>
 const NetworkPage: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('network');
+  const locale = useLocale();
 
   // TODO: integrate real node data here
   const hasNodes = false;
+
+  // Format date based on locale using dayjs
+  const formattedDate = useMemo(() => {
+    const targetDate = dayjs('2026-01-18');
+    if (locale === 'zh') {
+      return targetDate.locale('zh-cn').format('YYYY年M月D日');
+    }
+    return targetDate.locale('en').format('MMMM D, YYYY');
+  }, [locale]);
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
@@ -91,7 +104,7 @@ const NetworkPage: React.FC = () => {
           </motion.div>
 
           {/* My Nodes Summary */}
-          <motion.div
+          {/* <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -175,7 +188,6 @@ const NetworkPage: React.FC = () => {
               </div>
             ) : (
               <div className="relative grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)] items-center">
-                {/* Placeholder for future real node summary */}
                 <div className="space-y-3">
                   <h2 className="text-xl sm:text-2xl font-semibold text-white">
                     {t('portfolio.title')}
@@ -220,6 +232,31 @@ const NetworkPage: React.FC = () => {
                 </div>
               </div>
             )}
+          </motion.div> */}
+
+          {/* Coming Soon Notice */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="relative rounded-3xl border border-white/10 bg-linear-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 px-5 py-6 sm:px-7 sm:py-7 md:px-10 md:py-8 shadow-xl shadow-black/40 overflow-hidden"
+          >
+            <div className="pointer-events-none absolute -top-32 -right-24 w-72 h-72 bg-purple-500/30 blur-3xl opacity-40" />
+            <div className="pointer-events-none absolute -bottom-32 -left-24 w-80 h-80 bg-pink-500/20 blur-3xl opacity-40" />
+            
+            <div className="relative flex items-center justify-center min-h-[200px]">
+              <div className="text-center space-y-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-sm sm:text-base font-semibold text-white">
+                    {t('comingSoon.badge')}
+                  </span>
+                </div>
+                <p className="text-lg sm:text-xl md:text-2xl font-semibold text-white/90">
+                  {t('comingSoon.date', { date: formattedDate })}
+                </p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Purchase Nodes Section */}

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { TokenInfo } from "@/hooks/useDonationForm";
 import { useAccount, useChainId } from "wagmi";
@@ -21,7 +21,10 @@ import { DonateButton } from "./components/DonateButton";
 import BigNumber from "bignumber.js";
 import { useMasterContract } from "@/hooks/useMasterContract";
 import { formatUnits } from "ethers";
-import { queryProjectProportion, ProjectProportionData } from "@/service/project";
+import {
+  queryProjectProportion,
+  ProjectProportionData,
+} from "@/service/project";
 
 interface DonateProps {
   uid: string;
@@ -29,55 +32,71 @@ interface DonateProps {
 }
 
 const Donate = ({ uid, name }: DonateProps) => {
-  const t = useTranslations('donate');
-  const tCommon = useTranslations('common');
+  const t = useTranslations("donate");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const searchParams = useSearchParams();
   const { donate, isLoading: donationLoading } = useDonationContract();
-  const { calculateExchangeAmount, isLoading: isLoadingMasterContract, getEcosystemTokenDecimals, getEcosystemToken, getDonationToken } = useMasterContract();
+  const {
+    calculateExchangeAmount,
+    isLoading: isLoadingMasterContract,
+    getEcosystemTokenDecimals,
+    getEcosystemToken,
+    getDonationToken,
+  } = useMasterContract();
   const { isConnected, chain } = useAccount();
   const { openConnectModal } = useConnectModal();
   // const { calculateUSDValue } = useTokenPrices();
   const { address } = useAccount();
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [donationSuccess, setDonationSuccess] = React.useState(false);
-  
+
   // 本地状态管理
   const [amount, setAmount] = React.useState<string>("");
-  const [selectedToken, setSelectedToken] = React.useState<TokenInfo | null>(null);
-  const [selectedQuickAmount, setSelectedQuickAmount] = React.useState<number | null>(null);
+  const [selectedToken, setSelectedToken] = React.useState<TokenInfo | null>(
+    null
+  );
+  const [selectedQuickAmount, setSelectedQuickAmount] = React.useState<
+    number | null
+  >(null);
   const [rewardAmount, setRewardAmount] = React.useState<string | null>(null);
   const [isLoadingReward, setIsLoadingReward] = React.useState(false);
   const [amountChanged, setAmountChanged] = React.useState(false);
-  const [ecosystemTokenDecimals, setEcosystemTokenDecimals] = React.useState<number | null>(null);
-  const [proportionData, setProportionData] = React.useState<ProjectProportionData | null>(null);
+  const [ecosystemTokenDecimals, setEcosystemTokenDecimals] = React.useState<
+    number | null
+  >(null);
+  const [proportionData, setProportionData] =
+    React.useState<ProjectProportionData | null>(null);
 
   // 处理USDT代币变化（支持null）
   const handleTokenChange = React.useCallback((token: TokenInfo | null) => {
     if (token) {
-      setSelectedToken({...token});
+      setSelectedToken({ ...token });
     }
   }, []);
 
   // 处理金额变化
-  const handleAmountChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newAmount = e.target.value;
-    setAmount(newAmount);
-    setAmountChanged(true);
-    
-    // 如果输入了有效金额，立即显示 loading 状态
-    if (newAmount && parseFloat(newAmount) > 0) {
-      setIsLoadingReward(true);
-    } else {
-      // 如果金额无效，清除数据
-      setRewardAmount(null);
-      setProportionData(null);
-      setIsLoadingReward(false);
-    }
-  }, []);
+  const handleAmountChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newAmount = e.target.value;
+      setAmount(newAmount);
+      setAmountChanged(true);
+
+      // 如果输入了有效金额，立即显示 loading 状态
+      if (newAmount && parseFloat(newAmount) > 0) {
+        setIsLoadingReward(true);
+      } else {
+        // 如果金额无效，清除数据
+        setRewardAmount(null);
+        setProportionData(null);
+        setIsLoadingReward(false);
+      }
+    },
+    []
+  );
 
   // 快速金额选项
-  const quickAmounts = [10, 20, 50, 100, 200, 500];
+  const quickAmounts = [2, 5, 10, 50, 100, 200];
 
   // 处理快速金额选择
   const handleQuickAmountSelect = (value: number) => {
@@ -94,10 +113,25 @@ const Donate = ({ uid, name }: DonateProps) => {
         const decimals = await getEcosystemTokenDecimals();
         const token = await getEcosystemToken();
         const donationToken = await getDonationToken();
-        console.log("[fetchDecimals] 获取到的 token:", token, "类型:", typeof token);
-        console.log("[fetchDecimals] 获取到的 donationToken:", donationToken, "类型:", typeof donationToken);
-        console.log("[fetchDecimals] 获取到的 decimals:", decimals, "类型:", typeof decimals);
-        
+        console.log(
+          "[fetchDecimals] 获取到的 token:",
+          token,
+          "类型:",
+          typeof token
+        );
+        console.log(
+          "[fetchDecimals] 获取到的 donationToken:",
+          donationToken,
+          "类型:",
+          typeof donationToken
+        );
+        console.log(
+          "[fetchDecimals] 获取到的 decimals:",
+          decimals,
+          "类型:",
+          typeof decimals
+        );
+
         if (decimals && decimals > 0) {
           console.log("[fetchDecimals] 设置 decimals:", decimals);
           setEcosystemTokenDecimals(decimals);
@@ -111,15 +145,18 @@ const Donate = ({ uid, name }: DonateProps) => {
           return () => clearTimeout(retryTimeout);
         }
       } catch (error) {
-        console.error("[fetchDecimals] 获取 ecosystemToken decimals 失败:", error);
+        console.error(
+          "[fetchDecimals] 获取 ecosystemToken decimals 失败:",
+          error
+        );
       }
     };
-    
+
     // 延迟执行，确保合约实例已初始化
     const timeout = setTimeout(() => {
       fetchDecimals();
     }, 100);
-    
+
     return () => clearTimeout(timeout);
   }, [getEcosystemTokenDecimals]);
 
@@ -127,53 +164,58 @@ const Donate = ({ uid, name }: DonateProps) => {
   const debouncedAmount = useDebounce(amount, 800);
 
   // 同时获取奖励金额和项目比例数据（使用 Promise.all）
-  const fetchRewardAndProportion = React.useCallback(async (amountToFetch: string) => {
-    // 如果没有有效的金额，清除数据并返回
-    if (!amountToFetch || parseFloat(amountToFetch) <= 0) {
-      setRewardAmount(null);
-      setProportionData(null);
-      setAmountChanged(false);
-      setIsLoadingReward(false);
-      return;
-    }
-
-    // 如果 ecosystemTokenDecimals 还未获取，保持 loading 状态，等待 decimals 获取完成
-    if (!ecosystemTokenDecimals) {
-      // 保持 loading 状态，不执行计算
-      return;
-    }
-
-    try {
-      // 确保 loading 状态已设置（可能在 handleAmountChange 中已设置）
-      setIsLoadingReward(true);
-      
-      // 使用 Promise.all 同时调用两个接口
-      const [exchangeResult, proportionResponse] = await Promise.all([
-        calculateExchangeAmount(amountToFetch, 6),
-        queryProjectProportion(uid, amountToFetch),
-      ]);
-
-      // 处理奖励金额
-      const rewardValue = formatUnits(exchangeResult, ecosystemTokenDecimals);
-      const rewardBN = new BigNumber(rewardValue);
-      const formattedReward = rewardBN.decimalPlaces(6, BigNumber.ROUND_DOWN).toString();
-      setRewardAmount(formattedReward);
-
-      // 处理比例数据
-      if (proportionResponse.ok) {
-        setProportionData(proportionResponse.data);
-      } else {
+  const fetchRewardAndProportion = React.useCallback(
+    async (amountToFetch: string) => {
+      // 如果没有有效的金额，清除数据并返回
+      if (!amountToFetch || parseFloat(amountToFetch) <= 0) {
+        setRewardAmount(null);
         setProportionData(null);
+        setAmountChanged(false);
+        setIsLoadingReward(false);
+        return;
       }
-    } catch (error) {
-      console.error("获取奖励和比例数据失败:", error);
-      setRewardAmount(null);
-      setProportionData(null);
-    } finally {
-      setIsLoadingReward(false);
-      setAmountChanged(false);
-    }
-  }, [ecosystemTokenDecimals, calculateExchangeAmount, uid]);
+
+      // 如果 ecosystemTokenDecimals 还未获取，保持 loading 状态，等待 decimals 获取完成
+      if (!ecosystemTokenDecimals) {
+        // 保持 loading 状态，不执行计算
+        return;
+      }
+
+      try {
+        // 确保 loading 状态已设置（可能在 handleAmountChange 中已设置）
+        setIsLoadingReward(true);
+
+        // 使用 Promise.all 同时调用两个接口
+        const [exchangeResult, proportionResponse] = await Promise.all([
+          calculateExchangeAmount(amountToFetch, 6),
+          queryProjectProportion(uid, amountToFetch),
+        ]);
+
+        // 处理奖励金额
+        const rewardValue = formatUnits(exchangeResult, ecosystemTokenDecimals);
+        const rewardBN = new BigNumber(rewardValue);
+        const formattedReward = rewardBN
+          .decimalPlaces(6, BigNumber.ROUND_DOWN)
+          .toString();
+        setRewardAmount(formattedReward);
+
+        // 处理比例数据
+        if (proportionResponse.ok) {
+          setProportionData(proportionResponse.data);
+        } else {
+          setProportionData(null);
+        }
+      } catch (error) {
+        console.error("获取奖励和比例数据失败:", error);
+        setRewardAmount(null);
+        setProportionData(null);
+      } finally {
+        setIsLoadingReward(false);
+        setAmountChanged(false);
+      }
+    },
+    [ecosystemTokenDecimals, calculateExchangeAmount, uid]
+  );
 
   // 当防抖后的金额变化或 ecosystemTokenDecimals 获取完成时，获取数据
   React.useEffect(() => {
@@ -193,7 +235,10 @@ const Donate = ({ uid, name }: DonateProps) => {
   const prevChainIdRef = React.useRef<number | undefined>(undefined);
   React.useEffect(() => {
     // 只在chainId真正变化时重置（不是初始化时）
-    if (prevChainIdRef.current !== undefined && prevChainIdRef.current !== chainId) {
+    if (
+      prevChainIdRef.current !== undefined &&
+      prevChainIdRef.current !== chainId
+    ) {
       setAmount("");
       setSelectedToken(null);
       setSelectedQuickAmount(null);
@@ -203,10 +248,9 @@ const Donate = ({ uid, name }: DonateProps) => {
     prevChainIdRef.current = chainId;
   }, [chainId]);
 
-
   // 处理返回上一页的逻辑
   const handleReturnToPreviousPage = React.useCallback(() => {
-    const returnUrl = searchParams.get('returnUrl');
+    const returnUrl = searchParams.get("returnUrl");
     if (returnUrl) {
       router.push(returnUrl);
       return;
@@ -233,7 +277,7 @@ const Donate = ({ uid, name }: DonateProps) => {
     if (isConnected) {
       // 验证输入
       if (!amount || parseFloat(amount) <= 0) {
-        toast.error(tCommon('validation.pleaseEnterAmount'));
+        toast.error(tCommon("validation.pleaseEnterAmount"));
         return;
       }
 
@@ -241,10 +285,12 @@ const Donate = ({ uid, name }: DonateProps) => {
       if (selectedToken?.balance) {
         const balanceBN = new BigNumber(selectedToken.balance);
         const amountBN = new BigNumber(amount);
-        
+
         if (amountBN.isGreaterThan(balanceBN)) {
           toast.error(
-            tCommon('validation.insufficientBalanceMax', { max: balanceBN.toFixed() })
+            tCommon("validation.insufficientBalanceMax", {
+              max: balanceBN.toFixed(),
+            })
           );
           return;
         }
@@ -252,13 +298,13 @@ const Donate = ({ uid, name }: DonateProps) => {
 
       // 链ID验证和提示 - 在交易前明确显示当前连接的链信息
       const expectedChainId = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID);
-      
+
       // 验证当前链ID是否与预期链ID一致
       if (chainId !== expectedChainId) {
         const currentChainInfo = chain || getChainById(chainId);
         const expectedChainInfo = getChainById(expectedChainId);
         toast.error(
-          tCommon('wallet.wrongNetworkMessage', {
+          tCommon("wallet.wrongNetworkMessage", {
             expectedName: expectedChainInfo.name,
             expectedId: expectedChainId,
             currentName: currentChainInfo.name,
@@ -274,7 +320,7 @@ const Donate = ({ uid, name }: DonateProps) => {
       // 显示当前链信息（仅在链ID正确时）
       const chainInfo = chain || getChainById(chainId);
       toast.info(
-        tCommon('wallet.currentNetworkInfo', {
+        tCommon("wallet.currentNetworkInfo", {
           name: chainInfo.name,
           id: chainId,
         }),
@@ -287,33 +333,33 @@ const Donate = ({ uid, name }: DonateProps) => {
       try {
         setIsProcessing(true);
         setDonationSuccess(false);
-        
+
         const result = await donate(uid, amount);
-          
+
         if (result) {
           setDonationSuccess(true);
-          toast.success(tCommon('success.donationSuccess'));
+          toast.success(tCommon("success.donationSuccess"));
           // 重置表单
           setAmount("");
           setSelectedQuickAmount(null);
           setRewardAmount(null);
           setAmountChanged(false);
         } else {
-          toast.error(tCommon('errors.donationFailed'));
+          toast.error(tCommon("errors.donationFailed"));
         }
       } catch (error: any) {
         console.error("Donation failed:", error);
-        
+
         // 根据错误类型显示不同的错误信息
-        let errorMessage = tCommon('errors.donationFailed');
+        let errorMessage = tCommon("errors.donationFailed");
         if (error.message?.includes("user rejected")) {
-          errorMessage = tCommon('errors.transactionCancelled');
+          errorMessage = tCommon("errors.transactionCancelled");
         } else if (error.message?.includes("insufficient funds")) {
-          errorMessage = tCommon('errors.insufficientFunds');
+          errorMessage = tCommon("errors.insufficientFunds");
         } else if (error.message?.includes("gas")) {
-          errorMessage = tCommon('errors.gasIssue');
+          errorMessage = tCommon("errors.gasIssue");
         }
-        
+
         toast.error(errorMessage);
       } finally {
         setIsProcessing(false);
@@ -348,28 +394,30 @@ const Donate = ({ uid, name }: DonateProps) => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full mb-6"
             >
               <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-white/80">{t('badge')}</span>
+              <span className="text-sm font-medium text-white/80">
+                {t("badge")}
+              </span>
             </motion.div>
-            
+
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
               className="text-4xl md:text-5xl font-bold text-white mb-4"
             >
-              {t('title')}  
+              {t("title")}
               <span className="bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {t('titleHighlight')}
+                {t("titleHighlight")}
               </span>
             </motion.h1>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-lg text-white/70 max-w-md mx-auto"
             >
-              {t('subtitle')}
+              {t("subtitle")}
             </motion.p>
           </div>
 
@@ -404,9 +452,7 @@ const Donate = ({ uid, name }: DonateProps) => {
             </div> */}
 
             {/* Token Selection */}
-            <TokenSelection
-              onTokenChange={handleTokenChange}
-            />
+            <TokenSelection onTokenChange={handleTokenChange} />
 
             {/* Amount Input */}
             <AmountInput

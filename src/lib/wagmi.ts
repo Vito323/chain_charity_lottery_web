@@ -1,6 +1,6 @@
 "use client";
 import { connectorsForWallets, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { metaMaskWallet } from '@rainbow-me/rainbowkit/wallets';
+import { metaMaskWallet, tokenPocketWallet } from '@rainbow-me/rainbowkit/wallets';
 import {
   mainnet,
   polygon,
@@ -39,7 +39,7 @@ const { wallets } = getDefaultWallets();
 const reorderedWallets = wallets.map((group) => {
   if (group.groupName === 'Popular') {
     const rest = group.wallets.filter((w) => w !== metaMaskWallet);
-    return { ...group, wallets: [metaMaskWallet, ...rest] };
+    return { ...group, wallets: [metaMaskWallet, tokenPocketWallet, ...rest] };
   }
   return group;
 });
