@@ -160,6 +160,15 @@ export const useDonationContract = () => {
         // 将 amount 转换为 BigNumber
         const amountBN = ethers.parseUnits(amount, tokenDecimals || 6);
         
+        console.log("准备捐赠:", {
+          projectId,
+          amount,
+          amountBN: amountBN.toString(),
+          tokenAddress,
+          tokenDecimals: tokenDecimals || 6,
+          contractAddress: contractAddress.toString(),
+        });
+        
         // 检查并处理代币授权（在捐赠之前）
         await checkAndApproveToken(
           tokenAddress,
@@ -168,15 +177,20 @@ export const useDonationContract = () => {
           tokenDecimals || 6
         );
 
+        console.log("授权完成，开始调用合约 donate 函数");
+
         const contractWithSigner = await getSigner();
         const tx = await (contractWithSigner as any).donate(
           projectId,
           amountBN
         );
+        console.log("交易已发送，等待确认:", tx.hash);
         await tx.wait();
+        console.log("交易已确认");
         setIsLoading(false);
         return tx.hash;
       } catch (e: unknown) {
+        console.error("捐赠失败，详细错误:", e);
         handleError(e, "代币捐赠失败");
         throw e;
       }

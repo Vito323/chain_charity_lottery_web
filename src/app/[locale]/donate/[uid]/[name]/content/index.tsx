@@ -43,6 +43,7 @@ const Donate = ({ uid, name }: DonateProps) => {
     getEcosystemTokenDecimals,
     getEcosystemToken,
     getDonationToken,
+    getDonationTokenDecimals,
   } = useMasterContract();
   const { isConnected, chain } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -334,21 +335,31 @@ const Donate = ({ uid, name }: DonateProps) => {
         setIsProcessing(true);
         setDonationSuccess(false);
 
-        // 获取捐赠代币地址
-        let tokenAddress: string;
-        if (selectedToken?.address && !selectedToken.isNative) {
-          // 如果选择了 ERC20 代币，使用其地址
-          tokenAddress = selectedToken.address;
-        } else {
-          // 否则从 masterContract 获取默认捐赠代币地址
-          tokenAddress = await getDonationToken();
-          if (!tokenAddress || tokenAddress === ethers.ZeroAddress) {
-            throw new Error("捐赠代币地址未找到");
-          }
+        // 合约内部从 masterContract 获取代币地址，所以我们必须使用 masterContract 的 donationToken
+        // 获取捐赠代币地址（必须从 masterContract 获取，因为合约内部使用这个地址）
+        const tokenAddress = await getDonationToken();
+        if (!tokenAddress || tokenAddress === ethers.ZeroAddress) {
+          throw new Error("捐赠代币地址未找到");
         }
 
-        // 获取代币精度（优先使用 selectedToken 的 decimals，否则使用默认值 6）
-        const tokenDecimals = selectedToken?.decimals || 6;
+        // 获取代币精度（从 masterContract 获取，确保与合约期望的一致）
+        let tokenDecimals = 6; // 默认值
+        try {
+          const decimals = await getDonationTokenDecimals();
+          if (decimals && decimals > 0) {
+            tokenDecimals = decimals;
+          }
+        } catch (error) {
+          console.warn("获取代币精度失败，使用默认值 6:", error);
+        }
+
+        // 添加调试信息
+        console.log("捐赠参数:", {
+          projectId: uid,
+          amount,
+          tokenAddress,
+          tokenDecimals,
+        });
 
         const result = await donate(uid, amount, tokenAddress, tokenDecimals);
 
@@ -365,6 +376,12 @@ const Donate = ({ uid, name }: DonateProps) => {
         }
       } catch (error: any) {
         console.error("Donation failed:", error);
+        console.error("Error details:", {
+          message: error.message,
+          reason: error.reason,
+          code: error.code,
+          data: error.data,
+        });
 
         // 根据错误类型显示不同的错误信息
         let errorMessage = tCommon("errors.donationFailed");
@@ -376,9 +393,20 @@ const Donate = ({ uid, name }: DonateProps) => {
           errorMessage = tCommon("errors.gasIssue");
         } else if (error.message?.includes("allowance") || error.message?.includes("approve")) {
           errorMessage = "代币授权失败，请重试";
+        } else if (error.message?.includes("reverted") || error.reason?.includes("reverted")) {
+          // 合约执行回退
+          if (error.reason) {
+            errorMessage = `交易失败: ${error.reason}`;
+          } else if (error.message?.includes("require(false)")) {
+            errorMessage = "交易失败：合约条件检查未通过，请检查项目ID和金额是否正确";
+          } else {
+            errorMessage = "交易失败：合约执行回退，请检查项目ID、代币地址和金额是否正确";
+          }
         }
 
-        toast.error(errorMessage);
+        toast.error(errorMessage, {
+          autoClose: 5000,
+        });
       } finally {
         setIsProcessing(false);
       }
