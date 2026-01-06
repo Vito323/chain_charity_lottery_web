@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import { type LotteryHistory } from '@/service/lottery';
 import { renderTicketMetadata } from '@/service/asset';
+import { COLORS } from '@/utils/lottery';
 
 export type WinningType = 'lottery' | 'follow';
 
@@ -33,9 +34,37 @@ interface WinningDetailProps {
   type: WinningType;
 }
 
-// 写死的颜色基因和图像符号
-const DEFAULT_COLOR_GENES = ['#FF6B35', '#4ECDC4', '#9B59B6', '#E0E0E0'];
+// 默认的图像符号
 const DEFAULT_IMAGE_SYMBOLS = ['heart', 'knight', 'star'];
+const DEFAULT_COLOR_GENES = ['#FF6B35', '#4ECDC4', '#9B59B6', '#E0E0E0'];
+
+// 根据 colors 字符串解析颜色索引并获取对应的颜色值
+const parseColorGenes = (colorsString: string | undefined): string[] => {
+  if (!colorsString) {
+    // 如果没有 colors 数据，返回默认颜色
+    return DEFAULT_COLOR_GENES;
+  }
+
+  try {
+    // 假设 colors 是逗号分隔的索引字符串，如 "1,2,3,4"
+    const colorIndexes = colorsString.split('').map((idx) => parseInt(idx.trim(), 10)).filter((idx) => !isNaN(idx) && idx > 0);
+    
+    if (colorIndexes.length === 0) {
+      return DEFAULT_COLOR_GENES;
+    }
+
+    // 根据索引从 COLORS 数组中获取对应的颜色值
+    const colorValues = colorIndexes.map((index) => {
+      const colorGene = COLORS.find((color) => color.index === index);
+      return colorGene ? colorGene.value : '#E0E0E0'; // 如果找不到对应的颜色，使用默认灰色
+    });
+
+    return colorValues.length > 0 ? colorValues : DEFAULT_COLOR_GENES;
+  } catch (error) {
+    console.error('Failed to parse color genes:', error);
+    return DEFAULT_COLOR_GENES;
+  }
+};
 
 const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
   const t = useTranslations('lottery.winningDetail');
@@ -132,7 +161,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
       minute: '2-digit',
     }),
     digitalMatrix: lotteryHistory.numbers || '',
-    colorGenes: DEFAULT_COLOR_GENES, // 写死的颜色基因
+    colorGenes: parseColorGenes(lotteryHistory.colors), // 从 COLORS 的 index 对应取值
     imageSymbols: DEFAULT_IMAGE_SYMBOLS, // 写死的图像符号
     timestamp: `${currentTimestamp} #${lotteryHistory.id}`, // 使用当前时间
   };
@@ -289,7 +318,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
           </div>
 
           {/* Draw Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Digital Matrix */}
             <motion.div
               variants={itemVariants}
@@ -319,7 +348,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
             </motion.div>
 
             {/* Image Symbols */}
-            <motion.div
+            {/* <motion.div
               variants={itemVariants}
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
@@ -337,7 +366,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </motion.div> */}
           </div>
 
           {/* Timestamp */}

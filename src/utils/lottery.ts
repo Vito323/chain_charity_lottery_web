@@ -1,5 +1,12 @@
 import { RarityType } from '@/app/[locale]/nft-market/types';
 
+export interface ColorGene {
+  index: number;
+  name: string;
+  value: string;
+  rarity: RarityType;
+}
+
 /**
  * Rank to rarity mapping
  * rank: 1=common, 2=rare, 3=epic, 4=legendary, 5=mythic
@@ -119,3 +126,16 @@ export const goldShimmerStyle = `
   }
 `;
 
+
+
+export const COLORS: ColorGene[] = [
+  { index: 1, name: 'Red', value: '#e74c3c', rarity: 'common' },
+  { index: 2, name: 'Blue', value: '#3498db', rarity: 'common' },
+  { index: 3, name: 'Green', value: '#27ae60', rarity: 'common' },
+  { index: 4, name: 'Orange', value: '#f39c12', rarity: 'common' },
+  { index: 5, name: 'Yellow', value: '#f1c40f', rarity: 'common' },
+  { index: 6, name: 'Purple', value: '#9b59b6', rarity: 'common' },
+  { index: 7, name: 'Copper', value: '#d68910', rarity: 'rare' },
+  { index: 8, name: 'Silver', value: '#95a5a6', rarity: 'rare' },
+  { index: 9, name: 'Gold', value: '#f1c40f', rarity: 'rare' },
+]
