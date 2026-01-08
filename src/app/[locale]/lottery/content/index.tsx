@@ -75,20 +75,7 @@ const LotteryContent: React.FC = () => {
 
   // 组件挂载时获取配置，只执行一次
   useLayoutEffect(() => {
-    // 使用模块级别的双重锁 + 组件级别的标志，三重保护防止重复调用
-    if (isInitializing || hasInitialized || hasInitializedRef.current) {
-      return;
-    }
-    // 同步设置所有锁，确保原子性
-    isInitializing = true;
-    hasInitialized = true;
-    hasInitializedRef.current = true;
-    
-    queryLotteryConfig().finally(() => {
-      // 请求完成后释放模块级别的锁，允许后续的正常调用（如倒计时结束时的刷新）
-      isInitializing = false;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    queryLotteryConfig();
   }, []);
   
   // 更新 ref 中的值

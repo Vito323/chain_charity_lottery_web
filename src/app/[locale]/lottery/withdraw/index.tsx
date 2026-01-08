@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { useAccount } from 'wagmi';
-import { withdrawAmount } from '@/service/lottery';
+import { useAccount, useChainId } from 'wagmi';
+import { toast } from 'react-toastify';
 import useGlobalStore from '@/store';
 import LotteryWithdrawModal from '@/components/lottery-withdraw-modal';
+import { useMasterContract } from '@/hooks/useMasterContract';
+import { getChainById } from '@/lib/chain-config';
 
 const WithdrawPage = () => {
   const t = useTranslations('lottery.withdraw');
@@ -18,8 +20,9 @@ const WithdrawPage = () => {
   
   const withdrawAmountFromStore = useGlobalStore(state => state.withdrawAmount);
   const setWithdrawAmount = useGlobalStore(state => state.setWithdrawAmount);
+  const chainId = useChainId();
+  const { getUserWithdrawableAmount, withdrawBonus, getWithdrawPaused } = useMasterContract();
 
-  // 格式化金额，保留5位小数
   const formatAmount = (amount: string): string => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount)) return '0.000000';
@@ -35,14 +38,9 @@ const WithdrawPage = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await withdrawAmount(address);
+      const response = await getUserWithdrawableAmount(address);
       
-      if (response && typeof response === 'object' && 'data' in response) {
-        const amount = typeof response.data === 'string' ? response.data : String(response.data || '0');
-        setWithdrawAmount(amount);
-      } else {
-        setWithdrawAmount('0');
-      }
+      setWithdrawAmount(response as string || '0');
     } catch (err) {
       console.error('Failed to fetch withdraw amount:', err);
       setError(tCommon('errors.failedToLoad'));
@@ -50,7 +48,7 @@ const WithdrawPage = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [isConnected, address, setWithdrawAmount, tCommon]);
+  }, [isConnected, address, setWithdrawAmount, getUserWithdrawableAmount, tCommon]);
 
   // 组件挂载时获取数据
   useEffect(() => {
@@ -65,15 +63,90 @@ const WithdrawPage = () => {
     setShowModal(true);
   };
 
-  // 处理确认提现（保留函数，待实现）
+  // 处理确认提现
   const handleConfirmWithdraw = async () => {
-    // TODO: 实现提现逻辑
-    console.log('Withdraw confirmed:', {
-      amount: withdrawAmountFromStore,
-      address: address,
-    });
-    // 这里可以调用实际的提现接口
-    // await withdraw(...);
+    // 1. 基础验证：检查钱包连接和地址
+    if (!isConnected || !address) {
+      toast.error(tCommon('wallet.notConnected'));
+      return;
+    }
+
+    // 2. 检查提现金额是否大于0
+    const amount = parseFloat(withdrawAmountFromStore || '0');
+    if (isNaN(amount) || amount <= 0) {
+      toast.error(tCommon('validation.invalidAmount') || 'Invalid withdraw amount');
+      return;
+    }
+
+    // 3. 链ID验证：检查当前链是否与预期链一致
+    const expectedChainId = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID);
+    if (chainId !== expectedChainId) {
+      const currentChainInfo = getChainById(chainId);
+      const expectedChainInfo = getChainById(expectedChainId);
+      toast.error(
+        tCommon('wallet.wrongNetworkMessage', {
+          expectedName: expectedChainInfo.name,
+          expectedId: expectedChainId,
+          currentName: currentChainInfo.name,
+          currentId: chainId,
+        }),
+        {
+          autoClose: 5000,
+        }
+      );
+      return;
+    }
+
+    // 4. 检查提现是否暂停
+    try {
+      const isPaused = await getWithdrawPaused();
+      if (isPaused) {
+        toast.error(t('errors.withdrawPaused') || 'Withdraw is currently paused');
+        return;
+      }
+    } catch (err) {
+      console.error('Failed to check withdraw paused status:', err);
+      toast.error(tCommon('errors.failedToLoad'));
+      return;
+    }
+
+    // 5. 执行提现操作
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // 调用提现接口
+      const txHash = await withdrawBonus();
+      
+      // 提现成功
+      toast.success(
+        t('success.withdrawSuccess') || 'Withdraw successful',
+        {
+          autoClose: 5000,
+        }
+      );
+
+      // 关闭模态框
+      setShowModal(false);
+
+      // 刷新可提现金额
+      await fetchWithdrawAmount();
+    } catch (err: any) {
+      console.error('Withdraw failed:', err);
+      
+      // 处理用户拒绝交易的情况
+      if (err?.message?.includes('user rejected') || err?.message?.includes('User rejected')) {
+        toast.error(tCommon('wallet.transactionRejected') || 'Transaction rejected by user');
+      } else if (err?.message?.includes('insufficient funds')) {
+        toast.error(tCommon('wallet.insufficientFunds') || 'Insufficient funds');
+      } else {
+        const errorMessage = err?.message || tCommon('errors.withdrawFailed') || 'Withdraw failed';
+        setError(errorMessage);
+        toast.error(errorMessage);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const containerVariants = {

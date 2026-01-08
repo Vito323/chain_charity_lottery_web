@@ -9,8 +9,8 @@ import { TermsModal } from './TermsModal';
 import { MobileBottomSheet } from './MobileBottomSheet';
 import { DesktopDropdown } from './DesktopDropdown';
 import { userConnect } from '@/service/user';
-import { withdrawAmount } from '@/service/lottery';
 import useGlobalStore from '@/store';
+import { useMasterContract } from "@/hooks/useMasterContract";
 
 const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
@@ -22,6 +22,7 @@ const CustomConnectButton = () => {
   const hasCalledConnectRef = useRef<string | null>(null);
   const tCommon = useTranslations('common');
   const setWithdrawAmount = useGlobalStore(state => state.setWithdrawAmount);
+  const { getUserWithdrawableAmount } = useMasterContract();
 
   // 监听钱包连接状态，连接后调用 userConnect 接口验证
   useEffect(() => {
@@ -57,17 +58,9 @@ const CustomConnectButton = () => {
   // 当下拉框展示且钱包连接时，调用 withdrawAmount 接口更新可提现金额
   useEffect(() => {
     if (showDropdown && isConnected && address) {
-      withdrawAmount(address)
+      getUserWithdrawableAmount(address)
         .then((result) => {
-          // 根据 action 函数的返回类型，result 是 ActionResult<string>
-          // 结构为 { ok: boolean, msg?: string, code?: string, data: string }
-          if (result && typeof result === 'object' && 'data' in result) {
-            const amount = typeof result.data === 'string' ? result.data : String(result.data || '0');
-            setWithdrawAmount(amount);
-          } else {
-            // 兜底处理
-            setWithdrawAmount('0');
-          }
+          setWithdrawAmount(result as string);
         })
     }
   }, [showDropdown, isConnected, address, setWithdrawAmount]);

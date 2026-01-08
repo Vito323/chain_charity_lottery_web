@@ -81,10 +81,3 @@ export const getLotteryHistory = () => action<LotteryHistory[]>({
   url: `/lottery/history`,
   method: "GET",
 });
-
-
-
-export const withdrawAmount = (address: string) => action<string>({
-  url: `/lottery/drawable-amount/${address}`,
-  method: "GET",
-});

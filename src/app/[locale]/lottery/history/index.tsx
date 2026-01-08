@@ -132,23 +132,11 @@ const LotteryHistory = () => {
     fetchLotteryHistoryRef.current = fetchLotteryHistory;
   }, [fetchLotteryHistory]);
 
-  // 组件挂载时获取数据，只执行一次
-  // 使用 useLayoutEffect 确保在 DOM 更新之前同步执行，避免 React 19 严格模式下的重复调用
   useLayoutEffect(() => {
-    // 使用模块级别的双重锁 + 组件级别的标志，三重保护防止重复调用
-    if (isHistoryInitializing || hasHistoryInitialized || hasInitializedRef.current) {
-      return;
-    }
-    // 同步设置所有锁，确保原子性
-    isHistoryInitializing = true;
-    hasHistoryInitialized = true;
-    hasInitializedRef.current = true;
-    
     fetchLotteryHistory().finally(() => {
       // 请求完成后释放模块级别的锁，允许后续的正常调用（如开奖完成事件触发的刷新）
       isHistoryInitializing = false;
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 监听开奖完成事件，刷新历史记录
