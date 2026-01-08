@@ -97,7 +97,7 @@ const mockWinningRecords: WinningRecord[] = [
 ];
 
 // CCT 代币地址
-const CCT_TOKEN_ADDRESS = '0x510c241672e6ff04b0Ad76211cb141716a27EE2e' as `0x${string}`;
+const CCT_TOKEN_ADDRESS = '0x813DEAe5E185BB5D44BE297f9EE0c812D0254D11' as `0x${string}`;
 
 // ERC20 ABI (仅包含 balanceOf 和 decimals)
 const ERC20_ABI = [
