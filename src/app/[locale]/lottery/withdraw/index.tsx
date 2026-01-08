@@ -9,6 +9,7 @@ import useGlobalStore from '@/store';
 import LotteryWithdrawModal from '@/components/lottery-withdraw-modal';
 import { useMasterContract } from '@/hooks/useMasterContract';
 import { getChainById } from '@/lib/chain-config';
+import { formatUnits } from 'ethers';
 
 const WithdrawPage = () => {
   const t = useTranslations('lottery.withdraw');
@@ -39,8 +40,8 @@ const WithdrawPage = () => {
       setIsLoading(true);
       setError(null);
       const response = await getUserWithdrawableAmount(address);
-      
-      setWithdrawAmount(response as string || '0');
+      const value = formatUnits(response, 18);
+      setWithdrawAmount(value || '0');
     } catch (err) {
       console.error('Failed to fetch withdraw amount:', err);
       setError(tCommon('errors.failedToLoad'));
@@ -74,7 +75,7 @@ const WithdrawPage = () => {
     // 2. 检查提现金额是否大于0
     const amount = parseFloat(withdrawAmountFromStore || '0');
     if (isNaN(amount) || amount <= 0) {
-      toast.error(tCommon('validation.invalidAmount') || 'Invalid withdraw amount');
+      toast.error(tCommon('validation.invalidAmount'));
       return;
     }
 
@@ -101,7 +102,7 @@ const WithdrawPage = () => {
     try {
       const isPaused = await getWithdrawPaused();
       if (isPaused) {
-        toast.error(t('errors.withdrawPaused') || 'Withdraw is currently paused');
+        toast.error(t('errors.withdrawPaused'));
         return;
       }
     } catch (err) {
@@ -120,7 +121,7 @@ const WithdrawPage = () => {
       
       // 提现成功
       toast.success(
-        t('success.withdrawSuccess') || 'Withdraw successful',
+        t('success.withdrawSuccess'),
         {
           autoClose: 5000,
         }
@@ -136,11 +137,11 @@ const WithdrawPage = () => {
       
       // 处理用户拒绝交易的情况
       if (err?.message?.includes('user rejected') || err?.message?.includes('User rejected')) {
-        toast.error(tCommon('wallet.transactionRejected') || 'Transaction rejected by user');
+        toast.error(tCommon('wallet.transactionRejected'));
       } else if (err?.message?.includes('insufficient funds')) {
-        toast.error(tCommon('wallet.insufficientFunds') || 'Insufficient funds');
+        toast.error(tCommon('wallet.insufficientFunds'));
       } else {
-        const errorMessage = err?.message || tCommon('errors.withdrawFailed') || 'Withdraw failed';
+        const errorMessage = err?.message || tCommon('errors.withdrawFailed');
         setError(errorMessage);
         toast.error(errorMessage);
       }

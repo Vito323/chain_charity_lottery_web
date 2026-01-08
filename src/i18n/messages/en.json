@@ -411,6 +411,12 @@
         "amount": "Withdraw Amount",
         "address": "Withdraw Address",
         "confirm": "Confirm Withdrawal"
+      },
+      "errors": {
+        "withdrawPaused": "Withdraw is currently paused"
+      },
+      "success": {
+        "withdrawSuccess": "Withdraw successful"
       }
     }
   },

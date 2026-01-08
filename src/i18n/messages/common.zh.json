@@ -40,6 +40,7 @@
       "donationFailed": "捐赠失败。请重试。",
       "transactionCancelled": "用户取消了交易",
       "insufficientFunds": "余额不足，无法完成此交易",
+      "withdrawFailed": "提现失败",
       "gasIssue": "交易因 Gas 问题失败",
       "networkError": "网络错误",
       "serverError": "服务器错误"
@@ -81,6 +82,7 @@
       "pleaseConnectWallet": "请连接您的钱包",
       "pleaseSelectToken": "请选择代币",
       "pleaseEnterAmount": "请输入有效金额",
+      "invalidAmount": "无效金额",
       "insufficientBalanceMax": "余额不足。最大金额: {max} USDT"
     },
     "success": {
@@ -128,6 +130,9 @@
       "close": "关闭",
       "withdraw": "提现",
       "withdrawableAmount": "可提现金额",
+      "notConnected": "钱包未连接",
+      "transactionRejected": "用户拒绝了交易",
+      "insufficientFunds": "余额不足",
       "wrongNetworkMessage": "网络错误。请切换到 {expectedName} (链ID: {expectedId})。当前: {currentName} (链ID: {currentId})",
       "currentNetworkInfo": "当前网络: {name} (链ID: {id})"
     },

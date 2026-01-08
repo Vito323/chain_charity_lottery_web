@@ -11,6 +11,7 @@ import { DesktopDropdown } from './DesktopDropdown';
 import { userConnect } from '@/service/user';
 import useGlobalStore from '@/store';
 import { useMasterContract } from "@/hooks/useMasterContract";
+import { formatUnits } from "ethers";
 
 const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
@@ -60,7 +61,9 @@ const CustomConnectButton = () => {
     if (showDropdown && isConnected && address) {
       getUserWithdrawableAmount(address)
         .then((result) => {
-          setWithdrawAmount(result as string);
+          console.log(result, 'result1122');
+          const value = formatUnits(result, 18);
+          setWithdrawAmount(value || '0');
         })
     }
   }, [showDropdown, isConnected, address, setWithdrawAmount]);

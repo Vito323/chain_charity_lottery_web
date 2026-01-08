@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { getLotteryHistory, type LotteryHistory } from '@/service/lottery';
+import { type LotteryHistory } from '@/service/lottery';
 
 // 历史开奖结果数据类型（用于UI展示）
 interface LotteryHistoryItem {
@@ -15,18 +15,19 @@ interface LotteryHistoryItem {
   prizeAmount: number; // 奖金金额（USDT）
 }
 
-// 模块级别的初始化锁，防止 React 19 严格模式下的重复调用
-let isHistoryInitializing = false;
-let hasHistoryInitialized = false;
+interface LotteryHistoryProps {
+  historyData: LotteryHistory[];
+  isLoading: boolean;
+  error: string | null;
+}
 
-
-const LotteryHistory = () => {
+const LotteryHistory: React.FC<LotteryHistoryProps> = ({
+  historyData: rawHistoryData,
+  isLoading,
+  error,
+}) => {
   const t = useTranslations('lottery.history');
   const tCommon = useTranslations('common');
-  const [historyData, setHistoryData] = useState<LotteryHistoryItem[]>([]);
-  const [rawHistoryData, setRawHistoryData] = useState<LotteryHistory[]>([]); // 保存原始数据
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   // 格式化日期时间
   const formatDateTime = (dateString: string): string => {
@@ -44,12 +45,12 @@ const LotteryHistory = () => {
   };
 
   // 将接口数据转换为UI展示数据
-  const transformHistoryData = useCallback((data: LotteryHistory[]): LotteryHistoryItem[] => {
-    if (!Array.isArray(data) || data.length === 0) {
+  const historyData = useMemo(() => {
+    if (!Array.isArray(rawHistoryData) || rawHistoryData.length === 0) {
       return [];
     }
     
-    return data
+    return rawHistoryData
       .filter((item) => item && typeof item.id === 'number' && item.createdAt)
       .map((item) => {
         // 奖金金额：直接使用 total 字段
@@ -71,86 +72,7 @@ const LotteryHistory = () => {
         };
       })
       .sort((a, b) => b.drawNumber - a.drawNumber); // 按期号倒序排列
-  }, []);
-
-  // 使用 ref 存储 tCommon，避免在 fetchLotteryHistory 依赖中引入
-  const tCommonRef = React.useRef(tCommon);
-  useEffect(() => {
-    tCommonRef.current = tCommon;
-  }, [tCommon]);
-
-  // 使用 ref 跟踪请求是否正在进行，避免重复调用
-  const isRequestingRef = React.useRef(false);
-  // 使用 ref 跟踪是否已经初始化，避免重复调用
-  const hasInitializedRef = React.useRef(false);
-
-  // 获取历史开奖数据
-  const fetchLotteryHistory = useCallback(async () => {
-    // 如果已经有请求在进行，直接返回，避免重复调用
-    if (isRequestingRef.current) {
-      return;
-    }
-    
-    try {
-      isRequestingRef.current = true;
-      setIsLoading(true);
-      setError(null);
-      const response = await getLotteryHistory();
-      
-      if (response.ok) {
-        // 确保 response.data 存在且为数组
-        if (response.data && Array.isArray(response.data)) {
-          // 保存原始数据
-          setRawHistoryData(response.data);
-          const transformedData = transformHistoryData(response.data);
-          setHistoryData(transformedData);
-        } else {
-          // 数据格式不正确
-          console.warn('Invalid data format from lottery history API:', response.data);
-          setRawHistoryData([]);
-          setHistoryData([]);
-        }
-      } else {
-        // 接口返回错误
-        const errorMsg = response.msg || response.code || tCommonRef.current('errors.failedToLoadHistory');
-        console.error('Failed to fetch lottery history:', errorMsg);
-        setError(errorMsg);
-      }
-    } catch (err) {
-      // 网络错误或其他异常
-      console.error('Failed to fetch lottery history:', err);
-      setError(tCommonRef.current('errors.failedToLoadHistory'));
-    } finally {
-      setIsLoading(false);
-      isRequestingRef.current = false;
-    }
-  }, [transformHistoryData]);
-
-  // 使用 ref 存储 fetchLotteryHistory，避免在事件监听器中引入依赖
-  const fetchLotteryHistoryRef = React.useRef(fetchLotteryHistory);
-  useEffect(() => {
-    fetchLotteryHistoryRef.current = fetchLotteryHistory;
-  }, [fetchLotteryHistory]);
-
-  useLayoutEffect(() => {
-    fetchLotteryHistory().finally(() => {
-      // 请求完成后释放模块级别的锁，允许后续的正常调用（如开奖完成事件触发的刷新）
-      isHistoryInitializing = false;
-    });
-  }, []);
-
-  // 监听开奖完成事件，刷新历史记录
-  useEffect(() => {
-    const handleDrawComplete = () => {
-      fetchLotteryHistoryRef.current();
-    };
-
-    window.addEventListener('lotteryDrawComplete', handleDrawComplete);
-
-    return () => {
-      window.removeEventListener('lotteryDrawComplete', handleDrawComplete);
-    };
-  }, []);
+  }, [rawHistoryData]);
 
   // 获取状态文本
   const getStatusText = (status: 'upcoming' | 'won' | 'lost') => {
@@ -315,15 +237,13 @@ const LotteryHistory = () => {
                       <span className="text-sm sm:text-base md:text-lg font-bold text-white">
                         {t('drawNumberFormat', { number: item.drawNumber })}
                       </span>
-                      {item.status === 'won' ? (
-                        <span className="px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 rounded-lg bg-white/20 text-white text-xs sm:text-sm font-medium whitespace-nowrap">
-                          {getStatusText(item.status)}
-                        </span>
-                      ) : (
-                        <span className="text-xs sm:text-sm text-white/60 whitespace-nowrap">
-                          {getStatusText(item.status)}
-                        </span>
-                      )}
+                      <span className={`${
+                        (item.status as string) === 'won' || (item.status as string) === 'upcoming'
+                          ? 'px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 rounded-lg bg-white/20 text-white text-xs sm:text-sm font-medium whitespace-nowrap'
+                          : 'text-xs sm:text-sm text-white/60 whitespace-nowrap'
+                      }`}>
+                        {getStatusText(item.status)}
+                      </span>
                     </div>
                     {/* 第二行：开奖时间 */}
                     <div className="text-xs sm:text-sm text-white/60 wrap-break-word">

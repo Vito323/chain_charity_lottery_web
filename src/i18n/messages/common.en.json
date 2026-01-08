@@ -40,6 +40,7 @@
       "donationFailed": "Donation failed. Please try again.",
       "transactionCancelled": "Transaction was cancelled by user",
       "insufficientFunds": "Insufficient balance for this transaction",
+      "withdrawFailed": "Withdraw failed",
       "gasIssue": "Transaction failed due to gas issues",
       "networkError": "Network error",
       "serverError": "Server error"
@@ -81,6 +82,7 @@
       "pleaseConnectWallet": "Please connect your wallet",
       "pleaseSelectToken": "Please select a token",
       "pleaseEnterAmount": "Please enter a valid amount",
+      "invalidAmount": "Invalid amount",
       "insufficientBalanceMax": "Insufficient balance. Maximum: {max} USDT"
     },
     "success": {
@@ -128,6 +130,9 @@
       "close": "Close",
       "withdraw": "Withdraw",
       "withdrawableAmount": "Withdrawable Amount",
+      "notConnected": "Wallet not connected",
+      "transactionRejected": "Transaction rejected by user",
+      "insufficientFunds": "Insufficient funds",
       "wrongNetworkMessage": "Wrong network. Please switch to {expectedName} (Chain ID: {expectedId}). Current: {currentName} (Chain ID: {currentId})",
       "currentNetworkInfo": "Current Network: {name} (Chain ID: {id})"
     },

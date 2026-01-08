@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useLayoutEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
-import { getLotteryConfig, LotteryConfig } from "@/service/lottery";
+import { LotteryConfig } from "@/service/lottery";
 import { useTranslations } from 'next-intl';
 
 interface CountdownTime {
@@ -13,11 +13,19 @@ interface CountdownTime {
   seconds: number;
 }
 
-// 模块级别的初始化锁，防止 React 19 严格模式下的重复调用
-let isInitializing = false;
-let hasInitialized = false;
+interface LotteryContentProps {
+  lotteryConfig: LotteryConfig;
+  loading: boolean;
+  onRefresh: () => void;
+  onDrawComplete: () => void;
+}
 
-const LotteryContent: React.FC = () => {
+const LotteryContent: React.FC<LotteryContentProps> = ({
+  lotteryConfig,
+  loading,
+  onRefresh,
+  onDrawComplete,
+}) => {
   const { isConnected } = useAccount();
   const t = useTranslations('lottery');
   const tTime = useTranslations('common.time');
@@ -39,44 +47,8 @@ const LotteryContent: React.FC = () => {
   const refreshTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const hasTriggeredRefreshRef = React.useRef(false);
   
-  // 彩票配置状态
-  const [loading, setLoading] = useState(true);
-  const [lotteryConfig, setLotteryConfig] = useState<LotteryConfig>({
-    nextDrawTime: 0,
-    total: "0.00",
-    nextDrawTimestring: ''
-  });
-  
   // 使用 ref 存储 nextDrawTime，避免依赖变化导致定时器重新创建
   const nextDrawTimeRef = React.useRef(lotteryConfig.nextDrawTime);
-  // 使用 ref 跟踪请求是否正在进行，避免重复调用
-  const isRequestingRef = React.useRef(false);
-  const hasInitializedRef = React.useRef(false);
-
-  const queryLotteryConfig = useCallback(async () => {
-    // 如果已经有请求在进行，直接返回，避免重复调用
-    if (isRequestingRef.current) {
-      return;
-    }
-    
-    try {
-      isRequestingRef.current = true;
-      setLoading(true);
-      const res = await getLotteryConfig();
-      if (res.ok) {
-        setLotteryConfig(res.data);
-        setIsDrawComplete(false);
-      }
-    } finally {
-      setLoading(false);
-      isRequestingRef.current = false;
-    }
-  }, []);
-
-  // 组件挂载时获取配置，只执行一次
-  useLayoutEffect(() => {
-    queryLotteryConfig();
-  }, []);
   
   // 更新 ref 中的值
   useEffect(() => {
@@ -91,7 +63,9 @@ const LotteryContent: React.FC = () => {
     if (difference <= 0) {
       if (!isDrawComplete) {
         setIsDrawComplete(true);
-         queryLotteryConfig();
+        console.log('倒计时结束，触发开奖完成事件');
+        // 调用父组件传入的刷新函数
+        onRefresh();
         if (!hasTriggeredRefreshRef.current) {
           hasTriggeredRefreshRef.current = true;
           // 清理之前的定时器（如果存在）
@@ -99,8 +73,8 @@ const LotteryContent: React.FC = () => {
             clearTimeout(refreshTimerRef.current);
           }
           refreshTimerRef.current = setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('lotteryDrawComplete'));
             refreshTimerRef.current = null;
+            onDrawComplete?.();
           }, 2000);
         }
       }
@@ -127,7 +101,7 @@ const LotteryContent: React.FC = () => {
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
     return { days, hours, minutes, seconds };
-  }, [isDrawComplete]);
+  }, [isDrawComplete, onRefresh]);
 
   // 更新倒计时 - 只在 nextDrawTime 有值且大于 0 时启动定时器
   useEffect(() => {

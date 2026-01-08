@@ -333,6 +333,12 @@
         "amount": "提现金额",
         "address": "提现地址",
         "confirm": "确认提现"
+      },
+      "errors": {
+        "withdrawPaused": "提现功能当前已暂停"
+      },
+      "success": {
+        "withdrawSuccess": "提现成功"
       }
     }
   },

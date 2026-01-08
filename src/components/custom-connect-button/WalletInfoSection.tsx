@@ -38,11 +38,14 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
     router.push('/lottery/withdraw');
   };
 
-  // 格式化可提现金额，保留两位小数
+  // 格式化可提现金额，保留两位小数（截断，不四舍五入）
   const formattedWithdrawableAmount = useMemo(() => {
     if (!withdrawAmount) return '0.00';
     const amount = parseFloat(withdrawAmount);
-    return isNaN(amount) ? '0.00' : amount.toFixed(2);
+    if (isNaN(amount)) return '0.00';
+    // 截断到两位小数，不四舍五入
+    const truncated = Math.floor(amount * 100) / 100;
+    return truncated.toFixed(2);
   }, [withdrawAmount]);
 
   return (
