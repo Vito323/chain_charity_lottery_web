@@ -142,7 +142,7 @@ const HoldTicketDetail: React.FC<HoldTicketDetailProps> = ({ ticketId }) => {
   
   // Fetch NFTs from wallet
   const { nfts, loading: nftsLoading, error: nftsError, refresh: refreshNFTs } = useWalletNFTs({
-    pageSize: 100,
+    contractAddress: process.env.NEXT_PUBLIC_LOTTERY_NFT_CONTRACT_ADDRESS!,
   });
 
   // Find the specific ticket from wallet NFTs

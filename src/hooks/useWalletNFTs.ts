@@ -1,15 +1,14 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { useAccount, useChainId, usePublicClient } from 'wagmi';
-import { mainnet, polygon, polygonAmoy, bsc } from 'wagmi/chains';
+import { useAccount, useChainId } from 'wagmi';
+import { bsc } from 'wagmi/chains';
 import { createPublicClient, http, type Address } from 'viem';
 
 /**
  * useWalletNFTs Hook
  * 
- * 通过 ABI 方式获取指定合约的 NFT
+ * 通过 ABI 方式获取指定合约的 NFT（仅支持 BSC 链）
  * - 使用事件日志（Transfer 事件）获取用户拥有的 token IDs
- * - 兼容 BSC 和 POL 链
  * - 无需 API Key，直接调用链上合约
  * - 数据实时准确，完全去中心化
  * 
@@ -24,7 +23,7 @@ import { createPublicClient, http, type Address } from 'viem';
  * 注意事项：
  * - contractAddress 是必需的参数
  * - 合约必须是标准的 ERC721 合约
- * - 支持 BSC 和 POL 链
+ * - 仅支持 BSC 链
  * - 通过事件日志获取，如果历史事件不完整可能影响结果
  */
 
@@ -58,40 +57,6 @@ interface UseWalletNFTsReturn {
   refresh: () => void;
   totalCount: number;
 }
-
-// Alchemy API配置
-const ALCHEMY_API_KEYS = {
-  [mainnet.id]: process.env.NEXT_PUBLIC_ALCHEMY_MAINNET_KEY || 'demo',
-  [polygon.id]: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_KEY || 'demo',
-  [polygonAmoy.id]: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_KEY || 'demo',
-  [31337]: '',
-};
-
-// Moralis API配置（用于BSC链）
-const MORALIS_API_KEY = process.env.NEXT_PUBLIC_MORALIS_API_KEY || '';
-
-// 获取Alchemy API URL
-const getAlchemyUrl = (chainId: number) => {
-  const apiKey = ALCHEMY_API_KEYS[chainId as keyof typeof ALCHEMY_API_KEYS];
-  
-  switch (chainId) {
-    case mainnet.id:
-      return `https://eth-mainnet.g.alchemy.com/nft/v3/${apiKey}`;
-    case polygon.id:
-      return `https://polygon-mainnet.g.alchemy.com/nft/v3/${apiKey}`;
-    case polygonAmoy.id:
-      return `https://polygon-amoy.g.alchemy.com/nft/v3/${apiKey}`;
-    case 31337:
-      return null;
-    default:
-      return `https://eth-mainnet.g.alchemy.com/nft/v3/${apiKey}`;
-  }
-};
-
-// 检查是否使用Moralis API（BSC链）
-const shouldUseMoralis = (chainId: number): boolean => {
-  return chainId === bsc.id;
-};
 
 // ERC721 标准 ABI（用于通过合约直接获取 NFT）
 const ERC721_ABI = [
@@ -156,20 +121,15 @@ const isContract = async (client: ReturnType<typeof createPublicClient>, address
   }
 };
 
-// 使用 ABI 方式获取特定合约的 NFT（通过事件日志）
+// 使用 ABI 方式获取特定合约的 NFT（通过事件日志，仅支持 BSC 链）
 const fetchNFTsByABI = async (
   address: string,
-  contractAddress: string,
-  chainId: number
+  contractAddress: string
 ): Promise<{ nfts: WalletNFT[]; totalCount: number }> => {
   try {
-    // 创建 public client，兼容 BSC 和 POL 链
-    const chain = chainId === bsc.id ? bsc : 
-                  chainId === polygon.id ? polygon : 
-                  polygon;
-    
+    // 创建 public client，仅支持 BSC 链
     const client = createPublicClient({
-      chain,
+      chain: bsc,
       transport: http(),
     });
 
@@ -392,225 +352,6 @@ const fetchNFTsByABI = async (
   }
 };
 
-// 使用Moralis API获取BSC链NFT
-const fetchBSCNFTs = async (
-  address: string,
-  pageKey?: string,
-  pageSize: number = 20,
-  contractAddress?: string
-): Promise<{ nfts: WalletNFT[]; pageKey?: string; totalCount: number }> => {
-  if (!MORALIS_API_KEY) {
-    console.warn('Moralis API key not configured for BSC NFT fetching');
-    return { nfts: [], totalCount: 0 };
-  }
-
-  const url = new URL(`https://deep-index.moralis.io/api/v2.2/${address}/nft`);
-  url.searchParams.append('chain', 'bsc');
-  url.searchParams.append('format', 'decimal');
-  url.searchParams.append('limit', pageSize.toString());
-  
-  // 如果指定了合约地址，在 API 请求中过滤
-  if (contractAddress) {
-    url.searchParams.append('token_addresses', contractAddress);
-  }
-  
-  if (pageKey) {
-    url.searchParams.append('cursor', pageKey);
-  }
-
-  try {
-    const response = await fetch(url.toString(), {
-      method: 'GET',
-      headers: {
-        'X-API-Key': MORALIS_API_KEY,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json() as Record<string, unknown>;
-    const result = data.result as Array<Record<string, unknown>> || [];
-    
-    const nfts: WalletNFT[] = result.map((nft: Record<string, unknown>) => {
-      // 解析metadata
-      let metadata: Record<string, unknown> = {};
-      try {
-        if (typeof nft.metadata === 'string' && nft.metadata.trim()) {
-          metadata = JSON.parse(nft.metadata) as Record<string, unknown>;
-        } else if (nft.metadata && typeof nft.metadata === 'object') {
-          metadata = nft.metadata as Record<string, unknown>;
-        }
-      } catch (e) {
-        console.warn('Failed to parse metadata:', e);
-      }
-      
-      // 获取图片URL，优先级：metadata.image > token_uri > 占位符
-      let imageUrl = '/images/placeholder-all.png';
-      if (metadata.image && typeof metadata.image === 'string') {
-        imageUrl = metadata.image;
-      } else if (nft.token_uri && typeof nft.token_uri === 'string') {
-        imageUrl = nft.token_uri;
-      }
-      
-      // 处理IPFS URL
-      let processedImageUrl = imageUrl;
-      if (imageUrl.startsWith('ipfs://')) {
-        processedImageUrl = `https://ipfs.io/ipfs/${imageUrl.replace('ipfs://', '')}`;
-      } else if (imageUrl.startsWith('ipfs/')) {
-        processedImageUrl = `https://ipfs.io/${imageUrl}`;
-      }
-
-      // 获取token ID（可能是字符串或数字）
-      const tokenId = nft.token_id 
-        ? (typeof nft.token_id === 'string' ? nft.token_id : String(nft.token_id))
-        : '';
-
-      return {
-        id: `${nft.token_address}-${tokenId}`,
-        name: (metadata.name as string) || 
-              (nft.name as string) || 
-              `NFT #${tokenId}`,
-        description: (metadata.description as string) || undefined,
-        image: processedImageUrl,
-        owner: address,
-        tokenId: tokenId,
-        contractAddress: (nft.token_address as string) || '',
-        collectionName: (nft.name as string) || '',
-        collectionSymbol: (nft.symbol as string) || '',
-        tokenType: (nft.contract_type as string) || 'ERC721',
-        metadata: metadata,
-      };
-    });
-
-    return {
-      nfts,
-      pageKey: data.cursor as string | undefined,
-      totalCount: (data.total as number) || nfts.length,
-    };
-  } catch (error) {
-    console.error('Error fetching BSC NFTs:', error);
-    throw new Error('Failed to fetch BSC NFTs from wallet');
-  }
-};
-
-// 获取NFT数据
-const fetchWalletNFTs = async (
-  address: string,
-  chainId: number,
-  pageKey?: string,
-  pageSize: number = 20,
-  contractAddress?: string,
-  preferABI?: boolean,
-  fallbackToAPI?: boolean
-): Promise<{ nfts: WalletNFT[]; pageKey?: string; totalCount: number }> => {
-  // 如果指定了合约地址且优先使用 ABI，则使用 ABI 方式
-  if (contractAddress && preferABI) {
-    try {
-      const result = await fetchNFTsByABI(address, contractAddress, chainId);
-      return { ...result, pageKey: undefined }; // ABI 方式不支持分页
-    } catch (error) {
-      // ABI 方式失败时的处理
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.warn('ABI 方式获取 NFT 失败:', errorMessage);
-      
-      // 如果允许回退到 API 方式
-      if (fallbackToAPI) {
-        console.info('回退到 API 方式获取 NFT...');
-        // 继续执行下面的 API 方式代码
-      } else {
-        // 不允许回退，直接抛出错误
-        throw error;
-      }
-    }
-  }
-
-  // BSC链使用Moralis API
-  if (shouldUseMoralis(chainId)) {
-    return fetchBSCNFTs(address, pageKey, pageSize, contractAddress);
-  }
-
-  const baseUrl = getAlchemyUrl(chainId);
-  
-  // 本地网络不支持Alchemy NFT API
-  if (!baseUrl) {
-    return { nfts: [], totalCount: 0 };
-  }
-  
-  const url = new URL(`${baseUrl}/getNFTsForOwner`);
-  
-  url.searchParams.append('owner', address);
-  url.searchParams.append('withMetadata', 'true');
-  url.searchParams.append('pageSize', pageSize.toString());
-  
-  // 如果指定了合约地址，在 API 请求中过滤
-  if (contractAddress) {
-    url.searchParams.append('contractAddresses[]', contractAddress);
-  }
-  
-  if (pageKey) {
-    url.searchParams.append('pageKey', pageKey);
-  }
-
-  try {
-    const response = await fetch(url.toString());
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json() as Record<string, unknown>;
-    
-    // 转换Alchemy数据格式到我们的NFT格式
-    const ownedNfts = data.ownedNfts as Array<Record<string, unknown>> || [];
-    console.log('ownedNfts', ownedNfts);
-    const nfts: WalletNFT[] = ownedNfts.map((nft: Record<string, unknown>) => {
-      const contract = nft.contract as Record<string, unknown>;
-      const image = nft.image as Record<string, unknown>;
-      const raw = nft.raw as Record<string, unknown> | undefined;
-      
-      // 从 raw.metadata 改为直接取 metadata
-      // 如果 metadata 存在，直接使用；否则尝试从 raw.metadata 获取
-      const metadata = (nft.metadata as Record<string, unknown>) || 
-                      (raw?.metadata as Record<string, unknown>) || 
-                      ({} as Record<string, unknown>);
-      
-      return {
-        id: `${contract.address}-${nft.tokenId}`,
-        name: (nft.name as string) || (contract.name as string) || `NFT #${nft.tokenId}`,
-        description: nft.description as string,
-        image: (image?.originalUrl as string) || (image?.pngUrl as string) || (image?.cachedUrl as string) || '/images/placeholder-all.png',
-        owner: address,
-        tokenId: nft.tokenId as string,
-        contractAddress: contract.address as string,
-        collectionName: contract.name as string,
-        collectionSymbol: contract.symbol as string,
-        tokenType: nft.tokenType as string,
-        metadata: metadata,
-      };
-    });
-
-    // 如果指定了合约地址，过滤出该合约的 NFT
-    let filteredNfts = nfts;
-    if (contractAddress) {
-      const contractAddrLower = contractAddress.toLowerCase();
-      filteredNfts = nfts.filter(nft => 
-        nft.contractAddress?.toLowerCase() === contractAddrLower
-      );
-    }
-
-    return {
-      nfts: filteredNfts,
-      pageKey: data.pageKey as string | undefined,
-      totalCount: filteredNfts.length,
-    };
-  } catch (error) {
-    console.error('Error fetching NFTs:', error);
-    throw new Error('Failed to fetch NFTs from wallet');
-  }
-};
-
 export const useWalletNFTs = (options: UseWalletNFTsOptions): UseWalletNFTsReturn => {
   const { contractAddress } = options;
   const { address, isConnected } = useAccount();
@@ -631,9 +372,9 @@ export const useWalletNFTs = (options: UseWalletNFTsOptions): UseWalletNFTsRetur
       return;
     }
 
-    // 检查链是否支持（BSC 或 POL）
-    if (chainId !== bsc.id && chainId !== polygon.id) {
-      setError(`不支持的链 ID: ${chainId}，仅支持 BSC (${bsc.id}) 和 POL (${polygon.id})`);
+    // 检查链是否支持（仅支持 BSC）
+    if (chainId !== bsc.id) {
+      setError(`不支持的链 ID: ${chainId}，仅支持 BSC (${bsc.id})`);
       setNfts([]);
       setTotalCount(0);
       return;
@@ -644,7 +385,7 @@ export const useWalletNFTs = (options: UseWalletNFTsOptions): UseWalletNFTsRetur
       setError(null);
       
       // 使用 ABI 方式获取 NFT
-      const result = await fetchNFTsByABI(address, contractAddress, chainId);
+      const result = await fetchNFTsByABI(address, contractAddress);
       
       setNfts(result.nfts);
       setTotalCount(result.totalCount);

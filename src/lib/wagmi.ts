@@ -2,18 +2,14 @@
 import { connectorsForWallets, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { metaMaskWallet, tokenPocketWallet } from '@rainbow-me/rainbowkit/wallets';
 import {
-  mainnet,
-  polygon,
-  polygonAmoy,
   bsc,
 } from 'wagmi/chains';
-import { defineChain } from 'viem';
 import { createConfig, http } from 'wagmi';
 
 const appName = 'Hawaiian Nation ChainCharity';
 const projectId = 'YOUR_PROJECT_ID';
 
-const chains = [bsc, polygon, polygonAmoy] as const;
+const chains = [bsc] as const;
 
 const { wallets } = getDefaultWallets();
 

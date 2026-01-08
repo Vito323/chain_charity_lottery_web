@@ -131,11 +131,6 @@ const MyTickets: React.FC = () => {
   
   // Get lottery NFT contract address
   const lotteryContractAddress = useMemo(() => getLotteryNFTContractAddress(), []);
-  
-  // Fetch NFTs from wallet
-  // const { nfts, loading: nftsLoading, error: nftsError, refresh: refreshNFTs } = useWalletNFTs({
-  //   pageSize: 100,
-  // });
 
   // 获取特定合约的 NFT（使用 ABI，无需 API）
 const { nfts, loading: nftsLoading, error: nftsError, refresh: refreshNFTs } = useWalletNFTs({
