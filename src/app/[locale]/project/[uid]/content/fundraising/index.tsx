@@ -31,7 +31,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
       <div className="text-center mb-6">
         <div className="text-sm text-white/60 mb-2">{t('totalAmountRaised')}</div>
         <div className="text-4xl font-bold text-white mb-2">
-          ${safeTotalRaised.toLocaleString()}
+          ${safeTotalRaised.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </div>
         <div className="text-white/70">
           {t('raisedFrom', { contributors: safeContributors.toLocaleString() })}
@@ -51,7 +51,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
       {/* 操作按钮部分 */}
       <div className="mt-auto pt-6">
         <button
-          className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-fuchsia-600 text-white font-semibold rounded-full text-lg hover:from-purple-700 hover:via-pink-700 hover:to-fuchsia-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 hover:scale-105 text-center block cursor-pointer"
+          className="w-full px-8 py-4 bg-linear-to-r from-purple-600 via-pink-600 to-fuchsia-600 text-white font-semibold rounded-full text-lg hover:from-purple-700 hover:via-pink-700 hover:to-fuchsia-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/25 hover:scale-105 text-center block cursor-pointer"
           onClick={onDonate}
         >
           {t('donate')}

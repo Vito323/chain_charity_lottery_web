@@ -137,6 +137,7 @@ export const useMasterContract = () => {
       amount: string,
       tokenDecimals: number
     ): Promise<string> => {
+      console.log("calculateExchangeAmount11122", amount, tokenDecimals);
       setIsLoading(true);
       setError(null);
       try {
@@ -144,6 +145,7 @@ export const useMasterContract = () => {
         const result = await contractInstance.calculateExchangeAmount(
           ethers.parseUnits(amount, tokenDecimals)
         );
+        console.log("calculateExchangeAmount111223333", result);
         return result;
       } catch (e: unknown) {
         handleError(e, "代币捐赠失败");

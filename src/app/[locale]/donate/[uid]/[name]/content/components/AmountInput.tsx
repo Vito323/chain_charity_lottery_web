@@ -39,7 +39,6 @@ export const AmountInput: React.FC<AmountInputProps> = ({
   // 处理金额输入变化，限制不超过余额
   const handleAmountChangeWithLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    
     // 如果输入为空，直接更新
     if (!inputValue || inputValue === '') {
       onAmountChange(e);
