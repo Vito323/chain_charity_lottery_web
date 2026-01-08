@@ -34,7 +34,7 @@ export interface DonorData {
   address: string;
   available: string;
   createdAt: string;
-  hash: string;
+  txHash: string;
   timestamp: number;
   token: string;
   total: string;

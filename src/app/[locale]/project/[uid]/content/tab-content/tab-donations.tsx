@@ -99,7 +99,7 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
               {projectInfo?.donors && projectInfo.donors.length > 0 ? (
                 projectInfo.donors.map((donation: DonorData, index: number) => {
                   const address = donation?.address || '';
-                  const hash = donation?.hash || '';
+                  const txHash = donation?.txHash || '';
                   const createdAt = donation?.createdAt ? new Date(donation.createdAt) : new Date();
                   const isValidDate = !isNaN(createdAt.getTime());
                   
@@ -118,11 +118,11 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
                       <td className="py-4 px-2 font-mono text-sm">
                         <div className="flex items-center gap-2">
                           <span className="text-white/80">
-                            {hash.length > 14 ? `${hash.slice(0, 6)}...${hash.slice(-8)}` : hash}
+                            {txHash.length > 14 ? `${txHash.slice(0, 6)}...${txHash.slice(-8)}` : txHash}
                           </span>
                           <span 
                             className="text-white/40 hover:text-white/80 cursor-pointer transition-colors duration-200"
-                            onClick={() => window.open(`${scanUrl}${hash}`, "_blank")}
+                            onClick={() => window.open(`${scanUrl}${txHash}`, "_blank")}
                             title={t('table.viewTransactionDetails')}
                           >
                             <i className="fa fa-external-link text-xs"></i>
@@ -134,7 +134,7 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
                           ? new Intl.NumberFormat('en-US', {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
-                            }).format(parseFloat(String(donation.total)))
+                            }).format(parseFloat(donation.total))
                           : '0.00'}
                       </td>
                     </motion.tr>
@@ -163,7 +163,7 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
       </motion.div>
 
       {/* 侧边栏信息 */}
-      <motion.div variants={itemVariants} className="mt-8">
+      {/* <motion.div variants={itemVariants} className="mt-8">
         <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
           <h3 className="text-lg font-semibold text-white mb-4">
             {t('sidebar.allTimeDonations')}
@@ -202,7 +202,7 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
             ))}
           </div>
         </div>
-      </motion.div>
+      </motion.div> */}
     </motion.div>
   );
 };
