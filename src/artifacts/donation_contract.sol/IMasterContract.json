@@ -1,7 +1,7 @@
 {
   "_format": "hh3-artifact-1",
   "contractName": "IMasterContract",
-  "sourceName": "contracts/DonationContract.sol",
+  "sourceName": "contracts/CCDonationContract.sol",
   "abi": [
     {
       "inputs": [],
@@ -37,12 +37,30 @@
           "type": "address"
         },
         {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        },
+        {
           "internalType": "uint256",
           "name": "_amount",
           "type": "uint256"
         }
       ],
       "name": "airdrop",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_usdtAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "calculateExchangeAmount",
       "outputs": [
         {
           "internalType": "uint256",
@@ -50,7 +68,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -163,6 +181,6 @@
   "linkReferences": {},
   "deployedLinkReferences": {},
   "immutableReferences": {},
-  "inputSourceName": "project/contracts/DonationContract.sol",
-  "buildInfoId": "solc-0_8_28-65cc3ad2a7dd2da7aa72e8acde8c6388775513a9"
+  "inputSourceName": "project/contracts/CCDonationContract.sol",
+  "buildInfoId": "solc-0_8_28-58695329e96584d0d4c302ec5bc0bd4ed98f03c3"
 }
