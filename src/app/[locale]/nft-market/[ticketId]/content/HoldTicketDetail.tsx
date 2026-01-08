@@ -399,6 +399,7 @@ const HoldTicketDetail: React.FC<HoldTicketDetailProps> = ({ ticketId }) => {
         ticket={convertToMarketTicket()}
         ticketCount={mockTicketCount}
         type={successModalType}
+        ticketDna={''}
       />
     </div>
   );

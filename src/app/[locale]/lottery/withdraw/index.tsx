@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { useAccount } from 'wagmi';
 import { withdrawAmount } from '@/service/lottery';
 import useGlobalStore from '@/store';
-import { formatAddress } from '@/components/custom-connect-button/utils';
 import LotteryWithdrawModal from '@/components/lottery-withdraw-modal';
 
 const WithdrawPage = () => {
@@ -208,16 +207,16 @@ const WithdrawPage = () => {
                 <div className="text-sm sm:text-base text-white/70 mb-3">
                   {t('walletAddress')}
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-base sm:text-lg font-mono font-semibold text-white">
-                    {address ? formatAddress(address) : '--'}
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 text-base sm:text-lg font-mono font-semibold text-white break-all overflow-wrap-anywhere">
+                    {address || '--'}
                   </div>
                   {address && (
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(address);
                       }}
-                      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
+                      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer shrink-0"
                       title={tCommon('wallet.copyFullAddress')}
                     >
                       <i className="fa fa-copy text-sm"></i>

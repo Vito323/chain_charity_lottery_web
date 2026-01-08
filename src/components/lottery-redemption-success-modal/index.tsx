@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import { LotteryTicket } from '@/app/[locale]/nft-market/types';
 import { rarityConfig, goldShimmerStyle, rarityToRank } from '@/utils/lottery';
-import { renderTicket } from '@/service/asset';
+import { renderTicket, renderTicketByDna } from '@/service/asset';
 
 interface LotteryRedemptionSuccessModalProps {
   isOpen: boolean;
@@ -15,6 +15,7 @@ interface LotteryRedemptionSuccessModalProps {
   ticket: LotteryTicket;
   ticketCount: number; // 用户持有的彩票总数或出售次数
   type?: 'redemption' | 'follow' | 'purchase' | 'sell'; // 类型：兑换、跟投、购买或出售
+  ticketDna: string;
 }
 
 const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps> = ({
@@ -23,6 +24,7 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
   ticket,
   ticketCount,
   type = 'redemption',
+  ticketDna,
 }) => {
   const t = useTranslations('lottery.modals.success');
   const tCommon = useTranslations('common');
@@ -47,7 +49,11 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
       try {
         setIsLoadingSvg(true);
         setSvgError(false);
-        const svgDataUrl = await renderTicket(ticket.id.toString());
+        // 移除 0x 前缀（如果存在）
+        const dnaWithoutPrefix = ticketDna.startsWith('0x') || ticketDna.startsWith('0X') 
+          ? ticketDna.slice(2) 
+          : ticketDna;
+        const svgDataUrl = await renderTicketByDna(dnaWithoutPrefix);
         setSvgUrl(svgDataUrl);
       } catch (error) {
         console.error('Failed to render ticket SVG:', error);
@@ -56,10 +62,10 @@ const LotteryRedemptionSuccessModal: React.FC<LotteryRedemptionSuccessModalProps
         setIsLoadingSvg(false);
       }
     };
-    if (isOpen) {
+    if (isOpen && ticketDna) {
       fetchSvg();
     }
-  }, [ticket.id, isOpen]);
+  }, [ticketDna, isOpen]);
 
   const handleViewTickets = () => {
     onClose();

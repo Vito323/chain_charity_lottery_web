@@ -191,45 +191,86 @@ const fetchNFTsByABI = async (
       // 获取当前区块号
       const currentBlock = await client.getBlockNumber();
       
-      // 查询范围：从合约部署到当前区块（如果合约很老，可以限制范围）
-      // 为了性能，我们限制查询最近 10000 个区块，如果不够可以扩大范围
-      const fromBlock = currentBlock > BigInt(10000) ? currentBlock - BigInt(10000) : BigInt(0);
+      // RPC 限制：第三方 RPC（如 thirdweb）限制最多只能查询 1,000 个区块范围
+      const MAX_BLOCK_RANGE = BigInt(999); // 使用 999 确保不超过限制
+      const MAX_QUERY_ATTEMPTS = 10; // 最多尝试查询 10 次（覆盖最近 10,000 个区块）
       
-      // 查询所有转给用户的 Transfer 事件
-      const transferToEvents = await client.getLogs({
-        address: contractAddr,
-        event: TRANSFER_EVENT_ABI[0],
-        args: {
-          to: ownerAddr,
-        },
-        fromBlock,
-        toBlock: 'latest',
-      });
+      // 分批查询：从最近的区块开始，逐步往前查询
+      let toBlock = currentBlock;
+      let queriesPerformed = 0;
+      let totalFromBlock = currentBlock;
+      
+      while (queriesPerformed < MAX_QUERY_ATTEMPTS) {
+        let fromBlock = toBlock > MAX_BLOCK_RANGE ? toBlock - MAX_BLOCK_RANGE : BigInt(0);
+        totalFromBlock = fromBlock;
+        
+        try {
+          // 查询所有转给用户的 Transfer 事件
+          const transferToEvents = await client.getLogs({
+            address: contractAddr,
+            event: TRANSFER_EVENT_ABI[0],
+            args: {
+              to: ownerAddr,
+            },
+            fromBlock,
+            toBlock,
+          });
 
-      // 查询所有从用户转出的 Transfer 事件
-      const transferFromEvents = await client.getLogs({
-        address: contractAddr,
-        event: TRANSFER_EVENT_ABI[0],
-        args: {
-          from: ownerAddr,
-        },
-        fromBlock,
-        toBlock: 'latest',
-      });
+          // 查询所有从用户转出的 Transfer 事件
+          const transferFromEvents = await client.getLogs({
+            address: contractAddr,
+            event: TRANSFER_EVENT_ABI[0],
+            args: {
+              from: ownerAddr,
+            },
+            fromBlock,
+            toBlock,
+          });
 
-      // 处理转给用户的事件（添加 token）
-      transferToEvents.forEach((event) => {
-        if (event.args.tokenId !== undefined) {
-          tokenIds.add(event.args.tokenId.toString());
+          // 处理转给用户的事件（添加 token）
+          transferToEvents.forEach((event) => {
+            if (event.args.tokenId !== undefined) {
+              tokenIds.add(event.args.tokenId.toString());
+            }
+          });
+
+          // 处理从用户转出的事件（移除 token）
+          transferFromEvents.forEach((event) => {
+            if (event.args.tokenId !== undefined) {
+              tokenIds.delete(event.args.tokenId.toString());
+            }
+          });
+          
+          queriesPerformed++;
+          
+          // 如果已经查询到区块 0，停止查询
+          if (fromBlock === BigInt(0)) {
+            break;
+          }
+          
+          // 准备查询下一个批次（更早的区块）
+          toBlock = fromBlock - BigInt(1);
+          
+        } catch (queryError) {
+          // 如果单个批次查询失败，记录错误但继续尝试
+          const errorMsg = queryError instanceof Error ? queryError.message : String(queryError);
+          console.warn(`查询区块 ${fromBlock} 到 ${toBlock} 失败:`, errorMsg);
+          
+          // 如果是因为范围太大导致的错误，停止查询
+          if (errorMsg.includes('limit') || errorMsg.includes('exceeded')) {
+            console.warn('已达到 RPC 限制，停止查询更早的区块');
+            break;
+          }
+          
+          // 继续尝试查询更早的区块
+          if (fromBlock > BigInt(0)) {
+            toBlock = fromBlock - BigInt(1);
+            queriesPerformed++;
+          } else {
+            break;
+          }
         }
-      });
-
-      // 处理从用户转出的事件（移除 token）
-      transferFromEvents.forEach((event) => {
-        if (event.args.tokenId !== undefined) {
-          tokenIds.delete(event.args.tokenId.toString());
-        }
-      });
+      }
 
       // 验证：检查每个 token 的当前所有者是否真的是用户
       // 这可以处理历史事件不完整的情况
@@ -257,11 +298,13 @@ const fetchNFTsByABI = async (
       const finalTokenIds = verifiedTokenIds;
       
       // 如果通过事件获取的 token 数量少于 balanceOf，说明历史事件可能不完整
-      // 在这种情况下，我们仍然使用已验证的 token IDs
+      // 这通常发生在合约很老，或者 NFT 是在查询范围之前 mint 的
+      // 由于 RPC 限制（每次最多查询 1,000 个区块），我们分批查询了最近的区块
       if (finalTokenIds.length < Number(balance)) {
         console.warn(
-          `通过事件获取的 token 数量 (${finalTokenIds.length}) 少于 balanceOf (${balance})，` +
-          `可能是历史事件查询范围不够。`
+          `通过事件获取的 token 数量 (${finalTokenIds.length}) 少于 balanceOf (${balance})。` +
+          `已查询范围：区块 ${totalFromBlock} 到 ${currentBlock}（${queriesPerformed} 次查询，每次最多 1,000 个区块）。` +
+          `如果您的 NFT 是在更早的区块 mint 的，可能无法通过事件日志获取。`
         );
       }
       
@@ -312,6 +355,15 @@ const fetchNFTsByABI = async (
             }
           }
 
+          console.log('metadata', metadata);
+          console.log('collectionName', collectionName);
+          console.log('collectionSymbol', collectionSymbol);
+          console.log('tokenType', 'ERC721');
+          console.log('tokenId', tokenId.toString());
+          console.log('contractAddress', contractAddress);
+          console.log('owner', address);
+          console.log('tokenURI', tokenURI);
+          console.log('imageUrl', imageUrl);
           return {
             id: `${contractAddress}-${tokenId.toString()}`,
             name: (metadata.name as string) || `NFT #${tokenId.toString()}`,

@@ -4,7 +4,6 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
-import { formatAddress } from '@/components/custom-connect-button/utils';
 
 interface LotteryWithdrawModalProps {
   isOpen: boolean;
@@ -115,8 +114,8 @@ const LotteryWithdrawModal: React.FC<LotteryWithdrawModalProps> = ({
                 <div className="text-sm sm:text-base text-white/70">
                   {t('modal.address')}
                 </div>
-                <div className="text-base sm:text-lg font-mono font-semibold text-white">
-                  {address ? formatAddress(address) : '--'}
+                <div className="text-base sm:text-lg font-mono font-semibold text-white break-all overflow-wrap-anywhere">
+                  {address || '--'}
                 </div>
               </div>
             </div>

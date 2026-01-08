@@ -23,6 +23,7 @@ import { LotterySeries, mintLotteryTicket, mintPending } from '@/service/lottery
 import { useLotteryNFTContract } from '@/hooks/useLotteryNFTContract';
 import { getRarityPercentageFromRank, rankToRarity } from '@/utils/lottery';
 import { getChainById } from '@/lib/chain-config';
+import { useMasterContract } from '@/hooks/useMasterContract';
 
 interface LotteryTicketDetailProps {
   ticketId: string;
@@ -96,9 +97,6 @@ const mockWinningRecords: WinningRecord[] = [
   },
 ];
 
-// CCT 代币地址
-const CCT_TOKEN_ADDRESS = '0x813DEAe5E185BB5D44BE297f9EE0c812D0254D11' as `0x${string}`;
-
 // ERC20 ABI (仅包含 balanceOf 和 decimals)
 const ERC20_ABI = [
   {
@@ -155,14 +153,36 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
     return <HoldTicketDetail ticketId={ticketId} />;
   }
 
+  const [ticketDna, setTicketDna] = useState<string>('');
+
   const t = useTranslations('nftDetail');
   const tCommon = useTranslations('common');
   const { address, isConnected, chain } = useAccount();
   const chainId = useChainId();
   const { mint, isLoading: isMinting } = useLotteryNFTContract();
+  const { getEcosystemToken } = useMasterContract();
+  
+  // CCT 代币地址（从合约获取）
+  const [cctTokenAddress, setCctTokenAddress] = useState<`0x${string}` | undefined>(undefined);
   
   // 从本地存储读取 LotterySeries 数据
   const [lotterySeries, setLotterySeries] = useState<LotterySeries | null>(null);
+  
+  // 获取 CCT 代币地址
+  useEffect(() => {
+    const fetchCctTokenAddress = async () => {
+      try {
+        const address = await getEcosystemToken();
+        if (address) {
+          setCctTokenAddress(address as `0x${string}`);
+        }
+      } catch (error) {
+        console.error('Failed to fetch CCT token address:', error);
+      }
+    };
+    
+    fetchCctTokenAddress();
+  }, [getEcosystemToken]);
   
   useEffect(() => {
     const storageKey = `lottery_ticket_${ticketId}`;
@@ -187,21 +207,24 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
   
   // 查询 CCT 余额
   const { data: cctBalance, refetch: refetchCCTBalance } = useReadContract({
-    address: CCT_TOKEN_ADDRESS,
+    address: cctTokenAddress,
     abi: ERC20_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
     query: {
-      enabled: isConnected && !!address,
+      enabled: isConnected && !!address && !!cctTokenAddress,
       refetchInterval: 10000,
     },
   });
   
   // 查询 CCT decimals
   const { data: cctDecimals } = useReadContract({
-    address: CCT_TOKEN_ADDRESS,
+    address: cctTokenAddress,
     abi: ERC20_ABI,
     functionName: 'decimals',
+    query: {
+      enabled: !!cctTokenAddress,
+    },
   });
   const [activeTab, setActiveTab] = React.useState<DetailTab>('basic');
   const [tabKey, setTabKey] = React.useState(0);
@@ -290,6 +313,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
         return;
       }
       const preMintInfo = preMintResponse.data;
+      setTicketDna(preMintInfo.dna);
       // 2. 查询 CCT 余额
       const balanceResult = await refetchCCTBalance();
       const balance = balanceResult.data;
@@ -336,7 +360,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
       setTimeout(() => {
         setIsSuccessModalOpen(true);
         setMockTicketCount(prev => prev + 1);
-      }, 300);
+      }, 1000);
       
     } catch (error: any) {
       console.error('Redemption error:', error);
@@ -506,6 +530,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
             ticket={convertToMarketTicket()}
             ticketCount={mockTicketCount}
             type="redemption"
+            ticketDna={ticketDna}
           />
         </>
       )}
@@ -541,6 +566,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
             ticket={convertToMarketTicket()}
             ticketCount={mockTicketCount}
             type={successModalType}
+            ticketDna={ticketDna}
           />
         </>
       )}
