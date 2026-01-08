@@ -13,26 +13,7 @@ import { createConfig, http } from 'wagmi';
 const appName = 'Hawaiian Nation ChainCharity';
 const projectId = 'YOUR_PROJECT_ID';
 
-const localhost = defineChain({
-  id: 31337, 
-  name: 'LocalNet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Ethereum',
-    symbol: 'ETH',
-  },
-  rpcUrls: {
-    default: {
-      http: ['http://127.0.0.1:8545'],
-    },
-  },
-  blockExplorers: {
-    default: { name: 'Local Explorer', url: 'http://localhost:8545' },
-  },
-  testnet: true,
-});
-
-const chains = [mainnet, polygon, polygonAmoy, bsc, localhost] as const;
+const chains = [bsc, polygon, polygonAmoy] as const;
 
 const { wallets } = getDefaultWallets();
 

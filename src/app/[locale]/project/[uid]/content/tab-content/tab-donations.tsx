@@ -130,7 +130,12 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
                         </div>
                       </td>
                       <td className="py-4 px-2 font-semibold">
-                        {donation?.total || '0'}
+                        {donation?.total 
+                          ? new Intl.NumberFormat('en-US', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }).format(parseFloat(String(donation.total)))
+                          : '0.00'}
                       </td>
                     </motion.tr>
                   );

@@ -194,7 +194,8 @@ const Donate = ({ uid, name }: DonateProps) => {
         ]);
 
         // 处理奖励金额
-        const rewardValue = formatUnits(exchangeResult, ecosystemTokenDecimals);
+        //TODO 美金精度暂时
+        const rewardValue = formatUnits(exchangeResult, 6);
         const rewardBN = new BigNumber(rewardValue);
         const formattedReward = rewardBN
           .decimalPlaces(6, BigNumber.ROUND_DOWN)
@@ -216,7 +217,7 @@ const Donate = ({ uid, name }: DonateProps) => {
         setAmountChanged(false);
       }
     },
-    [ecosystemTokenDecimals, calculateExchangeAmount, uid]
+    [calculateExchangeAmount, uid]
   );
 
   // 当防抖后的金额变化或 ecosystemTokenDecimals 获取完成时，获取数据
