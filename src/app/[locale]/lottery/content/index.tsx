@@ -57,6 +57,12 @@ const LotteryContent: React.FC = () => {
     setLoading(false);
   }, []);
 
+  // 使用 ref 存储 queryLotteryConfig 函数，避免在 calculateCountdown 依赖中引入
+  const queryLotteryConfigRef = React.useRef(queryLotteryConfig);
+  useEffect(() => {
+    queryLotteryConfigRef.current = queryLotteryConfig;
+  }, [queryLotteryConfig]);
+
   // 计算倒计时
   const calculateCountdown = useCallback(() => {
     const now = new Date().getTime();
@@ -66,7 +72,7 @@ const LotteryContent: React.FC = () => {
       if (!isDrawComplete) {
         setIsDrawComplete(true);
         // 倒计时结束时，重新获取新的倒计时数据
-        queryLotteryConfig();
+        queryLotteryConfigRef.current();
         // 延迟2秒后触发刷新历史记录事件（只触发一次）
         if (!hasTriggeredRefreshRef.current) {
           hasTriggeredRefreshRef.current = true;
@@ -103,7 +109,7 @@ const LotteryContent: React.FC = () => {
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
     return { days, hours, minutes, seconds };
-  }, [lotteryConfig.nextDrawTime, isDrawComplete, queryLotteryConfig]);
+  }, [lotteryConfig.nextDrawTime, isDrawComplete]);
 
   // 更新倒计时
   useEffect(() => {
@@ -120,9 +126,11 @@ const LotteryContent: React.FC = () => {
     return value.toString().padStart(2, "0");
   };
 
+  // 组件挂载时获取配置，只执行一次
   useEffect(() => {
     queryLotteryConfig();
-  }, [queryLotteryConfig]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 组件卸载时清理定时器
   useEffect(() => {

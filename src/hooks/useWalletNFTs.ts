@@ -95,9 +95,17 @@ const fetchWalletNFTs = async (
     
     // 转换Alchemy数据格式到我们的NFT格式
     const ownedNfts = data.ownedNfts as Array<Record<string, unknown>> || [];
+    console.log('ownedNfts', ownedNfts);
     const nfts: WalletNFT[] = ownedNfts.map((nft: Record<string, unknown>) => {
       const contract = nft.contract as Record<string, unknown>;
       const image = nft.image as Record<string, unknown>;
+      const raw = nft.raw as Record<string, unknown> | undefined;
+      
+      // 从 raw.metadata 改为直接取 metadata
+      // 如果 metadata 存在，直接使用；否则尝试从 raw.metadata 获取
+      const metadata = (nft.metadata as Record<string, unknown>) || 
+                      (raw?.metadata as Record<string, unknown>) || 
+                      ({} as Record<string, unknown>);
       
       return {
         id: `${contract.address}-${nft.tokenId}`,
@@ -110,7 +118,7 @@ const fetchWalletNFTs = async (
         collectionName: contract.name as string,
         collectionSymbol: contract.symbol as string,
         tokenType: nft.tokenType as string,
-        metadata: nft.metadata as Record<string, unknown>,
+        metadata: metadata,
       };
     });
 

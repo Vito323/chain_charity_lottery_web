@@ -315,6 +315,25 @@
         "processing": "处理中...",
         "confirm": "确认跟投"
       }
+    },
+    "withdraw": {
+      "badge": "提现",
+      "title": "提现",
+      "titleHighlight": "资金",
+      "subtitle": "将您的奖金提现到已连接的钱包地址。",
+      "withdrawableAmount": "可提现金额",
+      "walletAddress": "钱包地址",
+      "withdrawButton": "提现",
+      "connect": {
+        "title": "连接您的钱包",
+        "description": "请连接您的钱包以查看可提现金额并提现资金。"
+      },
+      "modal": {
+        "title": "确认提现",
+        "amount": "提现金额",
+        "address": "提现地址",
+        "confirm": "确认提现"
+      }
     }
   },
   "nftMarket": {

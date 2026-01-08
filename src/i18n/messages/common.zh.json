@@ -126,6 +126,8 @@
       "disconnect": "断开连接",
       "copyFullAddress": "复制完整地址",
       "close": "关闭",
+      "withdraw": "提现",
+      "withdrawableAmount": "可提现金额",
       "wrongNetworkMessage": "网络错误。请切换到 {expectedName} (链ID: {expectedId})。当前: {currentName} (链ID: {currentId})",
       "currentNetworkInfo": "当前网络: {name} (链ID: {id})"
     },

@@ -8,6 +8,8 @@ const useGlobalStore = create<StoreTypes>((set) => ({
   setCategories: (state: CategoryData[]) => set({ categories: [...state] }),
   config: null,
   setConfig: (state: Config) => set({ config: { ...state } }),
+  withdrawAmount: '',
+  setWithdrawAmount: (state: string) => set({ withdrawAmount: state }),
 }));
 
 export default useGlobalStore;

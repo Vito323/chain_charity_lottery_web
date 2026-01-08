@@ -6,4 +6,6 @@ export interface StoreTypes {
   setCategories: (state: CategoryData[]) => void;
   config: Config | null;
   setConfig: (state: Config) => void;
+  withdrawAmount: string;
+  setWithdrawAmount: (state: string) => void;
 }

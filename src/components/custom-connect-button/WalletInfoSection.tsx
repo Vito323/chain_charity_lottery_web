@@ -1,8 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { formatAddress, getFallbackChainIcon } from './utils';
+import useGlobalStore from '@/store';
+import { useRouter } from 'next/navigation';
 
 interface WalletInfoSectionProps {
   account: { address: string };
@@ -19,7 +21,8 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const tCommon = useTranslations('common');
-
+  const withdrawAmount = useGlobalStore(state => state.withdrawAmount);
+  const router = useRouter();
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(account.address);
     setCopySuccess(true);
@@ -30,6 +33,17 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
     openChainModal();
     onCloseDropdown();
   };
+
+  const handleWithdraw = () => {
+    router.push('/lottery/withdraw');
+  };
+
+  // 格式化可提现金额，保留两位小数
+  const formattedWithdrawableAmount = useMemo(() => {
+    if (!withdrawAmount) return '0.00';
+    const amount = parseFloat(withdrawAmount);
+    return isNaN(amount) ? '0.00' : amount.toFixed(2);
+  }, [withdrawAmount]);
 
   return (
     <div className="p-6 border-b border-white/10 md:p-5">
@@ -51,7 +65,7 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
         </div>
       </div>
       
-      <div>
+      <div className="mb-4">
         <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
           {tCommon('wallet.network')}
         </div>
@@ -77,6 +91,23 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
             onClick={handleSwitchNetwork}
           >
             {tCommon('wallet.switchNetwork')}
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
+          {tCommon('wallet.withdrawableAmount')}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-bold text-white flex-1 md:text-sm sm:text-xs">
+            {formattedWithdrawableAmount} USDT
+          </span>
+          <button 
+            className="text-xs text-pink-400 bg-transparent border-0 cursor-pointer font-medium p-0 no-underline hover:text-pink-300 hover:underline active:text-pink-200"
+            onClick={handleWithdraw}
+          >
+            {tCommon('wallet.withdraw')}
           </button>
         </div>
       </div>

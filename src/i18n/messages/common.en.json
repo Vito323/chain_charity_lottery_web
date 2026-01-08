@@ -126,6 +126,8 @@
       "disconnect": "Disconnect",
       "copyFullAddress": "Copy full address",
       "close": "Close",
+      "withdraw": "Withdraw",
+      "withdrawableAmount": "Withdrawable Amount",
       "wrongNetworkMessage": "Wrong network. Please switch to {expectedName} (Chain ID: {expectedId}). Current: {currentName} (Chain ID: {currentId})",
       "currentNetworkInfo": "Current Network: {name} (Chain ID: {id})"
     },

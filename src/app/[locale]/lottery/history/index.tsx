@@ -68,6 +68,12 @@ const LotteryHistory = () => {
       .sort((a, b) => b.drawNumber - a.drawNumber); // 按期号倒序排列
   }, []);
 
+  // 使用 ref 存储 tCommon，避免在 fetchLotteryHistory 依赖中引入
+  const tCommonRef = React.useRef(tCommon);
+  useEffect(() => {
+    tCommonRef.current = tCommon;
+  }, [tCommon]);
+
   // 获取历史开奖数据
   const fetchLotteryHistory = useCallback(async () => {
     try {
@@ -90,28 +96,35 @@ const LotteryHistory = () => {
         }
       } else {
         // 接口返回错误
-        const errorMsg = response.msg || response.code || tCommon('errors.failedToLoadHistory');
+        const errorMsg = response.msg || response.code || tCommonRef.current('errors.failedToLoadHistory');
         console.error('Failed to fetch lottery history:', errorMsg);
         setError(errorMsg);
       }
     } catch (err) {
       // 网络错误或其他异常
       console.error('Failed to fetch lottery history:', err);
-      setError(tCommon('errors.failedToLoadHistory'));
+      setError(tCommonRef.current('errors.failedToLoadHistory'));
     } finally {
       setIsLoading(false);
     }
-  }, [transformHistoryData, tCommon]);
+  }, [transformHistoryData]);
 
-  // 组件挂载时获取数据
+  // 使用 ref 存储 fetchLotteryHistory，避免在事件监听器中引入依赖
+  const fetchLotteryHistoryRef = React.useRef(fetchLotteryHistory);
+  useEffect(() => {
+    fetchLotteryHistoryRef.current = fetchLotteryHistory;
+  }, [fetchLotteryHistory]);
+
+  // 组件挂载时获取数据，只执行一次
   useEffect(() => {
     fetchLotteryHistory();
-  }, [fetchLotteryHistory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 监听开奖完成事件，刷新历史记录
   useEffect(() => {
     const handleDrawComplete = () => {
-      fetchLotteryHistory();
+      fetchLotteryHistoryRef.current();
     };
 
     window.addEventListener('lotteryDrawComplete', handleDrawComplete);
@@ -119,7 +132,7 @@ const LotteryHistory = () => {
     return () => {
       window.removeEventListener('lotteryDrawComplete', handleDrawComplete);
     };
-  }, [fetchLotteryHistory]);
+  }, []);
 
   // 获取状态文本
   const getStatusText = (status: 'upcoming' | 'won' | 'lost') => {

@@ -24,6 +24,7 @@ import { formatUnits, ethers } from "ethers";
 import {
   queryProjectProportion,
   ProjectProportionData,
+  projectDonateCompleted,
 } from "@/service/project";
 
 interface DonateProps {
@@ -352,7 +353,6 @@ const Donate = ({ uid, name }: DonateProps) => {
         } catch (error) {
           console.warn("获取代币精度失败，使用默认值 6:", error);
         }
-
         // 添加调试信息
         console.log("捐赠参数:", {
           projectId: uid,
@@ -371,6 +371,7 @@ const Donate = ({ uid, name }: DonateProps) => {
           setSelectedQuickAmount(null);
           setRewardAmount(null);
           setAmountChanged(false);
+          await projectDonateCompleted(uid, address as string, amount, result);
         } else {
           toast.error(tCommon("errors.donationFailed"));
         }

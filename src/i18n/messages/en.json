@@ -393,6 +393,25 @@
         "processing": "Processing...",
         "confirm": "Confirm Follow Investment"
       }
+    },
+    "withdraw": {
+      "badge": "Withdraw",
+      "title": "Withdraw",
+      "titleHighlight": "Funds",
+      "subtitle": "Withdraw your winnings to your connected wallet address.",
+      "withdrawableAmount": "Withdrawable Amount",
+      "walletAddress": "Wallet Address",
+      "withdrawButton": "Withdraw",
+      "connect": {
+        "title": "Connect Your Wallet",
+        "description": "Please connect your wallet to view your withdrawable amount and withdraw funds."
+      },
+      "modal": {
+        "title": "Confirm Withdrawal",
+        "amount": "Withdraw Amount",
+        "address": "Withdraw Address",
+        "confirm": "Confirm Withdrawal"
+      }
     }
   },
   "nftMarket": {

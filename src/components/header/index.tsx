@@ -146,6 +146,7 @@ function Header() {
                           ? 'text-white' 
                           : 'text-white/80 hover:text-white'
                       }`}
+                      style={{ color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.8)' }}
                     >
                       <span className="block">
                         {item.label}
@@ -285,6 +286,7 @@ function Header() {
                             ? 'text-white bg-white/20 border border-white/30' 
                             : 'text-white/80 hover:text-white hover:bg-white/10'
                         }`}
+                        style={{ color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.8)' }}
                       >
                         <span className="block">
                           {item.label}

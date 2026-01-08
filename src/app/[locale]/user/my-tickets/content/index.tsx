@@ -36,21 +36,57 @@ const convertWalletNFTToTicket = (nft: WalletNFT): OwnedLotteryTicket => {
   let rarityLabel = 'Common';
   let purchasePrice = 0;
 
-  // Try to extract rarity from metadata
+  // Extract data from metadata.attributes array
   if (nft.metadata) {
-    const rank = (nft.metadata.rank as number) || (nft.metadata.rank as string);
-    if (rank) {
-      const rankNum = typeof rank === 'string' ? parseInt(rank, 10) : rank;
-      if (!isNaN(rankNum)) {
-        rarity = rankToRarity(rankNum);
-        rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+    const attributes = nft.metadata.attributes as Array<{ trait_type: string; value: string | number }> | undefined;
+    
+    if (attributes && Array.isArray(attributes)) {
+      // Extract Asset Value for purchasePrice
+      const assetValueAttr = attributes.find(attr => attr.trait_type === 'Asset Value');
+      if (assetValueAttr) {
+        const value = assetValueAttr.value;
+        purchasePrice = typeof value === 'string' ? parseFloat(value) : (typeof value === 'number' ? value : 0);
+      }
+
+      // Extract Rank for rarityLabel
+      const rankAttr = attributes.find(attr => attr.trait_type === 'Rank');
+      if (rankAttr) {
+        const rankValue = rankAttr.value as string;
+        // Directly use rankValue, format as first letter uppercase, rest lowercase
+        rarity = rankValue.toLowerCase() as RarityType;
+        rarityLabel = rankValue.charAt(0).toUpperCase() + rankValue.slice(1).toLowerCase();
+        //   } else {
+        //     // Try to parse as number rank (1-5)
+        //     const rankNum = parseInt(rankValue, 10);
+        //     if (!isNaN(rankNum)) {
+        //       rarity = rankToRarity(rankNum);
+        //       rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+        //     }
+        //   }
+        // } else if (typeof rankValue === 'number') {
+        //   rarity = rankToRarity(rankValue);
+        //   rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+        // }
       }
     }
 
-    // Try to extract purchase price from metadata
-    const price = (nft.metadata.price as number) || (nft.metadata.purchasePrice as number);
-    if (price) {
-      purchasePrice = typeof price === 'string' ? parseFloat(price) : price;
+    // Fallback: Try to extract from old metadata structure if attributes not found
+    if (purchasePrice === 0) {
+      const price = (nft.metadata.price as number) || (nft.metadata.purchasePrice as number);
+      if (price) {
+        purchasePrice = typeof price === 'string' ? parseFloat(price) : price;
+      }
+    }
+
+    if (rarity === 'common' && !attributes) {
+      const rank = (nft.metadata.rank as number) || (nft.metadata.rank as string);
+      if (rank) {
+        const rankNum = typeof rank === 'string' ? parseInt(rank, 10) : rank;
+        if (!isNaN(rankNum)) {
+          rarity = rankToRarity(rankNum);
+          rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+        }
+      }
     }
   }
 
