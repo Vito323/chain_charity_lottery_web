@@ -8,6 +8,9 @@ import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 
 export default function LotteryPage() {
+
+
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -19,7 +22,7 @@ export default function LotteryPage() {
       
       {/* Lottery Content Section */}
       <div id="lottery-content">
-        <LotteryContent />
+        <LotteryContent/>
       </div>
 
       {/* Lottery History Section */}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -14,6 +14,11 @@ interface LotteryHistoryItem {
   drawTime: string; // 开奖时间，格式：2025-08-08 12:00
   prizeAmount: number; // 奖金金额（USDT）
 }
+
+// 模块级别的初始化锁，防止 React 19 严格模式下的重复调用
+let isHistoryInitializing = false;
+let hasHistoryInitialized = false;
+
 
 const LotteryHistory = () => {
   const t = useTranslations('lottery.history');
@@ -74,9 +79,20 @@ const LotteryHistory = () => {
     tCommonRef.current = tCommon;
   }, [tCommon]);
 
+  // 使用 ref 跟踪请求是否正在进行，避免重复调用
+  const isRequestingRef = React.useRef(false);
+  // 使用 ref 跟踪是否已经初始化，避免重复调用
+  const hasInitializedRef = React.useRef(false);
+
   // 获取历史开奖数据
   const fetchLotteryHistory = useCallback(async () => {
+    // 如果已经有请求在进行，直接返回，避免重复调用
+    if (isRequestingRef.current) {
+      return;
+    }
+    
     try {
+      isRequestingRef.current = true;
       setIsLoading(true);
       setError(null);
       const response = await getLotteryHistory();
@@ -106,6 +122,7 @@ const LotteryHistory = () => {
       setError(tCommonRef.current('errors.failedToLoadHistory'));
     } finally {
       setIsLoading(false);
+      isRequestingRef.current = false;
     }
   }, [transformHistoryData]);
 
@@ -116,8 +133,21 @@ const LotteryHistory = () => {
   }, [fetchLotteryHistory]);
 
   // 组件挂载时获取数据，只执行一次
-  useEffect(() => {
-    fetchLotteryHistory();
+  // 使用 useLayoutEffect 确保在 DOM 更新之前同步执行，避免 React 19 严格模式下的重复调用
+  useLayoutEffect(() => {
+    // 使用模块级别的双重锁 + 组件级别的标志，三重保护防止重复调用
+    if (isHistoryInitializing || hasHistoryInitialized || hasInitializedRef.current) {
+      return;
+    }
+    // 同步设置所有锁，确保原子性
+    isHistoryInitializing = true;
+    hasHistoryInitialized = true;
+    hasInitializedRef.current = true;
+    
+    fetchLotteryHistory().finally(() => {
+      // 请求完成后释放模块级别的锁，允许后续的正常调用（如开奖完成事件触发的刷新）
+      isHistoryInitializing = false;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

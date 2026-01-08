@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
 import { getLotteryConfig, LotteryConfig } from "@/service/lottery";
@@ -13,20 +13,16 @@ interface CountdownTime {
   seconds: number;
 }
 
+// 模块级别的初始化锁，防止 React 19 严格模式下的重复调用
+let isInitializing = false;
+let hasInitialized = false;
+
 const LotteryContent: React.FC = () => {
   const { isConnected } = useAccount();
   const t = useTranslations('lottery');
   const tTime = useTranslations('common.time');
 
-  // 彩票配置状态
-  const [lotteryConfig, setLotteryConfig] = useState<LotteryConfig>({
-    nextDrawTime: 0,
-    total: "0.00",
-    nextDrawTimestring: ''
-  });
 
-  // 加载状态
-  const [loading, setLoading] = useState(true);
 
   // 倒计时状态
   const [countdown, setCountdown] = useState<CountdownTime>({
@@ -42,38 +38,73 @@ const LotteryContent: React.FC = () => {
   // 使用 ref 跟踪是否已经设置了刷新定时器，避免重复触发
   const refreshTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const hasTriggeredRefreshRef = React.useRef(false);
+  
+  // 彩票配置状态
+  const [loading, setLoading] = useState(true);
+  const [lotteryConfig, setLotteryConfig] = useState<LotteryConfig>({
+    nextDrawTime: 0,
+    total: "0.00",
+    nextDrawTimestring: ''
+  });
+  
+  // 使用 ref 存储 nextDrawTime，避免依赖变化导致定时器重新创建
+  const nextDrawTimeRef = React.useRef(lotteryConfig.nextDrawTime);
+  // 使用 ref 跟踪请求是否正在进行，避免重复调用
+  const isRequestingRef = React.useRef(false);
+  const hasInitializedRef = React.useRef(false);
 
-  // 直接使用 lotteryConfig.total 的值，不依赖动画
-  const jackpotValue = parseFloat(lotteryConfig.total) || 0;
-
-  // 查询彩票配置
   const queryLotteryConfig = useCallback(async () => {
-    setLoading(true);
-    const res = await getLotteryConfig();
-    if (res.ok) {
-      setLotteryConfig(res.data);
-      setIsDrawComplete(false);
+    // 如果已经有请求在进行，直接返回，避免重复调用
+    if (isRequestingRef.current) {
+      return;
     }
-    setLoading(false);
+    
+    try {
+      isRequestingRef.current = true;
+      setLoading(true);
+      const res = await getLotteryConfig();
+      if (res.ok) {
+        setLotteryConfig(res.data);
+        setIsDrawComplete(false);
+      }
+    } finally {
+      setLoading(false);
+      isRequestingRef.current = false;
+    }
   }, []);
 
-  // 使用 ref 存储 queryLotteryConfig 函数，避免在 calculateCountdown 依赖中引入
-  const queryLotteryConfigRef = React.useRef(queryLotteryConfig);
+  // 组件挂载时获取配置，只执行一次
+  useLayoutEffect(() => {
+    // 使用模块级别的双重锁 + 组件级别的标志，三重保护防止重复调用
+    if (isInitializing || hasInitialized || hasInitializedRef.current) {
+      return;
+    }
+    // 同步设置所有锁，确保原子性
+    isInitializing = true;
+    hasInitialized = true;
+    hasInitializedRef.current = true;
+    
+    queryLotteryConfig().finally(() => {
+      // 请求完成后释放模块级别的锁，允许后续的正常调用（如倒计时结束时的刷新）
+      isInitializing = false;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+  // 更新 ref 中的值
   useEffect(() => {
-    queryLotteryConfigRef.current = queryLotteryConfig;
-  }, [queryLotteryConfig]);
+    nextDrawTimeRef.current = lotteryConfig.nextDrawTime;
+  }, [lotteryConfig.nextDrawTime]);
 
   // 计算倒计时
   const calculateCountdown = useCallback(() => {
     const now = new Date().getTime();
-    const drawTime = lotteryConfig.nextDrawTime * 1000;
+    const drawTime = nextDrawTimeRef.current * 1000;
     const difference = drawTime - now;
     if (difference <= 0) {
       if (!isDrawComplete) {
         setIsDrawComplete(true);
-        // 倒计时结束时，重新获取新的倒计时数据
-        queryLotteryConfigRef.current();
-        // 延迟2秒后触发刷新历史记录事件（只触发一次）
+         queryLotteryConfig();
         if (!hasTriggeredRefreshRef.current) {
           hasTriggeredRefreshRef.current = true;
           // 清理之前的定时器（如果存在）
@@ -109,28 +140,32 @@ const LotteryContent: React.FC = () => {
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
     return { days, hours, minutes, seconds };
-  }, [lotteryConfig.nextDrawTime, isDrawComplete]);
+  }, [isDrawComplete]);
 
-  // 更新倒计时
+  // 更新倒计时 - 只在 nextDrawTime 有值且大于 0 时启动定时器
   useEffect(() => {
+    // 如果 nextDrawTime 为 0 或未加载完成，不启动定时器
+    if (loading || lotteryConfig.nextDrawTime === 0) {
+      setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      return;
+    }
+
+    // 立即计算一次倒计时
+    setCountdown(calculateCountdown());
+
+    // 启动定时器，每秒更新一次
     const timer = setInterval(() => {
       setCountdown(calculateCountdown());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [calculateCountdown]);
+  }, [loading, lotteryConfig.nextDrawTime, calculateCountdown]);
 
 
   // 格式化时间显示
   const formatTime = (value: number): string => {
     return value.toString().padStart(2, "0");
   };
-
-  // 组件挂载时获取配置，只执行一次
-  useEffect(() => {
-    queryLotteryConfig();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // 组件卸载时清理定时器
   useEffect(() => {
