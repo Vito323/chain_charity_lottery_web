@@ -15,8 +15,7 @@ const UserDashboard = () => {
   const { address, isConnected } = useAccount();
   const t = useTranslations('user');
   const { nfts, loading, hasMore, error, loadMore, refresh, totalCount } = useWalletNFTs({
-    pageSize: 20,
-    initialPage: 1
+    contractAddress: process.env.NEXT_PUBLIC_LOTTERY_NFT_CONTRACT_ADDRESS!,
   });
   const [isLoaded, setIsLoaded] = useState(false);
   const ref = useRef(null);
