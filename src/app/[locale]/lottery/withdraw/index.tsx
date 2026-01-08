@@ -229,7 +229,7 @@ const WithdrawPage = () => {
               {/* Withdraw Button */}
               <button
                 onClick={handleWithdrawClick}
-                // disabled={isLoading || !withdrawAmountFromStore || parseFloat(withdrawAmountFromStore) <= 0}
+                disabled={isLoading || !withdrawAmountFromStore || parseFloat(withdrawAmountFromStore) <= 0}
                 className={`w-full rounded-full py-4 px-6 text-base sm:text-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
                   isLoading || !withdrawAmountFromStore || parseFloat(withdrawAmountFromStore) <= 0
                     ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
