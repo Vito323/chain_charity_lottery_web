@@ -69,6 +69,20 @@ export const useMasterContract = () => {
     return contractInstance.connect(signer);
   }, [contractInstance]);
 
+  // 获取当前用户地址的辅助函数
+  const getCurrentUserAddress = useCallback(async (): Promise<string> => {
+    if (typeof window === "undefined") {
+      throw new Error("服务端环境无法获取用户地址");
+    }
+    if (!contractInstance) throw new Error("合约未初始化或钱包未连接");
+    const provider = contractInstance.runner
+      ?.provider as ethers.BrowserProvider;
+    if (!provider) throw new Error("未找到Provider");
+    const signer = await provider.getSigner();
+    if (!signer) throw new Error("未找到签名者");
+    return await signer.getAddress();
+  }, [contractInstance]);
+
   // ==================== 只读函数 (View Functions) ====================
 
   // 获取版本号
@@ -117,43 +131,99 @@ export const useMasterContract = () => {
   }, [contractInstance, handleError]);
 
   const getEcosystemTokenDecimals = useCallback(async (): Promise<number> => {
-    console.log("getEcosystemTokenDecimals11122", contractInstance);
-    console.log(!contractInstance);
     if (!contractInstance) return 0;
     try {
       const result = await contractInstance.ecosystemTokenDecimals();
-      console.log("getEcosystemTokenDecimals11122", result);
       return Number(result);
     } catch (e: any) {
-      console.log("getEcosystemTokenDecimals11122", e);
       handleError(e, "获取生态系统代币小数位失败");
       return 0;
     }
   }, [contractInstance, handleError]);
 
-  // 代币捐赠
+  // 获取用户可提现金额
+  const getUserWithdrawableAmount = useCallback(
+    async (userAddress: string): Promise<string> => {
+      if (!contractInstance) return "0";
+      try {
+        const result = await contractInstance.userWithdrawableAmount(userAddress);
+        return result.toString();
+      } catch (e: any) {
+        handleError(e, "获取用户可提现金额失败");
+        return "0";
+      }
+    },
+    [contractInstance, handleError]
+  );
+
+  // 获取当前用户可提现金额
+  const getCurrentUserWithdrawableAmount = useCallback(
+    async (): Promise<string> => {
+      if (!contractInstance) return "0";
+      try {
+        const userAddress = await getCurrentUserAddress();
+        const result = await contractInstance.userWithdrawableAmount(userAddress);
+        return result.toString();
+      } catch (e: any) {
+        handleError(e, "获取当前用户可提现金额失败");
+        return "0";
+      }
+    },
+    [contractInstance, handleError, getCurrentUserAddress]
+  );
+
+  // 获取提现暂停状态
+  const getWithdrawPaused = useCallback(async (): Promise<boolean> => {
+    if (!contractInstance) return false;
+    try {
+      const result = await contractInstance.withdrawPaused();
+      return result;
+    } catch (e: any) {
+      handleError(e, "获取提现暂停状态失败");
+      return false;
+    }
+  }, [contractInstance, handleError]);
+
+  // 计算兑换金额（只读函数）
   const calculateExchangeAmount = useCallback(
     async (
       amount: string,
       tokenDecimals: number
     ): Promise<string> => {
-      console.log("calculateExchangeAmount11122", amount, tokenDecimals);
-      setIsLoading(true);
-      setError(null);
+      if (!contractInstance) return "0";
       try {
-        if (!contractInstance) throw new Error("合约未初始化");
         const result = await contractInstance.calculateExchangeAmount(
           ethers.parseUnits(amount, tokenDecimals)
         );
-        console.log("calculateExchangeAmount111223333", result);
-        return result;
-      } catch (e: unknown) {
-        handleError(e, "代币捐赠失败");
-        throw e;
+        return result.toString();
+      } catch (e: any) {
+        handleError(e, "计算兑换金额失败");
+        return "0";
       }
     },
     [contractInstance, handleError]
   );
+
+  // ==================== 写入函数 (Write Functions) ====================
+
+  // 用户提现奖金
+  const withdrawBonus = useCallback(async (): Promise<string> => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const contractWithSigner = await getSigner();
+      const tx = await (contractWithSigner as any).withdrawBonus();
+      console.log("提现交易已发送，等待确认:", tx.hash);
+      await tx.wait();
+      console.log("提现交易已确认");
+      setIsLoading(false);
+      return tx.hash;
+    } catch (e: unknown) {
+      console.error("提现失败，详细错误:", e);
+      handleError(e, "提现失败");
+      throw e;
+    }
+  }, [getSigner, handleError]);
 
   return {
     // 状态
@@ -168,7 +238,15 @@ export const useMasterContract = () => {
     getEcosystemTokenDecimals,
     getDonationTokenDecimals,
 
-    // 写入函数 - 捐赠
+    // 只读函数 - 提现相关
+    getUserWithdrawableAmount,
+    getCurrentUserWithdrawableAmount,
+    getWithdrawPaused,
+
+    // 只读函数 - 计算
     calculateExchangeAmount,
+
+    // 写入函数 - 提现
+    withdrawBonus,
   };
 };
