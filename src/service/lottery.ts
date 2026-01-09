@@ -48,7 +48,7 @@ export interface LotteryHistory {
       dna: string;
       ownerId: string;
     };
-    reward: string;
+    reward?: string;
   }[];
 }
 

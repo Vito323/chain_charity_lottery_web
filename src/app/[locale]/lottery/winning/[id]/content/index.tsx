@@ -124,7 +124,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
       {/* Background Elements */}
 
       <motion.div
-        className="relative z-10 max-w-4xl mx-auto px-6 md:px-8"
+        className="relative z-10 max-w-7xl mx-auto px-6 md:px-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -149,7 +149,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
         </motion.div>
 
         {/* Prize Pool Amount */}
-        <motion.div
+        {/* <motion.div
           variants={itemVariants}
           className="bg-linear-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8 mb-6 md:mb-8"
         >
@@ -161,7 +161,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
               ≈{formatCurrency(lotteryHistory.total, "", 6)} USDT
             </div>
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Draw Information */}
         <motion.div variants={itemVariants} className="space-y-6 md:space-y-8">
@@ -272,10 +272,13 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                       <thead>
                         <tr className="border-b border-white/10">
                           <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
-                            #
+                            NFT ID
                           </th>
                           <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
                             {t("address")}
+                          </th>
+                          <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                            {t("reward")}
                           </th>
                           <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
                             DNA
@@ -294,7 +297,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                               className="border-b border-white/10 last:border-b-0 hover:bg-white/8 transition-colors duration-150"
                             >
                               <td className="px-3 md:px-4 py-3 md:py-4 text-white/80 text-sm md:text-base">
-                                {index + 1}
+                                {drawTicket.ticket.id}
                               </td>
                               <td className="px-3 md:px-4 py-3 md:py-4 text-white font-mono text-sm md:text-base">
                                 {drawTicket.ticket?.ownerId
@@ -307,6 +310,11 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                                       )}`
                                     : drawTicket.ticket.ownerId
                                   : "-"}
+                              </td>
+                              <td className="px-3 md:px-4 py-3 md:py-4 text-white text-sm md:text-base">
+                                {drawTicket.reward
+                                  ? formatCurrency(drawTicket.reward, "", 6)
+                                  : "-"} USDT
                               </td>
                               <td className="px-3 md:px-4 py-3 md:py-4">
                                 {drawTicket.ticket?.dna ? (
