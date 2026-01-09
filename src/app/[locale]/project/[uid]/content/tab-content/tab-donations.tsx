@@ -134,7 +134,7 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
                           ? new Intl.NumberFormat('en-US', {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
-                            }).format(parseFloat(donation.amount))
+                            }).format(Number(donation.amount))
                           : '0.00'}
                       </td>
                     </motion.tr>
