@@ -226,6 +226,7 @@
         "lottery": "中奖详情",
         "follow": "我的跟投"
       },
+      "winner": "中奖",
       "followBetAmount": "跟投金额",
       "winningAmount": "中奖金额",
       "prizePoolAmount": "奖池金额",
@@ -241,7 +242,8 @@
       "VRF": "VRF",
       "winnerList": "中奖名单",
       "address": "地址",
-      "dna": "DNA"
+      "dna": "DNA",
+      "previewNFT": "预览 NFT"
     },
     "winningRecords": {
       "badge": "中奖记录",

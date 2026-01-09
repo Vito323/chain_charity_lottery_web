@@ -304,6 +304,7 @@
         "lottery": "Winning Details",
         "follow": "My Follow-bet"
       },
+      "winner": "Winner",
       "followBetAmount": "Follow-bet Amount",
       "winningAmount": "Winning Amount",
       "prizePoolAmount": "Prize Pool Amount",
@@ -319,7 +320,8 @@
       "VRF": "VRF",
       "winnerList": "Winner List",
       "address": "Address",
-      "dna": "DNA"
+      "dna": "DNA",
+      "previewNFT": "Preview NFT"
     },
     "winningRecords": {
       "badge": "Winning Records",

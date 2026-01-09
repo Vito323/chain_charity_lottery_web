@@ -1,8 +1,7 @@
 import { provider } from "./provider";
 
-
 export interface TicketMetadata {
-    name: string;
+  name: string;
   description: string;
   image: string;
   external_url: string;
@@ -10,7 +9,7 @@ export interface TicketMetadata {
     trait_type: string;
     value: string;
   }[];
-};
+}
 
 /**
  * 渲染 NFT Ticket，返回 SVG 二进制流
@@ -41,7 +40,6 @@ export const renderTicket = async (ticketId: string): Promise<string> => {
   }
 };
 
-
 export const renderTicketByDna = async (dna: string): Promise<string> => {
   try {
     const response = await provider.request<Blob>({
@@ -66,8 +64,8 @@ export const renderTicketByDna = async (dna: string): Promise<string> => {
   }
 };
 
-
-export const renderTicketMetadata = async (dna: string) => provider.request<TicketMetadata>({
-  url: `/asset/metadata/${dna}`,
-  method: "GET",
-});
+export const renderTicketMetadata = async (dna: string) =>
+  provider.request<TicketMetadata>({
+    url: `/asset/metadata/${dna}`,
+    method: "GET",
+  });

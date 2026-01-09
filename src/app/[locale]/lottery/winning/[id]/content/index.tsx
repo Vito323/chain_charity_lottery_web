@@ -1,124 +1,84 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-// import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { useTranslations, useLocale } from 'next-intl';
-import { useChainId } from 'wagmi';
-import { type LotteryHistory } from '@/service/lottery';
-// import { renderTicketMetadata } from '@/service/asset';
-import { COLORS } from '@/utils/lottery';
-import { getScanUrl } from '@/utils/chain-info';
-import { CopyButton } from '@/components/copy-button';
-import dayjs from 'dayjs';
-import { formatCurrency } from '@/utils/currency';
-export type WinningType = 'lottery' | 'follow';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { useChainId, useAccount } from "wagmi";
+import { useRouter } from "@/i18n/navigation";
+import { type LotteryHistory } from "@/service/lottery";
+import { getScanUrl } from "@/utils/chain-info";
+import { CopyButton } from "@/components/copy-button";
+import dayjs from "dayjs";
+import { formatCurrency } from "@/utils/currency";
+import NFTPreviewModal from "./NFTPreviewModal";
 
-interface WinningDetailData {
-  id: string;
-  type: WinningType;
-  ticketImage: string;
-  series: string;
-  level: string;
-  rarityLabel: string;
-  winningAmount: number;
-  currency: string;
-  drawTime: string;
-  digitalMatrix: string;
-  colorGenes: string[];
-  imageSymbols: string[];
-  timestamp: string;
-  blockNumber?: string;
-  // For follow-bet type
-  followBetAmount?: number;
-}
+export type WinningType = "lottery" | "follow";
 
 interface WinningDetailProps {
   winningId: string;
   type: WinningType;
 }
 
-// 默认的图像符号
-const DEFAULT_IMAGE_SYMBOLS = ['heart', 'knight', 'star'];
-const DEFAULT_COLOR_GENES = ['#FF6B35', '#4ECDC4', '#9B59B6', '#E0E0E0'];
-
-// 根据 colors 字符串解析颜色索引并获取对应的颜色值
-const parseColorGenes = (colorsString: string | undefined): string[] => {
-  if (!colorsString) {
-    // 如果没有 colors 数据，返回默认颜色
-    return DEFAULT_COLOR_GENES;
-  }
-
-  try {
-    // 假设 colors 是逗号分隔的索引字符串，如 "1,2,3,4"
-    const colorIndexes = colorsString.split('').map((idx) => parseInt(idx.trim(), 10)).filter((idx) => !isNaN(idx) && idx > 0);
-    
-    if (colorIndexes.length === 0) {
-      return DEFAULT_COLOR_GENES;
-    }
-
-    // 根据索引从 COLORS 数组中获取对应的颜色值
-    const colorValues = colorIndexes.map((index) => {
-      const colorGene = COLORS.find((color) => color.index === index);
-      return colorGene ? colorGene.value : '#E0E0E0'; // 如果找不到对应的颜色，使用默认灰色
-    });
-
-    return colorValues.length > 0 ? colorValues : DEFAULT_COLOR_GENES;
-  } catch (error) {
-    console.error('Failed to parse color genes:', error);
-    return DEFAULT_COLOR_GENES;
-  }
-};
-
 const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
-  const t = useTranslations('lottery.winningDetail');
-  const tCommon = useTranslations('common');
+  const t = useTranslations("lottery.winningDetail");
+  const tCommon = useTranslations("common");
   const chainId = useChainId();
+  const { address } = useAccount();
+  const router = useRouter();
   const scanUrl = getScanUrl(chainId);
-  
-  // 从 localStorage 读取数据
-  const [lotteryHistory, setLotteryHistory] = useState<LotteryHistory | null>(null);
-  const [ticketImageUrl, setTicketImageUrl] = useState<string | null>(null);
-  const [isLoadingImage, setIsLoadingImage] = useState(true);
-  const [imageError, setImageError] = useState(false);
 
   // 从 localStorage 读取数据
+  const [lotteryHistory, setLotteryHistory] = useState<LotteryHistory | null>(
+    null
+  );
+  
+  // NFT 预览弹窗状态
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [previewDna, setPreviewDna] = useState<string | null>(null);
+
+  // 清空所有以 lottery_history_ 开头的缓存
+  const clearLotteryHistoryCache = () => {
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("lottery_history_")) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach((key) => localStorage.removeItem(key));
+    } catch (error) {
+      console.error("Failed to clear lottery history cache:", error);
+    }
+  };
+
+  // 从 localStorage 读取数据并检查日期
   useEffect(() => {
     try {
       const storedData = localStorage.getItem(`lottery_history_${winningId}`);
       if (storedData) {
         const data = JSON.parse(storedData) as LotteryHistory;
+
+        // 检查开奖时间的日期与当天日期是否相符
+        const drawDate = dayjs(data.createdAt).format("YYYY-MM-DD");
+        const todayDate = dayjs().format("YYYY-MM-DD");
+
+        if (drawDate !== todayDate) {
+          // 日期不符，清空缓存并跳转
+          setLotteryHistory(null);
+          clearLotteryHistoryCache();
+          return;
+        }
+
         setLotteryHistory(data);
       }
     } catch (error) {
-      console.error('Failed to load lottery history from localStorage:', error);
+      console.error("Failed to load lottery history from localStorage:", error);
+      setLotteryHistory(null);
+      clearLotteryHistoryCache();
     }
-  }, [winningId]);
+  }, [winningId, router]);
 
-  // 根据 dna 获取 Ticket Image
-  // useEffect(() => {
-  //   if (lotteryHistory?.dna) {
-  //     const fetchImage = async () => {
-  //       try {
-  //         setIsLoadingImage(true);
-  //         setImageError(false);
-  //         const response = await renderTicketMetadata(lotteryHistory.dna);
-  //         if (response.data?.image) {
-  //           setTicketImageUrl(response.data.image);
-  //         } else {
-  //           setImageError(true);
-  //         }
-  //       } catch (error) {
-  //         console.error('Failed to fetch ticket metadata:', error);
-  //         setImageError(true);
-  //       } finally {
-  //         setIsLoadingImage(false);
-  //       }
-  //     };
-
-  //     fetchImage();
-  //   }
-  // }, [lotteryHistory?.dna]);
 
   // 如果没有数据，返回 null 或显示错误
   if (!lotteryHistory) {
@@ -126,36 +86,14 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
       <section className="relative py-20 md:py-32">
         <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-8">
           <div className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl">
-            <p className="text-white/80">{tCommon('errors.failedToLoadHistory')}</p>
+            <p className="text-white/80">
+              {tCommon("errors.failedToLoadHistory")}
+            </p>
           </div>
         </div>
       </section>
     );
   }
-
-  
-
-  // const winningData: WinningDetailData = {
-  //   id: String(lotteryHistory.id),
-  //   type: 'lottery',
-  //   ticketImage: ticketImageUrl || '/images/placeholder-all.png',
-  //   // series: lotteryHistory.lotteryDrawTickets?.[0]?.seriesName || t('unknownSeries'),
-  //   // level: lotteryHistory.lotteryDrawTickets?.[0]?.title || t('unknownLevel'),
-  //   // rarityLabel: lotteryHistory.lotteryDrawTickets?.[0]?.title || 'Common',
-  //   winningAmount: lotteryHistory.total || 0,
-  //   currency: 'USDT',
-  //   drawTime: new Date(lotteryHistory.createdAt).toLocaleString(dateLocale, {
-  //     year: 'numeric',
-  //     month: '2-digit',
-  //     day: '2-digit',
-  //     hour: '2-digit',
-  //     minute: '2-digit',
-  //   }),
-  //   digitalMatrix: lotteryHistory.numbers || '',
-  //   colorGenes: parseColorGenes(lotteryHistory.colors), // 从 COLORS 的 index 对应取值
-  //   imageSymbols: DEFAULT_IMAGE_SYMBOLS, // 写死的图像符号
-  //   timestamp: `${currentTimestamp} #${lotteryHistory.id}`, // 使用当前时间
-  // };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -175,20 +113,11 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeOut' as const,
+        ease: "easeOut" as const,
       },
     },
   };
 
-  const getRarityColor = (rarity: string) => {
-    const rarityLower = rarity.toLowerCase();
-    if (rarityLower.includes('rare')) return 'text-blue-400';
-    if (rarityLower.includes('common') || rarityLower.includes('basic')) return 'text-gray-400';
-    if (rarityLower.includes('epic')) return 'text-purple-400';
-    if (rarityLower.includes('legendary')) return 'text-orange-400';
-    if (rarityLower.includes('mythic')) return 'text-yellow-400';
-    return 'text-white/60';
-  };
 
   return (
     <section className="relative py-20 md:py-32">
@@ -201,82 +130,23 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
         animate="visible"
       >
         {/* Page Header */}
-        <motion.div variants={itemVariants} className="text-center mb-12 md:mb-16">
+        <motion.div
+          variants={itemVariants}
+          className="text-center mb-12 md:mb-16"
+        >
           <motion.div
             className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-white/90 mb-6"
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-sm">
-              {type === 'lottery' ? t('badge.lottery') : t('badge.follow')}
+              {type === "lottery" ? t("badge.lottery") : t("badge.follow")}
             </span>
           </motion.div>
         </motion.div>
-
-        {/* Ticket Image and Basic Info */}
-        {/* <motion.div
-          variants={itemVariants}
-          className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 mb-6 md:mb-8"
-        >
-          <div className="flex flex-col md:flex-row gap-6 md:gap-8">
-            <div className="shrink-0 w-full md:w-auto">
-              <div 
-                className="relative w-full max-w-sm mx-auto md:max-w-none rounded-xl overflow-hidden bg-linear-to-br from-slate-800 to-slate-900"
-                style={{ aspectRatio: '16/10' }}
-              >
-                {isLoadingImage ? (
-                  <div className="absolute inset-0 flex items-center justify-center bg-slate-800/50">
-                    <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  </div>
-                ) : ticketImageUrl && !imageError ? (
-                  <img
-                    src={ticketImageUrl}
-                    alt={`${tCommon('images.winningTicket')} ${winningData.id}`}
-                    className="w-full h-full object-cover"
-                    onError={() => {
-                      setImageError(true);
-                    }}
-                  />
-                ) : (
-                  <Image
-                    src={winningData.ticketImage}
-                    alt={`${tCommon('images.winningTicket')} ${winningData.id}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 400px"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/images/placeholder-all.png';
-                    }}
-                  />
-                )}
-                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-              </div>
-            </div>
-            <div className="flex-1 space-y-3 md:space-y-4">
-              <div>
-                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">
-                  {winningData.series}
-                </h2>
-                <p className={`text-sm md:text-base lg:text-lg font-semibold ${getRarityColor(winningData.rarityLabel)}`}>
-                  {winningData.rarityLabel}
-                </p>
-              </div>
-
-              {type === 'follow' && winningData.followBetAmount && (
-                <div className="pt-3 md:pt-4 border-t border-white/10">
-                  <div className="text-white/60 text-xs md:text-sm mb-1">{t('followBetAmount')}</div>
-                  <div className="text-lg md:text-xl lg:text-2xl font-bold text-white">
-                    {winningData.followBetAmount.toLocaleString()} {winningData.currency}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div> */}
 
         {/* Prize Pool Amount */}
         <motion.div
@@ -284,80 +154,32 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
           className="bg-linear-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8 mb-6 md:mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="text-white/70 text-base md:text-lg">{t('prizePoolAmount')}</div>
+            <div className="text-white/70 text-base md:text-lg">
+              {t("prizePoolAmount")}
+            </div>
             <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-              ≈{
-                formatCurrency(lotteryHistory.total, '', 6)
-              } USDT
+              ≈{formatCurrency(lotteryHistory.total, "", 6)} USDT
             </div>
           </div>
         </motion.div>
 
         {/* Draw Information */}
         <motion.div variants={itemVariants} className="space-y-6 md:space-y-8">
-          <h3 className="text-xl md:text-2xl font-bold text-white">{t('drawInformation')}</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-white">
+            {t("drawInformation")}
+          </h3>
 
           {/* Draw Time */}
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6">
             <div className="flex items-center justify-between">
-              <div className="text-white/60 text-sm md:text-base">{t('drawTime')}</div>
+              <div className="text-white/60 text-sm md:text-base">
+                {t("drawTime")}
+              </div>
               <div className="text-white font-semibold text-base md:text-lg">
-                {dayjs(lotteryHistory.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                {dayjs(lotteryHistory.createdAt).format("YYYY-MM-DD HH:mm:ss")}
               </div>
             </div>
           </div>
-
-          {/* Draw Details Grid */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"> */}
-            {/* Digital Matrix */}
-            {/* <motion.div
-              variants={itemVariants}
-              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
-            >
-              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">{t('digitalMatrix')}</div>
-              <div className="text-lg md:text-xl font-bold text-white font-mono">
-                {winningData.digitalMatrix}
-              </div>
-            </motion.div> */}
-
-            {/* Color Genes */}
-            {/* <motion.div
-              variants={itemVariants}
-              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
-            >
-              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">{t('colorGenes')}</div>
-              <div className="flex gap-1 md:gap-2">
-                {winningData.colorGenes.map((color, index) => (
-                  <div
-                    key={index}
-                    className="flex-1 h-8 md:h-10 rounded-lg"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </motion.div> */}
-
-            {/* Image Symbols */}
-            {/* <motion.div
-              variants={itemVariants}
-              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
-            >
-              <div className="text-white/60 text-xs md:text-sm mb-2 md:mb-3">{t('imageSymbols')}</div>
-              <div className="flex gap-2 md:gap-3">
-                {winningData.imageSymbols.map((symbol, index) => (
-                  <div
-                    key={index}
-                    className="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center text-white/60 text-sm md:text-base"
-                  >
-                    {symbol === 'heart' && '♥'}
-                    {symbol === 'knight' && '♞'}
-                    {symbol === 'star' && '★'}
-                    {!['heart', 'knight', 'star'].includes(symbol) && symbol.charAt(0).toUpperCase()}
-                  </div>
-                ))}
-              </div>
-            </motion.div> */}
-          {/* </div> */}
 
           {/* Draw Hash */}
           {lotteryHistory.drawLotteryTxHash && (
@@ -366,15 +188,25 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="text-white/60 text-sm md:text-base">{t('drawHash')}</div>
+                <div className="text-white/60 text-sm md:text-base">
+                  {t("drawHash")}
+                </div>
                 <div className="flex items-center gap-2">
                   <span className="text-white font-semibold text-sm md:text-base font-mono">
                     {lotteryHistory.drawLotteryTxHash.length > 14
-                      ? `${lotteryHistory.drawLotteryTxHash.slice(0, 6)}...${lotteryHistory.drawLotteryTxHash.slice(-8)}`
+                      ? `${lotteryHistory.drawLotteryTxHash.slice(
+                          0,
+                          6
+                        )}...${lotteryHistory.drawLotteryTxHash.slice(-8)}`
                       : lotteryHistory.drawLotteryTxHash}
                   </span>
                   <button
-                    onClick={() => window.open(`${scanUrl}${lotteryHistory.drawLotteryTxHash}`, '_blank')}
+                    onClick={() =>
+                      window.open(
+                        `${scanUrl}${lotteryHistory.drawLotteryTxHash}`,
+                        "_blank"
+                      )
+                    }
                     className="text-white/40 hover:text-white/80 cursor-pointer transition-colors duration-200"
                     title="View Transaction Details"
                   >
@@ -392,11 +224,16 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <div className="text-white/60 text-sm md:text-base">{t('VRF')}</div>
+                <div className="text-white/60 text-sm md:text-base">
+                  {t("VRF")}
+                </div>
                 <div className="flex items-center gap-2">
                   <span className="text-white font-semibold text-sm md:text-base font-mono">
                     {lotteryHistory.dna.length > 14
-                      ? `${lotteryHistory.dna.slice(0, 6)}...${lotteryHistory.dna.slice(-8)}`
+                      ? `${lotteryHistory.dna.slice(
+                          0,
+                          6
+                        )}...${lotteryHistory.dna.slice(-8)}`
                       : lotteryHistory.dna}
                   </span>
                   <CopyButton text={lotteryHistory.dna} />
@@ -411,80 +248,135 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
             className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="text-white/60 text-sm md:text-base">{t('timestamp')}</div>
+              <div className="text-white/60 text-sm md:text-base">
+                {t("timestamp")}
+              </div>
               <div className="text-white font-semibold text-sm md:text-base font-mono">
-                {`${dayjs().format('YYYY-MM-DD HH:mm:ss')} #${lotteryHistory.id}`}
+                {`${dayjs().format("YYYY-MM-DD HH:mm:ss")} #${
+                  lotteryHistory.id
+                }`}
               </div>
             </div>
           </motion.div>
 
           {/* Winner List */}
-          {lotteryHistory.lotteryDrawTickets && lotteryHistory.lotteryDrawTickets.length > 0 && (
-            <motion.div variants={itemVariants} className="mt-6 md:mt-8">
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">{t('winnerList')}</h3>
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-white/10">
-                        <th className="px-4 md:px-6 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
-                          #
-                        </th>
-                        <th className="px-4 md:px-6 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
-                          {t('address')}
-                        </th>
-                        <th className="px-4 md:px-6 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
-                          DNA
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {lotteryHistory.lotteryDrawTickets.map((drawTicket, index) => (
-                        <motion.tr
-                          key={index}
-                          variants={itemVariants}
-                          className="border-b border-white/10 last:border-b-0 hover:bg-white/8 transition-colors duration-150"
-                        >
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-white/80 text-sm md:text-base">
-                            {index + 1}
-                          </td>
-                          <td className="px-4 md:px-6 py-3 md:py-4 text-white font-mono text-sm md:text-base">
-                            {drawTicket.ticket?.ownerId
-                              ? drawTicket.ticket.ownerId.length > 14
-                                ? `${drawTicket.ticket.ownerId.slice(0, 6)}...${drawTicket.ticket.ownerId.slice(-8)}`
-                                : drawTicket.ticket.ownerId
-                              : '-'}
-                          </td>
-                          <td className="px-4 md:px-6 py-3 md:py-4">
-                            {drawTicket.ticket?.dna ? (
-                              <div className="flex items-center gap-2 relative">
-                                <span className="text-white font-mono text-sm md:text-base">
-                                  {drawTicket.ticket.dna.length > 14
-                                    ? `${drawTicket.ticket.dna.slice(0, 6)}...${drawTicket.ticket.dna.slice(-8)}`
-                                    : drawTicket.ticket.dna}
-                                </span>
-                                <CopyButton 
-                                  text={drawTicket.ticket.dna} 
-                                  tooltipPosition="top"
-                                />
-                              </div>
-                            ) : (
-                              <span className="text-white font-mono text-sm md:text-base">-</span>
-                            )}
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
+          {lotteryHistory.lotteryDrawTickets &&
+            lotteryHistory.lotteryDrawTickets.length > 0 && (
+              <motion.div variants={itemVariants} className="mt-6 md:mt-8">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
+                  {t("winnerList")}
+                </h3>
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-white/10">
+                          <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                            #
+                          </th>
+                          <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                            {t("address")}
+                          </th>
+                          <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                            DNA
+                          </th>
+                          <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                            {t("previewNFT")}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {lotteryHistory.lotteryDrawTickets.map(
+                          (drawTicket, index) => (
+                            <motion.tr
+                              key={index}
+                              variants={itemVariants}
+                              className="border-b border-white/10 last:border-b-0 hover:bg-white/8 transition-colors duration-150"
+                            >
+                              <td className="px-3 md:px-4 py-3 md:py-4 text-white/80 text-sm md:text-base">
+                                {index + 1}
+                              </td>
+                              <td className="px-3 md:px-4 py-3 md:py-4 text-white font-mono text-sm md:text-base">
+                                {drawTicket.ticket?.ownerId
+                                  ? drawTicket.ticket.ownerId.length > 14
+                                    ? `${drawTicket.ticket.ownerId.slice(
+                                        0,
+                                        6
+                                      )}...${drawTicket.ticket.ownerId.slice(
+                                        -8
+                                      )}`
+                                    : drawTicket.ticket.ownerId
+                                  : "-"}
+                              </td>
+                              <td className="px-3 md:px-4 py-3 md:py-4">
+                                {drawTicket.ticket?.dna ? (
+                                  <div className="flex items-center gap-2 relative">
+                                    <span className="text-white font-mono text-sm md:text-base">
+                                      {drawTicket.ticket.dna.length > 14
+                                        ? `${drawTicket.ticket.dna.slice(
+                                            0,
+                                            6
+                                          )}...${drawTicket.ticket.dna.slice(
+                                            -8
+                                          )}`
+                                        : drawTicket.ticket.dna}
+                                    </span>
+                                    <CopyButton
+                                      text={drawTicket.ticket.dna}
+                                      tooltipPosition="top"
+                                    />
+                                  </div>
+                                ) : (
+                                  <span className="text-white font-mono text-sm md:text-base">
+                                    -
+                                  </span>
+                                )}
+                              </td>
+                              <td className="px-3 md:px-4 py-3 md:py-4">
+                                {drawTicket.ticket?.dna ? (
+                                  <button
+                                    onClick={() => {
+                                      setPreviewDna(drawTicket.ticket.dna);
+                                      setPreviewModalOpen(true);
+                                    }}
+                                    className="inline-flex items-center justify-center px-2 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-semibold text-white bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full transition-all duration-200 cursor-pointer shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 active:scale-95"
+                                    title={t("previewNFT")}
+                                  >
+                                    <i className="fa fa-eye text-xs md:text-sm"></i>
+                                    <span className="hidden md:inline ml-1.5 md:ml-2">{t("previewNFT")}</span>
+                                  </button>
+                                ) : (
+                                  <span className="text-white/40 text-sm md:text-base">-</span>
+                                )}
+                              </td>
+                            </motion.tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
         </motion.div>
       </motion.div>
+
+      {/* NFT Preview Modal */}
+      {lotteryHistory && (
+        <NFTPreviewModal
+          isOpen={previewModalOpen}
+          onClose={() => {
+            setPreviewModalOpen(false);
+            setPreviewDna(null);
+          }}
+          dna={previewDna}
+          type={type}
+          winningId={winningId}
+          lotteryHistory={lotteryHistory}
+        />
+      )}
     </section>
   );
 };
 
 export default WinningDetail;
-
