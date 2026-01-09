@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { formatAddress, getFallbackChainIcon } from './utils';
 import useGlobalStore from '@/store';
 import { useRouter } from 'next/navigation';
+import { formatCurrency } from "@/utils/currency";
 
 interface WalletInfoSectionProps {
   account: { address: string };
@@ -37,16 +38,6 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
   const handleWithdraw = () => {
     router.push('/lottery/withdraw');
   };
-
-  // 格式化可提现金额，保留两位小数（截断，不四舍五入）
-  const formattedWithdrawableAmount = useMemo(() => {
-    if (!withdrawAmount) return '0.00';
-    const amount = parseFloat(withdrawAmount);
-    if (isNaN(amount)) return '0.00';
-    // 截断到两位小数，不四舍五入
-    const truncated = Math.floor(amount * 100) / 100;
-    return truncated.toFixed(2);
-  }, [withdrawAmount]);
 
   return (
     <div className="p-6 border-b border-white/10 md:p-5">
@@ -104,7 +95,7 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-white flex-1 md:text-sm sm:text-xs">
-            {formattedWithdrawableAmount} USDT
+            {formatCurrency(withdrawAmount, '', 2)} USDT
           </span>
           <button 
             className="text-xs text-pink-400 bg-transparent border-0 cursor-pointer font-medium p-0 no-underline hover:text-pink-300 hover:underline active:text-pink-200"

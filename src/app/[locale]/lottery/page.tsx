@@ -18,8 +18,8 @@ export default function LotteryPage() {
   // 彩票配置状态
   const [lotteryConfig, setLotteryConfig] = useState<LotteryConfig>({
     nextDrawTime: 0,
-    total: "0.00",
-    nextDrawTimestring: ''
+    nextDrawLotteryTotal: '',
+    nextDrawTimeString: ''
   });
   const [configLoading, setConfigLoading] = useState(true);
   const [configError, setConfigError] = useState<string | null>(null);
@@ -28,6 +28,9 @@ export default function LotteryPage() {
   const [historyData, setHistoryData] = useState<LotteryHistoryType[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [historyError, setHistoryError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const PAGE_SIZE = 20;
 
   // 使用 ref 跟踪请求是否正在进行，避免重复调用
   const isConfigRequestingRef = useRef(false);
@@ -60,36 +63,55 @@ export default function LotteryPage() {
     }
   }, []);
 
-  // 获取历史记录
-  const fetchLotteryHistory = useCallback(async () => {
-    if (isHistoryRequestingRef.current) {
+  // 获取历史记录（支持分页）
+  const fetchLotteryHistory = useCallback(async (page: number = 1, pageSize: number = PAGE_SIZE, append: boolean = false) => {
+    if (isHistoryRequestingRef.current && !append) {
       return;
     }
 
     try {
-      isHistoryRequestingRef.current = true;
-      setHistoryLoading(true);
+      if (!append) {
+        isHistoryRequestingRef.current = true;
+        setHistoryLoading(true);
+      }
       setHistoryError(null);
-      const response = await getLotteryHistory();
+      const response = await getLotteryHistory(page, pageSize);
       
       if (response.ok) {
         if (response.data && Array.isArray(response.data)) {
-          setHistoryData(response.data);
+          if (append) {
+            // 追加数据
+            setHistoryData((prev) => [...prev, ...response.data]);
+            // 如果返回的数据少于 pageSize，说明没有更多数据了
+            setHasMore(response.data.length === pageSize);
+          } else {
+            // 替换数据（刷新或首次加载）
+            setHistoryData(response.data);
+            setHasMore(response.data.length === pageSize);
+            setCurrentPage(1);
+          }
         } else {
           console.warn('Invalid data format from lottery history API:', response.data);
-          setHistoryData([]);
+          if (!append) {
+            setHistoryData([]);
+          }
+          setHasMore(false);
         }
       } else {
         const errorMsg = response.msg || response.code || 'Failed to load history';
         console.error('Failed to fetch lottery history:', errorMsg);
         setHistoryError(errorMsg);
+        setHasMore(false);
       }
     } catch (err) {
       console.error('Failed to fetch lottery history:', err);
       setHistoryError('Failed to load history');
+      setHasMore(false);
     } finally {
-      setHistoryLoading(false);
-      isHistoryRequestingRef.current = false;
+      if (!append) {
+        setHistoryLoading(false);
+        isHistoryRequestingRef.current = false;
+      }
     }
   }, []);
 
@@ -115,23 +137,21 @@ export default function LotteryPage() {
 
   // 组件挂载时获取历史记录
   useEffect(() => {
-    // const now = Date.now();
-    // if (now - lastHistoryInitTime < INIT_DEBOUNCE_MS || hasHistoryInitializedRef.current) {
-    //   return;
-    // }
+    fetchLotteryHistory(1, PAGE_SIZE, false);
+  }, [fetchLotteryHistory]);
 
-    // console.log('页面挂载时获取历史记录');
-    // hasHistoryInitializedRef.current = true;
-    // lastHistoryInitTime = now;
-    // fetchLotteryHistory();
+  // 加载更多历史记录
+  const handleLoadMore = useCallback(async (page: number, pageSize: number) => {
+    await fetchLotteryHistory(page, pageSize, true);
+    setCurrentPage(page);
+  }, [fetchLotteryHistory]);
 
-    // return () => {
-    //   setTimeout(() => {
-    //     hasHistoryInitializedRef.current = false;
-    //   }, INIT_DEBOUNCE_MS);
-    // };
-    fetchLotteryHistory()
-  }, []);
+  // 刷新历史记录（倒计时结束后调用，从第1页开始）
+  const handleRefreshHistory = useCallback(() => {
+    fetchLotteryHistory(1, PAGE_SIZE, false);
+    // 触发刷新事件，通知历史记录组件重置分页
+    window.dispatchEvent(new Event('lotteryHistoryRefresh'));
+  }, [fetchLotteryHistory]);
 
   // 监听开奖完成事件，刷新数据
   // useEffect(() => {
@@ -162,7 +182,7 @@ export default function LotteryPage() {
           lotteryConfig={lotteryConfig}
           loading={configLoading}
           onRefresh={fetchLotteryConfig}
-          onDrawComplete={fetchLotteryHistory}
+          onDrawComplete={handleRefreshHistory}
         />
       </div>
 
@@ -172,6 +192,9 @@ export default function LotteryPage() {
           historyData={historyData}
           isLoading={historyLoading}
           error={historyError}
+          onLoadMore={handleLoadMore}
+          onRefresh={handleRefreshHistory}
+          hasMore={hasMore}
         />
       </div>
 

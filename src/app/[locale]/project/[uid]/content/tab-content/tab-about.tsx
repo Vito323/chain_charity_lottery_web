@@ -8,6 +8,7 @@ import MarkdownRenderer from "@/components/markdown-renderer";
 import "@/components/markdown-renderer/case-bb-styles.scss";
 import { ProjectDetailData } from "@/service/project";
 import { ProjectChainInfo } from "@/components/case-cards";
+import { formatCurrency } from '@/utils/currency';
 
 interface TabAboutProps {
   projectInfo?: ProjectDetailData;
@@ -93,13 +94,13 @@ const TabAbout = ({ projectInfo, uid }: TabAboutProps) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
             <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
               <div className="text-2xl font-bold text-white mb-1">
-                ${totalDonated.toFixed(2)}
+                {formatCurrency(totalDonated)}
               </div>
               <div className="text-white/70 text-sm">{t('raised')}</div>
             </div>
             <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
               <div className="text-2xl font-bold text-white mb-1">
-                ${goal.toFixed(2)}
+                {formatCurrency(goal)}
               </div>
               <div className="text-white/70 text-sm">{t('goal')}</div>
             </div>

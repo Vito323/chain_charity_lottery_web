@@ -223,7 +223,7 @@
     },
     "winningDetail": {
       "badge": {
-        "lottery": "我的NFT",
+        "lottery": "中奖详情",
         "follow": "我的跟投"
       },
       "followBetAmount": "跟投金额",
@@ -234,9 +234,14 @@
       "digitalMatrix": "数字矩阵",
       "colorGenes": "颜色基因",
       "imageSymbols": "图像符号",
-      "timestamp": "时间戳：",
+      "timestamp": "时间戳",
       "unknownSeries": "未知系列",
-      "unknownLevel": "未知等级"
+      "unknownLevel": "未知等级",
+      "drawHash": "开奖Hash",
+      "VRF": "VRF",
+      "winnerList": "中奖名单",
+      "address": "地址",
+      "dna": "DNA"
     },
     "winningRecords": {
       "badge": "中奖记录",

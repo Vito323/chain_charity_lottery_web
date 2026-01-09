@@ -32,6 +32,7 @@ export interface ProjectChainInfo {
   totalDonated: number;
   withdrawableAmount: number;
   withdrawnAmount: number;
+  goal: number;
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -43,6 +44,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   totalDonated,
   donationCount,
   animationDelay = 0,
+  goal = 0,
 }) => {
   const router = useRouter();
   const locale = useLocale();
@@ -72,6 +74,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         createdAt,
         donationCount,
         totalDonated,
+        goal,
       };
       localStorage.setItem(`project_${id}`, JSON.stringify(projectData));
     } catch (error) {
@@ -81,10 +84,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   // NOTE: 当前项目列表接口没有返回目标金额，这里用一个
   // 合理的上限做归一化，仅用于前端展示进度效果。
-  const PROGRESS_BASE = 150_000;
+  const PROGRESS_BASE = goal || 500;
   const rawProgress =
     PROGRESS_BASE > 0 ? (totalDonated / PROGRESS_BASE) * 100 : 0;
   const progress = Math.max(0, Math.min(100, rawProgress));
+
+  console.log('progress', progress);
 
   const handleCardClick = () => {
     cacheProjectData();
@@ -193,7 +198,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <div className="stalwart-footer-block stalwart-footer-block-right">
             <span className="stalwart-footer-label">{t('fundingProgress')}</span>
             <span className="stalwart-footer-value">
-              {progress.toFixed(0)}%
+              {progress.toFixed(2)}%
             </span>
           </div>
         </div>

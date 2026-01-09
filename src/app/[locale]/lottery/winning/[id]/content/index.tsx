@@ -1,13 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
+import { useChainId } from 'wagmi';
 import { type LotteryHistory } from '@/service/lottery';
-import { renderTicketMetadata } from '@/service/asset';
+// import { renderTicketMetadata } from '@/service/asset';
 import { COLORS } from '@/utils/lottery';
-
+import { getScanUrl } from '@/utils/chain-info';
+import { CopyButton } from '@/components/copy-button';
+import dayjs from 'dayjs';
+import { formatCurrency } from '@/utils/currency';
 export type WinningType = 'lottery' | 'follow';
 
 interface WinningDetailData {
@@ -69,7 +73,8 @@ const parseColorGenes = (colorsString: string | undefined): string[] => {
 const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
   const t = useTranslations('lottery.winningDetail');
   const tCommon = useTranslations('common');
-  const locale = useLocale();
+  const chainId = useChainId();
+  const scanUrl = getScanUrl(chainId);
   
   // 从 localStorage 读取数据
   const [lotteryHistory, setLotteryHistory] = useState<LotteryHistory | null>(null);
@@ -128,43 +133,29 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
     );
   }
 
-  // 格式化当前时间戳（根据语言环境）
-  const localeMap: Record<string, string> = {
-    'en': 'en-US',
-    'zh': 'zh-CN',
-  };
-  const dateLocale = localeMap[locale] || 'en-US';
   
-  const currentTimestamp = new Date().toLocaleString(dateLocale, {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
 
-  const winningData: WinningDetailData = {
-    id: String(lotteryHistory.id),
-    type: 'lottery',
-    ticketImage: ticketImageUrl || '/images/placeholder-all.png',
-    series: lotteryHistory.lotteryDrawTickets?.[0]?.seriesName || t('unknownSeries'),
-    level: lotteryHistory.lotteryDrawTickets?.[0]?.title || t('unknownLevel'),
-    rarityLabel: lotteryHistory.lotteryDrawTickets?.[0]?.title || 'Common',
-    winningAmount: lotteryHistory.total || 0,
-    currency: 'USDT',
-    drawTime: new Date(lotteryHistory.createdAt).toLocaleString(dateLocale, {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    }),
-    digitalMatrix: lotteryHistory.numbers || '',
-    colorGenes: parseColorGenes(lotteryHistory.colors), // 从 COLORS 的 index 对应取值
-    imageSymbols: DEFAULT_IMAGE_SYMBOLS, // 写死的图像符号
-    timestamp: `${currentTimestamp} #${lotteryHistory.id}`, // 使用当前时间
-  };
+  // const winningData: WinningDetailData = {
+  //   id: String(lotteryHistory.id),
+  //   type: 'lottery',
+  //   ticketImage: ticketImageUrl || '/images/placeholder-all.png',
+  //   // series: lotteryHistory.lotteryDrawTickets?.[0]?.seriesName || t('unknownSeries'),
+  //   // level: lotteryHistory.lotteryDrawTickets?.[0]?.title || t('unknownLevel'),
+  //   // rarityLabel: lotteryHistory.lotteryDrawTickets?.[0]?.title || 'Common',
+  //   winningAmount: lotteryHistory.total || 0,
+  //   currency: 'USDT',
+  //   drawTime: new Date(lotteryHistory.createdAt).toLocaleString(dateLocale, {
+  //     year: 'numeric',
+  //     month: '2-digit',
+  //     day: '2-digit',
+  //     hour: '2-digit',
+  //     minute: '2-digit',
+  //   }),
+  //   digitalMatrix: lotteryHistory.numbers || '',
+  //   colorGenes: parseColorGenes(lotteryHistory.colors), // 从 COLORS 的 index 对应取值
+  //   imageSymbols: DEFAULT_IMAGE_SYMBOLS, // 写死的图像符号
+  //   timestamp: `${currentTimestamp} #${lotteryHistory.id}`, // 使用当前时间
+  // };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -295,10 +286,9 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="text-white/70 text-base md:text-lg">{t('prizePoolAmount')}</div>
             <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-              {winningData.winningAmount.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })} {winningData.currency}
+              ≈{
+                formatCurrency(lotteryHistory.total, '', 6)
+              } USDT
             </div>
           </div>
         </motion.div>
@@ -312,7 +302,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
             <div className="flex items-center justify-between">
               <div className="text-white/60 text-sm md:text-base">{t('drawTime')}</div>
               <div className="text-white font-semibold text-base md:text-lg">
-                {winningData.drawTime}
+                {dayjs(lotteryHistory.createdAt).format('YYYY-MM-DD HH:mm:ss')}
               </div>
             </div>
           </div>
@@ -369,6 +359,52 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
             </motion.div> */}
           {/* </div> */}
 
+          {/* Draw Hash */}
+          {lotteryHistory.drawLotteryTxHash && (
+            <motion.div
+              variants={itemVariants}
+              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
+            >
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="text-white/60 text-sm md:text-base">{t('drawHash')}</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-white font-semibold text-sm md:text-base font-mono">
+                    {lotteryHistory.drawLotteryTxHash.length > 14
+                      ? `${lotteryHistory.drawLotteryTxHash.slice(0, 6)}...${lotteryHistory.drawLotteryTxHash.slice(-8)}`
+                      : lotteryHistory.drawLotteryTxHash}
+                  </span>
+                  <button
+                    onClick={() => window.open(`${scanUrl}${lotteryHistory.drawLotteryTxHash}`, '_blank')}
+                    className="text-white/40 hover:text-white/80 cursor-pointer transition-colors duration-200"
+                    title="View Transaction Details"
+                  >
+                    <i className="fa fa-external-link text-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* VRF */}
+          {lotteryHistory.dna && (
+            <motion.div
+              variants={itemVariants}
+              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
+            >
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="text-white/60 text-sm md:text-base">{t('VRF')}</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-white font-semibold text-sm md:text-base font-mono">
+                    {lotteryHistory.dna.length > 14
+                      ? `${lotteryHistory.dna.slice(0, 6)}...${lotteryHistory.dna.slice(-8)}`
+                      : lotteryHistory.dna}
+                  </span>
+                  <CopyButton text={lotteryHistory.dna} />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {/* Timestamp */}
           <motion.div
             variants={itemVariants}
@@ -377,10 +413,73 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="text-white/60 text-sm md:text-base">{t('timestamp')}</div>
               <div className="text-white font-semibold text-sm md:text-base font-mono">
-                {winningData.timestamp}
+                {`${dayjs().format('YYYY-MM-DD HH:mm:ss')} #${lotteryHistory.id}`}
               </div>
             </div>
           </motion.div>
+
+          {/* Winner List */}
+          {lotteryHistory.lotteryDrawTickets && lotteryHistory.lotteryDrawTickets.length > 0 && (
+            <motion.div variants={itemVariants} className="mt-6 md:mt-8">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">{t('winnerList')}</h3>
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-white/10">
+                        <th className="px-4 md:px-6 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                          #
+                        </th>
+                        <th className="px-4 md:px-6 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                          {t('address')}
+                        </th>
+                        <th className="px-4 md:px-6 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                          VRF
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {lotteryHistory.lotteryDrawTickets.map((drawTicket, index) => (
+                        <motion.tr
+                          key={index}
+                          variants={itemVariants}
+                          className="border-b border-white/10 last:border-b-0 hover:bg-white/8 transition-colors duration-150"
+                        >
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-white/80 text-sm md:text-base">
+                            {index + 1}
+                          </td>
+                          <td className="px-4 md:px-6 py-3 md:py-4 text-white font-mono text-sm md:text-base">
+                            {drawTicket.ticket?.ownerId
+                              ? drawTicket.ticket.ownerId.length > 14
+                                ? `${drawTicket.ticket.ownerId.slice(0, 6)}...${drawTicket.ticket.ownerId.slice(-8)}`
+                                : drawTicket.ticket.ownerId
+                              : '-'}
+                          </td>
+                          <td className="px-4 md:px-6 py-3 md:py-4">
+                            {drawTicket.ticket?.dna ? (
+                              <div className="flex items-center gap-2 relative">
+                                <span className="text-white font-mono text-sm md:text-base">
+                                  {drawTicket.ticket.dna.length > 14
+                                    ? `${drawTicket.ticket.dna.slice(0, 6)}...${drawTicket.ticket.dna.slice(-8)}`
+                                    : drawTicket.ticket.dna}
+                                </span>
+                                <CopyButton 
+                                  text={drawTicket.ticket.dna} 
+                                  tooltipPosition="top"
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-white font-mono text-sm md:text-base">-</span>
+                            )}
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       </motion.div>
     </section>

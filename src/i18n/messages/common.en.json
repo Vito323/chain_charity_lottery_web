@@ -89,7 +89,6 @@
       "subscribeSuccess": "Subscription successful! Thank you for your attention",
       "donationSuccess": "Donation successful! Thank you for your support.",
       "donationSuccessful": "Donation Successful!",
-      "copied": "Copied!",
       "delistSuccess": "Ticket delisted successfully",
       "redemptionSuccess": "Redemption successful! Transaction completed."
     },
@@ -127,6 +126,7 @@
       "earningsDetails": "Earnings Details",
       "disconnect": "Disconnect",
       "copyFullAddress": "Copy full address",
+      "copied": "Copied!",
       "close": "Close",
       "withdraw": "Withdraw",
       "withdrawableAmount": "Withdrawable Amount",

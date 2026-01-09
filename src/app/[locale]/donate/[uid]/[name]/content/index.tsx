@@ -193,7 +193,6 @@ const Donate = ({ uid, name }: DonateProps) => {
         ]);
 
         // 处理奖励金额
-        //TODO 美金精度暂时
         const rewardValue = formatUnits(exchangeResult, 18);
         setRewardAmount(rewardValue);
 
@@ -367,7 +366,9 @@ const Donate = ({ uid, name }: DonateProps) => {
           setSelectedQuickAmount(null);
           setRewardAmount(null);
           setAmountChanged(false);
-          await projectDonateCompleted(uid, address as string, amount, result);
+          setTimeout(async () => {
+            await projectDonateCompleted(uid, address as string, amount, result);
+          }, 1000);
         } else {
           toast.error(tCommon("errors.donationFailed"));
         }

@@ -301,7 +301,7 @@
     },
     "winningDetail": {
       "badge": {
-        "lottery": "My Lottery Ticket",
+        "lottery": "Winning Details",
         "follow": "My Follow-bet"
       },
       "followBetAmount": "Follow-bet Amount",
@@ -312,9 +312,14 @@
       "digitalMatrix": "Digital Matrix",
       "colorGenes": "Color Genes",
       "imageSymbols": "Image Symbols",
-      "timestamp": "Timestamp:",
+      "timestamp": "Timestamp",
       "unknownSeries": "Unknown Series",
-      "unknownLevel": "Unknown Level"
+      "unknownLevel": "Unknown Level",
+      "drawHash": "Draw Hash",
+      "VRF": "VRF",
+      "winnerList": "Winner List",
+      "address": "Address",
+      "dna": "DNA"
     },
     "winningRecords": {
       "badge": "Winning Records",

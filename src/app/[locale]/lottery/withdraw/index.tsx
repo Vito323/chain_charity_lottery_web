@@ -10,6 +10,7 @@ import LotteryWithdrawModal from '@/components/lottery-withdraw-modal';
 import { useMasterContract } from '@/hooks/useMasterContract';
 import { getChainById } from '@/lib/chain-config';
 import { formatUnits } from 'ethers';
+import { formatCurrency } from '@/utils/currency';
 
 const WithdrawPage = () => {
   const t = useTranslations('lottery.withdraw');
@@ -23,12 +24,6 @@ const WithdrawPage = () => {
   const setWithdrawAmount = useGlobalStore(state => state.setWithdrawAmount);
   const chainId = useChainId();
   const { getUserWithdrawableAmount, withdrawBonus, getWithdrawPaused } = useMasterContract();
-
-  const formatAmount = (amount: string): string => {
-    const numAmount = parseFloat(amount);
-    if (isNaN(numAmount)) return '0.000000';
-    return numAmount.toFixed(6);
-  };
 
   // 获取可提现金额
   const fetchWithdrawAmount = useCallback(async () => {
@@ -271,7 +266,7 @@ const WithdrawPage = () => {
                   </div>
                 ) : (
                   <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-                    {formatAmount(withdrawAmountFromStore)} USDT
+                    {formatCurrency(withdrawAmountFromStore, '', 6)} USDT
                   </div>
                 )}
               </div>

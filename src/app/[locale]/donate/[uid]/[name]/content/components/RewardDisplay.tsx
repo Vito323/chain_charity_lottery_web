@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import BigNumber from "bignumber.js";
 import { formatUnits } from "ethers";
 import useGlobalStore from "@/store";
+import { formatCurrency } from "@/utils/currency";
 
 interface RewardDisplayProps {
   amount: string;
@@ -54,9 +55,6 @@ export const RewardDisplay: React.FC<RewardDisplayProps> = ({
     return Math.min(100, Math.max(0, Math.round((surpassedCount / totalDonors) * 100)));
   }, [surpassedCount, totalDonors]);
   
-  // 使用 BigNumber 计算 USD 价值（USDT固定）
-  // const usdValueStr = calculateUSDValue(amount, 'USDT');
-  // const usdValueBN = new BigNumber(usdValueStr || 0);
   
   // 使用奖励金额（从合约计算得到）
   const expectedCLTBN = rewardAmount 
@@ -296,7 +294,7 @@ export const RewardDisplay: React.FC<RewardDisplayProps> = ({
               {/* Expected CCT Token Reward */}
               <p className="text-white/90! text-sm leading-relaxed">
                 {t('ranking.expectedReward', { 
-                  amount: expectedCLTBN.isGreaterThan(0) ? expectedCLTBN.toFixed(6) : '0.000000', 
+                  amount: formatCurrency(rewardAmount || 0, '', 6),
                   ecosystemToken: config?.ecosystemToken || 'CCT' 
                 })}
               </p>

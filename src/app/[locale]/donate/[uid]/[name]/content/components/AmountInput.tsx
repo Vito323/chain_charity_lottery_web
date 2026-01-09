@@ -3,6 +3,27 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from 'next-intl';
 import BigNumber from "bignumber.js";
+import { formatCurrency } from "@/utils/currency";
+
+// 辅助函数：向下取整格式化（不四舍五入）
+const floorToFixed = (value: BigNumber | number | null | undefined, decimals: number = 2): string => {
+  if (!value) {
+    return '0';
+  }
+  if (value instanceof BigNumber) {
+    return value.decimalPlaces(decimals, BigNumber.ROUND_DOWN).toFixed(decimals);
+  }
+  const multiplier = Math.pow(10, decimals);
+  return (Math.floor(value * multiplier) / multiplier).toFixed(decimals);
+};
+
+// 辅助函数：向下取整格式化（不指定小数位数，使用默认）
+const floorToString = (value: BigNumber | null | undefined): string => {
+  if (!value) {
+    return '0';
+  }
+  return value.decimalPlaces(0, BigNumber.ROUND_DOWN).toFixed();
+};
 
 interface AmountInputProps {
   usdtBalance: string | null;
@@ -75,12 +96,12 @@ export const AmountInput: React.FC<AmountInputProps> = ({
 
     // 如果有余额限制，检查是否超过余额
     if (tokenBalance && inputBN.isGreaterThan(tokenBalance)) {
-      // 如果超过余额，设置为余额值（保留两位小数）
+      // 如果超过余额，设置为余额值（保留两位小数，向下取整）
       const maxAmountEvent = {
         ...e,
         target: {
           ...e.target,
-          value: tokenBalance.toFixed(2),
+          value: floorToFixed(tokenBalance, 2),
         },
       } as React.ChangeEvent<HTMLInputElement>;
       onAmountChange(maxAmountEvent);
@@ -107,7 +128,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
     if (!tokenBalance) {
       return undefined;
     }
-    return tokenBalance.toFixed();
+    return floorToString(tokenBalance);
   }, [tokenBalance]);
 
   // 检查当前输入是否超过余额
@@ -120,16 +141,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
   }, [amount, tokenBalance]);
 
   return (
-    <div className="mb-6">
-      <label className="block text-sm font-medium text-white/80 mb-3">
-        {t('amount')}
-        {tokenBalance && (
-          <span className="ml-2 text-xs text-white/60 font-normal">
-            ({t('balance')}: {Number(tokenBalance?.toFixed() || 0).toFixed(6)} USDT)
-          </span>
-        )}
-      </label>
-      
+    <div className="mb-6">      
       {/* Quick Amount Selection */}
       <div className="mb-4">
         <div className="grid grid-cols-3 gap-3">
@@ -149,7 +161,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
                     ? 'border-white/5 bg-white/5 opacity-40 cursor-not-allowed'
                     : 'border-white/10 hover:bg-white/10 hover:border-white/20'
                 } ${isDisabled ? 'opacity-40 cursor-not-allowed' : ''}`}
-                title={isDisabled ? tCommon('validation.insufficientBalanceMax', { max: tokenBalance?.toFixed() || '0' }) : ''}
+                title={isDisabled ? tCommon('validation.insufficientBalanceMax', { max: floorToString(tokenBalance) }) : ''}
               >
                 <span className={`font-medium text-base ${isDisabled ? 'text-white/40' : 'text-white'}`}>
                   {quickAmount} USDT
@@ -183,7 +195,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
               ? 'border-red-500/50 focus:ring-red-500/50'
               : 'border-white/10 focus:ring-purple-500/50'
           }`}
-          placeholder={`Other Amount (Max: ${Number(tokenBalance?.toFixed() || 0).toFixed(2)} USDT)`}
+          placeholder={`Other Amount (Max: ${formatCurrency(tokenBalance?.toFixed() || 0, '')} USDT)`}
           value={amount}
           onChange={handleAmountChangeWithLimit}
           disabled={!isConnected || isProcessing}
@@ -199,7 +211,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
         )}
         {isAmountExceeded && tokenBalance && (
           <p className="mt-2 text-sm text-red-400">
-            {tCommon('validation.insufficientBalanceMax', { max: Number(tokenBalance?.toFixed() || 0).toFixed(2) })}
+            {tCommon('validation.insufficientBalanceMax', { max: formatCurrency(tokenBalance?.toFixed() || 0, '') })}
           </p>
         )}
       </div>

@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { useAccount } from 'wagmi';
 import { type LotteryHistory } from '@/service/lottery';
+import { formatCurrency } from '@/utils/currency';
 
 // 历史开奖结果数据类型（用于UI展示）
 interface LotteryHistoryItem {
@@ -19,15 +21,33 @@ interface LotteryHistoryProps {
   historyData: LotteryHistory[];
   isLoading: boolean;
   error: string | null;
+  onLoadMore: (page: number, pageSize: number) => Promise<void>;
+  onRefresh: () => void;
+  hasMore: boolean;
 }
+
+const PAGE_SIZE = 10;
 
 const LotteryHistory: React.FC<LotteryHistoryProps> = ({
   historyData: rawHistoryData,
   isLoading,
   error,
+  onLoadMore,
+  onRefresh,
+  hasMore,
 }) => {
   const t = useTranslations('lottery.history');
   const tCommon = useTranslations('common');
+  const { address } = useAccount();
+  
+  // 分页状态（使用父组件传入的数据长度计算当前页）
+  const currentPage = useMemo(() => {
+    return Math.ceil(rawHistoryData.length / PAGE_SIZE) || 1;
+  }, [rawHistoryData.length]);
+  
+  const [loadingMore, setLoadingMore] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isLoadingMoreRef = useRef(false);
 
   // 格式化日期时间
   const formatDateTime = (dateString: string): string => {
@@ -59,9 +79,21 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
         // 格式化开奖时间
         const drawTime = formatDateTime(item.createdAt);
         
-        // 状态判断：已开奖的记录都视为 'lost'（已开奖但未中奖）
-        // 如果需要更精确的状态判断，可以根据实际业务逻辑调整
-        const status: 'upcoming' | 'won' | 'lost' = 'lost';
+        // 状态判断：检查 lotteryDrawTickets 中是否有当前钱包地址
+        let status: 'upcoming' | 'won' | 'lost' = 'lost';
+        
+        if (address && item.lotteryDrawTickets && Array.isArray(item.lotteryDrawTickets)) {
+          // 检查是否有中奖记录（ownerId 匹配当前钱包地址）
+          const hasWon = item.lotteryDrawTickets.some(
+            (drawTicket) => 
+              drawTicket.ticket?.ownerId && 
+              drawTicket.ticket.ownerId.toLowerCase() === address.toLowerCase()
+          );
+          
+          if (hasWon) {
+            status = 'won';
+          }
+        }
         
         return {
           id: String(item.id),
@@ -72,7 +104,7 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
         };
       })
       .sort((a, b) => b.drawNumber - a.drawNumber); // 按期号倒序排列
-  }, [rawHistoryData]);
+  }, [rawHistoryData, address]);
 
   // 获取状态文本
   const getStatusText = (status: 'upcoming' | 'won' | 'lost') => {
@@ -88,14 +120,6 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
     }
   };
 
-  // 格式化奖金显示：千分位逗号，保留两位小数
-  const formatPrizeAmount = (amount: number) => {
-    return amount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
-
   // 处理跳转，保存数据到 localStorage
   const handleHistoryItemClick = (itemId: string) => {
     // 找到对应的原始数据
@@ -105,6 +129,80 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
       localStorage.setItem(`lottery_history_${itemId}`, JSON.stringify(rawData));
     }
   };
+
+  // 加载更多数据
+  const loadMore = useCallback(async () => {
+    if (isLoadingMoreRef.current || loadingMore || !hasMore || isLoading) {
+      return;
+    }
+
+    isLoadingMoreRef.current = true;
+    setLoadingMore(true);
+
+    try {
+      const nextPage = currentPage + 1;
+      await onLoadMore(nextPage, PAGE_SIZE);
+    } catch (error) {
+      console.error('Failed to load more history:', error);
+    } finally {
+      setLoadingMore(false);
+      isLoadingMoreRef.current = false;
+    }
+  }, [currentPage, onLoadMore, hasMore, isLoading, loadingMore]);
+
+  // 滚动到底部加载更多
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      // 如果正在加载或没有更多数据，不处理
+      if (loadingMore || !hasMore || isLoading) {
+        return;
+      }
+
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // 当滚动到距离底部200px时触发加载
+      if (documentHeight - scrollTop - windowHeight < 200) {
+        loadMore();
+      }
+    };
+
+    // 使用节流优化滚动事件
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleWindowScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+    };
+  }, [loadMore, loadingMore, hasMore, isLoading]);
+
+  // 监听刷新回调（倒计时结束时触发）
+  useEffect(() => {
+    const handleRefresh = () => {
+      // 重置加载状态
+      isLoadingMoreRef.current = false;
+      setLoadingMore(false);
+      // 父组件会重置数据，这里不需要额外操作
+    };
+
+    // 监听自定义事件，当倒计时结束时触发刷新
+    window.addEventListener('lotteryHistoryRefresh', handleRefresh);
+    
+    return () => {
+      window.removeEventListener('lotteryHistoryRefresh', handleRefresh);
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -210,6 +308,7 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
         {/* History List */}
         {!isLoading && !error && historyData.length > 0 && (
           <motion.div
+            ref={containerRef}
             variants={itemVariants}
             initial="hidden"
             whileInView="visible"
@@ -254,7 +353,7 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
                   {/* 右侧内容：奖金和箭头 */}
                   <div className="flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0">
                     <span className="text-sm sm:text-base md:text-lg font-bold text-white text-right whitespace-nowrap">
-                      {formatPrizeAmount(item.prizeAmount)} USDT
+                    ≈{formatCurrency(item.prizeAmount || 0, '', 6)} USDT
                     </span>
                     <svg
                       className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white/60 shrink-0"
@@ -273,6 +372,31 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
                 </motion.div>
               </Link>
             ))}
+
+            {/* Loading More Indicator */}
+            {loadingMore && hasMore && (
+              <motion.div
+                className="flex items-center justify-center py-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
+                <span className="text-white/60 text-sm">{tCommon('status.loading')}</span>
+              </motion.div>
+            )}
+
+            {/* No More Data Indicator */}
+            {!hasMore && historyData.length > 0 && (
+              <motion.div
+                className="flex items-center justify-center py-8 text-white/40 text-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                {tCommon('empty.checkBackLater') || 'No more data'}
+              </motion.div>
+            )}
           </motion.div>
         )}
 

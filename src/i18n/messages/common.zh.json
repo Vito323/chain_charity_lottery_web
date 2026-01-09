@@ -89,7 +89,6 @@
       "subscribeSuccess": "订阅成功！感谢您的关注",
       "donationSuccess": "捐赠成功！感谢您的支持。",
       "donationSuccessful": "捐赠成功！",
-      "copied": "已复制！",
       "delistSuccess": "下架成功",
       "redemptionSuccess": "兑换成功！交易已完成。"
     },
@@ -127,6 +126,7 @@
       "earningsDetails": "收益详情",
       "disconnect": "断开连接",
       "copyFullAddress": "复制完整地址",
+      "copied": "已复制！",
       "close": "关闭",
       "withdraw": "提现",
       "withdrawableAmount": "可提现金额",

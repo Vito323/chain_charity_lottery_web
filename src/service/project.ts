@@ -15,6 +15,7 @@ export interface ProjectData {
   createdAt: string;
   donationCount: number;
   totalDonated: number;
+  goal: number;
 }
 
 

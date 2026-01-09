@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
 import { LotteryConfig } from "@/service/lottery";
 import { useTranslations } from 'next-intl';
+import { formatCurrency } from "@/utils/currency";
+import WithdrawAmountSection from "./lottery-withdraw-amount-section";
 
 interface CountdownTime {
   days: number;
@@ -266,14 +268,14 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
           </div>
 
           {/* Jackpot Section */}
-          {/* <div className="text-center">
+          <div className="text-center">
             <h3 className="text-xl md:text-2xl font-semibold text-white/80 mb-4">
               {t('jackpot.title')}
             </h3>
             <div className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-2">
               {isConnected ? (
                 <span>
-                  ${jackpotValue.toLocaleString()}
+                  {formatCurrency(lotteryConfig.nextDrawLotteryTotal, '', 6)} USDT
                 </span>
               ) : (
                 t('jackpot.connectWallet')
@@ -282,7 +284,12 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
             <p className="text-white/60 text-sm">
               {t('jackpot.description')}
             </p>
-          </div> */}
+          </div>
+        </motion.div>
+
+        {/* Withdraw Amount Section */}
+        <motion.div variants={itemVariants} className="mb-16">
+          <WithdrawAmountSection isDrawComplete={isDrawComplete} />
         </motion.div>
 
         {/* NFT Tickets Section */}

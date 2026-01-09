@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { TokenInfo } from "@/hooks/useDonationForm";
 import { useDonationTokenBalance } from "@/hooks/useDonationTokenBalance";
+import { formatCurrency } from "@/utils/currency";
 
 interface TokenSelectionProps {
   onTokenChange: (token: TokenInfo | null) => void;
@@ -66,7 +67,7 @@ export const TokenSelection: React.FC<TokenSelectionProps> = ({
                 </div>
                 {!isBalanceLoading && (
                   <p className="text-xs text-white/60 mt-1">
-                    {tCommon('labels.balance', { balance: Number(usdtBalance || 0).toFixed(6), symbol: "USDT" })}
+                    {tCommon('labels.balance', { balance: formatCurrency(usdtBalance || 0, '', 6), symbol: "USDT" })}
                   </p>
                 )}
               </div>

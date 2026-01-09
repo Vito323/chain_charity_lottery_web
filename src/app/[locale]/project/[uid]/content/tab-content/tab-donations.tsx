@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { useChainId } from 'wagmi';
 import { ProjectDetailData, DonorData } from '@/service/project';
-import { ProjectChainInfo } from '@/components/case-cards';
 import { getChainInfo, getScanUrl } from '@/utils/chain-info';
+import dayjs from 'dayjs';
+import { formatCurrency } from '@/utils/currency';
 
 interface NetworkAddress {
   name: string;
@@ -110,7 +110,8 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
                       className="border-b border-white/5 hover:bg-white/5 transition-colors"
                     >
                       <td className="py-4 px-2">
-                        {isValidDate ? createdAt.toLocaleDateString() : t('table.invalidDate')}
+                        {dayjs(createdAt).format('YY/MM/DD HH:mm:ss')}
+                        {/* {isValidDate ? createdAt.toLocaleDateString() : t('table.invalidDate')} */}
                       </td>
                       <td className="py-4 px-2 font-mono text-sm">
                         {address.length > 10 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address}
@@ -130,12 +131,7 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
                         </div>
                       </td>
                       <td className="py-4 px-2 font-semibold">
-                        ${donation?.amount 
-                          ? new Intl.NumberFormat('en-US', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            }).format(Number(donation.amount))
-                          : '0.00'}
+                        {formatCurrency(donation?.amount)}
                       </td>
                     </motion.tr>
                   );

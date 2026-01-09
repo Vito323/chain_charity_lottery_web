@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
+import { formatCurrency } from '@/utils/currency';
 
 interface LotteryWithdrawModalProps {
   isOpen: boolean;
@@ -22,14 +23,7 @@ const LotteryWithdrawModal: React.FC<LotteryWithdrawModalProps> = ({
   const tCommon = useTranslations('common');
   const { isConnected, address } = useAccount();
   const [isProcessing, setIsProcessing] = React.useState(false);
-
-  // 格式化金额，保留5位小数
-  const formatAmount = (amount: string): string => {
-    const numAmount = parseFloat(amount);
-    if (isNaN(numAmount)) return '0.000000';
-    return numAmount.toFixed(6);
-  };
-
+  
   // 当Modal关闭时重置所有状态
   React.useEffect(() => {
     if (!isOpen) {
@@ -103,7 +97,7 @@ const LotteryWithdrawModal: React.FC<LotteryWithdrawModalProps> = ({
                   {t('modal.amount')}
                 </div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {formatAmount(withdrawAmount)} USDT
+                  {formatCurrency(withdrawAmount, '', 6)} USDT
                 </div>
               </div>
             </div>

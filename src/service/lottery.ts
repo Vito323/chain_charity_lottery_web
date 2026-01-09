@@ -1,6 +1,5 @@
 import { action } from "./provider";
 
-
 export interface LotterySeries {
   id: number;
   seriesName: string;
@@ -21,10 +20,9 @@ export interface LotterySeries {
 
 export interface LotteryConfig {
   nextDrawTime: number;
-  nextDrawTimestring: string;
-  total: string;
+  nextDrawTimeString: string;
+  nextDrawLotteryTotal: string;
 }
-
 
 export interface mintPending {
   dna: string;
@@ -38,46 +36,60 @@ export interface mintPending {
 export interface LotteryHistory {
   id: number;
   dna: string;
-  numbers: string;
-  colors: string;
-  total: number;
+  threshold: string;
+  total: string;
+  winnerCount: number;
   createdAt: string;
-  lotteryDrawTickets: LotterySeries[];
+  drawLotteryTxHash: string;
+  batchUpdateUserWithdrawableAmountTxHash: string;
+  lotteryDrawTickets: {
+    ticket: {
+      id: number;
+      dna: string;
+      ownerId: string;
+    };
+    reward: string;
+  }[];
 }
 
-export const getLotteryConfig = () => action<LotteryConfig>({
-  url: `/lottery`,
-  method: "GET",
-});
+export const getLotteryConfig = () =>
+  action<LotteryConfig>({
+    url: `/lottery`,
+    method: "GET",
+  });
 
+export const getLotteryTickets = () =>
+  action<LotterySeries[]>({
+    url: `/lottery/series`,
+    method: "GET",
+  });
 
-export const getLotteryTickets = () => action<LotterySeries[]>({
-  url: `/lottery/series`,
-  method: "GET",
-});
+export const mintPending = (seriesId: number, to: string) =>
+  action<mintPending>({
+    url: `/lottery/mint-pending`,
+    method: "POST",
+    data: {
+      seriesId,
+      to,
+    },
+  });
 
+export const mintLotteryTicket = (dna: string, txHash: string) =>
+  action<void>({
+    url: `/lottery/mint`,
+    method: "POST",
+    data: {
+      dna,
+      txHash,
+    },
+  });
 
-export const mintPending = (seriesId: number, to: string) => action<mintPending>({
-  url: `/lottery/mint-pending`,
-  method: "POST",
-  data: {
-    seriesId,
-    to,
-  },
-});
-
-
-export const mintLotteryTicket = (dna: string, txHash: string) => action<void>({
-  url: `/lottery/mint`,
-  method: "POST",
-  data: {
-    dna,
-    txHash,
-  },
-});
-
-
-export const getLotteryHistory = () => action<LotteryHistory[]>({
-  url: `/lottery/history`,
-  method: "GET",
-});
+export const getLotteryHistory = (page: number, pageSize: number) =>
+  action<LotteryHistory[]>({
+    url: `/lottery/history`,
+    method: "GET",
+    params: {
+      page,
+      pageSize,
+    },
+  });
