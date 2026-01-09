@@ -37,7 +37,7 @@ export interface DonorData {
   txHash: string;
   timestamp: number;
   token: string;
-  total: string;
+  amount: string;
 }
 
 export interface TracksData {
