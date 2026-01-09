@@ -434,7 +434,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                           {t('address')}
                         </th>
                         <th className="px-4 md:px-6 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
-                          VRF
+                          DNA
                         </th>
                       </tr>
                     </thead>
