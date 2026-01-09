@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { TabPanel } from "@/components/tab";
 import { ProjectData, queryProjects } from "@/service/project";
 import ProjectCard from "../project-card";
@@ -12,6 +13,7 @@ interface ProjectListProps {
 }
 
 const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
+  const t = useTranslations('projects.list');
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState<ProjectData[]>([]);
   const [error, setError] = React.useState<string | null>(null);
@@ -28,11 +30,11 @@ const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
       }
     } catch (error) {
       console.error(error);
-      setError('Failed to load data, please try again later');
+      setError(t('error.message'));
     } finally {
       setLoading(false);
     }
-  }, [categoryId]);
+  }, [categoryId, t]);
 
   const handleRetry = React.useCallback(() => {
     setRetryCount(prev => prev + 1);
@@ -46,7 +48,7 @@ const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
   // Content skeleton screen
   const ContentSkeleton = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-8">
-      {[1, 2, 3, 4, 5, 6].map((_, index) => (
+      {[1, 2, 3].map((_, index) => (
         <div key={index} className="stalwart-skeleton-card"></div>
       ))}
     </div>
@@ -62,14 +64,14 @@ const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
           <line x1="9" y1="9" x2="15" y2="15"/>
         </svg>
       </div>
-      <h4 className="stalwart-error-title">Load Failed</h4>
+      <h4 className="stalwart-error-title">{t('error.title')}</h4>
       <p className="stalwart-error-message">{error}</p>
       <button 
         className="stalwart-retry-btn"
         onClick={handleRetry}
         disabled={loading}
       >
-        {loading ? 'Retrying...' : 'Reload'}
+        {loading ? t('error.retrying') : t('error.reload')}
       </button>
     </div>
   );
@@ -84,8 +86,8 @@ const ProjectList = ({ activeTab, index, categoryId }: ProjectListProps) => {
           <line x1="12" y1="22.08" x2="12" y2="12"/>
         </svg>
       </div>
-      <h4 className="stalwart-empty-title">No Projects Found</h4>
-      <p className="stalwart-empty-message">There are no projects in this category yet.</p>
+      <h4 className="stalwart-empty-title">{t('empty.title')}</h4>
+      <p className="stalwart-empty-message">{t('empty.message')}</p>
     </div>
   );
 

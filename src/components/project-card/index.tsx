@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useRouter } from "next/navigation";
+import "dayjs/locale/zh-cn";
+import "dayjs/locale/en";
+import { useTranslations, useLocale } from "next-intl";
+import { Link, useRouter } from "@/i18n/navigation";
 import { ProjectData } from "@/service/project";
 import { formatCurrency } from "@/utils/currency";
 import "./project-card.scss";
@@ -43,10 +45,39 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   animationDelay = 0,
 }) => {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('projects.card');
 
   const [, setCurrentProjectFundInfo] =
     React.useState<ProjectChainInfo | null>(null);
   const [isHovered, setIsHovered] = React.useState(false);
+
+  // Configure dayjs locale based on current locale
+  React.useEffect(() => {
+    if (locale === 'zh') {
+      dayjs.locale('zh-cn');
+    } else {
+      dayjs.locale('en');
+    }
+  }, [locale]);
+
+  // Cache project data to localStorage before navigation
+  const cacheProjectData = React.useCallback(() => {
+    try {
+      const projectData: ProjectData = {
+        id,
+        name,
+        description,
+        image,
+        createdAt,
+        donationCount,
+        totalDonated,
+      };
+      localStorage.setItem(`project_${id}`, JSON.stringify(projectData));
+    } catch (error) {
+      console.error('Failed to cache project data:', error);
+    }
+  }, [id, name, description, image, createdAt, donationCount, totalDonated]);
 
   // NOTE: 当前项目列表接口没有返回目标金额，这里用一个
   // 合理的上限做归一化，仅用于前端展示进度效果。
@@ -56,12 +87,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const progress = Math.max(0, Math.min(100, rawProgress));
 
   const handleCardClick = () => {
-    console.log("Card clicked:", id, name);
+    cacheProjectData();
     router.push(`/project/${id}`);
   };
 
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    cacheProjectData();
   };
 
 
@@ -124,7 +156,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               className="stalwart-donate-btn-inline"
               onClick={handleButtonClick}
             >
-              <span>Donate Now</span>
+              <span>{t('donateNow')}</span>
             </Link>
           </motion.div>
         </div>
@@ -132,10 +164,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Meta info */}
         <div className="stalwart-card-meta">
           <span className="stalwart-meta-updated">
-            Updated {dayjs(createdAt).fromNow()}
+            {t('updated')} {dayjs(createdAt).fromNow()}
           </span>
           <span className="stalwart-meta-contributors">
-            {donationCount || 0} contributors
+            {donationCount || 0} {t('contributors')}
           </span>
         </div>
 
@@ -152,14 +184,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Footer: amount + progress */}
         <div className="stalwart-card-footer">
           <div className="stalwart-footer-block">
-            <span className="stalwart-footer-label">Total Raised</span>
+            <span className="stalwart-footer-label">{t('totalRaised')}</span>
             <span className="stalwart-footer-value">
               {formatCurrency(totalDonated)} USDT
             </span>
           </div>
 
           <div className="stalwart-footer-block stalwart-footer-block-right">
-            <span className="stalwart-footer-label">Funding Progress</span>
+            <span className="stalwart-footer-label">{t('fundingProgress')}</span>
             <span className="stalwart-footer-value">
               {progress.toFixed(0)}%
             </span>

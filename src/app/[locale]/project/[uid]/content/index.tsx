@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 import React from "react";
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef, useState, useCallback, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef, useState, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import TabContent from "./tab-content/index";
 import Covers from "./cover/index";
 import Fundraising from "./fundraising/index";
-import { projectDetail, ProjectDetailData } from "@/service/project";
+import { projectDetail, ProjectDetailData, ProjectData } from "@/service/project";
 import { ProjectChainInfo } from "@/components/case-cards";
 import { useAccount, useChainId } from "wagmi";
 
@@ -19,15 +19,16 @@ interface ShowcaseProps {
 
 const Showcase = ({ uid }: ShowcaseProps) => {
   const router = useRouter();
-  const t = useTranslations('projectDetail');
+  const t = useTranslations("projectDetail");
   const { isConnected } = useAccount();
   const chainId = useChainId();
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-  
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   // 状态管理 - 延用原有逻辑
   const [detail, setDetail] = useState<ProjectDetailData>();
-  const [currentProjectInfo, setCurrentProjectFundInfo] = useState<ProjectChainInfo | null>(null);
+  const [currentProjectInfo, setCurrentProjectFundInfo] =
+    useState<ProjectChainInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // 获取项目详情 - 延用原有逻辑
@@ -39,7 +40,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
         setDetail(response.data);
       }
     } catch (error) {
-      console.error('Failed to fetch project details:', error);
+      console.error("Failed to fetch project details:", error);
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +68,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut' as const,
+        ease: "easeOut" as const,
       },
     },
   };
@@ -88,7 +89,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
             transition={{
               duration: 8,
               repeat: Infinity,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
           <motion.div
@@ -100,7 +101,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
             transition={{
               duration: 10,
               repeat: Infinity,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             }}
           />
         </div>
@@ -120,29 +121,29 @@ const Showcase = ({ uid }: ShowcaseProps) => {
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-sm">{t('badge')}</span>
+                <span className="text-sm">{t("badge")}</span>
               </motion.div>
-              
+
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] tracking-tight drop-shadow-[0_3px_16px_rgba(0,0,0,0.6)] mb-6">
                 <motion.span
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.6 }}
-                  transition={{ duration: 0.7, ease: 'easeOut' }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
                 >
-                  {t('title')}
+                  {t("title")}
                 </motion.span>
               </h1>
-              
+
               <motion.p
                 className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
               >
                 {detail?.name || "--"}
               </motion.p>
@@ -176,7 +177,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
                   transition={{
                     duration: 4,
                     repeat: Infinity,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                   }}
                 />
                 <motion.div
@@ -188,12 +189,12 @@ const Showcase = ({ uid }: ShowcaseProps) => {
                   transition={{
                     duration: 6,
                     repeat: Infinity,
-                    ease: 'easeInOut',
+                    ease: "easeInOut",
                   }}
                 />
 
                 {/* Glow effect */}
-                <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-fuchsia-600/20" />
+                <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md bg-linear-to-r from-purple-600/20 via-pink-600/20 to-fuchsia-600/20" />
               </div>
             </motion.div>
 
@@ -210,7 +211,22 @@ const Showcase = ({ uid }: ShowcaseProps) => {
                 contributors={detail?.donationCount || 0}
                 projectId={uid}
                 onDonate={() => {
-                  router.push(`/donate/${uid}/${detail?.name || ""}`);
+                  // Get project name from cache first, fallback to detail
+                  let projectName = "";
+                  try {
+                    const cachedData = localStorage.getItem(`project_${uid}`);
+                    if (cachedData) {
+                      const parsedData: ProjectData = JSON.parse(cachedData);
+                      projectName = parsedData.name || "";
+                    }
+                  } catch (error) {
+                    console.error("Failed to read cached project data:", error);
+                  }
+                  // Fallback to detail if cache doesn't have name
+                  if (!projectName && detail?.name) {
+                    projectName = detail.name;
+                  }
+                  router.push(`/donate/${uid}/${projectName}`);
                 }}
               />
             </motion.div>
@@ -221,10 +237,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
       {/* 标签页内容 - 延用 TabContent 的布局逻辑 */}
       <section className="py-20 bg-linear-to-b from-slate-900 to-slate-950">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <TabContent 
-            projectInfo={detail} 
-            uid={uid} 
-          />
+          <TabContent projectInfo={detail} uid={uid} />
         </div>
       </section>
     </>

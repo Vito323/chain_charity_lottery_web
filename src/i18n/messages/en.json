@@ -233,6 +233,25 @@
       "title": "kind-hearted donors have contributed so far",
       "subtitle": "Recent on-chain donations from our global community.",
       "donated": "Donated"
+    },
+    "list": {
+      "error": {
+        "title": "Load Failed",
+        "message": "Failed to load data, please try again later",
+        "retrying": "Retrying...",
+        "reload": "Reload"
+      },
+      "empty": {
+        "title": "No Projects Found",
+        "message": "There are no projects in this category yet."
+      }
+    },
+    "card": {
+      "donateNow": "Donate Now",
+      "updated": "Updated",
+      "contributors": "contributors",
+      "totalRaised": "Total Raised",
+      "fundingProgress": "Funding Progress"
     }
   },
   "lottery": {
@@ -788,6 +807,7 @@
     "walletAddress": "Wallet Address",
     "selectToken": "Select Token",
     "amount": "Amount",
+    "balance": "Balance",
     "totalDonation": "Total Donation",
     "donateNow": "Donate Now",
     "donationSuccessful": "Donation Successful!",

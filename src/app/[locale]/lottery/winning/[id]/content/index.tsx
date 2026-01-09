@@ -318,9 +318,9 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
           </div>
 
           {/* Draw Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"> */}
             {/* Digital Matrix */}
-            <motion.div
+            {/* <motion.div
               variants={itemVariants}
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
@@ -328,10 +328,10 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
               <div className="text-lg md:text-xl font-bold text-white font-mono">
                 {winningData.digitalMatrix}
               </div>
-            </motion.div>
+            </motion.div> */}
 
             {/* Color Genes */}
-            <motion.div
+            {/* <motion.div
               variants={itemVariants}
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
             >
@@ -345,7 +345,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                   />
                 ))}
               </div>
-            </motion.div>
+            </motion.div> */}
 
             {/* Image Symbols */}
             {/* <motion.div
@@ -367,7 +367,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                 ))}
               </div>
             </motion.div> */}
-          </div>
+          {/* </div> */}
 
           {/* Timestamp */}
           <motion.div

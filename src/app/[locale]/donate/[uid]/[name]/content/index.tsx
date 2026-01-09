@@ -186,7 +186,6 @@ const Donate = ({ uid, name }: DonateProps) => {
       try {
         // 确保 loading 状态已设置（可能在 handleAmountChange 中已设置）
         setIsLoadingReward(true);
-
         // 使用 Promise.all 同时调用两个接口
         const [exchangeResult, proportionResponse] = await Promise.all([
           calculateExchangeAmount(amountToFetch, 18),

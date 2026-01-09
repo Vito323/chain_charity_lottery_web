@@ -42,7 +42,7 @@ const Fundraising: React.FC<FundraisingProps> = ({
       <div className="mb-6">
         <div className="bg-white/5 rounded-xl p-3 border border-white/10">
           <div className="flex items-start gap-2 text-sm text-white/70">
-            <span className="flex-shrink-0">{t('projectId')}:</span>
+            <span className="shrink-0">{t('projectId')}:</span>
             <span className="font-mono text-xs break-all">{projectId}</span>
           </div>
         </div>

@@ -66,7 +66,7 @@ export const TokenSelection: React.FC<TokenSelectionProps> = ({
                 </div>
                 {!isBalanceLoading && (
                   <p className="text-xs text-white/60 mt-1">
-                    {tCommon('labels.balance', { balance: usdtBalance, symbol: "USDT" })}
+                    {tCommon('labels.balance', { balance: Number(usdtBalance || 0).toFixed(6), symbol: "USDT" })}
                   </p>
                 )}
               </div>

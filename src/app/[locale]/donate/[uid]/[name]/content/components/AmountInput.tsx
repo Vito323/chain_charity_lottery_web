@@ -36,12 +36,33 @@ export const AmountInput: React.FC<AmountInputProps> = ({
     return new BigNumber(usdtBalance);
   }, [usdtBalance]);
 
-  // 处理金额输入变化，限制不超过余额
+  // 处理金额输入变化，限制不超过余额，最大两位小数
   const handleAmountChangeWithLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     // 如果输入为空，直接更新
     if (!inputValue || inputValue === '') {
       onAmountChange(e);
+      return;
+    }
+
+    // 限制最多两位小数
+    const decimalRegex = /^\d*\.?\d{0,2}$/;
+    if (!decimalRegex.test(inputValue)) {
+      // 如果不符合两位小数格式，截断为两位小数
+      const parts = inputValue.split('.');
+      if (parts.length === 2 && parts[1].length > 2) {
+        const truncatedValue = `${parts[0]}.${parts[1].substring(0, 2)}`;
+        const truncatedEvent = {
+          ...e,
+          target: {
+            ...e.target,
+            value: truncatedValue,
+          },
+        } as React.ChangeEvent<HTMLInputElement>;
+        onAmountChange(truncatedEvent);
+        return;
+      }
+      // 如果格式不合法（比如包含多个小数点），不更新
       return;
     }
 
@@ -54,12 +75,12 @@ export const AmountInput: React.FC<AmountInputProps> = ({
 
     // 如果有余额限制，检查是否超过余额
     if (tokenBalance && inputBN.isGreaterThan(tokenBalance)) {
-      // 如果超过余额，设置为余额值
+      // 如果超过余额，设置为余额值（保留两位小数）
       const maxAmountEvent = {
         ...e,
         target: {
           ...e.target,
-          value: tokenBalance.toFixed(),
+          value: tokenBalance.toFixed(2),
         },
       } as React.ChangeEvent<HTMLInputElement>;
       onAmountChange(maxAmountEvent);
@@ -104,7 +125,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
         {t('amount')}
         {tokenBalance && (
           <span className="ml-2 text-xs text-white/60 font-normal">
-            (Balance: {tokenBalance.toFixed()} USDT)
+            ({t('balance')}: {Number(tokenBalance?.toFixed() || 0).toFixed(6)} USDT)
           </span>
         )}
       </label>
@@ -162,7 +183,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
               ? 'border-red-500/50 focus:ring-red-500/50'
               : 'border-white/10 focus:ring-purple-500/50'
           }`}
-          placeholder={`Other Amount (Max: ${tokenBalance?.toFixed() || '0'})`}
+          placeholder={`Other Amount (Max: ${Number(tokenBalance?.toFixed() || 0).toFixed(2)} USDT)`}
           value={amount}
           onChange={handleAmountChangeWithLimit}
           disabled={!isConnected || isProcessing}
@@ -178,7 +199,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
         )}
         {isAmountExceeded && tokenBalance && (
           <p className="mt-2 text-sm text-red-400">
-            {tCommon('validation.insufficientBalanceMax', { max: tokenBalance.toFixed() })}
+            {tCommon('validation.insufficientBalanceMax', { max: Number(tokenBalance?.toFixed() || 0).toFixed(2) })}
           </p>
         )}
       </div>

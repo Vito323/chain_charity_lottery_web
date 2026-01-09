@@ -155,6 +155,25 @@
       "title": "位善良的捐赠者已参与贡献",
       "subtitle": "来自我们全球社区的近期链上捐赠。",
       "donated": "捐赠了"
+    },
+    "list": {
+      "error": {
+        "title": "加载失败",
+        "message": "数据加载失败，请稍后重试",
+        "retrying": "重试中...",
+        "reload": "重新加载"
+      },
+      "empty": {
+        "title": "未找到项目",
+        "message": "此分类中暂无项目。"
+      }
+    },
+    "card": {
+      "donateNow": "立即捐赠",
+      "updated": "更新于",
+      "contributors": "位捐赠者",
+      "totalRaised": "总筹集",
+      "fundingProgress": "筹资进度"
     }
   },
   "lottery": {
@@ -710,6 +729,7 @@
     "walletAddress": "钱包地址",
     "selectToken": "选择代币",
     "amount": "金额",
+    "balance": "余额",
     "totalDonation": "总捐赠额",
     "donateNow": "立即捐赠",
     "donationSuccessful": "捐赠成功！",

@@ -50,7 +50,7 @@ const ProjectsContent = () => {
         ))}
       </div>
       <div className="stalwart-skeleton-grid">
-        {[1, 2, 3, 4, 5, 6].map((_, index) => (
+        {[1, 2, 3].map((_, index) => (
           <div key={index} className="stalwart-skeleton-card"></div>
         ))}
       </div>
