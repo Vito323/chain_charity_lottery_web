@@ -268,7 +268,7 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
           </div>
 
           {/* Jackpot Section */}
-          <div className="text-center">
+          {/* <div className="text-center">
             <h3 className="text-xl md:text-2xl font-semibold text-white/80 mb-4">
               {t('jackpot.title')}
             </h3>
@@ -281,7 +281,7 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
                 t('jackpot.connectWallet')
               )}
             </div>
-          </div>
+          </div> */}
         </motion.div>
 
         {/* Withdraw Amount Section */}
