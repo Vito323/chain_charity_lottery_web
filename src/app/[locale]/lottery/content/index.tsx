@@ -281,9 +281,6 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
                 t('jackpot.connectWallet')
               )}
             </div>
-            <p className="text-white/60 text-sm">
-              {t('jackpot.description')}
-            </p>
           </div>
         </motion.div>
 
