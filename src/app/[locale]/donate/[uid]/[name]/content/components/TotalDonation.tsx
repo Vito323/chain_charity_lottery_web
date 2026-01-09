@@ -29,7 +29,7 @@ export const TotalDonation: React.FC<TotalDonationProps> = ({
       <div className="flex justify-between items-center p-4 bg-linear-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
         <span className="text-white/80 font-medium">{t('totalDonation')}</span>
         <span className="text-white font-bold text-lg">
-          {amount ? `$${amount}` : "---"}
+          {amount ? `$${Number(amount).toFixed(2)}` : "---"}
         </span>
       </div>
     </div>

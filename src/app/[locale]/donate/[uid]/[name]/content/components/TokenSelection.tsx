@@ -27,12 +27,10 @@ export const TokenSelection: React.FC<TokenSelectionProps> = ({
       return null;
     }
 
-
-
     return {
       symbol: "USDT",
       name: "Tether USD",
-      decimals: 6,
+      decimals: 18,
       address: usdtAddress,
       balance: usdtBalance,
       displayBalance: usdtBalance,

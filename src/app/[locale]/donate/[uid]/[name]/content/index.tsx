@@ -189,18 +189,14 @@ const Donate = ({ uid, name }: DonateProps) => {
 
         // 使用 Promise.all 同时调用两个接口
         const [exchangeResult, proportionResponse] = await Promise.all([
-          calculateExchangeAmount(amountToFetch, 6),
+          calculateExchangeAmount(amountToFetch, 18),
           queryProjectProportion(uid, amountToFetch),
         ]);
 
         // 处理奖励金额
         //TODO 美金精度暂时
-        const rewardValue = formatUnits(exchangeResult, 6);
-        const rewardBN = new BigNumber(rewardValue);
-        const formattedReward = rewardBN
-          .decimalPlaces(6, BigNumber.ROUND_DOWN)
-          .toString();
-        setRewardAmount(formattedReward);
+        const rewardValue = formatUnits(exchangeResult, 18);
+        setRewardAmount(rewardValue);
 
         // 处理比例数据
         if (proportionResponse.ok) {
@@ -345,14 +341,14 @@ const Donate = ({ uid, name }: DonateProps) => {
         }
 
         // 获取代币精度（从 masterContract 获取，确保与合约期望的一致）
-        let tokenDecimals = 6; // 默认值
+        let tokenDecimals = 18; // 默认值
         try {
           const decimals = await getDonationTokenDecimals();
           if (decimals && decimals > 0) {
             tokenDecimals = decimals;
           }
         } catch (error) {
-          console.warn("获取代币精度失败，使用默认值 6:", error);
+          console.warn("获取代币精度失败，使用默认值 18:", error);
         }
         // 添加调试信息
         console.log("捐赠参数:", {

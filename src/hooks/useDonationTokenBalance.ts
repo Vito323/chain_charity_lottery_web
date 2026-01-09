@@ -25,7 +25,7 @@ const ERC20_ABI = [
 ] as const;
 
 // USDT小数位数
-const USDT_DECIMALS = 6;
+const USDT_DECIMALS = 18;
 
 interface BalanceOptions {
   tokenAddress?: `0x${string}`;

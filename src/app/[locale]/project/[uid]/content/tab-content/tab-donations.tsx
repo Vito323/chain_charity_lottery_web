@@ -130,7 +130,7 @@ const TabDonations = ({ projectInfo }: TabDonationsProps) => {
                         </div>
                       </td>
                       <td className="py-4 px-2 font-semibold">
-                        {donation?.total 
+                        ${donation?.total 
                           ? new Intl.NumberFormat('en-US', {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
