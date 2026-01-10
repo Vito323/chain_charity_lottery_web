@@ -36,6 +36,7 @@ export default async function RootLayout({ children }: Props) {
             <Providers>
               {children}
               <Analytics />
+              <SpeedInsights />
               </Providers>
           </NextIntlClientProvider>
         </div>
