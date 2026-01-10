@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { TokenInfo } from "@/hooks/useDonationForm";
 import { useAccount, useChainId } from "wagmi";
 import { useDonationContract } from "@/hooks/useDonationContract";
@@ -69,6 +68,7 @@ const Donate = ({ uid, name }: DonateProps) => {
   >(null);
   const [proportionData, setProportionData] =
     React.useState<ProjectProportionData | null>(null);
+  const requestIdRef = React.useRef(0);
 
   // 处理USDT代币变化（支持null）
   const handleTokenChange = React.useCallback((token: TokenInfo | null) => {
@@ -165,7 +165,6 @@ const Donate = ({ uid, name }: DonateProps) => {
   // 使用防抖处理金额
   const debouncedAmount = useDebounce(amount, 800);
 
-  // 同时获取奖励金额和项目比例数据（使用 Promise.all）
   const fetchRewardAndProportion = React.useCallback(
     async (amountToFetch: string) => {
       // 如果没有有效的金额，清除数据并返回
@@ -177,41 +176,62 @@ const Donate = ({ uid, name }: DonateProps) => {
         return;
       }
 
-      // 如果 ecosystemTokenDecimals 还未获取，保持 loading 状态，等待 decimals 获取完成
       if (!ecosystemTokenDecimals) {
-        // 保持 loading 状态，不执行计算
         return;
       }
 
-      try {
-        // 确保 loading 状态已设置（可能在 handleAmountChange 中已设置）
-        setIsLoadingReward(true);
-        // 使用 Promise.all 同时调用两个接口
-        const [exchangeResult, proportionResponse] = await Promise.all([
-          calculateExchangeAmount(amountToFetch, 18),
-          queryProjectProportion(uid, amountToFetch),
-        ]);
+      const currentRequestId = ++requestIdRef.current;
+      setIsLoadingReward(true);
+      let rewardCompleted = false;
+      let proportionCompleted = false;
 
-        // 处理奖励金额
-        const rewardValue = formatUnits(exchangeResult, 18);
-        setRewardAmount(rewardValue);
-
-        // 处理比例数据
-        if (proportionResponse.ok) {
-          setProportionData(proportionResponse.data);
-        } else {
-          setProportionData(null);
+      const checkAndCloseLoading = () => {
+        if (currentRequestId === requestIdRef.current && rewardCompleted && proportionCompleted) {
+          setIsLoadingReward(false);
+          setAmountChanged(false);
         }
-      } catch (error) {
-        console.error("获取奖励和比例数据失败:", error);
-        setRewardAmount(null);
-        setProportionData(null);
-      } finally {
-        setIsLoadingReward(false);
-        setAmountChanged(false);
-      }
+      };
+
+      (async () => {
+        try {
+          const exchangeResult = await calculateExchangeAmount(amountToFetch, 18);
+          if (currentRequestId === requestIdRef.current) {
+            const rewardValue = formatUnits(exchangeResult, 18);
+            setRewardAmount(rewardValue);
+          }
+        } catch (error) {
+          console.error("获取奖励金额失败:", error);
+          if (currentRequestId === requestIdRef.current) {
+            setRewardAmount(null);
+          }
+        } finally {
+          rewardCompleted = true;
+          checkAndCloseLoading();
+        }
+      })();
+
+      (async () => {
+        try {
+          const proportionResponse = await queryProjectProportion(uid, amountToFetch);
+          if (currentRequestId === requestIdRef.current) {
+            if (proportionResponse.ok) {
+              setProportionData(proportionResponse.data);
+            } else {
+              setProportionData(null);
+            }
+          }
+        } catch (error) {
+          console.error("获取项目比例数据失败:", error);
+          if (currentRequestId === requestIdRef.current) {
+            setProportionData(null);
+          }
+        } finally {
+          proportionCompleted = true;
+          checkAndCloseLoading();
+        }
+      })();
     },
-    [calculateExchangeAmount, uid]
+    [calculateExchangeAmount, uid, ecosystemTokenDecimals]
   );
 
   // 当防抖后的金额变化或 ecosystemTokenDecimals 获取完成时，获取数据
