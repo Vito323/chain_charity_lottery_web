@@ -9,6 +9,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { Providers } from "./providers";
 import { getLocale } from 'next-intl/server';
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const sora = Sora({
   variable: "--font-sora",
