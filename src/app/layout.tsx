@@ -33,7 +33,10 @@ export default async function RootLayout({ children }: Props) {
       <body className={`${sora.variable} antialiased font-sans`}>
         <div className="App" id="scrool">
           <NextIntlClientProvider locale={locale}>
-            <Providers>{children}</Providers>
+            <Providers>
+              {children}
+              <Analytics />
+              </Providers>
           </NextIntlClientProvider>
         </div>
       </body>
