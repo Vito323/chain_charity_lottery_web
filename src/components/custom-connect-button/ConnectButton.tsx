@@ -38,8 +38,8 @@ const CustomConnectButton = () => {
 
       userConnect(address)
         .then((result) => {
-          // 如果返回 false，则断开连接
-          if (!result) {
+          // 如果返回 false，则断开连接       
+          if (!result.data) {
             disconnect();
             hasCalledConnectRef.current = null; // 重置，允许重试
           }

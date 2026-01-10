@@ -71,17 +71,6 @@ const UserDashboard = () => {
       description: t('stats.totalNFTs.description')
     },
     {
-      label: t('stats.collections.label'),
-      value: isConnected ? Math.ceil(totalCount / 10) : '--',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-        </svg>
-      ),
-      color: 'from-blue-500 to-cyan-500',
-      description: t('stats.collections.description')
-    },
-    {
       label: t('stats.walletAddress.label'),
       value: isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : t('stats.notConnected'),
       icon: (
@@ -174,7 +163,7 @@ const UserDashboard = () => {
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
+            className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-16"
           >
             {userStats.map((stat, index) => (
               <motion.div

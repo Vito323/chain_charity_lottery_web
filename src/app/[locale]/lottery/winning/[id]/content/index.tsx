@@ -290,75 +290,105 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                       </thead>
                       <tbody>
                         {lotteryHistory.lotteryDrawTickets.map(
-                          (drawTicket, index) => (
-                            <motion.tr
-                              key={index}
-                              variants={itemVariants}
-                              className="border-b border-white/10 last:border-b-0 hover:bg-white/8 transition-colors duration-150"
-                            >
-                              <td className="px-3 md:px-4 py-3 md:py-4 text-white/80 text-sm md:text-base">
-                                {drawTicket.ticket.id}
-                              </td>
-                              <td className="px-3 md:px-4 py-3 md:py-4 text-white font-mono text-sm md:text-base">
-                                {drawTicket.ticket?.ownerId
-                                  ? drawTicket.ticket.ownerId.length > 14
-                                    ? `${drawTicket.ticket.ownerId.slice(
-                                        0,
-                                        6
-                                      )}...${drawTicket.ticket.ownerId.slice(
-                                        -8
-                                      )}`
-                                    : drawTicket.ticket.ownerId
-                                  : "-"}
-                              </td>
-                              <td className="px-3 md:px-4 py-3 md:py-4 text-white text-sm md:text-base">
-                                {drawTicket.reward
-                                  ? formatCurrency(drawTicket.reward, "", 6)
-                                  : "-"} USDT
-                              </td>
-                              <td className="px-3 md:px-4 py-3 md:py-4">
-                                {drawTicket.ticket?.dna ? (
-                                  <div className="flex items-center gap-2 relative">
-                                    <span className="text-white font-mono text-sm md:text-base">
-                                      {drawTicket.ticket.dna.length > 14
-                                        ? `${drawTicket.ticket.dna.slice(
-                                            0,
-                                            6
-                                          )}...${drawTicket.ticket.dna.slice(
-                                            -8
-                                          )}`
-                                        : drawTicket.ticket.dna}
+                          (drawTicket, index) => {
+                            const isCurrentWallet = address && drawTicket.ticket?.ownerId && 
+                              address.toLowerCase() === drawTicket.ticket.ownerId.toLowerCase();
+                            
+                            return (
+                              <motion.tr
+                                key={index}
+                                variants={itemVariants}
+                                className={`border-b last:border-b-0 transition-all duration-300 ${
+                                  isCurrentWallet
+                                    ? "bg-linear-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 border-emerald-400/40 hover:from-emerald-500/30 hover:via-teal-500/30 hover:to-emerald-500/30 shadow-lg shadow-emerald-500/20 relative"
+                                    : "border-white/10 hover:bg-white/8"
+                                }`}
+                              >
+                                {/* {isCurrentWallet && (
+                                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-linear-to-b from-emerald-400 to-teal-400 rounded-r-full"></div>
+                                )} */}
+                                <td className="px-3 md:px-4 py-3 md:py-4 text-white/80 text-sm md:text-base relative">
+                                  <div className="flex items-center gap-2">
+                                    <span className={isCurrentWallet ? "text-white font-semibold" : ""}>
+                                      {drawTicket.ticket.id}
                                     </span>
-                                    <CopyButton
-                                      text={drawTicket.ticket.dna}
-                                      tooltipPosition="top"
-                                    />
                                   </div>
-                                ) : (
-                                  <span className="text-white font-mono text-sm md:text-base">
-                                    -
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-3 md:px-4 py-3 md:py-4">
-                                {drawTicket.ticket?.dna ? (
-                                  <button
-                                    onClick={() => {
-                                      setPreviewDna(drawTicket.ticket.dna);
-                                      setPreviewModalOpen(true);
-                                    }}
-                                    className="inline-flex items-center justify-center px-2 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-semibold text-white bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-full transition-all duration-200 cursor-pointer shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 active:scale-95"
-                                    title={t("previewNFT")}
-                                  >
-                                    <i className="fa fa-eye text-xs md:text-sm"></i>
-                                    <span className="hidden md:inline ml-1.5 md:ml-2">{t("previewNFT")}</span>
-                                  </button>
-                                ) : (
-                                  <span className="text-white/40 text-sm md:text-base">-</span>
-                                )}
-                              </td>
-                            </motion.tr>
-                          )
+                                </td>
+                                <td className="px-3 md:px-4 py-3 md:py-4 font-mono text-sm md:text-base relative">
+                                  <div className="flex items-center gap-2">
+                                    <span className={isCurrentWallet ? "text-white font-semibold bg-emerald-500/10 px-2 py-1 rounded-md" : "text-white"}>
+                                      {drawTicket.ticket?.ownerId
+                                        ? drawTicket.ticket.ownerId.length > 14
+                                          ? `${drawTicket.ticket.ownerId.slice(
+                                              0,
+                                              6
+                                            )}...${drawTicket.ticket.ownerId.slice(
+                                              -8
+                                            )}`
+                                          : drawTicket.ticket.ownerId
+                                        : "-"}
+                                    </span>
+                                    {isCurrentWallet && (
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-linear-to-r from-emerald-400 to-teal-400 text-white shadow-md">
+                                        <i className="fa fa-star text-[10px]"></i>
+                                        {/* YOU */}
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                                <td className={`px-3 md:px-4 py-3 md:py-4 text-sm md:text-base ${isCurrentWallet ? "text-white font-semibold" : "text-white"}`}>
+                                  {drawTicket.reward
+                                    ? formatCurrency(drawTicket.reward, "", 6)
+                                    : "-"} USDT
+                                </td>
+                                <td className="px-3 md:px-4 py-3 md:py-4">
+                                  {drawTicket.ticket?.dna ? (
+                                    <div className="flex items-center gap-2 relative">
+                                      <span className={`font-mono text-sm md:text-base ${isCurrentWallet ? "text-white font-semibold" : "text-white"}`}>
+                                        {drawTicket.ticket.dna.length > 14
+                                          ? `${drawTicket.ticket.dna.slice(
+                                              0,
+                                              6
+                                            )}...${drawTicket.ticket.dna.slice(
+                                              -8
+                                            )}`
+                                          : drawTicket.ticket.dna}
+                                      </span>
+                                      <CopyButton
+                                        text={drawTicket.ticket.dna}
+                                        tooltipPosition="top"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <span className={`font-mono text-sm md:text-base ${isCurrentWallet ? "text-white/60" : "text-white"}`}>
+                                      -
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-3 md:px-4 py-3 md:py-4">
+                                  {drawTicket.ticket?.dna ? (
+                                    <button
+                                      onClick={() => {
+                                        setPreviewDna(drawTicket.ticket.dna);
+                                        setPreviewModalOpen(true);
+                                      }}
+                                      className={`inline-flex items-center justify-center px-2 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-semibold text-white rounded-full transition-all duration-200 cursor-pointer active:scale-95 ${
+                                        isCurrentWallet
+                                          ? "bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 shadow-lg shadow-emerald-500/40 hover:shadow-emerald-500/60"
+                                          : "bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40"
+                                      }`}
+                                      title={t("previewNFT")}
+                                    >
+                                      <i className="fa fa-eye text-xs md:text-sm"></i>
+                                      <span className="hidden md:inline ml-1.5 md:ml-2">{t("previewNFT")}</span>
+                                    </button>
+                                  ) : (
+                                    <span className="text-white/40 text-sm md:text-base">-</span>
+                                  )}
+                                </td>
+                              </motion.tr>
+                            );
+                          }
                         )}
                       </tbody>
                     </table>
