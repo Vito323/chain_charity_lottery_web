@@ -28,6 +28,9 @@ const WithdrawPage = () => {
   // 获取可提现金额
   const fetchWithdrawAmount = useCallback(async () => {
     if (!isConnected || !address) {
+      setWithdrawAmount('0');
+      setError(null);
+      setIsLoading(false);
       return;
     }
 
