@@ -4,6 +4,7 @@ import { useDisconnect, useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
 import { formatAddress } from "./utils";
 import { TermsModal } from "./TermsModal";
 import { MobileBottomSheet } from "./MobileBottomSheet";
@@ -38,9 +39,11 @@ const CustomConnectButton = () => {
 
       userConnect(address)
         .then((result) => {
-          // 如果返回 false，则断开连接
+          // 如果返回 false，则断开连接并提示
           if (!result.data) {
+            toast.error(tCommon("errors.notInWhitelist"));
             disconnect();
+            setWithdrawAmount("0");
             hasCalledConnectRef.current = null; // 重置，允许重试
           }
         })

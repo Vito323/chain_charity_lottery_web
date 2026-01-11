@@ -43,7 +43,8 @@
       "withdrawFailed": "Withdraw failed",
       "gasIssue": "Transaction failed due to gas issues",
       "networkError": "Network error",
-      "serverError": "Server error"
+      "serverError": "Server error",
+      "notInWhitelist": "This wallet has no permission"
     },
     "terms": {
       "accept": "I have read and accepted the",
