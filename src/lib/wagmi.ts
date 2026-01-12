@@ -6,8 +6,8 @@ import {
 } from 'wagmi/chains';
 import { createConfig, http } from 'wagmi';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME;
-const projectId = process.env.NEXT_PUBLIC_APP_PROJECT_ID;
+const appName = process.env.NEXT_PUBLIC_APP_NAME!;
+const projectId = process.env.NEXT_PUBLIC_APP_PROJECT_ID!;
 
 const chains = [bsc] as const;
 
