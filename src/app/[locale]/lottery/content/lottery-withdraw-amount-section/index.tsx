@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { useMasterContract } from '@/hooks/useMasterContract';
 import { formatCurrency } from '@/utils/currency';
 import useGlobalStore from '@/store';
 import { queryWithdrawableAmount } from '@/service/lottery';
@@ -25,37 +24,61 @@ const WithdrawAmountSection: React.FC<WithdrawAmountSectionProps> = ({
   const router = useRouter();
   const t = useTranslations('lottery.withdraw');
   const tCommon = useTranslations('common');
-  const { getUserWithdrawableAmount } = useMasterContract();
-  
-  // 从store获取和设置可提现金额
   const withdrawAmountFromStore = useGlobalStore(state => state.withdrawAmount);
   const setWithdrawAmount = useGlobalStore(state => state.setWithdrawAmount);
-  
   const [isLoading, setIsLoading] = useState(false);
-  
-  // 用于跟踪是否已经在倒计时结束时刷新过
   const hasRefreshedOnCompleteRef = useRef(false);
   const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isFetchingRef = useRef(false);
+  const isMountedRef = useRef(true);
+  const fetchWithdrawAmountRef = useRef<(() => Promise<void>) | null>(null);
+  const isDrawCompleteRef = useRef(isDrawComplete);
+  
+  // 同步 isDrawComplete 到 ref
+  useEffect(() => {
+    isDrawCompleteRef.current = isDrawComplete;
+  }, [isDrawComplete]);
 
   // 获取可提现金额
   const fetchWithdrawAmount = useCallback(async () => {
     if (!isConnected || !address) {
       setWithdrawAmount('0');
+      setIsLoading(false);
+      return;
+    }
+    
+    if (isFetchingRef.current) {
       return;
     }
 
     try {
+      isFetchingRef.current = true;
       setIsLoading(true);
       const response = await queryWithdrawableAmount(address);
+      
+      if (!isMountedRef.current) {
+        return;
+      }
+      
       const value = response.data || '0';
       setWithdrawAmount(value);
     } catch (error) {
       console.error('Failed to fetch withdraw amount:', error);
-      setWithdrawAmount('0');
+      if (isMountedRef.current) {
+        setWithdrawAmount('0');
+      }
     } finally {
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
+      isFetchingRef.current = false;
     }
-  }, [isConnected, address, getUserWithdrawableAmount, setWithdrawAmount]);
+  }, [isConnected, address, setWithdrawAmount]);
+
+  // 更新 ref 中的函数引用
+  useEffect(() => {
+    fetchWithdrawAmountRef.current = fetchWithdrawAmount;
+  }, [fetchWithdrawAmount]);
 
   // 组件挂载或钱包连接时获取可提现金额
   useEffect(() => {
@@ -63,47 +86,55 @@ const WithdrawAmountSection: React.FC<WithdrawAmountSectionProps> = ({
       fetchWithdrawAmount();
     } else {
       setWithdrawAmount('0');
+      setIsLoading(false);
     }
   }, [isConnected, address, fetchWithdrawAmount, setWithdrawAmount]);
 
-  // 监听倒计时结束,延迟1秒刷新可提现金额
   useEffect(() => {
     if (isDrawComplete && isConnected && address) {
-      // 清理之前的定时器
       if (refreshTimerRef.current) {
         clearTimeout(refreshTimerRef.current);
         refreshTimerRef.current = null;
       }
-      
-      // 如果还没刷新过,则延迟1秒刷新可提现金额
+    
       if (!hasRefreshedOnCompleteRef.current) {
         refreshTimerRef.current = setTimeout(() => {
-          hasRefreshedOnCompleteRef.current = true;
-          fetchWithdrawAmount();
+          if (isMountedRef.current && isDrawCompleteRef.current && isConnected && address) {
+            hasRefreshedOnCompleteRef.current = true;
+            if (fetchWithdrawAmountRef.current) {
+              fetchWithdrawAmountRef.current();
+            }
+          }
         }, 1000);
       }
     } else {
-      // 当倒计时未完成时,重置刷新标志,允许下次倒计时结束时再次刷新
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
       hasRefreshedOnCompleteRef.current = false;
     }
 
-    // 清理函数
     return () => {
       if (refreshTimerRef.current) {
         clearTimeout(refreshTimerRef.current);
         refreshTimerRef.current = null;
       }
     };
-  }, [isDrawComplete, isConnected, address, fetchWithdrawAmount]);
+  }, [isDrawComplete, isConnected, address]);
 
-  // 组件卸载时清理定时器
+  // 组件挂载和卸载时的处理
   useEffect(() => {
+    isMountedRef.current = true;
+    
     return () => {
+      isMountedRef.current = false;
       if (refreshTimerRef.current) {
         clearTimeout(refreshTimerRef.current);
         refreshTimerRef.current = null;
       }
       hasRefreshedOnCompleteRef.current = false;
+      isFetchingRef.current = false;
     };
   }, []);
 
