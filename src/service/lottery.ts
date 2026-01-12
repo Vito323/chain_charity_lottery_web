@@ -93,3 +93,10 @@ export const getLotteryHistory = (page: number, pageSize: number) =>
       pageSize,
     },
   });
+
+
+  export const queryWithdrawableAmount = (address: string) =>
+    action<string>({
+      url: `/lottery/drawable-amount/${address}`,
+      method: "GET",
+    });

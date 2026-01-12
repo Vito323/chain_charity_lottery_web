@@ -7,8 +7,8 @@ import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useMasterContract } from '@/hooks/useMasterContract';
 import { formatCurrency } from '@/utils/currency';
-import { formatUnits } from 'ethers';
 import useGlobalStore from '@/store';
+import { queryWithdrawableAmount } from '@/service/lottery';
 
 interface WithdrawAmountSectionProps {
   /**
@@ -46,9 +46,9 @@ const WithdrawAmountSection: React.FC<WithdrawAmountSectionProps> = ({
 
     try {
       setIsLoading(true);
-      const response = await getUserWithdrawableAmount(address);
-      const value = formatUnits(response, 18);
-      setWithdrawAmount(value || '0');
+      const response = await queryWithdrawableAmount(address);
+      const value = response.data || '0';
+      setWithdrawAmount(value);
     } catch (error) {
       console.error('Failed to fetch withdraw amount:', error);
       setWithdrawAmount('0');

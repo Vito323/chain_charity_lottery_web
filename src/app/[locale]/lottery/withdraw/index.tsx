@@ -9,8 +9,8 @@ import useGlobalStore from '@/store';
 import LotteryWithdrawModal from '@/components/lottery-withdraw-modal';
 import { useMasterContract } from '@/hooks/useMasterContract';
 import { getChainById } from '@/lib/chain-config';
-import { formatUnits } from 'ethers';
 import { formatCurrency } from '@/utils/currency';
+import { queryWithdrawableAmount } from '@/service/lottery';
 
 const WithdrawPage = () => {
   const t = useTranslations('lottery.withdraw');
@@ -37,9 +37,9 @@ const WithdrawPage = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await getUserWithdrawableAmount(address);
-      const value = formatUnits(response, 18);
-      setWithdrawAmount(value || '0');
+      const response = await queryWithdrawableAmount(address);
+      const value = response.data || '0';
+      setWithdrawAmount(value);
     } catch (err) {
       console.error('Failed to fetch withdraw amount:', err);
       setError(tCommon('errors.failedToLoad'));

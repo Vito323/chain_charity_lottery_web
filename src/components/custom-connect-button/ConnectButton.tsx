@@ -12,7 +12,7 @@ import { DesktopDropdown } from "./DesktopDropdown";
 import { userConnect } from "@/service/user";
 import useGlobalStore from "@/store";
 import { useMasterContract } from "@/hooks/useMasterContract";
-import { formatUnits } from "ethers";
+import { queryWithdrawableAmount } from "@/service/lottery";
 
 const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
@@ -63,10 +63,10 @@ const CustomConnectButton = () => {
   useEffect(() => {
     if (showDropdown) {
       if (isConnected && address) {
-        getUserWithdrawableAmount(address).then((result) => {
-          console.log(result, "result1122");
-          const value = formatUnits(result, 18);
-          setWithdrawAmount(value || "0");
+        queryWithdrawableAmount(address).then((result) => {
+          console.log(result.data, "result1122");
+          // const value = formatUnits(result.data, 18);
+          setWithdrawAmount(result.data || "0");
         });
       } else {
         setWithdrawAmount("0");
