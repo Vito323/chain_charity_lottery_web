@@ -72,6 +72,9 @@ const WinnerList: React.FC<WinnerListProps> = ({
             <thead>
               <tr className="border-b border-white/10">
                 <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
+                  {t("ranking")}
+                </th>
+                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   NFT ID
                 </th>
                 <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
@@ -115,7 +118,18 @@ const WinnerList: React.FC<WinnerListProps> = ({
                             isCurrentWallet ? "text-white font-semibold" : ""
                           }
                         >
-                          #{drawTicket.ticket.id}
+                          #{index + 1}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-3 md:px-4 py-3 md:py-4 text-white/80 text-sm md:text-base relative whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={
+                            isCurrentWallet ? "text-white font-semibold" : ""
+                          }
+                        >
+                          {drawTicket.ticket.id}
                         </span>
                       </div>
                     </td>

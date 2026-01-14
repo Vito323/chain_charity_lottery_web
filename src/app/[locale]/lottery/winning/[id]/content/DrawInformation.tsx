@@ -8,6 +8,7 @@ import { type LotteryHistoryDetail } from "@/service/lottery";
 import { getScanUrl } from "@/utils/chain-info";
 import { CopyButton } from "@/components/copy-button";
 import dayjs from "dayjs";
+import { formatCurrency } from "@/utils/currency";
 
 interface DrawInformationProps {
   lotteryHistory: LotteryHistoryDetail | null;
@@ -117,26 +118,31 @@ const DrawInformation: React.FC<DrawInformationProps> = ({
         </motion.div>
       ) : null}
 
-      {/* Timestamp */}
-      <motion.div
-        variants={variants}
-        className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
-      >
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <div className="text-white/60 text-sm md:text-base">
-            {t("timestamp")}
-          </div>
-          {isLoading ? (
-            <SkeletonText className="w-48" />
-          ) : (
-            <div className="text-white font-semibold text-sm md:text-base font-mono">
-              {lotteryHistory
-                ? `${dayjs().format("YYYY-MM-DD HH:mm:ss")} #${lotteryHistory.id}`
-                : "-"}
+      {/* Average Score */}
+      {!isLoading &&
+      lotteryHistory?.threshold &&
+      parseFloat(lotteryHistory.threshold) <= 10000 && (
+        <motion.div
+          key="average-score"
+          variants={variants}
+          initial="hidden"
+          animate="visible"
+          className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6"
+        >
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="text-white/60 text-sm md:text-base">
+              {t("averageScore")}
             </div>
-          )}
-        </div>
-      </motion.div>
+            <div className="text-white font-semibold text-sm md:text-base">
+              {formatCurrency(
+                parseFloat(lotteryHistory.threshold) / 100,
+                "",
+                2
+              )}
+            </div>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
