@@ -42,14 +42,24 @@ export interface LotteryHistory {
   createdAt: string;
   drawLotteryTxHash: string;
   batchUpdateUserWithdrawableAmountTxHash: string;
-  lotteryDrawTickets: {
-    ticket: {
-      id: number;
-      dna: string;
-      ownerId: string;
-    };
-    reward?: string;
-  }[];
+  isWinner: boolean;
+}
+
+export interface LotteryHistoryTicket {
+  id: number;
+  ticket: {
+    id: number;
+    dna: string;
+    ownerId: string;
+    colors: string;
+    numbers: string;
+  };
+  reward: string;
+  score: number;
+}
+
+export interface LotteryHistoryDetail extends LotteryHistory {
+  lotteryDrawTickets: LotteryHistoryTicket[];
 }
 
 export const getLotteryConfig = () =>
@@ -84,9 +94,9 @@ export const mintLotteryTicket = (dna: string, txHash: string) =>
     },
   });
 
-export const getLotteryHistory = (page: number, pageSize: number) =>
+export const getLotteryHistory = (address: string, page: number, pageSize: number) =>
   action<LotteryHistory[]>({
-    url: `/lottery/history`,
+    url: `/lottery/history/${address}`,
     method: "GET",
     params: {
       page,
@@ -98,5 +108,11 @@ export const getLotteryHistory = (page: number, pageSize: number) =>
   export const queryWithdrawableAmount = (address: string) =>
     action<string>({
       url: `/lottery/drawable-amount/${address}`,
+      method: "GET",
+    });
+
+    export const queryDrawHistoryDetail = (drawId: number) =>
+    action<LotteryHistoryDetail>({
+      url: `/lottery/history/detail/${drawId}`,
       method: "GET",
     });

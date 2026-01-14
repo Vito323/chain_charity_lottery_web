@@ -4,7 +4,6 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { useAccount } from 'wagmi';
 import { type LotteryHistory } from '@/service/lottery';
 import { formatCurrency } from '@/utils/currency';
 
@@ -38,7 +37,6 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
 }) => {
   const t = useTranslations('lottery.history');
   const tCommon = useTranslations('common');
-  const { address } = useAccount();
   
   // 分页状态（使用父组件传入的数据长度计算当前页）
   const currentPage = useMemo(() => {
@@ -79,21 +77,8 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
         // 格式化开奖时间
         const drawTime = formatDateTime(item.createdAt);
         
-        // 状态判断：检查 lotteryDrawTickets 中是否有当前钱包地址
-        let status: 'upcoming' | 'won' | 'lost' = 'lost';
-        
-        if (address && item.lotteryDrawTickets && Array.isArray(item.lotteryDrawTickets)) {
-          // 检查是否有中奖记录（ownerId 匹配当前钱包地址）
-          const hasWon = item.lotteryDrawTickets.some(
-            (drawTicket) => 
-              drawTicket.ticket?.ownerId && 
-              drawTicket.ticket.ownerId.toLowerCase() === address.toLowerCase()
-          );
-          
-          if (hasWon) {
-            status = 'won';
-          }
-        }
+        // 状态判断：直接使用 isWinner 字段
+        const status: 'upcoming' | 'won' | 'lost' = item.isWinner ? 'won' : 'lost';
         
         return {
           id: String(item.id),
@@ -104,7 +89,7 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
         };
       })
       .sort((a, b) => b.drawNumber - a.drawNumber); // 按期号倒序排列
-  }, [rawHistoryData, address]);
+  }, [rawHistoryData]);
 
   // 获取状态文本
   const getStatusText = (status: 'upcoming' | 'won' | 'lost') => {
@@ -117,16 +102,6 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
         return t('status.lost');
       default:
         return '';
-    }
-  };
-
-  // 处理跳转，保存数据到 localStorage
-  const handleHistoryItemClick = (itemId: string) => {
-    // 找到对应的原始数据
-    const rawData = rawHistoryData.find((item) => String(item.id) === itemId);
-    if (rawData) {
-      // 保存到 localStorage
-      localStorage.setItem(`lottery_history_${itemId}`, JSON.stringify(rawData));
     }
   };
 
@@ -319,7 +294,6 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
               <Link 
                 key={item.id} 
                 href={`/lottery/winning/${item.id}`}
-                onClick={() => handleHistoryItemClick(item.id)}
               >
                 <motion.div
                   className="flex items-center justify-between bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-4 md:p-5 hover:bg-white/10 transition-all duration-200 cursor-pointer"

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
+import { useAccount } from "wagmi";
 import Header from "@/components/header";
 import LotteryContent from "./content";
 import LotteryHistory from "./history";
@@ -15,6 +16,9 @@ let lastHistoryInitTime = 0;
 const INIT_DEBOUNCE_MS = 200; // 200ms内的多次挂载只执行一次
 
 export default function LotteryPage() {
+  // 获取钱包地址
+  const { address } = useAccount();
+
   // 彩票配置状态
   const [lotteryConfig, setLotteryConfig] = useState<LotteryConfig>({
     nextDrawTime: 0,
@@ -65,6 +69,14 @@ export default function LotteryPage() {
 
   // 获取历史记录（支持分页）
   const fetchLotteryHistory = useCallback(async (page: number = 1, pageSize: number = PAGE_SIZE, append: boolean = false) => {
+    // 如果没有钱包地址，不请求数据
+    if (!address) {
+      setHistoryData([]);
+      setHistoryLoading(false);
+      setHasMore(false);
+      return;
+    }
+
     if (isHistoryRequestingRef.current && !append) {
       return;
     }
@@ -75,7 +87,7 @@ export default function LotteryPage() {
         setHistoryLoading(true);
       }
       setHistoryError(null);
-      const response = await getLotteryHistory(page, pageSize);
+      const response = await getLotteryHistory(address, page, pageSize);
       
       if (response.ok) {
         if (response.data && Array.isArray(response.data)) {
@@ -113,7 +125,7 @@ export default function LotteryPage() {
         isHistoryRequestingRef.current = false;
       }
     }
-  }, []);
+  }, [address]);
 
   // 组件挂载时获取配置
   useEffect(() => {
@@ -135,10 +147,18 @@ export default function LotteryPage() {
     fetchLotteryConfig()
   }, []);
 
-  // 组件挂载时获取历史记录
+  // 组件挂载时或地址变化时获取历史记录
   useEffect(() => {
-    fetchLotteryHistory(1, PAGE_SIZE, false);
-  }, [fetchLotteryHistory]);
+    if (address) {
+      fetchLotteryHistory(1, PAGE_SIZE, false);
+    } else {
+      // 如果地址为空，重置历史记录状态
+      setHistoryData([]);
+      setHistoryLoading(false);
+      setHasMore(false);
+      setHistoryError(null);
+    }
+  }, [address, fetchLotteryHistory]);
 
   // 加载更多历史记录
   const handleLoadMore = useCallback(async (page: number, pageSize: number) => {

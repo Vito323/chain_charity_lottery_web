@@ -7,14 +7,14 @@ import { useTranslations } from "next-intl";
 import { renderTicketMetadata, type TicketMetadata } from "@/service/asset";
 import { goldShimmerStyle, rarityConfig } from "@/utils/lottery";
 import { formatCurrency } from "@/utils/currency";
-import type { LotteryHistory } from "@/service/lottery";
+import type { LotteryHistoryDetail } from "@/service/lottery";
 import type { WinningType } from "./index";
 
 interface WinningTicketCardProps {
   winnerDna: string;
   type: WinningType;
   winningId: string;
-  lotteryHistory: LotteryHistory | null;
+  lotteryHistory: LotteryHistoryDetail | null;
   variants: Variants;
 }
 

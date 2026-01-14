@@ -4,7 +4,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import WinningTicketCard from "./WinningTicketCard";
-import type { LotteryHistory } from "@/service/lottery";
+import type { LotteryHistoryDetail } from "@/service/lottery";
 import type { WinningType } from "./index";
 import { type Variants } from "framer-motion";
 
@@ -14,7 +14,7 @@ interface NFTPreviewModalProps {
   dna: string | null;
   type: WinningType;
   winningId: string;
-  lotteryHistory: LotteryHistory | null;
+  lotteryHistory: LotteryHistoryDetail | null;
 }
 
 const NFTPreviewModal: React.FC<NFTPreviewModalProps> = ({
