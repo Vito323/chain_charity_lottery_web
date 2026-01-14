@@ -66,24 +66,24 @@ const WinnerList: React.FC<WinnerListProps> = ({
       <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
         {t("winnerList")}
       </h3>
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl">
-        <div className="overflow-x-auto overflow-y-visible">
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+        <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
-                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   NFT ID
                 </th>
-                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   {t("address")}
                 </th>
-                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   {t("reward")}
                 </th>
-                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   DNA
                 </th>
-                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold">
+                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   {t("previewNFT")}
                 </th>
               </tr>
@@ -108,7 +108,7 @@ const WinnerList: React.FC<WinnerListProps> = ({
                         : "border-white/10 hover:bg-white/8"
                     }`}
                   >
-                    <td className="px-3 md:px-4 py-3 md:py-4 text-white/80 text-sm md:text-base relative">
+                    <td className="px-3 md:px-4 py-3 md:py-4 text-white/80 text-sm md:text-base relative whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <span
                           className={
@@ -119,7 +119,7 @@ const WinnerList: React.FC<WinnerListProps> = ({
                         </span>
                       </div>
                     </td>
-                    <td className="px-3 md:px-4 py-3 md:py-4 font-mono text-sm md:text-base relative">
+                    <td className="px-3 md:px-4 py-3 md:py-4 font-mono text-sm md:text-base relative whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <span
                           className={
@@ -145,7 +145,7 @@ const WinnerList: React.FC<WinnerListProps> = ({
                       </div>
                     </td>
                     <td
-                      className={`px-3 md:px-4 py-3 md:py-4 text-sm md:text-base ${
+                      className={`px-3 md:px-4 py-3 md:py-4 text-sm md:text-base whitespace-nowrap ${
                         isCurrentWallet ? "text-white font-semibold" : "text-white"
                       }`}
                     >
@@ -154,7 +154,7 @@ const WinnerList: React.FC<WinnerListProps> = ({
                         : "-"}{" "}
                       USDT
                     </td>
-                    <td className="px-3 md:px-4 py-3 md:py-4">
+                    <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap">
                       {drawTicket.ticket?.dna ? (
                         <div className="flex items-center gap-2 relative">
                           <span
@@ -186,7 +186,7 @@ const WinnerList: React.FC<WinnerListProps> = ({
                         </span>
                       )}
                     </td>
-                    <td className="px-3 md:px-4 py-3 md:py-4">
+                    <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap">
                       {drawTicket.ticket?.dna ? (
                         <button
                           onClick={() => {
