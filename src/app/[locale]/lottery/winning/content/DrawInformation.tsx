@@ -14,12 +14,22 @@ interface DrawInformationProps {
   lotteryHistory: LotteryHistoryDetail | null;
   isLoading: boolean;
   variants: Variants;
+  currentPeriod: number;
+  maxPeriod: number;
+  canGoPrevious: boolean;
+  canGoNext: boolean;
+  onNavigate: (direction: "previous" | "next") => void;
 }
 
 const DrawInformation: React.FC<DrawInformationProps> = ({
   lotteryHistory,
   isLoading,
   variants,
+  currentPeriod,
+  maxPeriod,
+  canGoPrevious,
+  canGoNext,
+  onNavigate,
 }) => {
   const t = useTranslations("lottery.winningDetail");
   const chainId = useChainId();
@@ -32,9 +42,48 @@ const DrawInformation: React.FC<DrawInformationProps> = ({
 
   return (
     <motion.div variants={variants} className="space-y-6 md:space-y-8">
-      <h3 className="text-xl md:text-2xl font-bold text-white">
-        {t("drawInformation")}
-      </h3>
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <h3 className="text-xl md:text-2xl font-bold text-white">
+          {t("drawInformation")}
+        </h3>
+        {/* Navigation Buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onNavigate("previous")}
+            disabled={!canGoPrevious}
+            className={`
+              px-4 py-2 rounded-xl font-semibold text-sm md:text-base
+              transition-all duration-300 flex items-center gap-2
+              ${
+                canGoPrevious
+                  ? "bg-linear-to-r from-purple-600/80 to-pink-600/80 hover:from-purple-600 hover:to-pink-600 text-white border border-white/20 hover:border-white/30 cursor-pointer hover:scale-105 active:scale-95 shadow-lg hover:shadow-purple-500/20"
+                  : "bg-white/5 text-white/30 border border-white/10 cursor-not-allowed opacity-50"
+              }
+            `}
+            title={canGoPrevious ? t("navigation.previousPeriod") : t("navigation.noPreviousPeriod")}
+          >
+            <i className="fa fa-chevron-left text-xs"></i>
+            <span className="hidden sm:inline">{t("navigation.previous")}</span>
+          </button>
+          <button
+            onClick={() => onNavigate("next")}
+            disabled={!canGoNext}
+            className={`
+              px-4 py-2 rounded-xl font-semibold text-sm md:text-base
+              transition-all duration-300 flex items-center gap-2
+              ${
+                canGoNext
+                  ? "bg-linear-to-r from-purple-600/80 to-pink-600/80 hover:from-purple-600 hover:to-pink-600 text-white border border-white/20 hover:border-white/30 cursor-pointer hover:scale-105 active:scale-95 shadow-lg hover:shadow-purple-500/20"
+                  : "bg-white/5 text-white/30 border border-white/10 cursor-not-allowed opacity-50"
+              }
+            `}
+            title={canGoNext ? t("navigation.nextPeriod") : t("navigation.noNextPeriod")}
+          >
+            <span className="hidden sm:inline">{t("navigation.next")}</span>
+            <i className="fa fa-chevron-right text-xs"></i>
+          </button>
+        </div>
+      </div>
 
       {/* Draw Time */}
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6">

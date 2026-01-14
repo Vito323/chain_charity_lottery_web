@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { type LotteryHistoryDetail, queryDrawHistoryDetail } from "@/service/lottery";
 import NFTPreviewModal from "./NFTPreviewModal";
 import DrawInformation from "./DrawInformation";
@@ -11,13 +13,17 @@ import WinnerList from "./WinnerList";
 export type WinningType = "lottery" | "follow";
 
 interface WinningDetailProps {
-  winningId: string;
+  periodId?: string;
   type: WinningType;
 }
 
-const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
+const MAX_PERIOD_KEY = "lottery_max_period";
+
+const WinningDetail: React.FC<WinningDetailProps> = ({ periodId, type }) => {
   const t = useTranslations("lottery.winningDetail");
   const tCommon = useTranslations("common");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // 数据状态
   const [lotteryHistory, setLotteryHistory] = useState<LotteryHistoryDetail | null>(
@@ -30,6 +36,52 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [previewDna, setPreviewDna] = useState<string | null>(null);
 
+  // 当前期数：从 periodId 获取，如果没有则从 searchParams 获取，都没有则默认为 1
+  const currentPeriodId = periodId || searchParams.get("period_id") || "1";
+  
+  // 获取最大期数：从 localStorage 获取，如果没有则使用当前期数
+  const maxPeriod = useMemo(() => {
+    if (typeof window === "undefined") {
+      return parseInt(currentPeriodId, 10) || 1;
+    }
+    const storedMax = localStorage.getItem(MAX_PERIOD_KEY);
+    if (storedMax) {
+      const parsed = parseInt(storedMax, 10);
+      if (!isNaN(parsed) && parsed > 0) {
+        return parsed;
+      }
+    }
+    const currentId = parseInt(currentPeriodId, 10);
+    const maxId = isNaN(currentId) || currentId <= 0 ? 1 : currentId;
+    // 如果 localStorage 中没有，则保存当前期数作为最大值
+    if (!storedMax) {
+      localStorage.setItem(MAX_PERIOD_KEY, String(maxId));
+    }
+    return maxId;
+  }, [currentPeriodId]);
+
+  // 当前期数
+  const currentPeriod = useMemo(() => {
+    const period = parseInt(currentPeriodId, 10);
+    return isNaN(period) || period <= 0 ? 1 : period;
+  }, [currentPeriodId]);
+
+  // 是否可以点击上一期/下一期
+  const canGoPrevious = currentPeriod > 1;
+  const canGoNext = currentPeriod < maxPeriod;
+
+  // 导航到上一期/下一期：只更新 URL 查询参数，依赖 searchParams 变化触发数据刷新
+  const handleNavigate = (direction: "previous" | "next") => {
+    const newPeriod = direction === "previous" ? currentPeriod - 1 : currentPeriod + 1;
+    if (newPeriod >= 1 && newPeriod <= maxPeriod) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("period_id", String(newPeriod));
+      // params.set("type", type);
+      // 使用 i18n router 更新当前 URL（不会整页刷新）
+      router.replace(`/lottery/winning?${params.toString()}`);
+    }
+  };
+
   // 从接口获取数据
   useEffect(() => {
     const fetchDrawHistoryDetail = async () => {
@@ -37,7 +89,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
         setIsLoading(true);
         setError(null);
         
-        const drawId = parseInt(winningId, 10);
+        const drawId = parseInt(currentPeriodId, 10);
         if (isNaN(drawId)) {
           setError("Invalid draw ID");
           setIsLoading(false);
@@ -63,7 +115,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
     };
 
     fetchDrawHistoryDetail();
-  }, [winningId]);
+  }, [currentPeriodId]);
 
 
   // 错误状态（只在有错误且没有数据时显示全屏错误）
@@ -81,7 +133,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
                 onClick={() => {
                   setIsLoading(true);
                   setError(null);
-                  const drawId = parseInt(winningId, 10);
+                  const drawId = parseInt(currentPeriodId, 10);
                   if (!isNaN(drawId)) {
                     queryDrawHistoryDetail(drawId)
                       .then((response) => {
@@ -168,6 +220,11 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
           lotteryHistory={lotteryHistory}
           isLoading={isLoading}
           variants={itemVariants}
+          currentPeriod={currentPeriod}
+          maxPeriod={maxPeriod}
+          canGoPrevious={canGoPrevious}
+          canGoNext={canGoNext}
+          onNavigate={handleNavigate}
         />
 
         {/* Winner List */}
@@ -192,7 +249,7 @@ const WinningDetail: React.FC<WinningDetailProps> = ({ winningId, type }) => {
           }}
           dna={previewDna}
           type={type}
-          winningId={winningId}
+          winningId={currentPeriodId}
           lotteryHistory={lotteryHistory}
         />
       )}

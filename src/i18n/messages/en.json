@@ -324,7 +324,16 @@
       "address": "Address",
       "reward": "Reward",
       "dna": "DNA",
-      "previewNFT": "Preview NFT"
+      "rarity": "Rarity",
+      "previewNFT": "Preview NFT",
+      "navigation": {
+        "previous": "Previous",
+        "next": "Next",
+        "previousPeriod": "Previous Period",
+        "nextPeriod": "Next Period",
+        "noPreviousPeriod": "No Previous Period",
+        "noNextPeriod": "No Next Period"
+      }
     },
     "winningRecords": {
       "badge": "Winning Records",
