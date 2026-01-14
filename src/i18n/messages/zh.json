@@ -246,7 +246,16 @@
       "address": "地址",
       "reward": "奖金",
       "dna": "DNA",
-      "previewNFT": "预览 NFT"
+      "rarity": "稀有度",
+      "previewNFT": "预览 NFT",
+      "navigation": {
+        "previous": "上一期",
+        "next": "下一期",
+        "previousPeriod": "上一期",
+        "nextPeriod": "下一期",
+        "noPreviousPeriod": "没有上一期",
+        "noNextPeriod": "没有下一期"
+      }
     },
     "winningRecords": {
       "badge": "中奖记录",

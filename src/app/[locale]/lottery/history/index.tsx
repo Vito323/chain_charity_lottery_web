@@ -293,7 +293,10 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
             {historyData.map((item, index) => (
               <Link 
                 key={item.id} 
-                href={`/lottery/winning/${item.id}`}
+                onClick={() => {
+                  localStorage.setItem('lottery_max_period', String(historyData[0].id));
+                }}
+                href={`/lottery/winning?period_id=${item.id}`}
               >
                 <motion.div
                   className="flex items-center justify-between bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-3 sm:p-4 md:p-5 hover:bg-white/10 transition-all duration-200 cursor-pointer"

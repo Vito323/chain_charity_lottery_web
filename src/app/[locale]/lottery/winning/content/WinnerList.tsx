@@ -7,6 +7,7 @@ import { useAccount } from "wagmi";
 import { type LotteryHistoryDetail } from "@/service/lottery";
 import { CopyButton } from "@/components/copy-button";
 import { formatCurrency } from "@/utils/currency";
+import { rankToRarity, rarityConfig, goldShimmerStyle } from "@/utils/lottery";
 
 interface WinnerListProps {
   lotteryHistory: LotteryHistoryDetail | null;
@@ -87,6 +88,9 @@ const WinnerList: React.FC<WinnerListProps> = ({
                   DNA
                 </th>
                 <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
+                  NFT {t("rarity")}
+                </th>
+                <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   {t("previewNFT")}
                 </th>
               </tr>
@@ -98,6 +102,11 @@ const WinnerList: React.FC<WinnerListProps> = ({
                   drawTicket.ticket?.ownerId &&
                   address.toLowerCase() ===
                     drawTicket.ticket.ownerId.toLowerCase();
+
+                // 获取稀有度信息
+                const rank = drawTicket.ticket?.series?.rank;
+                const rarity = rank ? rankToRarity(rank) : null;
+                const rarityStyle = rarity ? rarityConfig[rarity] : null;
 
                 return (
                   <motion.tr
@@ -196,6 +205,40 @@ const WinnerList: React.FC<WinnerListProps> = ({
                             isCurrentWallet ? "text-white/60" : "text-white"
                           }`}
                         >
+                          -
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-3 md:px-4 py-3 md:py-4 whitespace-nowrap">
+                      {rarity && rarityStyle ? (
+                        <div className="relative inline-flex items-center">
+                          {/* 黄金闪烁效果 - 仅在 rank 5 (mythic) 时显示 */}
+                          {rank === 5 && (
+                            <>
+                              <style>{goldShimmerStyle}</style>
+                              <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-full">
+                                <div
+                                  className="absolute inset-0"
+                                  style={{
+                                    background:
+                                      "linear-gradient(90deg, transparent 0%, rgba(255, 240, 120, 0.4) 30%, rgba(255, 250, 150, 0.7) 50%, rgba(255, 240, 120, 0.4) 70%, transparent 100%)",
+                                    animation: "goldShimmer 3s ease-in-out infinite",
+                                    width: "60%",
+                                    height: "140%",
+                                  }}
+                                />
+                              </div>
+                            </>
+                          )}
+                          <span
+                            className={`inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs md:text-sm font-semibold ${rarityStyle.color} bg-linear-to-r ${rarityStyle.bgGradient} border`}
+                            style={{ borderColor: rarityStyle.borderColor }}
+                          >
+                            {tCommon(`rarity.${rarity}`)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-white/40 text-sm md:text-base">
                           -
                         </span>
                       )}

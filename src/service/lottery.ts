@@ -53,6 +53,9 @@ export interface LotteryHistoryTicket {
     ownerId: string;
     colors: string;
     numbers: string;
+    series: {
+      rank: number;
+    }
   };
   reward: string;
   score: number;
