@@ -88,7 +88,7 @@ const WinnerList: React.FC<WinnerListProps> = ({
                   DNA
                 </th>
                 <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
-                  NFT {t("rarity")}
+                  {t("rarity")}
                 </th>
                 <th className="px-3 md:px-4 py-3 md:py-4 text-left text-white/60 text-sm md:text-base font-semibold whitespace-nowrap">
                   {t("previewNFT")}
