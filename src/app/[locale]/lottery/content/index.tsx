@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
 import { LotteryConfig } from "@/service/lottery";
 import { useTranslations } from 'next-intl';
-import { formatCurrency } from "@/utils/currency";
 import WithdrawAmountSection from "./lottery-withdraw-amount-section";
 
 interface CountdownTime {
@@ -45,17 +44,27 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
   // 是否已开奖
   const [isDrawComplete, setIsDrawComplete] = useState(false);
   
-  // 使用 ref 跟踪是否已经设置了刷新定时器，避免重复触发
   const refreshTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const hasTriggeredRefreshRef = React.useRef(false);
-  
-  // 使用 ref 存储 nextDrawTime，避免依赖变化导致定时器重新创建
+  const shouldCallDrawCompleteRef = React.useRef(false);
+  const drawCompleteTimerStartTimeRef = React.useRef<number | null>(null);
   const nextDrawTimeRef = React.useRef(lotteryConfig.nextDrawTime);
+  const onRefreshRef = React.useRef(onRefresh);
+  const onDrawCompleteRef = React.useRef(onDrawComplete);
   
   // 更新 ref 中的值
   useEffect(() => {
     nextDrawTimeRef.current = lotteryConfig.nextDrawTime;
   }, [lotteryConfig.nextDrawTime]);
+  
+  // 更新回调函数的 ref
+  useEffect(() => {
+    onRefreshRef.current = onRefresh;
+  }, [onRefresh]);
+  
+  useEffect(() => {
+    onDrawCompleteRef.current = onDrawComplete;
+  }, [onDrawComplete]);
 
   // 计算倒计时
   const calculateCountdown = useCallback(() => {
@@ -66,32 +75,64 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
       if (!isDrawComplete) {
         setIsDrawComplete(true);
         console.log('倒计时结束，触发开奖完成事件');
-        // 调用父组件传入的刷新函数
-        onRefresh();
+        // 调用父组件传入的刷新函数（使用 ref 确保是最新引用）
+        if (onRefreshRef.current) {
+          console.log('调用 onRefresh 刷新配置');
+          onRefreshRef.current();
+        }
         if (!hasTriggeredRefreshRef.current) {
           hasTriggeredRefreshRef.current = true;
+          shouldCallDrawCompleteRef.current = true;
+          drawCompleteTimerStartTimeRef.current = Date.now();
           // 清理之前的定时器（如果存在）
           if (refreshTimerRef.current) {
             clearTimeout(refreshTimerRef.current);
           }
-          refreshTimerRef.current = setTimeout(() => {
-            refreshTimerRef.current = null;
-            onDrawComplete?.();
+          // 保存定时器 ID，确保即使 ref 被清理也能执行回调
+          const timerId = setTimeout(() => {
+            // 检查是否应该执行回调（防止被意外清理）
+            if (shouldCallDrawCompleteRef.current) {
+              shouldCallDrawCompleteRef.current = false;
+              drawCompleteTimerStartTimeRef.current = null;
+              refreshTimerRef.current = null;
+              // 使用 ref 确保调用的是最新的 onDrawComplete
+              console.log('倒计时结束 2 秒后，调用 onDrawComplete 刷新历史记录');
+              if (onDrawCompleteRef.current) {
+                console.log('执行 onDrawComplete 回调');
+                onDrawCompleteRef.current();
+              } else {
+                console.warn('onDrawCompleteRef.current 为空，无法刷新历史记录');
+              }
+            } else {
+              console.log('shouldCallDrawCompleteRef 为 false，跳过回调');
+            }
           }, 2000);
+          refreshTimerRef.current = timerId;
+          console.log('已设置 2 秒后执行 onDrawComplete 的定时器');
+        } else {
+          console.log('已经触发过刷新，跳过');
         }
       }
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
 
     // 如果之前已开奖，但现在有新的倒计时，重置状态
-    if (isDrawComplete) {
+    if (isDrawComplete && difference > 0) {
       setIsDrawComplete(false);
-      // 重置刷新标志，允许下次倒计时结束时再次触发
       hasTriggeredRefreshRef.current = false;
-      // 清理之前的定时器
       if (refreshTimerRef.current) {
-        clearTimeout(refreshTimerRef.current);
-        refreshTimerRef.current = null;
+        const timeSinceTimerStart = drawCompleteTimerStartTimeRef.current 
+          ? Date.now() - drawCompleteTimerStartTimeRef.current 
+          : Infinity;
+        if (timeSinceTimerStart >= 2000 || difference > 5000) {
+          console.log('检测到新的倒计时，清理之前的定时器', { timeSinceTimerStart, difference });
+          clearTimeout(refreshTimerRef.current);
+          refreshTimerRef.current = null;
+          shouldCallDrawCompleteRef.current = false;
+          drawCompleteTimerStartTimeRef.current = null;
+        } else {
+          console.log('定时器正在等待执行，不清理', { timeSinceTimerStart, difference });
+        }
       }
     }
 
@@ -103,7 +144,7 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
     return { days, hours, minutes, seconds };
-  }, [isDrawComplete, onRefresh]);
+  }, [isDrawComplete]);
 
   // 更新倒计时 - 只在 nextDrawTime 有值且大于 0 时启动定时器
   useEffect(() => {

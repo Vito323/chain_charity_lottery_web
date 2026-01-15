@@ -71,14 +71,17 @@ export default function LotteryPage() {
   const fetchLotteryHistory = useCallback(async (page: number = 1, pageSize: number = PAGE_SIZE, append: boolean = false) => {
     // 如果没有钱包地址，不请求数据
     if (!address) {
+      console.log('fetchLotteryHistory: 没有钱包地址，跳过请求');
       setHistoryData([]);
       setHistoryLoading(false);
       setHasMore(false);
       return;
     }
 
+    // 如果是刷新操作（非追加），即使正在请求也要重置，确保能获取最新数据
     if (isHistoryRequestingRef.current && !append) {
-      return;
+      console.log('fetchLotteryHistory: 正在请求中，但这是刷新操作，重置请求状态');
+      isHistoryRequestingRef.current = false;
     }
 
     try {
@@ -87,7 +90,9 @@ export default function LotteryPage() {
         setHistoryLoading(true);
       }
       setHistoryError(null);
+      console.log('fetchLotteryHistory: 开始请求历史记录', { address, page, pageSize });
       const response = await getLotteryHistory(address, page, pageSize);
+      console.log('fetchLotteryHistory: 请求完成', { ok: response.ok, dataLength: response.data?.length });
       
       if (response.ok) {
         if (response.data && Array.isArray(response.data)) {
@@ -168,24 +173,9 @@ export default function LotteryPage() {
 
   // 刷新历史记录（倒计时结束后调用，从第1页开始）
   const handleRefreshHistory = useCallback(() => {
+    console.log('handleRefreshHistory 被调用，准备刷新历史记录', { address, hasAddress: !!address });
     fetchLotteryHistory(1, PAGE_SIZE, false);
-    // 触发刷新事件，通知历史记录组件重置分页
-    window.dispatchEvent(new Event('lotteryHistoryRefresh'));
-  }, [fetchLotteryHistory]);
-
-  // 监听开奖完成事件，刷新数据
-  // useEffect(() => {
-  //   const handleDrawComplete = () => {
-  //     fetchLotteryConfig();
-  //     fetchLotteryHistory();
-  //   };
-
-  //   window.addEventListener('lotteryDrawComplete', handleDrawComplete);
-
-  //   return () => {
-  //     window.removeEventListener('lotteryDrawComplete', handleDrawComplete);
-  //   };
-  // }, [fetchLotteryConfig, fetchLotteryHistory]);
+  }, [fetchLotteryHistory, address]);
 
   return (
     <motion.div
