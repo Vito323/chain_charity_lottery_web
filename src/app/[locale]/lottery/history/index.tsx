@@ -162,22 +162,14 @@ const LotteryHistory: React.FC<LotteryHistoryProps> = ({
     };
   }, [loadMore, loadingMore, hasMore, isLoading]);
 
-  // 监听刷新回调（倒计时结束时触发）
+  // 当父组件刷新数据时（isLoading 从 true 变为 false），重置加载更多状态
   useEffect(() => {
-    const handleRefresh = () => {
-      // 重置加载状态
+    if (!isLoading) {
+      // 数据加载完成，重置加载更多状态
       isLoadingMoreRef.current = false;
       setLoadingMore(false);
-      // 父组件会重置数据，这里不需要额外操作
-    };
-
-    // 监听自定义事件，当倒计时结束时触发刷新
-    window.addEventListener('lotteryHistoryRefresh', handleRefresh);
-    
-    return () => {
-      window.removeEventListener('lotteryHistoryRefresh', handleRefresh);
-    };
-  }, []);
+    }
+  }, [isLoading]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
