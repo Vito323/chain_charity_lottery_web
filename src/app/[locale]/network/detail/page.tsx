@@ -4,18 +4,18 @@ import Footer from "@/components/footer";
 import ScrollToTop from "@/components/scroll-to-top";
 
 interface NodeDetailPageProps {
-  params: Promise<{
-    nodeId: string;
+  searchParams: Promise<{
+    tier?: string;
   }>;
 }
 
-const NodeDetailPage = async ({ params }: NodeDetailPageProps) => {
-  const { nodeId } = await params;
+const NodeDetailPage = async ({ searchParams }: NodeDetailPageProps) => {
+  const { tier = "genesis" } = await searchParams;
   
   return (
     <>
       <Header />
-      <NodeDetail nodeId={nodeId} />
+      <NodeDetail tier={tier} />
       <Footer />
       <ScrollToTop />
     </>

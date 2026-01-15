@@ -84,7 +84,7 @@ const NetworkPage: React.FC = () => {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
                   {t('title')}
                 </h1>
-                {/* <Link href="/user/network?tab=nodes">
+                <Link href="/user/network?tab=nodes">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -95,7 +95,7 @@ const NetworkPage: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </motion.button>
-                </Link> */}
+                </Link>
               </div>
               <p className="mt-3 text-sm sm:text-base text-white/70 max-w-xl">
                 {t('subtitle')}
@@ -104,7 +104,7 @@ const NetworkPage: React.FC = () => {
           </motion.div>
 
           {/* My Nodes Summary */}
-          {/* <motion.div
+          <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -232,35 +232,10 @@ const NetworkPage: React.FC = () => {
                 </div>
               </div>
             )}
-          </motion.div> */}
-
-          {/* Coming Soon Notice */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="fixed top-28 md:top-36 left-0 right-0 bottom-0 flex items-center justify-center bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 z-40"
-          >
-            <div className="pointer-events-none absolute -top-32 -right-24 w-72 h-72 bg-purple-500/30 blur-3xl opacity-40" />
-            <div className="pointer-events-none absolute -bottom-32 -left-24 w-80 h-80 bg-pink-500/20 blur-3xl opacity-40" />
-            
-            <div className="relative flex items-center justify-center w-full h-full">
-              <div className="text-center space-y-4">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-sm sm:text-base font-semibold text-white">
-                    {t('comingSoon.badge')}
-                  </span>
-                </div>
-                <p className="text-lg sm:text-xl md:text-2xl font-semibold text-white/90">
-                  {t('comingSoon.date', { date: formattedDate })}
-                </p>
-              </div>
-            </div>
           </motion.div>
 
           {/* Purchase Nodes Section */}
-          {/* <motion.section
+          <motion.section
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -290,11 +265,11 @@ const NetworkPage: React.FC = () => {
                   variants={cardVariants}
                   initial="hidden"
                   animate="visible"
-                  className="group relative overflow-hidden rounded-3xl border border-white/12 bg-gradient-to-b from-slate-900/90 via-slate-950/95 to-slate-950/95 p-5 sm:p-6 shadow-lg shadow-black/40"
+                  className="group relative overflow-hidden rounded-3xl border border-white/12 bg-linear-to-b from-slate-900/90 via-slate-950/95 to-slate-950/95 p-5 sm:p-6 shadow-lg shadow-black/40"
                   whileHover={{ y: -4 }}
                 >
                   <div
-                    className={`pointer-events-none absolute inset-x-[-40%] top-[-40%] h-40 bg-gradient-to-r ${tier.accentFrom} ${tier.accentTo} opacity-20 blur-3xl transition-opacity duration-300 group-hover:opacity-40`}
+                    className={`pointer-events-none absolute inset-x-[-40%] top-[-40%] h-40 bg-linear-to-r ${tier.accentFrom} ${tier.accentTo} opacity-20 blur-3xl transition-opacity duration-300 group-hover:opacity-40`}
                   />
 
                   <div className="relative space-y-4">
@@ -323,7 +298,7 @@ const NetworkPage: React.FC = () => {
 
                     <div className="flex items-center justify-between gap-3 pt-1">
                       <Link
-                        href={`/network/${tier.id}`}
+                        href={`/network/detail?tier=${tier.id}`}
                         className="inline-flex flex-1 items-center justify-center rounded-full bg-white/12 px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-white/20 transition-colors duration-200 cursor-pointer"
                       >
                         {t('nodeTiers.viewDetails')}
@@ -333,7 +308,7 @@ const NetworkPage: React.FC = () => {
                 </motion.div>
               ))}
             </div>
-          </motion.section> */}
+          </motion.section>
         </section>
       </main>
 
@@ -343,7 +318,7 @@ const NetworkPage: React.FC = () => {
   );
 };
 
-/* const GenesisTierCard: React.FC = () => {
+const GenesisTierCard: React.FC = () => {
   const t = useTranslations('network');
   const genesis = NODE_TIERS.find((tier) => tier.id === 'genesis');
 
@@ -355,11 +330,11 @@ const NetworkPage: React.FC = () => {
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      className="group relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 px-5 py-6 sm:px-7 sm:py-7 shadow-2xl shadow-black/50"
+      className="group relative overflow-hidden rounded-3xl border border-white/15 bg-linear-to-r from-slate-950 via-slate-900 to-slate-950 px-5 py-6 sm:px-7 sm:py-7 shadow-2xl shadow-black/50"
       whileHover={{ y: -4 }}
     >
       <div
-        className={`pointer-events-none absolute -inset-x-20 -top-32 h-40 bg-gradient-to-r ${genesis.accentFrom} ${genesis.accentTo} opacity-30 blur-3xl transition-opacity duration-300 group-hover:opacity-60`}
+        className={`pointer-events-none absolute -inset-x-20 -top-32 h-40 bg-linear-to-r ${genesis.accentFrom} ${genesis.accentTo} opacity-30 blur-3xl transition-opacity duration-300 group-hover:opacity-60`}
       />
       <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div className="space-y-3 max-w-xl">
@@ -401,7 +376,7 @@ const NetworkPage: React.FC = () => {
             </div>
           </div>
           <Link
-            href="/network/genesis"
+            href="/network/detail?&tier=genesis"
             className="inline-flex items-center justify-center rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-600 hover:to-pink-600 transition-colors duration-200 cursor-pointer"
           >
             {t('nodeTiers.viewDetails')}
@@ -410,7 +385,7 @@ const NetworkPage: React.FC = () => {
       </div>
     </motion.div>
   );
-}; */
+};
 
 export default NetworkPage;
 

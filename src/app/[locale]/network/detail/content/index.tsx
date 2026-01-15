@@ -7,6 +7,8 @@ import { useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import { useTranslations } from "next-intl";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import NodePurchaseModal from "@/components/node-purchase-modal";
 import NodePurchaseSuccessModal from "@/components/node-purchase-success-modal";
 import { useNodeDetail } from "./hooks/useNodeDetail";
@@ -20,16 +22,19 @@ import PriceAdvantage from "./components/PriceAdvantage";
 import SecurityMeasures from "./components/SecurityMeasures";
 
 interface NodeDetailProps {
-  nodeId: string;
+  tier: string;
 }
 
-const NodeDetail: React.FC<NodeDetailProps> = ({ nodeId }) => {
+const NodeDetail: React.FC<NodeDetailProps> = ({ tier }) => {
   const t = useTranslations("nodeDetail");
   const tNetwork = useTranslations("network");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [purchaseData, setPurchaseData] = useState<{
@@ -40,13 +45,12 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ nodeId }) => {
 
   const {
     selectedNodeId,
-    setSelectedNodeId,
     currentNode,
     isGenesis,
     isSuper,
     isStandard,
     nfts,
-  } = useNodeDetail(nodeId);
+  } = useNodeDetail(tier);
 
   // 节点基本信息
   const nodeInfo = {
@@ -74,7 +78,10 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ nodeId }) => {
 
   // 处理 NFT 切换
   const handleNFTChange = (nodeId: "genesis" | "super" | "standard") => {
-    setSelectedNodeId(nodeId);
+    // 更新 URL searchParams
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tier", nodeId);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   // 安全保障措施数据

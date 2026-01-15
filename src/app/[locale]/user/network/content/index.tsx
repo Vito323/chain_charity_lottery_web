@@ -93,7 +93,7 @@ const NetworkDetail: React.FC = () => {
               setActiveTab(index);
               // 更新 URL 参数（不刷新页面）
               const tabNames = ['nodes', 'earnings', 'history'];
-              const newUrl = `/network/detail?tab=${tabNames[index]}`;
+              const newUrl = `/user/network?tab=${tabNames[index]}`;
               window.history.pushState({}, '', newUrl);
             }}
             tabBar={tabBar}

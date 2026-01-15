@@ -617,6 +617,43 @@
         "earningsDetails": "Earnings Details",
         "purchaseHistory": "Purchase History"
       }
+    },
+    "invite": {
+      "badge": "Invite Network",
+      "title": "Invite Network",
+      "titleHighlight": "",
+      "subtitle": "Bind to a parent node and start your referral network",
+      "bindButton": "Bind to Parent Node",
+      "inviteButton": "Invite Friends",
+      "parentNode": {
+        "title": "Parent Node Information",
+        "subtitle": "Your referral node information",
+        "address": "Address",
+        "joinDate": "Join Date",
+        "nodeCount": "Node Count",
+        "totalEarnings": "Total Earnings",
+        "level": "Level",
+        "referralCount": "Referrals",
+        "nodeType": {
+          "genesis": "Genesis Node",
+          "super": "Super Node",
+          "standard": "Standard Node"
+        }
+      },
+      "userAddress": {
+        "title": "Your Address",
+        "subtitle": "The address that will be bound to the parent node",
+        "label": "Address"
+      },
+      "modals": {
+        "bind": {
+          "title": "Confirm Binding",
+          "description": "Once you bind to this parent node, you cannot change it. Please confirm your decision.",
+          "parentNodeAddress": "Parent Node Address",
+          "connectWalletFirst": "Please connect your wallet first",
+          "confirmButton": "Confirm Binding"
+        }
+      }
     }
   },
   "user": {

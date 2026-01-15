@@ -539,6 +539,43 @@
         "earningsDetails": "收益详情",
         "purchaseHistory": "购买历史"
       }
+    },
+    "invite": {
+      "badge": "邀请网络",
+      "title": "邀请网络",
+      "titleHighlight": "",
+      "subtitle": "绑定上级节点，开启您的推荐网络",
+      "bindButton": "绑定上级节点",
+      "inviteButton": "邀请好友",
+      "parentNode": {
+        "title": "上级节点信息",
+        "subtitle": "您的推荐节点信息",
+        "address": "地址",
+        "joinDate": "加入日期",
+        "nodeCount": "节点数量",
+        "totalEarnings": "总收益",
+        "level": "等级",
+        "referralCount": "推荐数量",
+        "nodeType": {
+          "genesis": "创世节点",
+          "super": "超级节点",
+          "standard": "标准节点"
+        }
+      },
+      "userAddress": {
+        "title": "您的地址",
+        "subtitle": "将绑定到上级节点的地址",
+        "label": "地址"
+      },
+      "modals": {
+        "bind": {
+          "title": "确认绑定",
+          "description": "一旦您绑定到此上级节点，将无法更改。请确认您的决定。",
+          "parentNodeAddress": "上级节点地址",
+          "connectWalletFirst": "请先连接您的钱包",
+          "confirmButton": "确认绑定"
+        }
+      }
     }
   },
   "user": {
