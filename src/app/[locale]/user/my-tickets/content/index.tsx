@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAccount, useChainId } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import OwnedLotteryCard from '../components/OwnedLotteryCard';
 import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { RarityType } from '@/app/[locale]/nft-market/types';
-import { useWalletNFTs, WalletNFT } from '@/hooks/useWalletNFTs';
+import { getAssetOwner, AssetOwner } from '@/service/asset';
 import { rankToRarity } from '@/utils/lottery';
 
 type FilterTab = 'hold' | 'listed';
@@ -21,157 +21,113 @@ interface OwnedLotteryTicket {
   purchasePrice: number;
   currency: string;
   isListed?: boolean; // Whether the ticket is listed for sale
+  dna: string; // DNA for rendering ticket image
 }
 
-// Get lottery NFT contract address
-const getLotteryNFTContractAddress = (): string | null => {
-  if (typeof window === 'undefined') return null;
-  return process.env.NEXT_PUBLIC_LOTTERY_NFT_CONTRACT_ADDRESS || null;
-};
-
-// Convert WalletNFT to OwnedLotteryTicket
-const convertWalletNFTToTicket = (nft: WalletNFT): OwnedLotteryTicket => {
-  // Extract rarity from metadata or default to common
-  let rarity: RarityType = 'common';
-  let rarityLabel = 'Common';
-  let purchasePrice = 0;
-
-  // Extract data from metadata.attributes array
-  if (nft.metadata) {
-    const attributes = nft.metadata.attributes as Array<{ trait_type: string; value: string | number }> | undefined;
-    
-    if (attributes && Array.isArray(attributes)) {
-      // Extract Asset Value for purchasePrice
-      const assetValueAttr = attributes.find(attr => attr.trait_type === 'Asset Value');
-      if (assetValueAttr) {
-        const value = assetValueAttr.value;
-        purchasePrice = typeof value === 'string' ? parseFloat(value) : (typeof value === 'number' ? value : 0);
-      }
-
-      // Extract Rank for rarityLabel
-      const rankAttr = attributes.find(attr => attr.trait_type === 'Rank');
-      if (rankAttr) {
-        const rankValue = rankAttr.value as string;
-        // Directly use rankValue, format as first letter uppercase, rest lowercase
-        rarity = rankValue.toLowerCase() as RarityType;
-        rarityLabel = rankValue.charAt(0).toUpperCase() + rankValue.slice(1).toLowerCase();
-        //   } else {
-        //     // Try to parse as number rank (1-5)
-        //     const rankNum = parseInt(rankValue, 10);
-        //     if (!isNaN(rankNum)) {
-        //       rarity = rankToRarity(rankNum);
-        //       rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
-        //     }
-        //   }
-        // } else if (typeof rankValue === 'number') {
-        //   rarity = rankToRarity(rankValue);
-        //   rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
-        // }
-      }
-    }
-
-    // Fallback: Try to extract from old metadata structure if attributes not found
-    if (purchasePrice === 0) {
-      const price = (nft.metadata.price as number) || (nft.metadata.purchasePrice as number);
-      if (price) {
-        purchasePrice = typeof price === 'string' ? parseFloat(price) : price;
-      }
-    }
-
-    if (rarity === 'common' && !attributes) {
-      const rank = (nft.metadata.rank as number) || (nft.metadata.rank as string);
-      if (rank) {
-        const rankNum = typeof rank === 'string' ? parseInt(rank, 10) : rank;
-        if (!isNaN(rankNum)) {
-          rarity = rankToRarity(rankNum);
-          rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
-        }
-      }
-    }
-  }
-
-  // Default purchase price if not found in metadata
-  if (purchasePrice === 0) {
-    // Use rarity-based default prices
-    switch (rarity) {
-      case 'mythic':
-        purchasePrice = 10000;
-        break;
-      case 'legendary':
-        purchasePrice = 5000;
-        break;
-      case 'epic':
-        purchasePrice = 1000;
-        break;
-      case 'rare':
-        purchasePrice = 500;
-        break;
-      default:
-        purchasePrice = 100;
-    }
-  }
+// Convert AssetOwner to OwnedLotteryTicket
+const convertAssetOwnerToTicket = (asset: AssetOwner): OwnedLotteryTicket => {
+  // Use rank from series to determine rarity
+  const rank = asset.series?.rank || 1;
+  const rarity = rankToRarity(rank);
+  const rarityLabel = rarity.charAt(0).toUpperCase() + rarity.slice(1);
+  
+  // Use price from series
+  const purchasePrice = asset.series?.price || 0;
 
   return {
-    id: nft.id,
-    image: nft.image || '/images/placeholder-all.png',
+    id: asset.dna,
+    image: '', // Image will be loaded in OwnedLotteryCard component
     rarity,
     rarityLabel,
     purchasePrice,
     currency: 'CCT',
-    isListed: false, // All tickets from wallet are not listed by default
+    isListed: false, // All tickets from owner are not listed by default
+    dna: asset.dna,
   };
 };
 
 const MyTickets: React.FC = () => {
   const { isConnected, address } = useAccount();
-  const chainId = useChainId();
   const t = useTranslations('myTickets');
   const tCommon = useTranslations('common');
   const [activeTab, setActiveTab] = useState<FilterTab>('hold');
-  
-  // Get lottery NFT contract address
-  const lotteryContractAddress = useMemo(() => getLotteryNFTContractAddress(), []);
+  const [assets, setAssets] = useState<AssetOwner[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // 获取特定合约的 NFT（使用 ABI，无需 API）
-const { nfts, loading: nftsLoading, error: nftsError, refresh: refreshNFTs } = useWalletNFTs({
-  contractAddress: process.env.NEXT_PUBLIC_LOTTERY_NFT_CONTRACT_ADDRESS!,
-});
+  // Fetch assets from getAssetOwner API
+  useEffect(() => {
+    const fetchAssets = async () => {
+      if (!isConnected || !address) {
+        setAssets([]);
+        return;
+      }
 
-  // Filter and convert lottery NFTs
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await getAssetOwner(address);
+        
+        if (response.ok && response.data) {
+          setAssets(response.data);
+        } else {
+          setError(response.msg || 'Failed to load tickets');
+          setAssets([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch assets:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load tickets');
+        setAssets([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAssets();
+  }, [isConnected, address]);
+
+  // Convert assets to tickets
   const ownedTickets = useMemo(() => {
-    if (!isConnected || !lotteryContractAddress || !nfts.length) {
+    if (!assets.length) {
       return [];
     }
 
-    // Filter NFTs that belong to the lottery contract
-    const lotteryNFTs = nfts.filter((nft) => {
-      if (!nft.contractAddress) return false;
-      // Compare addresses (case-insensitive)
-      return nft.contractAddress.toLowerCase() === lotteryContractAddress.toLowerCase();
-    });
+    return assets.map((asset) => convertAssetOwnerToTicket(asset));
+  }, [assets]);
 
-    // Convert to OwnedLotteryTicket format
-    return lotteryNFTs.map(convertWalletNFTToTicket);
-  }, [nfts, isConnected, lotteryContractAddress]);
-
-  // Note: useWalletNFTs hook already handles automatic loading when address/chainId changes
-  // No need to manually refresh here to avoid infinite loops
-
-  const isLoading = nftsLoading;
-  const error = nftsError;
+  const refreshAssets = async () => {
+    if (!isConnected || !address) return;
+    
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getAssetOwner(address);
+      
+      if (response.ok && response.data) {
+        setAssets(response.data);
+      } else {
+        setError(response.msg || 'Failed to load tickets');
+      }
+    } catch (err) {
+      console.error('Failed to refresh assets:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load tickets');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSell = async (ticketId: string) => {
     // TODO: Implement sell functionality
     console.log('Selling ticket:', ticketId);
-    // After selling, refresh NFTs to get updated data
-    refreshNFTs();
+    // After selling, refresh assets to get updated data
+    refreshAssets();
   };
 
   const handleDelist = async (ticketId: string) => {
     // TODO: Implement delist functionality
     console.log('Delisting ticket:', ticketId);
-    // After delisting, refresh NFTs to get updated data
-    refreshNFTs();
+    // After delisting, refresh assets to get updated data
+    refreshAssets();
   };
 
   // Filter tickets based on active tab
@@ -397,7 +353,7 @@ const { nfts, loading: nftsLoading, error: nftsError, refresh: refreshNFTs } = u
                 </p>
                 <Link
                   href="/lottery"
-                  className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+                  className="inline-flex items-center justify-center rounded-full bg-linear-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
                 >
                   {t('empty.browseLottery')}
                 </Link>

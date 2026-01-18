@@ -25,6 +25,7 @@ import {
   ProjectProportionData,
   projectDonateCompleted,
 } from "@/service/project";
+import { Delay } from "@/utils/methods";
 
 interface DonateProps {
   uid: string;
@@ -386,9 +387,8 @@ const Donate = ({ uid, name }: DonateProps) => {
           setSelectedQuickAmount(null);
           setRewardAmount(null);
           setAmountChanged(false);
-          setTimeout(async () => {
-            await projectDonateCompleted(uid, address as string, amount, result);
-          }, 1000);
+          await Delay(1000);
+          await projectDonateCompleted(uid, address as string, amount, result);
         } else {
           toast.error(tCommon("errors.donationFailed"));
         }
@@ -548,7 +548,7 @@ const Donate = ({ uid, name }: DonateProps) => {
             {/* Total Donation */}
             <TotalDonation
               amount={amount}
-              // calculateUSDValue={calculateUSDValue}
+            // calculateUSDValue={calculateUSDValue}
             />
 
             {/* Donate Button */}

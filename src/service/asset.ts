@@ -1,4 +1,4 @@
-import { provider } from "./provider";
+import { action, provider } from "./provider";
 
 export interface TicketMetadata {
   name: string;
@@ -11,6 +11,27 @@ export interface TicketMetadata {
   }[];
 }
 
+
+export interface AssetOwner {
+ dna: string,
+ colors: string,
+ numbers: string,
+ timestamp: string,
+ amount: number,
+ generation: number,
+ address: string,
+ status: number,
+ series: {
+  seriesName: string,
+  title: string,
+  description: string,
+  rank: number,
+  highest: number,
+  price: number,
+ }
+ 
+
+}
 /**
  * 渲染 NFT Ticket，返回 SVG 二进制流
  * @param ticketId Ticket ID
@@ -69,3 +90,11 @@ export const renderTicketMetadata = async (dna: string) =>
     url: `/asset/metadata/${dna}`,
     method: "GET",
   });
+
+
+
+  export const getAssetOwner = (address: string) =>
+    action<AssetOwner[]>({
+      url: `/asset/owner/${address}`,
+      method: "GET",
+    });

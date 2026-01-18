@@ -27,12 +27,12 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ onCloseDropdown 
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div className="py-2 flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-track-white/10 scrollbar-thumb-white/30 hover:scrollbar-thumb-white/50 max-h-[300px] md:max-h-[300px]">
-        <button 
+        {/* <button 
           className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
           onClick={() => handleNavigation("/user")}
         >
           {tCommon('wallet.userCenter')}
-        </button>
+        </button> */}
         
         {/* <button 
           className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"

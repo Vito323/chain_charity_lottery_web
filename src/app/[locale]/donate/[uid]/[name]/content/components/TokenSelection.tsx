@@ -1,9 +1,11 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useAccount } from "wagmi";
 import { TokenInfo } from "@/hooks/useDonationForm";
-import { useDonationTokenBalance } from "@/hooks/useDonationTokenBalance";
+import { useMasterContract } from "@/hooks/useMasterContract";
+import { userToken } from "@/service/user";
 import { formatCurrency } from "@/utils/currency";
 
 interface TokenSelectionProps {
@@ -15,12 +17,56 @@ export const TokenSelection: React.FC<TokenSelectionProps> = ({
 }) => {
   const t = useTranslations("donate");
   const tCommon = useTranslations("common");
-  const {
-    balance: usdtBalance,
-    address: usdtAddress,
-    isLoading: isBalanceLoading,
-    isConnected,
-  } = useDonationTokenBalance();
+  const { address, isConnected } = useAccount();
+  const { getDonationToken } = useMasterContract();
+  
+  const [usdtAddress, setUsdtAddress] = useState<string | null>(null);
+  const [usdtBalance, setUsdtBalance] = useState<string>("0");
+  const [usdtDecimals, setUsdtDecimals] = useState<number>(18);
+  const [isBalanceLoading, setIsBalanceLoading] = useState(false);
+
+  // 获取 USDT 合约地址
+  useEffect(() => {
+    const fetchUsdtAddress = async () => {
+      try {
+        const address = await getDonationToken();
+        if (address) {
+          setUsdtAddress(address);
+        }
+      } catch (error) {
+        console.error('Failed to fetch USDT token address:', error);
+      }
+    };
+
+    fetchUsdtAddress();
+  }, [getDonationToken]);
+
+  // 使用 userToken API 获取 USDT 余额和 decimals
+  useEffect(() => {
+    const fetchUsdtTokenInfo = async () => {
+      if (!isConnected || !address || !usdtAddress) {
+        setUsdtBalance("0");
+        return;
+      }
+
+      setIsBalanceLoading(true);
+      try {
+        const response = await userToken(address, usdtAddress);
+        if (response?.data) {
+          const { balance, decimals } = response.data;
+          setUsdtBalance(balance);
+          setUsdtDecimals(decimals || 18);
+        }
+      } catch (error) {
+        console.error('Failed to fetch USDT token info:', error);
+        setUsdtBalance("0");
+      } finally {
+        setIsBalanceLoading(false);
+      }
+    };
+
+    fetchUsdtTokenInfo();
+  }, [isConnected, address, usdtAddress]);
 
   // 构建USDT TokenInfo
   const usdtTokenInfo = useMemo<TokenInfo | null>(() => {
@@ -31,13 +77,13 @@ export const TokenSelection: React.FC<TokenSelectionProps> = ({
     return {
       symbol: "USDT",
       name: "Tether USD",
-      decimals: 18,
+      decimals: usdtDecimals,
       address: usdtAddress,
       balance: usdtBalance,
       displayBalance: usdtBalance,
       isNative: false,
     };
-  }, [isConnected, usdtAddress, usdtBalance]);
+  }, [isConnected, usdtAddress, usdtBalance, usdtDecimals]);
 
   // 当USDT信息变化时，通知父组件
   useEffect(() => {
