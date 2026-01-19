@@ -2,11 +2,10 @@
 
 import React from "react";
 import { motion, type Variants } from "framer-motion";
-import type { NodeTierId } from "@/constants/nodes";
 
 interface NFT {
   id: string;
-  nodeId: NodeTierId;
+  rank: string;
   nodeName: string;
   gradient: string;
   borderColor: string;
@@ -14,15 +13,15 @@ interface NFT {
 
 interface NFTSelectorProps {
   nfts: NFT[];
-  selectedNodeId: NodeTierId;
-  onNFTChange: (nodeId: NodeTierId) => void;
+  selectedRank: string;
+  onNFTChange: (rank: string) => void;
   isInView: boolean;
   variants: Variants;
 }
 
 const NFTSelector: React.FC<NFTSelectorProps> = ({
   nfts,
-  selectedNodeId,
+  selectedRank,
   onNFTChange,
   isInView,
   variants,
@@ -36,17 +35,17 @@ const NFTSelector: React.FC<NFTSelectorProps> = ({
         {nfts.map((nft, index) => (
           <motion.div
             key={nft.id}
-            onClick={() => onNFTChange(nft.nodeId)}
+            onClick={() => onNFTChange(nft.rank)}
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: index * 0.1 }}
             className={`relative rounded-xl sm:rounded-2xl border-2 ${
-              selectedNodeId === nft.nodeId
+              selectedRank === nft.rank
                 ? "border-yellow-500 ring-2 ring-yellow-500/50"
                 : nft.borderColor
             } bg-linear-to-br ${nft.gradient} p-3 sm:p-4 md:p-6 aspect-[3/4] flex flex-col justify-between shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer`}
           >
-            {selectedNodeId === nft.nodeId && (
+            {selectedRank === nft.rank && (
               <div className="absolute top-2 right-2 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center z-20">
                 <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />

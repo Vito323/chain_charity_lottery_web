@@ -22,10 +22,10 @@ import PriceAdvantage from "./components/PriceAdvantage";
 import SecurityMeasures from "./components/SecurityMeasures";
 
 interface NodeDetailProps {
-  tier: string;
+  rank: string;
 }
 
-const NodeDetail: React.FC<NodeDetailProps> = ({ tier }) => {
+const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
   const t = useTranslations("nodeDetail");
   const tNetwork = useTranslations("network");
   const ref = useRef(null);
@@ -44,17 +44,21 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ tier }) => {
   } | null>(null);
 
   const {
-    selectedNodeId,
+    selectedRank,
     currentNode,
     isGenesis,
     isSuper,
     isStandard,
     nfts,
-  } = useNodeDetail(tier);
+  } = useNodeDetail(rank);
+
+  // 获取 reward 字段（从接口数据中）
+  const nodeReward = (currentNode as any).reward ?? 0;
+  const nodePrice = currentNode.price;
 
   // 节点基本信息
   const nodeInfo = {
-    name: currentNode.name,
+    name: tNetwork(`nodeTiers.${currentNode.id}.name`),
     title: isGenesis
       ? t("certificates.genesisNodeCertificate")
       : t("certificates.certificateOfOwnership"),
@@ -77,10 +81,10 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ tier }) => {
   };
 
   // 处理 NFT 切换
-  const handleNFTChange = (nodeId: "genesis" | "super" | "standard") => {
+  const handleNFTChange = (nodeRank: string) => {
     // 更新 URL searchParams
     const params = new URLSearchParams(searchParams.toString());
-    params.set("tier", nodeId);
+    params.set("rank", nodeRank);
     router.replace(`${pathname}?${params.toString()}`);
   };
 
@@ -120,7 +124,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ tier }) => {
           {/* NFT Certificates Section - All nodes show NFT selection */}
           <NFTSelector
             nfts={nfts}
-            selectedNodeId={selectedNodeId}
+            selectedRank={selectedRank}
             onNFTChange={handleNFTChange}
             isInView={isInView}
             variants={itemVariants}
@@ -140,7 +144,9 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ tier }) => {
               <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 {/* Investment Returns Section */}
                 <InvestmentReturns
-                  investmentReturns={currentNode.investmentReturns}
+                  price={nodePrice}
+                  reward={nodeReward}
+                  currency={currentNode.currency}
                   isStandard={isStandard}
                   isSuper={isSuper}
                   isInView={isInView}

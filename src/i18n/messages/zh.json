@@ -464,7 +464,7 @@
         "description": "专为经验丰富的投资者设计。"
       },
       "standard": {
-        "name": "标准节点",
+        "name": "普通节点",
         "description": "适合日常投资者的入门选择。"
       },
       "annualizedYield": "年化收益率",

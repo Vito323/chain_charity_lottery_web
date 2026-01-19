@@ -128,7 +128,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+        className="fixed inset-0 z-100 flex items-center justify-center p-4"
         onClick={onClose}
       >
         {/* Backdrop */}
@@ -140,7 +140,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
           transition={{ type: 'spring', duration: 0.3 }}
-          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 border border-white/10 rounded-3xl shadow-2xl"
+          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-linear-to-b from-slate-900 via-slate-950 to-slate-900 border border-white/10 rounded-3xl shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6 sm:p-8 space-y-6 relative">

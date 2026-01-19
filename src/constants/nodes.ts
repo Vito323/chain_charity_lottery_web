@@ -19,6 +19,7 @@ export interface NodeTier {
   highlight?: string;
   accentFrom: string;
   accentTo: string;
+  rank: string;
 }
 
 /**
@@ -81,6 +82,7 @@ export const NODES_DATA: NodeData[] = [
     // Basic tier information
     id: "genesis",
     name: "Genesis Node",
+    rank: "0",
     price: 100_000,
     currency: "USDT",
     aprRange: [25, 35],
@@ -111,9 +113,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Price advantage
     priceAdvantage: {
-      nodePrice: "$0.17/CCT",
+      nodePrice: "0.17/CCT",
       exclusivePrice: "Exclusive pre-sale price",
-      publicPrice: "$2.5/CCT",
+      publicPrice: "2.5USDT/CCT",
       publicOffering: "Public offering price",
       advantage: "14.6x",
       advantageDescription:
@@ -130,6 +132,7 @@ export const NODES_DATA: NodeData[] = [
     // Basic tier information
     id: "super",
     name: "Super Node",
+    rank: "1",
     price: 50_000,
     currency: "USDT",
     aprRange: [20, 30],
@@ -159,9 +162,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Price advantage
     priceAdvantage: {
-      nodePrice: "$0.17/CCT",
+      nodePrice: "0.075USDT/CCT",
       exclusivePrice: "Exclusive pre-sale price",
-      publicPrice: "$2.5/CCT",
+      publicPrice: "2.5USDT/CCT",
       publicOffering: "Public offering price",
       advantage: "14.6x",
       advantageDescription:
@@ -178,6 +181,7 @@ export const NODES_DATA: NodeData[] = [
     // Basic tier information
     id: "standard",
     name: "Standard Node",
+    rank: "2",
     price: 10_000,
     currency: "USDT",
     aprRange: [15, 25],
@@ -207,9 +211,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Price advantage
     priceAdvantage: {
-      nodePrice: "$0.17/CCT",
+      nodePrice: "0.10USDT/CCT",
       exclusivePrice: "Exclusive pre-sale price",
-      publicPrice: "$2.5/CCT",
+      publicPrice: "2.5USDT/CCT",
       publicOffering: "Public offering price",
       advantage: "14.6x",
       advantageDescription:
@@ -247,5 +251,6 @@ export const getNodeTiers = (): NodeTier[] => {
     highlight: node.highlight,
     accentFrom: node.accentFrom,
     accentTo: node.accentTo,
+    rank: node.rank,
   }));
 };

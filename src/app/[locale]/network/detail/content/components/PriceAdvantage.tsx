@@ -35,7 +35,7 @@ const PriceAdvantage: React.FC<PriceAdvantageProps> = ({
             {priceAdvantage.nodePrice}
           </div>
           <p className="text-xs text-white/60 mt-1">
-            {priceAdvantage.exclusivePrice}
+            {t("purchase.exclusivePrice")}
           </p>
         </motion.div>
         <motion.div
@@ -51,7 +51,7 @@ const PriceAdvantage: React.FC<PriceAdvantageProps> = ({
             {priceAdvantage.publicPrice}
           </div>
           <p className="text-xs text-white/60 mt-1">
-            {priceAdvantage.publicOffering}
+            {t("purchase.publicOffering")}
           </p>
         </motion.div>
       </div>
@@ -59,7 +59,7 @@ const PriceAdvantage: React.FC<PriceAdvantageProps> = ({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={isInView ? { opacity: 1, scale: 1 } : {}}
         transition={{ delay: 0.4 }}
-        className="rounded-lg border-2 border-emerald-500/50 bg-gradient-to-r from-emerald-900/30 to-teal-900/30 p-3 sm:p-4 md:mt-auto"
+        className="rounded-lg border-2 border-emerald-500/50 bg-linear-to-r from-emerald-900/30 to-teal-900/30 p-3 sm:p-4 md:mt-auto"
       >
         <div className="flex items-center justify-between gap-2 mb-1.5">
           <div className="text-xs text-white/70">
@@ -70,7 +70,7 @@ const PriceAdvantage: React.FC<PriceAdvantageProps> = ({
           </div>
         </div>
         <p className="text-xs text-white/80">
-          {priceAdvantage.advantageDescription}
+          {t("purchase.advantageDescription")}
         </p>
       </motion.div>
     </div>

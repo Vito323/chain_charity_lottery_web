@@ -5,17 +5,17 @@ import ScrollToTop from "@/components/scroll-to-top";
 
 interface NodeDetailPageProps {
   searchParams: Promise<{
-    tier?: string;
+    rank?: string;
   }>;
 }
 
 const NodeDetailPage = async ({ searchParams }: NodeDetailPageProps) => {
-  const { tier = "genesis" } = await searchParams;
+  const { rank = "0" } = await searchParams;
   
   return (
     <>
       <Header />
-      <NodeDetail tier={tier} />
+      <NodeDetail rank={rank} />
       <Footer />
       <ScrollToTop />
     </>

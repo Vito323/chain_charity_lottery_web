@@ -542,7 +542,7 @@
         "description": "Designed for experienced investors."
       },
       "standard": {
-        "name": "Standard Node",
+        "name": "Normal Node",
         "description": "Accessible entry for everyday investors."
       },
       "annualizedYield": "Annualized yield",
