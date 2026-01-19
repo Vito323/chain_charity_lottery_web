@@ -44,7 +44,13 @@
       "gasIssue": "Transaction failed due to gas issues",
       "networkError": "Network error",
       "serverError": "Server error",
-      "notInWhitelist": "This wallet has no permission"
+      "notInWhitelist": "This wallet has no permission",
+      "walletNotConnected": "Wallet not connected",
+      "nodeIdMissing": "Node ID is missing",
+      "failedToFetchBalance": "Failed to fetch balance",
+      "failedToGetPurchaseSignature": "Failed to get purchase signature",
+      "purchaseFailed": "Purchase failed, please try again",
+      "paymentTokenNotFound": "Payment token address not found"
     },
     "terms": {
       "accept": "I have read and accepted the",
@@ -91,7 +97,8 @@
       "donationSuccess": "Donation successful! Thank you for your support.",
       "donationSuccessful": "Donation Successful!",
       "delistSuccess": "Ticket delisted successfully",
-      "redemptionSuccess": "Redemption successful! Transaction completed."
+      "redemptionSuccess": "Redemption successful! Transaction completed.",
+      "purchaseSuccess": "Purchase successful!"
     },
     "labels": {
       "price": "Price",

@@ -19,9 +19,14 @@ const getNodeTierIdByRank = (rank: string | number): NodeTierId => {
  * Convert API NodeData to NodeData, merging with default data
  * Priority: API data first, then default data
  */
-const convertApiNodeToNodeData = (apiNode: ApiNodeData): NodeData => {
+const convertApiNodeToNodeData = (apiNode: ApiNodeData): NodeData & { reward: number; apiId?: number; maxSupply?: number; currentSupply?: number } => {
   const tierId = getNodeTierIdByRank(apiNode.rank);
   const defaultNode = NODES_DATA.find((node) => node.id === tierId) || NODES_DATA[0];
+
+  // Calculate stats from API data
+  const maxSupply = apiNode.maxSupply ?? defaultNode.globalLimit;
+  const currentSupply = apiNode.currentSupply ?? 0;
+  const remaining = maxSupply - currentSupply;
 
   // Merge API data with default data, prioritizing API data
   return {
@@ -29,12 +34,23 @@ const convertApiNodeToNodeData = (apiNode: ApiNodeData): NodeData => {
     id: tierId,
     name: apiNode.name?.trim() || defaultNode.name,
     price: apiNode.price ?? defaultNode.price,
-    globalLimit: apiNode.maxSupply ?? defaultNode.globalLimit,
+    globalLimit: maxSupply,
     description: apiNode.description?.trim() || defaultNode.description,
     rank: apiNode.rank,
+    // Update stats with API data
+    stats: {
+      totalLimit: maxSupply,
+      sold: currentSupply,
+      remaining: remaining,
+    },
     // Store reward from API for InvestmentReturns calculation
     reward: apiNode.reward ?? 0,
-  } as NodeData & { reward: number };
+    // Store API nodeId for purchase
+    apiId: apiNode.id,
+    // Store original API fields for reference
+    maxSupply: maxSupply,
+    currentSupply: currentSupply,
+  } as NodeData & { reward: number; apiId?: number; maxSupply?: number; currentSupply?: number };
 };
 
 export const useNodeDetail = (rank: string) => {
@@ -89,6 +105,22 @@ export const useNodeDetail = (rank: string) => {
     return node || nodeList[0] || NODES_DATA[0];
   }, [selectedRank, nodeList]);
 
+  // Get nodeId from API data (for purchase)
+  const nodeId = useMemo(() => {
+    const rankNum = parseInt(selectedRank, 10);
+    // Try to find the node from API response
+    const apiNode = nodeList.find((n) => {
+      const nodeRank = typeof n.rank === 'string' ? parseInt(n.rank, 10) : n.rank;
+      return nodeRank === rankNum;
+    });
+    // If we have API data with apiId field, use it
+    if (apiNode && 'apiId' in apiNode && typeof (apiNode as any).apiId === 'number') {
+      return (apiNode as any).apiId;
+    }
+    // Fallback: use rank as nodeId (0, 1, 2)
+    return rankNum;
+  }, [selectedRank, nodeList]);
+
   const isGenesis = currentNode.id === "genesis";
   const isSuper = currentNode.id === "super";
   const isStandard = currentNode.id === "standard";
@@ -116,6 +148,7 @@ export const useNodeDetail = (rank: string) => {
     isStandard,
     nfts,
     isLoading,
+    nodeId,
   };
 };
 

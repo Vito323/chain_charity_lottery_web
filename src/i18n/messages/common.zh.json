@@ -44,7 +44,13 @@
       "gasIssue": "交易因 Gas 问题失败",
       "networkError": "网络错误",
       "serverError": "服务器错误",
-      "notInWhitelist": "该钱包暂无权限"
+      "notInWhitelist": "该钱包暂无权限",
+      "walletNotConnected": "钱包未连接",
+      "nodeIdMissing": "节点ID缺失",
+      "failedToFetchBalance": "获取余额失败",
+      "failedToGetPurchaseSignature": "获取购买签名失败",
+      "purchaseFailed": "购买失败，请重试",
+      "paymentTokenNotFound": "支付代币地址未找到"
     },
     "terms": {
       "accept": "我已阅读并接受",
@@ -91,7 +97,8 @@
       "donationSuccess": "捐赠成功！感谢您的支持。",
       "donationSuccessful": "捐赠成功！",
       "delistSuccess": "下架成功",
-      "redemptionSuccess": "兑换成功！交易已完成。"
+      "redemptionSuccess": "兑换成功！交易已完成。",
+      "purchaseSuccess": "购买成功！"
     },
     "labels": {
       "price": "价格",

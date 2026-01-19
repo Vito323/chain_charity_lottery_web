@@ -5,7 +5,7 @@ import { mainnet, polygon, polygonAmoy, bsc } from 'wagmi/chains';
 import BigNumber from 'bignumber.js';
 
 // USDT合约地址配置
-const USDT_ADDRESSES: Record<number, `0x${string}`> = {
+export const USDT_ADDRESSES: Record<number, `0x${string}`> = {
   [mainnet.id]: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   [polygon.id]: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
   [polygonAmoy.id]: "0x2011a15d6FA0b8E4a4c8c9c4f4e4e4e4e4e4e4e4",

@@ -1,124 +1,70 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
-import { isMockMode, requireRealCall } from '@/utils/mock';
-import { NODES_DATA, getNodeById, type NodeData } from '@/constants/nodes';
+import { type NodeData } from '@/constants/nodes';
 
 interface NodePurchaseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  nodeType: 'genesis' | 'super' | 'standard';
-  nodePrice: number; // 节点价格（美元或USDT）
-  exclusivePrice: number; // 专享价格（美元/CCT）
+  currentNode: NodeData; // 当前节点数据
   remaining?: number; // 剩余数量（仅普通节点需要）
-  onPurchaseSuccess?: (nodeType: 'genesis' | 'super' | 'standard', certificateId?: number) => void;
+  isProcessing?: boolean; // 是否正在处理购买
+  onConfirmPurchase: (quantity: number, acceptedTerms: boolean) => void; // 确认购买回调
 }
 
 const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
   isOpen,
   onClose,
-  nodeType,
-  nodePrice,
-  exclusivePrice,
+  currentNode,
   remaining = 0,
-  onPurchaseSuccess,
+  isProcessing = false,
+  onConfirmPurchase,
 }) => {
   const t = useTranslations('nodePurchaseModal');
   const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [quantity, setQuantity] = useState<number>(1);
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  // 获取当前节点数据
-  const currentNode: NodeData | undefined = NODES_DATA.find((node) => node.id === nodeType);
-  const isStandard = nodeType === 'standard';
-  const maxQuantity = isStandard ? remaining : 1;
+  // 固定数量为1
+  const quantity = 1;
+
+  const isStandard = currentNode.id === 'standard';
+
+  // 从 currentNode 获取价格
+  const nodePrice = currentNode.price;
+  
+  // 从 currentNode.priceAdvantage 获取专享价格
+  // priceAdvantage.nodePrice 格式类似 "0.17/CCT" 或 "0.075USDT/CCT"
+  // 需要提取数字部分
+  const exclusivePrice = useMemo(() => {
+    const priceStr = currentNode.priceAdvantage.nodePrice;
+    // 提取数字部分（支持小数）
+    const match = priceStr.match(/(\d+\.?\d*)/);
+    return match ? parseFloat(match[1]) : 0.17; // 默认值
+  }, [currentNode.priceAdvantage.nodePrice]);
+
+  // 计算总价格（USDT）- 固定为1个节点的价格
+  const totalPrice = nodePrice;
 
   // 当Modal关闭时重置所有状态
   useEffect(() => {
     if (!isOpen) {
       setAcceptedTerms(false);
-      setQuantity(1);
-      setIsProcessing(false);
     }
   }, [isOpen]);
 
-  // 计算实付价（CCT）- 使用当前节点数据
-  const actualPaymentCLT = currentNode 
-    ? Math.floor((currentNode.price * quantity) / exclusivePrice)
-    : Math.floor((nodePrice * quantity) / exclusivePrice);
-
-  // 处理数量变化
-  const handleQuantityChange = (delta: number) => {
-    setQuantity((prev) => {
-      const newQuantity = prev + delta;
-      if (newQuantity < 1) return 1;
-      if (isStandard && newQuantity > maxQuantity) return maxQuantity;
-      return newQuantity;
-    });
-  };
-
-  const handleQuantityInput = (value: string) => {
-    const numValue = parseInt(value, 10);
-    if (isNaN(numValue) || numValue < 1) {
-      setQuantity(1);
-      return;
-    }
-    if (isStandard && numValue > maxQuantity) {
-      setQuantity(maxQuantity);
-      return;
-    }
-    setQuantity(numValue);
-  };
-
-  // 如果没有找到节点数据，返回 null
-  if (!currentNode) return null;
-
-  const handleConfirmPurchase = async () => {
+  const handleConfirmClick = () => {
     if (!isConnected || !acceptedTerms || isProcessing) {
       return;
     }
-    
-    setIsProcessing(true);
-    
-    try {
-      // 模拟加载过程
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      // In mock mode, require real API call or wallet transaction
-      if (isMockMode()) {
-        requireRealCall(`Node purchase for ${nodeType} node with quantity ${isStandard ? quantity : 1}`, 'server');
-        setIsProcessing(false);
-        return;
-      }
-      
-      // Mock购买流程 - 模拟异步操作
-      // 模拟购买成功
-      console.log('Purchase successful:', {
-        nodeType,
-        quantity: isStandard ? quantity : 1,
-        actualPaymentCLT,
-      });
-      
-      // 关闭购买Modal
-      onClose();
-      
-      // 触发成功回调
-      if (onPurchaseSuccess) {
-        onPurchaseSuccess(nodeType);
-      }
-    } catch (error) {
-      console.error('Purchase failed:', error);
-      setIsProcessing(false);
-      // 这里可以显示错误提示
-    }
+    // 固定传递数量1
+    onConfirmPurchase(1, acceptedTerms);
   };
 
-  if (!isOpen || !currentNode) return null;
+  if (!isOpen) return null;
 
   const nodeTypeName = currentNode.name;
 
@@ -160,7 +106,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <div className="text-sm text-white/60 mb-1">
-                    {nodeTypeName} {t('salePrice')}{isStandard ? ` (${t('perShare')})` : ''}
+                    {nodeTypeName} {t('salePrice')}
                   </div>
                   <div className="text-2xl sm:text-3xl font-bold text-white">
                     {currentNode.price.toLocaleString()} {currentNode.currency}
@@ -225,53 +171,12 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
               </div>
             </div>
 
-            {/* Purchase Quantity Section (Only for Standard Nodes) */}
-            {isStandard && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-white/70">
-                    {t('purchaseQuantity')} {remaining > 0 && `(${remaining.toLocaleString()} ${t('sharesRemaining')})`}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleQuantityChange(-1)}
-                      disabled={quantity <= 1}
-                      className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white cursor-pointer transition-colors"
-                      aria-label={tCommon('accessibility.decreaseQuantity')}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                      </svg>
-                    </button>
-                    <input
-                      type="number"
-                      value={quantity}
-                      onChange={(e) => handleQuantityInput(e.target.value)}
-                      min={1}
-                      max={maxQuantity}
-                      className="w-16 h-8 text-center bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                    <button
-                      onClick={() => handleQuantityChange(1)}
-                      disabled={quantity >= maxQuantity}
-                      className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-white cursor-pointer transition-colors"
-                      aria-label={tCommon('accessibility.increaseQuantity')}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* Payment Info */}
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-white/70">{t('actualPaymentPrice')}</div>
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {actualPaymentCLT.toLocaleString()} CCT
+                  {totalPrice.toLocaleString()} USDT
                 </div>
               </div>
             </div>
@@ -299,12 +204,12 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
 
             {/* Confirm Purchase Button */}
             <button
-              onClick={handleConfirmPurchase}
+              onClick={handleConfirmClick}
               disabled={!isConnected || !acceptedTerms || isProcessing}
               className={`w-full rounded-full py-4 px-6 text-base sm:text-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
                 !isConnected || !acceptedTerms || isProcessing
                   ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/30 cursor-pointer'
+                  : 'bg-linear-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/30 cursor-pointer'
               }`}
             >
               {isProcessing ? (

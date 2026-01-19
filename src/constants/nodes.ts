@@ -113,7 +113,7 @@ export const NODES_DATA: NodeData[] = [
 
     // Price advantage
     priceAdvantage: {
-      nodePrice: "0.17/CCT",
+      nodePrice: "0.05USDT/CCT",
       exclusivePrice: "Exclusive pre-sale price",
       publicPrice: "2.5USDT/CCT",
       publicOffering: "Public offering price",
