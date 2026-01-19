@@ -96,9 +96,9 @@ const NodePurchaseSuccessModal: React.FC<NodePurchaseSuccessModalProps> = ({
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">
                 {t('title')}
               </h2>
-              <p className="text-xs sm:text-sm md:text-base text-white/70">
+              {/* <p className="text-xs sm:text-sm md:text-base text-white/70">
                 {t('description', { count: nodeCount, ordinal: locale === 'zh' ? '' : getOrdinalSuffix(nodeCount) })}
-              </p>
+              </p> */}
             </motion.div>
 
             {/* Certificate Image (Genesis Node) or Success Icon (Standard) */}
