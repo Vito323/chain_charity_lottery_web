@@ -94,9 +94,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Statistics
     stats: {
-      totalLimit: 50,
-      sold: 12,
-      remaining: 38,
+      totalLimit: 0,
+      sold: 0,
+      remaining: 0,
     },
 
     // Investment returns
@@ -143,9 +143,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Statistics
     stats: {
-      totalLimit: 600,
-      sold: 245,
-      remaining: 355,
+      totalLimit: 0,
+      sold: 0,
+      remaining: 0,
     },
 
     // Investment returns
@@ -192,9 +192,9 @@ export const NODES_DATA: NodeData[] = [
 
     // Statistics
     stats: {
-      totalLimit: 5_000,
-      sold: 1_868,
-      remaining: 3_132,
+      totalLimit: 0,
+      sold: 0,
+      remaining: 0,
     },
 
     // Investment returns

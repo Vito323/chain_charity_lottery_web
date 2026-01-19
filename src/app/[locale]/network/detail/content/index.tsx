@@ -219,7 +219,8 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
           const translated = tCommon(messageKey as any);
           errorMessage = translated !== messageKey ? translated : errorMsg;
         } else {
-          errorMessage = errorMsg;
+          const bracketIndex = errorMessage.indexOf('(');
+          errorMessage = bracketIndex > -1 ? errorMessage.substring(0, bracketIndex).trim() : errorMessage;
         }
       }
 
