@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { RarityType } from '@/app/[locale]/nft-market/types';
 import { useRouter } from 'next/navigation';
 import { rarityConfig, goldShimmerStyle } from '@/utils/lottery';
+import { renderTicketByDna } from '@/service/asset';
 
 interface OwnedLotteryTicket {
   id: string;
@@ -16,6 +17,7 @@ interface OwnedLotteryTicket {
   rarityLabel: string;
   purchasePrice: number; // Purchase price in CCT
   currency: string;
+  dna: string; // DNA for rendering ticket image
 }
 
 interface OwnedLotteryCardProps {
@@ -37,7 +39,42 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
   const tCommon = useTranslations('common');
   const rarityStyle = rarityConfig[ticket.rarity];
   const [isProcessing, setIsProcessing] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [isLoadingImage, setIsLoadingImage] = useState(true);
+  const [imageError, setImageError] = useState(false);
   const router = useRouter();
+
+  // Load image by DNA
+  useEffect(() => {
+    const loadImage = async () => {
+      if (!ticket.dna) {
+        setImageUrl('/images/placeholder-all.png');
+        setIsLoadingImage(false);
+        return;
+      }
+
+      try {
+        setIsLoadingImage(true);
+        setImageError(false);
+        
+        // Remove 0x prefix if exists
+        const dnaWithoutPrefix = ticket.dna.startsWith('0x') || ticket.dna.startsWith('0X')
+          ? ticket.dna.slice(2)
+          : ticket.dna;
+
+        const renderedImageUrl = await renderTicketByDna(dnaWithoutPrefix);
+        setImageUrl(renderedImageUrl);
+      } catch (err) {
+        console.error(`Failed to render image for DNA ${ticket.dna}:`, err);
+        setImageError(true);
+        setImageUrl('/images/placeholder-all.png');
+      } finally {
+        setIsLoadingImage(false);
+      }
+    };
+
+    loadImage();
+  }, [ticket.dna]);
 
   const handleSell = async () => {
     router.push(`/nft-market/${ticket.id}?type=sell`);
@@ -48,9 +85,9 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
   };
 
   // 检查图片是否是 SVG（来自 render API 或 .svg 扩展名）
-  const isSvgImage = ticket.image.includes('/render/') || 
-                     ticket.image.includes('.svg') || 
-                     ticket.image.startsWith('data:image/svg+xml');
+  const isSvgImage = imageUrl.includes('/render/') || 
+                     imageUrl.includes('.svg') || 
+                     imageUrl.startsWith('data:image/svg+xml');
 
   return (
     <motion.div
@@ -96,31 +133,59 @@ const OwnedLotteryCard: React.FC<OwnedLotteryCardProps> = ({
               className="relative w-full min-w-[280px] min-h-[176px]"
               style={{ aspectRatio: '16/10' }}
             >
-              {isSvgImage ? (
-                // 使用普通 img 标签处理 SVG
-                <img
-                  src={ticket.image}
-                  alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/placeholder-all.png';
-                  }}
-                />
-              ) : (
-                // 使用 Next.js Image 组件处理其他图片格式
-                <Image
-                  src={ticket.image}
-                  alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 280px, (max-width: 1024px) 350px, 350px"
-                  unoptimized={ticket.image.startsWith('data:')}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/placeholder-all.png';
-                  }}
-                />
+              {/* Loading State */}
+              {isLoadingImage && (
+                <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-slate-800 to-slate-900">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <p className="text-xs text-white/60">{tCommon('status.loading')}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Image */}
+              {!isLoadingImage && imageUrl && (
+                <>
+                  {isSvgImage ? (
+                    // 使用普通 img 标签处理 SVG
+                    <img
+                      src={imageUrl}
+                      alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/images/placeholder-all.png';
+                        setImageError(true);
+                      }}
+                    />
+                  ) : (
+                    // 使用 Next.js Image 组件处理其他图片格式
+                    <Image
+                      src={imageUrl}
+                      alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 280px, (max-width: 1024px) 350px, 350px"
+                      unoptimized={imageUrl.startsWith('data:')}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/images/placeholder-all.png';
+                        setImageError(true);
+                      }}
+                    />
+                  )}
+                </>
+              )}
+
+              {/* Error State - Show placeholder */}
+              {!isLoadingImage && (!imageUrl || imageError) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-slate-800 to-slate-900">
+                  <img
+                    src="/images/placeholder-all.png"
+                    alt={`${tCommon('images.lotteryTicket')} ${ticket.id}`}
+                    className="w-full h-full object-cover opacity-50"
+                  />
+                </div>
               )}
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               

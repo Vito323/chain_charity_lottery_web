@@ -8,23 +8,25 @@ import { createConfig, http } from 'wagmi';
 
 const appName = process.env.NEXT_PUBLIC_APP_NAME!;
 const projectId = process.env.NEXT_PUBLIC_APP_PROJECT_ID!;
-
 const chains = [bsc] as const;
 
-const { wallets } = getDefaultWallets();
+const isBrowser = typeof window !== 'undefined';
 
-const reorderedWallets = wallets.map((group) => {
-  if (group.groupName === 'Popular') {
-    const rest = group.wallets.filter((w) => w !== metaMaskWallet);
-    return { ...group, wallets: [metaMaskWallet, tokenPocketWallet, ...rest] };
-  }
-  return group;
-});
+const getConnectors = () => {
+  if (!isBrowser) return []; // 服务端直接返回空
 
-const connectors = connectorsForWallets(reorderedWallets, {
-  projectId,
-  appName,
-});
+  const { wallets } = getDefaultWallets();
+
+  const reorderedWallets = wallets.map((group) => {
+    if (group.groupName === 'Popular') {
+      const rest = group.wallets.filter((w) => w !== metaMaskWallet);
+      return { ...group, wallets: [metaMaskWallet, tokenPocketWallet, ...rest] };
+    }
+    return group;
+  });
+
+  return connectorsForWallets(reorderedWallets, { projectId, appName });
+};
 
 const transports = chains.reduce<Record<number, ReturnType<typeof http>>>((acc, chain) => {
   acc[chain.id] = http();
@@ -34,6 +36,6 @@ const transports = chains.reduce<Record<number, ReturnType<typeof http>>>((acc, 
 export const config = createConfig({
   chains,
   transports,
-  connectors,
+  connectors: getConnectors(),
   ssr: true,
 });

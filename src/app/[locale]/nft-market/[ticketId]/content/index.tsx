@@ -5,16 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
 import { useAccount, useChainId } from 'wagmi';
-import { useReadContract } from 'wagmi';
-import { formatUnits, parseUnits } from 'viem';
-import BigNumber from 'bignumber.js';
 import { TicketImage } from './components/TicketImage';
 import { BasicInfoTab } from './components/BasicInfoTab';
 import { HistoryTab } from './components/HistoryTab';
 import LotteryRedemptionModal from '@/components/lottery-redemption-modal';
 import LotteryRedemptionSuccessModal from '@/components/lottery-redemption-success-modal';
 import LotteryFollowInvestmentModal from '@/components/lottery-follow-investment-modal';
-import LotterySellModal from '@/components/lottery-sell-modal';
+// import LotterySellModal from '@/components/lottery-sell-modal';
 import LotteryDelistModal from '@/components/lottery-delist-modal';
 import HoldTicketDetail from './HoldTicketDetail';
 import { DetailTab, LotteryTicket, PurchaseRecord, WinningRecord } from './types';
@@ -24,6 +21,7 @@ import { useLotteryNFTContract } from '@/hooks/useLotteryNFTContract';
 import { getRarityPercentageFromRank, rankToRarity } from '@/utils/lottery';
 import { getChainById } from '@/lib/chain-config';
 import { useMasterContract } from '@/hooks/useMasterContract';
+import { userToken } from '@/service/user';
 
 interface LotteryTicketDetailProps {
   ticketId: string;
@@ -97,23 +95,6 @@ const mockWinningRecords: WinningRecord[] = [
   },
 ];
 
-// ERC20 ABI (仅包含 balanceOf 和 decimals)
-const ERC20_ABI = [
-  {
-    constant: true,
-    inputs: [{ name: '_owner', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: 'balance', type: 'uint256' }],
-    type: 'function',
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'decimals',
-    outputs: [{ name: '', type: 'uint8' }],
-    type: 'function',
-  },
-] as const;
 
 // Convert LotterySeries to LotteryTicket
 const convertLotterySeriesToTicket = (series: LotterySeries): LotteryTicket => {
@@ -205,27 +186,25 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
     return mockTicketData;
   }, [lotterySeries]);
   
-  // 查询 CCT 余额
-  const { data: cctBalance, refetch: refetchCCTBalance } = useReadContract({
-    address: cctTokenAddress,
-    abi: ERC20_ABI,
-    functionName: 'balanceOf',
-    args: address ? [address] : undefined,
-    query: {
-      enabled: isConnected && !!address && !!cctTokenAddress,
-      refetchInterval: 10000,
-    },
-  });
-  
-  // 查询 CCT decimals
-  const { data: cctDecimals } = useReadContract({
-    address: cctTokenAddress,
-    abi: ERC20_ABI,
-    functionName: 'decimals',
-    query: {
-      enabled: !!cctTokenAddress,
-    },
-  });
+  // 使用 userToken API 一次性获取 CCT 余额和 decimals
+  const fetchCCTTokenInfo = async (): Promise<{ balance: string; decimals: number } | null> => {
+    if (!isConnected || !address || !cctTokenAddress) {
+      return null;
+    }
+    
+    try {
+      const response = await userToken(address, cctTokenAddress);
+      if (response?.data) {
+        const { balance, decimals } = response.data;
+        const decimalsNum = decimals || 18;
+        return { balance, decimals: decimalsNum };
+      }
+      return null;
+    } catch (error) {
+      console.error('Failed to fetch CCT token info:', error);
+      return null;
+    }
+  };
   const [activeTab, setActiveTab] = React.useState<DetailTab>('basic');
   const [tabKey, setTabKey] = React.useState(0);
   
@@ -314,26 +293,15 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
       }
       const preMintInfo = preMintResponse.data;
       setTicketDna(preMintInfo.dna);
-      // 2. 查询 CCT 余额
-      const balanceResult = await refetchCCTBalance();
-      const balance = balanceResult.data;
-      const decimals = (cctDecimals as number) || 18;
-      console.log('balance', balance, cctDecimals);
-      if (!balance) {
+      // 2. 重新获取 CCT 余额和 decimals
+      const tokenInfo = await fetchCCTTokenInfo();
+      if (!tokenInfo) {
         toast.error(tCommon('errors.failedToLoad'));
         return;
       }
-      const requiredAmountBigInt = BigInt(preMintInfo.amount);
-      const requiredAmountFormatted = formatUnits(requiredAmountBigInt, decimals);
+      const { balance, decimals } = tokenInfo;
       
-      // 钱包余额是 bigint（原始值），转换为格式化值
-      const balanceBigInt = typeof balance === 'bigint' ? balance : BigInt(balance.toString());
-      const userBalanceFormatted = formatUnits(balanceBigInt, decimals);
-      
-      // 使用 BigNumber 进行比对（两者都是格式化值）
-      const requiredAmountBN = new BigNumber(requiredAmountFormatted);
-      const userBalanceBN = new BigNumber(userBalanceFormatted);
-      if (userBalanceBN.isLessThan(requiredAmountBN)) {
+      if (parseFloat(balance) < parseFloat(preMintInfo.amount)) {
         toast.error(tCommon('errors.insufficientFunds'));
         return;
       }
