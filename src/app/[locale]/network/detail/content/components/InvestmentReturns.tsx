@@ -25,11 +25,9 @@ const InvestmentReturns: React.FC<InvestmentReturnsProps> = ({
 
   // 计算各年回报
   // 第一年：reward * 50%
-  // 第二年：剩下的50% = (reward - reward*50%) * 50% = reward * 25%
-  // 第三年：剩下的全部 = reward - reward*50% - reward*25% = reward * 25%
+  // 第三年：剩下的全部 = reward * 50%
   const year1Reward = useMemo(() => reward * 0.5, [reward]);
-  const year2Reward = useMemo(() => reward * 0.25, [reward]);
-  const year3Reward = useMemo(() => reward * 0.25, [reward]);
+  const year3Reward = useMemo(() => reward * 0.5, [reward]);
   const totalReward = useMemo(() => reward, [reward]);
 
   // 格式化数字显示
@@ -62,7 +60,6 @@ const InvestmentReturns: React.FC<InvestmentReturnsProps> = ({
 
   // 格式化各年回报
   const year1Formatted = useMemo(() => `${formatNumber(year1Reward)} CCT`, [year1Reward]);
-  const year2Formatted = useMemo(() => `${formatNumber(year2Reward)} CCT`, [year2Reward]);
   const year3Formatted = useMemo(() => `${formatNumber(year3Reward)} CCT`, [year3Reward]);
 
   return (
@@ -99,7 +96,7 @@ const InvestmentReturns: React.FC<InvestmentReturnsProps> = ({
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -117,19 +114,6 @@ const InvestmentReturns: React.FC<InvestmentReturnsProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.5 }}
-          className="rounded-lg border border-white/10 bg-white/5 p-2.5 sm:p-3 text-center"
-        >
-          <div className="text-xs text-white/60 mb-1">
-            {t("purchase.year2")}
-          </div>
-          <div className="text-sm sm:text-base font-bold text-white">
-            {year2Formatted}
-          </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.6 }}
           className="rounded-lg border border-white/10 bg-white/5 p-2.5 sm:p-3 text-center"
         >
           <div className="text-xs text-white/60 mb-1">

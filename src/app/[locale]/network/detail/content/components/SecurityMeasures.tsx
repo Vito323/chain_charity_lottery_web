@@ -39,10 +39,10 @@ const SecurityMeasures: React.FC<SecurityMeasuresProps> = ({
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: index * 0.1 }}
-            className="rounded-xl sm:rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 p-3 sm:p-4 md:p-5 shadow-xl hover:border-white/20 transition-all duration-300"
+            className="rounded-xl sm:rounded-2xl border border-white/10 bg-linear-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 p-3 sm:p-4 md:p-5 shadow-xl hover:border-white/20 transition-all duration-300"
           >
             <div className="flex items-start gap-2 sm:gap-3">
-              <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 flex items-center justify-center">
+              <div className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg bg-linear-to-br from-purple-500/20 to-pink-500/20 border border-white/10 flex items-center justify-center">
                 <i
                   className={`${measure.icon} text-lg sm:text-xl md:text-2xl text-purple-400`}
                 ></i>
@@ -57,10 +57,10 @@ const SecurityMeasures: React.FC<SecurityMeasuresProps> = ({
                       key={itemIndex}
                       className="flex items-start gap-1.5 text-xs sm:text-sm text-white/70 leading-relaxed"
                     >
-                      <span className="text-emerald-400 mt-0.5 flex-shrink-0 text-xs">
+                      <span className="text-emerald-400 mt-0.5 shrink-0 text-xs">
                         •
                       </span>
-                      <span className="break-words">{item}</span>
+                      <span className="wrap-break-word">{item}</span>
                     </li>
                   ))}
                 </ul>
