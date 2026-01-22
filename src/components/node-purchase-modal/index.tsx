@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { type NodeData } from '@/constants/nodes';
+import { ServiceAgreementModal } from '@/components/service-agreement-modal';
+import { PrivacyPolicyModal } from '@/components/privacy-policy-modal';
 
 interface NodePurchaseModalProps {
   isOpen: boolean;
@@ -27,6 +29,9 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
   const tCommon = useTranslations('common');
   const { isConnected } = useAccount();
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showServiceAgreement, setShowServiceAgreement] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // 固定数量为1
   const quantity = 1;
@@ -49,12 +54,33 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
   // 计算总价格（USDT）- 固定为1个节点的价格
   const totalPrice = nodePrice;
 
+  // 处理 mounted 状态
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   // 当Modal关闭时重置所有状态
   useEffect(() => {
     if (!isOpen) {
       setAcceptedTerms(false);
+      setShowServiceAgreement(false);
+      setShowPrivacyPolicy(false);
     }
   }, [isOpen]);
+
+  // 处理 body 滚动
+  useEffect(() => {
+    if (showServiceAgreement || showPrivacyPolicy) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showServiceAgreement, showPrivacyPolicy]);
 
   const handleConfirmClick = () => {
     if (!isConnected || !acceptedTerms || isProcessing) {
@@ -182,7 +208,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
             </div>
 
             {/* Terms and Conditions */}
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <input
                 type="checkbox"
                 id="terms-checkbox"
@@ -192,20 +218,36 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
               />
               <label htmlFor="terms-checkbox" className="flex-1 text-sm text-white/70 cursor-pointer">
                 {tCommon('terms.accept')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowServiceAgreement(true);
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.service')}
-                </a>{' '}
+                </button>{' '}
                 {tCommon('terms.and')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowPrivacyPolicy(true);
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.privacy')}
-                </a>
+                </button>
               </label>
-            </div>
+            </div> */}
 
             {/* Confirm Purchase Button */}
             <button
               onClick={handleConfirmClick}
-              disabled={!isConnected || !acceptedTerms || isProcessing}
+              disabled={!isConnected || isProcessing}
               className={`w-full rounded-full py-4 px-6 text-base sm:text-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
                 !isConnected || !acceptedTerms || isProcessing
                   ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
@@ -229,6 +271,16 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
           </div>
         </motion.div>
       </motion.div>
+      <ServiceAgreementModal
+        show={showServiceAgreement}
+        onClose={() => setShowServiceAgreement(false)}
+        mounted={mounted}
+      />
+      <PrivacyPolicyModal
+        show={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+        mounted={mounted}
+      />
     </AnimatePresence>
   );
 };

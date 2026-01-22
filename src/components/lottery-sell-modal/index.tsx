@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { isMockMode, requireRealCall } from '@/utils/mock';
+import { ServiceAgreementModal } from '@/components/service-agreement-modal';
+import { PrivacyPolicyModal } from '@/components/privacy-policy-modal';
 
 interface LotterySellModalProps {
   isOpen: boolean;
@@ -31,11 +33,20 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
   const [duration, setDuration] = useState<string>('7');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showServiceAgreement, setShowServiceAgreement] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // 计算手续费
   const serviceFeeRate = 0.025; // 2.5%
   const creatorFeeRate = 0.002; // 0.2%
   const numericSalePrice = parseFloat(salePrice.replace(/,/g, '')) || 0;
+
+  // 处理 mounted 状态
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // 当Modal关闭时重置所有状态
   useEffect(() => {
@@ -44,8 +55,23 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
       setDuration('7');
       setAcceptedTerms(false);
       setIsProcessing(false);
+      setShowServiceAgreement(false);
+      setShowPrivacyPolicy(false);
     }
   }, [isOpen, purchasePrice]);
+
+  // 处理 body 滚动
+  useEffect(() => {
+    if (showServiceAgreement || showPrivacyPolicy) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showServiceAgreement, showPrivacyPolicy]);
 
   // 格式化数字输入
   const handleSalePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,13 +228,29 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
                 />
                 <label htmlFor="terms-checkbox-sell" className="flex-1 text-sm sm:text-base text-white/70 cursor-pointer">
                   {tCommon('terms.accept')}{' '}
-                  <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setShowServiceAgreement(true);
+                    }}
+                    className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                  >
                     {tCommon('terms.service')}
-                  </a>{' '}
+                  </button>{' '}
                   {tCommon('terms.and')}{' '}
-                  <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setShowPrivacyPolicy(true);
+                    }}
+                    className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                  >
                     {tCommon('terms.privacy')}
-                  </a>
+                  </button>
                 </label>
               </div>
             </div>
@@ -240,6 +282,16 @@ const LotterySellModal: React.FC<LotterySellModalProps> = ({
           </div>
         </motion.div>
       </motion.div>
+      <ServiceAgreementModal
+        show={showServiceAgreement}
+        onClose={() => setShowServiceAgreement(false)}
+        mounted={mounted}
+      />
+      <PrivacyPolicyModal
+        show={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+        mounted={mounted}
+      />
     </AnimatePresence>
   );
 };

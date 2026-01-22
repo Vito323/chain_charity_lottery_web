@@ -9,6 +9,8 @@ import { formatAddress } from "./utils";
 import { TermsModal } from "./TermsModal";
 import { MobileBottomSheet } from "./MobileBottomSheet";
 import { DesktopDropdown } from "./DesktopDropdown";
+import { ServiceAgreementModal } from "@/components/service-agreement-modal";
+import { PrivacyPolicyModal } from "@/components/privacy-policy-modal";
 import { userConnect } from "@/service/user";
 import useGlobalStore from "@/store";
 import { useMasterContract } from "@/hooks/useMasterContract";
@@ -20,6 +22,8 @@ const CustomConnectButton = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showServiceAgreement, setShowServiceAgreement] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const hasCalledConnectRef = useRef<string | null>(null);
   const tCommon = useTranslations("common");
@@ -100,7 +104,7 @@ const CustomConnectButton = () => {
 
   // 处理条款弹窗的 body 滚动
   useEffect(() => {
-    if (showTermsModal) {
+    if (showTermsModal || showServiceAgreement || showPrivacyPolicy) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -109,7 +113,7 @@ const CustomConnectButton = () => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [showTermsModal]);
+  }, [showTermsModal, showServiceAgreement, showPrivacyPolicy]);
 
   const handleConnectClick = () => {
     setShowTermsModal(true);
@@ -229,6 +233,18 @@ const CustomConnectButton = () => {
               onAcceptedTermsChange={setAcceptedTerms}
               onConfirm={handleConfirmConnect}
               onCancel={handleTermsCancel}
+              onOpenServiceAgreement={() => setShowServiceAgreement(true)}
+              onOpenPrivacyPolicy={() => setShowPrivacyPolicy(true)}
+              mounted={mounted}
+            />
+            <ServiceAgreementModal
+              show={showServiceAgreement}
+              onClose={() => setShowServiceAgreement(false)}
+              mounted={mounted}
+            />
+            <PrivacyPolicyModal
+              show={showPrivacyPolicy}
+              onClose={() => setShowPrivacyPolicy(false)}
               mounted={mounted}
             />
           </div>

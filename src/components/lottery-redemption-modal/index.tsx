@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
+import { ServiceAgreementModal } from '@/components/service-agreement-modal';
+import { PrivacyPolicyModal } from '@/components/privacy-policy-modal';
 
 interface LotteryRedemptionModalProps {
   isOpen: boolean;
@@ -28,14 +30,38 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
   const isPurchaseType = type === 'purchase';
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showServiceAgreement, setShowServiceAgreement] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // 处理 mounted 状态
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // 当Modal关闭时重置所有状态
   useEffect(() => {
     if (!isOpen) {
       setAcceptedTerms(false);
       setIsProcessing(false);
+      setShowServiceAgreement(false);
+      setShowPrivacyPolicy(false);
     }
   }, [isOpen]);
+
+  // 处理 body 滚动
+  useEffect(() => {
+    if (showServiceAgreement || showPrivacyPolicy) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showServiceAgreement, showPrivacyPolicy]);
 
   const handleConfirmRedemption = async () => {
     if (!isConnected || !acceptedTerms || isProcessing) {
@@ -134,13 +160,29 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
               />
               <label htmlFor="terms-checkbox-redemption" className="flex-1 text-sm sm:text-base text-white/70 cursor-pointer">
                 {tCommon('terms.accept')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                {/* <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowServiceAgreement(true);
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.service')}
-                </a>{' '}
-                {tCommon('terms.and')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                </button>{' '} */}
+                {/* {tCommon('terms.and')}{' '} */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowPrivacyPolicy(true);
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.privacy')}
-                </a>
+                </button>
               </label>
             </div>
 
@@ -171,6 +213,18 @@ const LotteryRedemptionModal: React.FC<LotteryRedemptionModalProps> = ({
           </div>
         </motion.div>
       </motion.div>
+      {/* <ServiceAgreementModal
+        show={showServiceAgreement}
+        isNFT
+        onClose={() => setShowServiceAgreement(false)}
+        mounted={mounted}
+      /> */}
+      <PrivacyPolicyModal
+        isNFT
+        show={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+        mounted={mounted}
+      />
     </AnimatePresence>
   );
 };

@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useTranslations } from 'next-intl';
 import { isMockMode, requireRealCall } from '@/utils/mock';
+import { ServiceAgreementModal } from '@/components/service-agreement-modal';
+import { PrivacyPolicyModal } from '@/components/privacy-policy-modal';
 
 interface LotteryFollowInvestmentModalProps {
   isOpen: boolean;
@@ -31,6 +33,15 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
   const [shares, setShares] = useState(1);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showServiceAgreement, setShowServiceAgreement] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // 处理 mounted 状态
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // 当Modal关闭时重置所有状态
   useEffect(() => {
@@ -38,8 +49,23 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
       setShares(1);
       setAcceptedTerms(false);
       setIsProcessing(false);
+      setShowServiceAgreement(false);
+      setShowPrivacyPolicy(false);
     }
   }, [isOpen]);
+
+  // 处理 body 滚动
+  useEffect(() => {
+    if (showServiceAgreement || showPrivacyPolicy) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showServiceAgreement, showPrivacyPolicy]);
 
   // 计算实付价
   const actualPayment = shares * 10; // 每份10 CCT（根据图片显示）
@@ -211,13 +237,29 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
               />
               <label htmlFor="terms-checkbox-follow" className="flex-1 text-xs sm:text-sm md:text-base text-white/70 cursor-pointer">
                 {tCommon('terms.accept')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowServiceAgreement(true);
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.service')}
-                </a>{' '}
+                </button>{' '}
                 {tCommon('terms.and')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowPrivacyPolicy(true);
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.privacy')}
-                </a>
+                </button>
               </label>
             </div>
 
@@ -248,6 +290,16 @@ const LotteryFollowInvestmentModal: React.FC<LotteryFollowInvestmentModalProps> 
           </div>
         </motion.div>
       </motion.div>
+      <ServiceAgreementModal
+        show={showServiceAgreement}
+        onClose={() => setShowServiceAgreement(false)}
+        mounted={mounted}
+      />
+      <PrivacyPolicyModal
+        show={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+        mounted={mounted}
+      />
     </AnimatePresence>
   );
 };

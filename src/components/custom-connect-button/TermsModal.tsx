@@ -10,6 +10,8 @@ interface TermsModalProps {
   onAcceptedTermsChange: (accepted: boolean) => void;
   onConfirm: () => void;
   onCancel: () => void;
+  onOpenServiceAgreement: () => void;
+  onOpenPrivacyPolicy: () => void;
   mounted: boolean;
 }
 
@@ -19,6 +21,8 @@ export const TermsModal: React.FC<TermsModalProps> = ({
   onAcceptedTermsChange,
   onConfirm,
   onCancel,
+  onOpenServiceAgreement,
+  onOpenPrivacyPolicy,
   mounted,
 }) => {
   const tCommon = useTranslations('common');
@@ -74,13 +78,29 @@ export const TermsModal: React.FC<TermsModalProps> = ({
               />
               <label htmlFor="terms-checkbox-connect" className="flex-1 text-sm md:text-base text-white/70 cursor-pointer">
                 {tCommon('terms.accept')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onOpenServiceAgreement();
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.service')}
-                </a>{' '}
+                </button>{' '}
                 {tCommon('terms.and')}{' '}
-                <a href="#" className="text-purple-400 hover:text-purple-300 underline">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onOpenPrivacyPolicy();
+                  }}
+                  className="text-purple-400 hover:text-purple-300 underline bg-transparent border-0 p-0 cursor-pointer"
+                >
                   {tCommon('terms.privacy')}
-                </a>
+                </button>
               </label>
             </div>
 
