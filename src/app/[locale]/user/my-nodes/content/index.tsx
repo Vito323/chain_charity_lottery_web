@@ -1,22 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
-import { defaultNodeHoldings } from './constants';
 import { NodeHolding } from './types';
-import SectionHeader from './SectionHeader';
 import ConnectWalletPrompt from './ConnectWalletPrompt';
 import SummaryCards from './SummaryCards';
 import LoadingErrorState from './LoadingErrorState';
 import NodeHoldingsTable from './NodeHoldingsTable';
 import EmptyState from './EmptyState';
+import { userNodes } from '@/service/user';
+import { queryNodeList } from '@/service/node';
+import { useTranslations } from 'next-intl';
 
 const MyNodesList: React.FC = () => {
-  const { isConnected } = useAccount();
-  const [nodeHoldings] = useState<NodeHolding[]>(defaultNodeHoldings);
-  const [isLoading] = useState(false);
-  const [error] = useState<string | null>(null);
+  const { isConnected, address } = useAccount();
+  const tCommon = useTranslations('common');
+
+  const [nodeHoldings, setNodeHoldings] = useState<NodeHolding[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -41,6 +44,75 @@ const MyNodesList: React.FC = () => {
     },
   };
 
+  const buildNodeHoldings = useCallback(
+    async (walletAddress: string): Promise<NodeHolding[]> => {
+      const [userNodesRes, nodeListRes] = await Promise.all([
+        userNodes(walletAddress),
+        queryNodeList(),
+      ]);
+
+      const userNodeList = userNodesRes.ok && userNodesRes.data ? userNodesRes.data : [];
+      const nodeList = nodeListRes.ok && nodeListRes.data ? nodeListRes.data : [];
+
+      const priceByRank = new Map<string, number>();
+      nodeList.forEach((n) => {
+        priceByRank.set(String(n.rank), Number(n.price) || 0);
+      });
+
+      const rankToNodeType = (rank: string): NodeHolding['nodeType'] => {
+        switch (String(rank)) {
+          case '0':
+            return 'genesis';
+          case '1':
+            return 'super';
+          case '2':
+          default:
+            return 'standard';
+        }
+      };
+
+      return userNodeList.map((n) => {
+        const rank = String(n.rank);
+        const accumulated = parseFloat(String(n.earnings ?? '0')) || 0;
+        return {
+          id: String(n.id),
+          nodeType: rankToNodeType(rank),
+          purchaseCost: {
+            usdt: priceByRank.get(rank) ?? 0,
+          },
+          accumulatedEarnings: accumulated,
+        };
+      });
+    },
+    []
+  );
+
+  const fetchHoldings = useCallback(async () => {
+    if (!address) return;
+    setIsLoading(true);
+    setError(null);
+    try {
+      const holdings = await buildNodeHoldings(address);
+      setNodeHoldings(holdings);
+    } catch (e) {
+      console.error('Failed to fetch node holdings:', e);
+      setError(tCommon('errors.failedToLoad'));
+      setNodeHoldings([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [address, buildNodeHoldings, tCommon]);
+
+  useEffect(() => {
+    if (isConnected && address) {
+      fetchHoldings();
+    } else {
+      setNodeHoldings([]);
+      setError(null);
+      setIsLoading(false);
+    }
+  }, [isConnected, address, fetchHoldings]);
+
   // Show content based on connection status and data
   // Ensure isConnected is explicitly boolean to avoid undefined issues
   const connected = Boolean(isConnected);
@@ -55,9 +127,6 @@ const MyNodesList: React.FC = () => {
         animate="visible"
         transition={{ duration: 0.3 }}
       >
-        {/* Section Header */}
-        {/* <SectionHeader variants={itemVariants} /> */}
-
         {/* Loading/Error State - Show first if loading or error */}
         {isLoading || error ? (
           <LoadingErrorState isLoading={isLoading} error={error} />

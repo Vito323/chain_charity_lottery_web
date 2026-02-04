@@ -12,6 +12,57 @@
     "connectWallet": "连接钱包",
     "language": "语言"
   },
+  "bindNode": {
+    "badge": "绑定节点",
+    "title": "绑定你的",
+    "titleHighlight": "节点",
+    "subtitle": "输入一个持有节点的钱包地址，签名确认后即可绑定到你的账户。",
+    "sections": {
+      "yourWallet": "当前钱包",
+      "referrerWalletAddress": "要绑定的钱包地址"
+    },
+    "placeholders": {
+      "walletAddress": "0x..."
+    },
+    "validation": {
+      "referrerCannotBeSelf": "绑定地址不能与当前钱包地址相同。"
+    },
+    "actions": {
+      "connectWallet": "连接钱包",
+      "bind": "绑定",
+      "clear": "清空",
+      "copy": "复制"
+    },
+    "status": {
+      "processing": "处理中..."
+    },
+    "modals": {
+      "alreadyBound": {
+        "title": "已完成绑定",
+        "description": "你的钱包已绑定，无需重复操作。",
+        "confirm": "确认"
+      },
+      "confirmBind": {
+        "title": "确认绑定",
+        "description": "请仔细确认下方地址是否正确。一旦绑定，将无法修改。",
+        "addressLabel": "绑定地址",
+        "cancel": "取消",
+        "confirm": "确认绑定"
+      }
+    },
+    "toasts": {
+      "connectWalletFirst": "请先连接钱包。",
+      "enterWalletAddress": "请输入钱包地址。",
+      "invalidWalletAddress": "钱包地址格式不正确。",
+      "cannotBindSelf": "不能绑定自己的地址。",
+      "referrerHasNoNodes": "该地址未持有任何节点，无法绑定。",
+      "failedToGenerateParams": "生成绑定参数失败，请稍后重试。",
+      "bindingFailed": "绑定失败，请重试。",
+      "bindingSuccessful": "绑定成功。",
+      "signatureRejected": "你已在钱包中取消签名。",
+      "unknownError": "操作失败，请稍后重试。"
+    }
+  },
   "hero": {
     "badge": "用善意连接世界",
     "titlePart1": "用",
@@ -431,6 +482,7 @@
         "transparent": "链上收益，透明奖励"
       },
       "totalAssets": "总节点资产 (USDT)",
+      "cumulativeEarnings": "累计收益 (USDT)",
       "yesterdayRewards": "昨日奖励",
       "rewardsDetail": "购买后将显示奖励详情",
       "genesisNodes": "创世节点",
@@ -441,6 +493,7 @@
       "title": "我的节点组合",
       "description": "您的节点持仓和每日奖励表现的概览。",
       "totalAssets": "总节点资产 (USDT)",
+      "cumulativeEarnings": "累计收益 (USDT)",
       "yesterdayRewards": "昨日奖励",
       "rewardsDetails": "奖励详情"
     },

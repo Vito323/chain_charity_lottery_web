@@ -6,6 +6,13 @@ export const formatAddress = (address: string): string => {
 };
 
 /**
+ * 获取邀请链接
+ */
+export const formatInviteLink = (link: string): string => {
+  return `${link.slice(0, 6)}...${link.slice(-6)}`;
+};
+
+/**
  * 获取链的备用图标
  */
 export const getFallbackChainIcon = (chainId: number): string => {

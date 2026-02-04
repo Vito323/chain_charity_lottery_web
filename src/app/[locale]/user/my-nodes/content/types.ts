@@ -3,12 +3,8 @@ export interface NodeHolding {
   id: string;
   nodeType: 'genesis' | 'super' | 'standard';
   purchaseCost: {
-    usd: number;
-    clt: number;
-  };
-  yesterdayEarnings: {
-    amount: number;
-    percentage: number;
+    /** Purchase cost in USDT (no CCT conversion) */
+    usdt: number;
   };
   accumulatedEarnings: number;
 }

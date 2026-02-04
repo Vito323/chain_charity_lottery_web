@@ -4,7 +4,6 @@ import { useDisconnect, useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
 import { formatAddress } from "./utils";
 import { TermsModal } from "./TermsModal";
 import { MobileBottomSheet } from "./MobileBottomSheet";
@@ -15,6 +14,7 @@ import { userConnect } from "@/service/user";
 import useGlobalStore from "@/store";
 import { useMasterContract } from "@/hooks/useMasterContract";
 import { queryWithdrawableAmount } from "@/service/lottery";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 const CustomConnectButton = () => {
   const { disconnect } = useDisconnect();
@@ -27,12 +27,19 @@ const CustomConnectButton = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const hasCalledConnectRef = useRef<string | null>(null);
   const tCommon = useTranslations("common");
+  const pathname = usePathname();
+  const router = useRouter();
   const setWithdrawAmount = useGlobalStore((state) => state.setWithdrawAmount);
   const { getUserWithdrawableAmount } = useMasterContract();
 
-  // 监听钱包连接状态，连接后调用 userConnect 接口验证
+  // 监听钱包连接状态，连接后调用 userConnect 接口验证（bind-node 页面除外）
   useEffect(() => {
     if (isConnected && address) {
+      // bind-node 页面不调用 userConnect
+      if (pathname?.includes("/bind-node")) {
+        return;
+      }
+
       // 防止重复调用：如果当前地址已经调用过，则不再调用
       if (hasCalledConnectRef.current === address) {
         return;
@@ -43,17 +50,18 @@ const CustomConnectButton = () => {
 
       userConnect(address)
         .then((result) => {
-          // 如果返回 false，则断开连接并提示
+          // 如果不在白名单，跳转至 bind-node 页面
           if (!result.data) {
-            toast.error(tCommon("errors.notInWhitelist"));
-            disconnect();
+            // toast.error(tCommon("errors.notInWhitelist"));
+            router.push("/bind-node");
+            // disconnect();
             setWithdrawAmount("0");
             hasCalledConnectRef.current = null; // 重置，允许重试
+          
           }
         })
         .catch((error) => {
           console.error("Failed to call userConnect:", error);
-          // 出错时也断开连接
           disconnect();
           hasCalledConnectRef.current = null; // 重置，允许重试
         });
@@ -61,7 +69,7 @@ const CustomConnectButton = () => {
       // 如果断开连接，重置标记
       hasCalledConnectRef.current = null;
     }
-  }, [isConnected, address, disconnect]);
+  }, [isConnected, address, pathname, disconnect, router]);
 
   // 当下拉框展示且钱包连接时，调用 withdrawAmount 接口更新可提现金额
   useEffect(() => {

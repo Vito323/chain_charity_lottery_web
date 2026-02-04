@@ -9,6 +9,23 @@ export interface UserToken {
 }
 
 
+export interface UserNode {
+id: string;
+level: number;
+earnings: string; // 昨日收益
+name: string;
+rank: string; // 0/1/2分别对应创世/超级/普通
+description: string;
+status: number;
+}
+
+
+export interface UserProfile {
+  referrer?: string;
+  node?: UserNode[]
+}
+
+
 
 
 export interface UserReferrerPending {
@@ -25,6 +42,12 @@ export const userConnect = async (address: string) =>
     method: 'GET',
   });
 
+
+  export const userNodes = async (address: string) =>
+    action<UserNode[]>({
+      url: `/user/node/${address}`,
+      method: 'GET',
+    });
 
 
 
@@ -46,15 +69,17 @@ export const queryUserReferrer = async (address: string) =>
   });
 
 
-export const bindUserReferrer = async (address: string, referrer: string, signature: string) =>
+export const bindUserReferrer = async (data: {
+  nonce: string;
+  address: string;
+  referrer: string;
+  signature: string;
+  timestamp: number;
+}) =>
   action<void>({
     url: `/user/bind-referrer`,
     method: 'PUT',
-    data: {
-      address,
-      referrer,
-      signature,
-    },
+    data,
   });
 
 

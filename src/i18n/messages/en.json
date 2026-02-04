@@ -12,6 +12,57 @@
     "connectWallet": "Connect Wallet",
     "language": "Language"
   },
+  "bindNode": {
+    "badge": "Bind Node",
+    "title": "Bind your",
+    "titleHighlight": "node",
+    "subtitle": "Enter a wallet address that owns nodes, then sign to bind it to your account.",
+    "sections": {
+      "yourWallet": "Your wallet",
+      "referrerWalletAddress": "Referrer wallet address"
+    },
+    "placeholders": {
+      "walletAddress": "0x..."
+    },
+    "validation": {
+      "referrerCannotBeSelf": "Referrer cannot be the same as your wallet address."
+    },
+    "actions": {
+      "connectWallet": "Connect wallet",
+      "bind": "Bind",
+      "clear": "Clear",
+      "copy": "Copy"
+    },
+    "status": {
+      "processing": "Processing..."
+    },
+    "modals": {
+      "alreadyBound": {
+        "title": "Already bound",
+        "description": "Your wallet is already bound. No further action is required.",
+        "confirm": "Confirm"
+      },
+      "confirmBind": {
+        "title": "Confirm binding",
+        "description": "Please carefully check the address below. Once bound, it cannot be changed.",
+        "addressLabel": "Address to bind",
+        "cancel": "Cancel",
+        "confirm": "Confirm binding"
+      }
+    },
+    "toasts": {
+      "connectWalletFirst": "Please connect your wallet first.",
+      "enterWalletAddress": "Please enter a wallet address.",
+      "invalidWalletAddress": "Invalid wallet address format.",
+      "cannotBindSelf": "You cannot bind to your own address.",
+      "referrerHasNoNodes": "This address has no nodes and cannot be used for binding.",
+      "failedToGenerateParams": "Failed to generate binding parameters. Please try again.",
+      "bindingFailed": "Binding failed. Please try again.",
+      "bindingSuccessful": "Binding successful.",
+      "signatureRejected": "Signature was rejected in your wallet.",
+      "unknownError": "Something went wrong. Please try again."
+    }
+  },
   "hero": {
     "badge": "Connecting the world with Kindness",
     "titlePart1": "Connecting the world with",
@@ -509,6 +560,7 @@
         "transparent": "On-chain yield, transparent rewards"
       },
       "totalAssets": "Total node assets (USDT)",
+      "cumulativeEarnings": "Cumulative earnings (USDT)",
       "yesterdayRewards": "Yesterday's rewards",
       "rewardsDetail": "Rewards detail will appear after purchase",
       "genesisNodes": "Genesis nodes",
@@ -519,6 +571,7 @@
       "title": "My node portfolio",
       "description": "Overview of your node positions and daily reward performance.",
       "totalAssets": "Total node assets (USDT)",
+      "cumulativeEarnings": "Cumulative earnings (USDT)",
       "yesterdayRewards": "Yesterday's rewards",
       "rewardsDetails": "Rewards details"
     },

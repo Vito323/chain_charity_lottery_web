@@ -35,9 +35,6 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                 {t('table.purchaseCost')}
               </th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
-                {t('table.yesterdayEarnings')}
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
                 {t('table.accumulatedEarnings')}
               </th>
             </tr>
@@ -56,7 +53,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getNodeTypeBadge(node.nodeType)} text-white`}
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-linear-to-r ${getNodeTypeBadge(node.nodeType)} text-white`}
                     >
                       {getNodeTypeName(node.nodeType)}
                     </span>
@@ -64,18 +61,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-white">
-                    {formatCurrency(node.purchaseCost.usd)}
-                  </div>
-                  <div className="text-xs text-white/60">
-                    {node.purchaseCost.clt.toLocaleString()} CCT
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm font-medium text-emerald-400">
-                    +{formatCurrency(node.yesterdayEarnings.amount)}
-                  </div>
-                  <div className="text-xs text-white/60">
-                    +{node.yesterdayEarnings.percentage.toFixed(2)}%
+                    {formatCurrency(node.purchaseCost.usdt)}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -101,31 +87,16 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
           >
             <div className="flex items-center justify-between">
               <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getNodeTypeBadge(node.nodeType)} text-white`}
+                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-linear-to-r ${getNodeTypeBadge(node.nodeType)} text-white`}
               >
                 {getNodeTypeName(node.nodeType)}
               </span>
             </div>
             
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <div className="text-white/60 text-xs mb-1">{t('table.purchaseCost')}</div>
-                <div className="text-white font-medium">
-                  {formatCurrency(node.purchaseCost.usd)}
-                </div>
-                <div className="text-white/60 text-xs">
-                  {node.purchaseCost.clt.toLocaleString()} CCT
-                </div>
-              </div>
-              
-              <div>
-                <div className="text-white/60 text-xs mb-1">{t('table.yesterdayEarnings')}</div>
-                <div className="text-emerald-400 font-medium">
-                  +{formatCurrency(node.yesterdayEarnings.amount)}
-                </div>
-                <div className="text-white/60 text-xs">
-                  +{node.yesterdayEarnings.percentage.toFixed(2)}%
-                </div>
+            <div className="text-sm">
+              <div className="text-white/60 text-xs mb-1">{t('table.purchaseCost')}</div>
+              <div className="text-white font-medium">
+                {formatCurrency(node.purchaseCost.usdt)}
               </div>
             </div>
             

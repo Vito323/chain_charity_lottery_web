@@ -28,8 +28,8 @@ const NetworkDetail: React.FC = () => {
 
   const tabBar = [
     { label: t('tabs.myNodes') || tCommon('wallet.holdNodes') || 'My Nodes' },
-    { label: t('tabs.earningsDetails') || 'Earnings Details' },
-    { label: t('tabs.purchaseHistory') || tCommon('wallet.nodePurchaseRecords') || 'Purchase History' },
+    // { label: t('tabs.earningsDetails') || 'Earnings Details' },
+    // { label: t('tabs.purchaseHistory') || tCommon('wallet.nodePurchaseRecords') || 'Purchase History' },
   ];
 
   const containerVariants = {
