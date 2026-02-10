@@ -7,25 +7,25 @@ export default function HorseYearTopBar() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const canvasEl = canvasRef.current;
+    if (!canvasEl) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvasEl.getContext("2d");
     if (!ctx) return;
 
-    function resize() {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    }
+    const resize = () => {
+      canvasEl.width = canvasEl.offsetWidth;
+      canvasEl.height = canvasEl.offsetHeight;
+    };
 
     resize();
     window.addEventListener("resize", resize);
 
     const particles: any[] = [];
 
-    function spawnTokenBurst() {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height * 0.7;
+    const spawnTokenBurst = () => {
+      const x = Math.random() * canvasEl.width;
+      const y = Math.random() * canvasEl.height * 0.7;
       const count = 28;
 
       for (let i = 0; i < count; i++) {
@@ -42,12 +42,12 @@ export default function HorseYearTopBar() {
           color: ["#FFD700", "#c1121f", "#ffb703"][Math.floor(Math.random() * 3)]
         });
       }
-    }
+    };
 
     const burstTimer = setInterval(spawnTokenBurst, 2200);
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const animate = () => {
+      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
       particles.forEach((p, i) => {
         p.x += p.vx;
@@ -66,7 +66,7 @@ export default function HorseYearTopBar() {
       });
 
       requestAnimationFrame(animate);
-    }
+    };
 
     animate();
 
@@ -100,7 +100,7 @@ export default function HorseYearTopBar() {
           </div>
         </div>
 
-        <button className="relative overflow-hidden rounded-full px-6 py-2.5 font-black text-white bg-gradient-to-br from-[#c1121f] to-[#ffb703] shadow-[0_0_20px_rgba(255,60,60,0.55)] transition hover:-translate-y-[2px] hover:scale-[1.07] hover:shadow-[0_0_36px_rgba(255,80,80,0.85)]">
+        <button className="relative overflow-hidden rounded-full px-6 py-2.5 font-black text-white bg-linear-to-br from-[#c1121f] to-[#ffb703] shadow-[0_0_20px_rgba(255,60,60,0.55)] transition hover:-translate-y-[2px] hover:scale-[1.07] hover:shadow-[0_0_36px_rgba(255,80,80,0.85)]">
           {t("cta")}
           <span className="absolute inset-0 animate-shine bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.35),transparent)]" />
         </button>
