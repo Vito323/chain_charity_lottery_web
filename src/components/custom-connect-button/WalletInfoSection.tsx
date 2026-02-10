@@ -1,11 +1,15 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { formatAddress, formatInviteLink, getFallbackChainIcon } from './utils';
 import useGlobalStore from '@/store';
 import { useRouter } from 'next/navigation';
 import { formatCurrency } from "@/utils/currency";
+import { queryUserReferrer } from '@/service/user';
+
+// Cache referrer by address to avoid duplicate API calls (e.g. Strict Mode or re-mounts)
+const referrerCache: Record<string, string | null> = {};
 
 interface WalletInfoSectionProps {
   account: { address: string };
@@ -22,9 +26,32 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [copyInviteSuccess, setCopyInviteSuccess] = useState(false);
+  const [referrer, setReferrer] = useState<string | null>(null);
   const tCommon = useTranslations('common');
   const withdrawAmount = useGlobalStore(state => state.withdrawAmount);
   const router = useRouter();
+
+  useEffect(() => {
+    const addr = account.address;
+    if (referrerCache[addr] !== undefined) {
+      setReferrer(referrerCache[addr]);
+      return;
+    }
+    let cancelled = false;
+    queryUserReferrer(addr)
+      .then((res) => {
+        const value = res?.data ?? null;
+        referrerCache[addr] = value;
+        if (!cancelled) setReferrer(value);
+      })
+      .catch(() => {
+        referrerCache[addr] = null;
+        if (!cancelled) setReferrer(null);
+      });
+    return () => { cancelled = true; };
+  }, [account.address]);
+
+  const showInviteLink = referrer != null && referrer.trim() !== '' && referrer.trim().toLowerCase() !== '0x0';
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(account.address);
     setCopySuccess(true);
@@ -66,24 +93,26 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
         </div>
       </div>
 
-      <div className="mb-4">
-        <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
-          邀请链接
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="text-base font-bold text-white font-mono md:text-base sm:text-sm">
-            {formatInviteLink(window.location.origin + '/bind-node?referrer=' + account.address)}
+      {showInviteLink && (
+        <div className="mb-4">
+          <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
+            {tCommon('wallet.inviteLink')}
           </div>
-          <button 
-            className="bg-transparent border-0 text-white/60 cursor-pointer p-1 rounded transition-all duration-200 hover:bg-white/10 hover:text-purple-600 active:bg-white/20"
-            onClick={handleCopyInviteLink}
-            title={''}
-          >
-            <i className={`fa text-xs ${copyInviteSuccess ? 'fa-check' : 'fa-copy'}`}></i>
-          </button>
+          <div className="flex items-center gap-2">
+            <div className="text-base font-bold text-white font-mono md:text-base sm:text-sm">
+              {formatInviteLink(window.location.origin + '/bind-node?referrer=' + account.address)}
+            </div>
+            <button 
+              className="bg-transparent border-0 text-white/60 cursor-pointer p-1 rounded transition-all duration-200 hover:bg-white/10 hover:text-purple-600 active:bg-white/20"
+              onClick={handleCopyInviteLink}
+              title={tCommon('wallet.copyInviteLink')}
+            >
+              <i className={`fa text-xs ${copyInviteSuccess ? 'fa-check' : 'fa-copy'}`}></i>
+            </button>
+          </div>
         </div>
-      </div>
-      
+      )}
+
       <div className="mb-4">
         <div className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
           {tCommon('wallet.network')}
