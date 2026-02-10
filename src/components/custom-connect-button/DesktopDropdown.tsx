@@ -9,6 +9,7 @@ interface DesktopDropdownProps {
   chain: { id: number; name?: string; iconUrl?: string };
   openChainModal: () => void;
   onClose: () => void;
+  showInviteLink: boolean;
 }
 
 export const DesktopDropdown: React.FC<DesktopDropdownProps> = ({
@@ -17,6 +18,7 @@ export const DesktopDropdown: React.FC<DesktopDropdownProps> = ({
   chain,
   openChainModal,
   onClose,
+  showInviteLink,
 }) => {
   if (!show) return null;
 
@@ -29,6 +31,7 @@ export const DesktopDropdown: React.FC<DesktopDropdownProps> = ({
       className="hidden md:flex md:flex-col absolute top-full right-0 bg-slate-900/95 rounded-2xl shadow-2xl shadow-black/40 z-[1000] mt-3 overflow-hidden border border-white/10 backdrop-blur-xl min-w-[300px] max-w-[300px] max-h-[85vh]"
     >
       <DropdownContent
+        showInviteLink={showInviteLink}
         account={account}
         chain={chain}
         openChainModal={openChainModal}

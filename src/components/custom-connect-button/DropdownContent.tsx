@@ -8,6 +8,7 @@ interface DropdownContentProps {
   chain: { id: number; name?: string; iconUrl?: string };
   openChainModal: () => void;
   onCloseDropdown: () => void;
+  showInviteLink: boolean;
 }
 
 export const DropdownContent: React.FC<DropdownContentProps> = ({
@@ -15,10 +16,12 @@ export const DropdownContent: React.FC<DropdownContentProps> = ({
   chain,
   openChainModal,
   onCloseDropdown,
+  showInviteLink,
 }) => {
   return (
     <>
       <WalletInfoSection
+        showInviteLink={showInviteLink}
         account={account}
         chain={chain}
         openChainModal={openChainModal}

@@ -10,7 +10,7 @@ import { MobileBottomSheet } from "./MobileBottomSheet";
 import { DesktopDropdown } from "./DesktopDropdown";
 import { ServiceAgreementModal } from "@/components/service-agreement-modal";
 import { PrivacyPolicyModal } from "@/components/privacy-policy-modal";
-import { userConnect } from "@/service/user";
+import { queryUserReferrer, userConnect } from "@/service/user";
 import useGlobalStore from "@/store";
 import { useMasterContract } from "@/hooks/useMasterContract";
 import { queryWithdrawableAmount } from "@/service/lottery";
@@ -31,7 +31,7 @@ const CustomConnectButton = () => {
   const router = useRouter();
   const setWithdrawAmount = useGlobalStore((state) => state.setWithdrawAmount);
   const { getUserWithdrawableAmount } = useMasterContract();
-
+  const [showInviteLink, setShowInviteLink] = useState(false);
   // 监听钱包连接状态，连接后调用 userConnect 接口验证（bind-node 页面除外）
   useEffect(() => {
     if (isConnected && address) {
@@ -80,11 +80,24 @@ const CustomConnectButton = () => {
           // const value = formatUnits(result.data, 18);
           setWithdrawAmount(result.data || "0");
         });
+        handleQueryUserReferrer(address);
       } else {
         setWithdrawAmount("0");
       }
     }
   }, [showDropdown, isConnected, address, setWithdrawAmount]);
+
+
+  const handleQueryUserReferrer = async (addr: string) => {
+    const isShowInviteLinkRes = localStorage.getItem(`showInviteLink_${addr}`);
+    if (isShowInviteLinkRes === '1') {
+      setShowInviteLink(true);
+      return;
+    }
+    const result = await queryUserReferrer(addr);
+    const isShowInviteLink = result.data !== "0x0" && result.data !== null;
+    localStorage.setItem(`showInviteLink_${addr}`, isShowInviteLink ? '1' : '0');
+  };
 
   // 处理点击外部关闭下拉菜单
   useEffect(() => {
@@ -223,8 +236,10 @@ const CustomConnectButton = () => {
                     openChainModal={openChainModal}
                     onClose={handleCloseDropdown}
                     mounted={mounted}
+                    showInviteLink={showInviteLink}
                   />
                   <DesktopDropdown
+                    showInviteLink={showInviteLink}
                     show={showDropdown}
                     account={account}
                     chain={chain}

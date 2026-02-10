@@ -12,6 +12,7 @@ interface MobileBottomSheetProps {
   openChainModal: () => void;
   onClose: () => void;
   mounted: boolean;
+  showInviteLink: boolean;
 }
 
 export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
@@ -20,6 +21,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   chain,
   openChainModal,
   onClose,
+  showInviteLink,
   mounted,
 }) => {
   const tCommon = useTranslations('common');
@@ -70,6 +72,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
             {/* 内容 */}
             <div className="overflow-y-auto flex-1 overscroll-contain">
               <DropdownContent
+                showInviteLink={showInviteLink}
                 account={account}
                 chain={chain}
                 openChainModal={openChainModal}

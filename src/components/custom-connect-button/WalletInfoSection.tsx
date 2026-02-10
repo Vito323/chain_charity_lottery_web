@@ -16,6 +16,7 @@ interface WalletInfoSectionProps {
   chain: { id: number; name?: string; iconUrl?: string };
   openChainModal: () => void;
   onCloseDropdown: () => void;
+  showInviteLink: boolean;
 }
 
 export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
@@ -23,35 +24,36 @@ export const WalletInfoSection: React.FC<WalletInfoSectionProps> = ({
   chain,
   openChainModal,
   onCloseDropdown,
+  showInviteLink,
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [copyInviteSuccess, setCopyInviteSuccess] = useState(false);
-  const [referrer, setReferrer] = useState<string | null>(null);
+  // const [referrer, setReferrer] = useState<string | null>(null);
   const tCommon = useTranslations('common');
   const withdrawAmount = useGlobalStore(state => state.withdrawAmount);
   const router = useRouter();
 
-  useEffect(() => {
-    const addr = account.address;
-    if (referrerCache[addr] !== undefined) {
-      setReferrer(referrerCache[addr]);
-      return;
-    }
-    let cancelled = false;
-    queryUserReferrer(addr)
-      .then((res) => {
-        const value = res?.data ?? null;
-        referrerCache[addr] = value;
-        if (!cancelled) setReferrer(value);
-      })
-      .catch(() => {
-        referrerCache[addr] = null;
-        if (!cancelled) setReferrer(null);
-      });
-    return () => { cancelled = true; };
-  }, [account.address]);
+  // useEffect(() => {
+  //   const addr = account.address;
+  //   if (referrerCache[addr] !== undefined) {
+  //     setReferrer(referrerCache[addr]);
+  //     return;
+  //   }
+  //   let cancelled = false;
+  //   queryUserReferrer(addr)
+  //     .then((res) => {
+  //       const value = res?.data ?? null;
+  //       referrerCache[addr] = value;
+  //       if (!cancelled) setReferrer(value);
+  //     })
+  //     .catch(() => {
+  //       referrerCache[addr] = null;
+  //       if (!cancelled) setReferrer(null);
+  //     });
+  //   return () => { cancelled = true; };
+  // }, [account.address]);
 
-  const showInviteLink = referrer != null && referrer.trim() !== '' && referrer.trim().toLowerCase() !== '0x0';
+  // const showInviteLink = referrer != null && referrer.trim() !== '' && referrer.trim().toLowerCase() !== '0x0';
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(account.address);
     setCopySuccess(true);
