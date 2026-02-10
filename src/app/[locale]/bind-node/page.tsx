@@ -18,6 +18,7 @@ import ScrollToTop from "@/components/scroll-to-top";
 import {
   bindUserReferrer,
   bindUserReferrerPending,
+  queryUserReferrer,
   userConnect,
   userNodes,
 } from "@/service/user";
@@ -61,9 +62,9 @@ const BindNodePage = () => {
     if (hasCheckedConnectRef.current === address) return;
     hasCheckedConnectRef.current = address;
 
-    userConnect(address)
+    queryUserReferrer(address)
       .then((res) => {
-        if (res?.data === true) {
+        if (res?.data && res.data !== "0x0") {
           setShowAlreadyBoundModal(true);
         }
       })
@@ -105,9 +106,9 @@ const BindNodePage = () => {
 
     setIsProcessing(true);
     try {
-      const nodesRes = await userNodes(normalizedReferrer);
-      const nodes = nodesRes.ok && Array.isArray(nodesRes.data) ? nodesRes.data : [];
-      if (nodes.length === 0) {
+      const nodesRes = await queryUserReferrer(normalizedReferrer);
+      // const nodes = nodesRes.ok && Array.isArray(nodesRes.data) ? nodesRes.data : [];
+      if (nodesRes.data === "0x0" || !nodesRes.data) {
         toast.error(t("toasts.referrerHasNoNodes"));
         return;
       }
