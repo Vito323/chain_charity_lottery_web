@@ -1084,26 +1084,31 @@
     }
   },
   "nodePurchaseModal": {
-    "salePrice": "售价",
-    "perShare": "每股",
-    "exclusivePrice": "节点投资者专享价格：",
-    "selectCertificate": "选择您的节点证书",
-    "purchaseQuantity": "购买数量",
-    "sharesRemaining": "股剩余",
-    "actualPaymentPrice": "实际支付价格：",
-    "confirmPurchase": "确认购买",
-    "selectedNode": "已选节点",
-    "stats": {
-      "limit": "限额",
-      "sold": "已售",
-      "remaining": "剩余"
-    },
-    "success": {
-      "title": "节点购买成功",
-      "description": "这是您的第 {count} 个节点",
-      "viewNodes": "查看我的节点",
-      "returnHome": "返回首页",
-      "continuePurchase": "继续购买"
-    }
+   "salePrice": "售价",
+   "perShare": "每股",
+   "exclusivePrice": "节点投资者专享价格：",
+   "selectCertificate": "选择您的节点证书",
+   "purchaseQuantity": "购买数量",
+   "sharesRemaining": "股剩余",
+   "actualPaymentPrice": "实际支付价格：",
+   "confirmPurchase": "确认购买",
+   "selectedNode": "已选节点",
+   "stats": {
+    "limit": "限额",
+    "sold": "已售",
+    "remaining": "剩余"
+   },
+   "success": {
+    "title": "节点购买成功",
+    "description": "这是您的第 {count} 个节点",
+    "viewNodes": "查看我的节点",
+    "returnHome": "返回首页",
+    "continuePurchase": "继续购买"
+   }
+  },
+  "horseYearTopBar": {
+   "title": "🐎 2026 马年 · 农历新年奖励进行中",
+   "subtitle": "捐赠 · 收益 · 领取专属代币奖励",
+   "cta": "参与新年活动"
   }
 }

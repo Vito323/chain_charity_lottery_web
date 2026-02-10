@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { LNG_LIST } from '@/i18n/routing';
 import ConnectButton from '../custom-connect-button/ConnectButton';
+import NewYearTopBar from '@/components/top-bar';
 
 const navItems = [
   { key: 'home', href: '/' },
@@ -99,10 +100,12 @@ function Header() {
       style={{ pointerEvents: 'auto' }}
       suppressHydrationWarning
     >
+      <NewYearTopBar />
+
       <div
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
         style={{ 
-          paddingTop: scrolled ? 12 : 20, 
+          paddingTop: scrolled ? 12 : 24, 
           paddingBottom: scrolled ? 12 : 20,
           transition: 'padding 0.3s ease-out'
         }}

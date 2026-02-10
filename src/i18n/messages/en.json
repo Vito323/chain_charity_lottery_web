@@ -1162,27 +1162,32 @@
     }
   },
   "nodePurchaseModal": {
-    "salePrice": "Sale Price",
-    "perShare": "per share",
-    "exclusivePrice": "Node Investor Exclusive Price:",
-    "selectCertificate": "Select Your Node Certificate",
-    "purchaseQuantity": "Purchase Quantity",
-    "sharesRemaining": "shares remaining",
-    "actualPaymentPrice": "Actual Payment Price:",
-    "processing": "Processing...",
-    "confirmPurchase": "Confirm Purchase",
-    "selectedNode": "Selected Node",
-    "stats": {
-      "limit": "Limit",
-      "sold": "Sold",
-      "remaining": "Remaining"
-    },
-    "success": {
-      "title": "Node Purchase Successful",
-      "description": "This is your {count}{ordinal} node",
-      "viewNodes": "View my nodes",
-      "returnHome": "Return to Homepage",
-      "continuePurchase": "Continue Purchase"
-    }
+   "salePrice": "Sale Price",
+   "perShare": "per share",
+   "exclusivePrice": "Node Investor Exclusive Price:",
+   "selectCertificate": "Select Your Node Certificate",
+   "purchaseQuantity": "Purchase Quantity",
+   "sharesRemaining": "shares remaining",
+   "actualPaymentPrice": "Actual Payment Price:",
+   "processing": "Processing...",
+   "confirmPurchase": "Confirm Purchase",
+   "selectedNode": "Selected Node",
+   "stats": {
+    "limit": "Limit",
+    "sold": "Sold",
+    "remaining": "Remaining"
+   },
+   "success": {
+    "title": "Node Purchase Successful",
+    "description": "This is your {count}{ordinal} node",
+    "viewNodes": "View my nodes",
+    "returnHome": "Return to Homepage",
+    "continuePurchase": "Continue Purchase"
+   }
+  },
+  "horseYearTopBar": {
+   "title": "🐎 Year of the Horse 2026 · Lunar New Year Rewards Live",
+   "subtitle": "Donate · Earn · Claim Exclusive Token Rewards",
+   "cta": "Join Festival Event"
   }
 }
