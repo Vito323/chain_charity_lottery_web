@@ -1109,6 +1109,10 @@
   "horseYearTopBar": {
    "title": "🐎 2026 马年 · 农历新年奖励进行中",
    "subtitle": "捐赠 · 收益 · 领取专属代币奖励",
-   "cta": "参与新年活动"
+   "cta": "参与新年活动",
+   "modal": {
+    "eventNotStarted": "活动暂未开始。",
+    "confirm": "知道了"
+   }
   }
 }

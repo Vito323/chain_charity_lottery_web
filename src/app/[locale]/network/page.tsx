@@ -150,7 +150,7 @@ const NetworkPage: React.FC = () => {
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
       <Header />
 
-      <main className="pt-28 md:pt-36 pb-20 relative">
+      <main className="pt-56 md:pt-52 pb-20 relative">
         <section className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 space-y-10 md:space-y-14">
           {/* Page Title */}
           <motion.div

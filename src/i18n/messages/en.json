@@ -1188,6 +1188,10 @@
   "horseYearTopBar": {
    "title": "🐎 Year of the Horse 2026 · Lunar New Year Rewards Live",
    "subtitle": "Donate · Earn · Claim Exclusive Token Rewards",
-   "cta": "Join Festival Event"
+   "cta": "Join Festival Event",
+   "modal": {
+    "eventNotStarted": "Event has not started yet.",
+    "confirm": "OK"
+   }
   }
 }
