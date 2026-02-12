@@ -7,7 +7,7 @@ const LotteryWithdrawPage = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-[#0b1020] pt-16">
+      <div className="min-h-screen bg-[#0b1020] pt-40">
         <WithdrawPage />
       </div>
       <Footer />

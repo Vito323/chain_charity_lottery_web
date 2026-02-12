@@ -129,7 +129,7 @@ const NFTMarketPage = () => {
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
       <Header />
       {/* Hero Section */}
-      <section className="relative pt-32 md:pt-52 pb-12 md:pb-20 overflow-hidden">
+      <section className="relative pt-60 pb-12 md:pb-20 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-linear-to-b from-slate-900/50 via-slate-950/80 to-slate-950" />

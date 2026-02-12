@@ -205,7 +205,7 @@ const LotteryContent: React.FC<LotteryContentProps> = ({
   };
 
   return (
-    <section className="relative py-20 pb-0">
+    <section className="relative pt-40">
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         {/* Animated Background Shapes */}
