@@ -7,7 +7,7 @@ const DonationRecordsPage = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
         <DonationRecords />
       </div>
       <Footer />

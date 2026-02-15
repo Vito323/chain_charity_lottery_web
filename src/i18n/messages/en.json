@@ -981,6 +981,14 @@
     "totalDonations": "Total Donations",
     "loading": "Loading donation records...",
     "donated": "donated",
+    "list": {
+      "project": "Project",
+      "amount": "Amount",
+      "date": "Date",
+      "tx": "Tx",
+      "noValue": "—",
+      "viewOnExplorer": "View on explorer"
+    },
     "empty": {
       "title": "No Donation Records Found",
       "description": "You haven't made any donations yet. Start contributing to projects you care about!",

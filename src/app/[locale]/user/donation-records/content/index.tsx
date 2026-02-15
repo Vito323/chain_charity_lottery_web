@@ -2,128 +2,63 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useAccount } from 'wagmi';
-import { useTranslations } from 'next-intl';
+import { useAccount, useChainId } from 'wagmi';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import ConnectButton from '@/components/custom-connect-button/ConnectButton';
 import { formatCurrency } from '@/utils/currency';
+import { getScanUrl } from '@/utils/chain-info';
 import { isMockMode, requireRealCall } from '@/utils/mock';
-
-// Donation record interface
-interface DonationRecord {
-  id: string;
-  donorAddress: string;
-  amount: number;
-  currency: string;
-  relativeTime: string;
-  timestamp: string;
-  projectId?: string;
-}
-
-// Format wallet address
-const formatAddress = (address: string) => {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};
-
-// Mock data
-const defaultDonationRecords: DonationRecord[] = [
-  // {
-  //   id: '1',
-  //   donorAddress: '0x1234567890123456789012345678901234567890',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '20 seconds ago',
-  //   timestamp: '2025-08-08 18:18:18',
-  // },
-  // {
-  //   id: '2',
-  //   donorAddress: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '58 seconds ago',
-  //   timestamp: '2025-08-08 18:18:00',
-  // },
-  // {
-  //   id: '3',
-  //   donorAddress: '0x9876543210987654321098765432109876543210',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '1 minute ago',
-  //   timestamp: '2025-08-08 18:17:00',
-  // },
-  // {
-  //   id: '4',
-  //   donorAddress: '0x1111111111111111111111111111111111111111',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '28 minutes ago',
-  //   timestamp: '2025-08-08 17:50:00',
-  // },
-  // {
-  //   id: '5',
-  //   donorAddress: '0x2222222222222222222222222222222222222222',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '1 hour ago',
-  //   timestamp: '2025-08-08 17:18:00',
-  // },
-  // {
-  //   id: '6',
-  //   donorAddress: '0x3333333333333333333333333333333333333333',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '18 hours ago',
-  //   timestamp: '2025-08-08 00:18:00',
-  // },
-  // {
-  //   id: '7',
-  //   donorAddress: '0x4444444444444444444444444444444444444444',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '1 day ago',
-  //   timestamp: '2025-08-07 18:18:00',
-  // },
-  // {
-  //   id: '8',
-  //   donorAddress: '0x5555555555555555555555555555555555555555',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '18 days ago',
-  //   timestamp: '2025-07-21 18:18:00',
-  // },
-  // {
-  //   id: '9',
-  //   donorAddress: '0x6666666666666666666666666666666666666666',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '188 days ago',
-  //   timestamp: '2025-02-01 18:18:00',
-  // },
-  // {
-  //   id: '10',
-  //   donorAddress: '0x7777777777777777777777777777777777777777',
-  //   amount: 200,
-  //   currency: 'USDT',
-  //   relativeTime: '388 days ago',
-  //   timestamp: '2024-07-16 18:18:00',
-  // },
-];
+import { queryUserDonationRecord, type UserDonationRecord } from '@/service/user';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import 'dayjs/locale/en';
 
 const DonationRecords: React.FC = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
+  const chainId = useChainId();
+  const locale = useLocale();
   const t = useTranslations('donationRecords');
   const tCommon = useTranslations('common');
-  
-  // In mock mode, require real API call to fetch donation records
+  const scanUrl = getScanUrl(chainId);
+
+  const dateLocale = locale === 'zh' ? 'zh-cn' : 'en';
+  const formatDate = (ts: string) =>
+    dayjs(ts).locale(dateLocale).format(locale === 'zh' ? 'YYYY年M月D日 HH:mm' : 'MMM D, YYYY HH:mm');
+
+  const [donationRecords, setDonationRecords] = useState<UserDonationRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+
   useEffect(() => {
-    if (isMockMode()) {
-      requireRealCall('Fetch donation records', 'network');
+    if (!address) {
+      setDonationRecords([]);
+      return;
     }
-  }, []);
-  
-  const [donationRecords] = useState<DonationRecord[]>(defaultDonationRecords);
-  const [isLoading] = useState(false);
-  const [error] = useState<string | null>(null);
+    let cancelled = false;
+    setIsLoading(true);
+    setError(null);
+    queryUserDonationRecord(address)
+      .then((res) => {
+        if (!cancelled) {
+          const list = res?.ok && Array.isArray(res?.data) ? res.data : [];
+          setDonationRecords(list);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err?.message ?? tCommon('errors.failedToLoadDonationRecords'));
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [address, tCommon]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -147,15 +82,17 @@ const DonationRecords: React.FC = () => {
     },
   };
 
-  // Calculate total donations
-  const totalDonations = donationRecords.reduce((sum, record) => sum + record.amount, 0);
+  const totalDonations = donationRecords.reduce(
+    (sum, record) => sum + (parseFloat(record.amount) || 0),
+    0
+  );
 
   return (
-    <section className="relative py-20 pt-32 md:py-32 md:pt-52">
+    <section className="relative py-20 pt-72 md:py-32 md:pt-62">
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-6 md:px-8"
         variants={containerVariants}
-        initial="hidden"
+        initial="visible"
         animate="visible"
       >
         {/* Section Header */}
@@ -172,7 +109,7 @@ const DonationRecords: React.FC = () => {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            {t('title')} <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
+            {t('title')} <span className="bg-linear-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             {t('subtitle')}
@@ -215,9 +152,6 @@ const DonationRecords: React.FC = () => {
                   <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
                     {formatCurrency(totalDonations)}
                   </div>
-                  <div className="text-white/60 text-sm md:text-base">
-                    USDT
-                  </div>
                 </div>
               </div>
             </div>
@@ -257,46 +191,74 @@ const DonationRecords: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Donation Records List */}
+        {/* Donation Records List - fields from API: projectId, amount, token, timestamp, txHash */}
         {!isLoading && !error && donationRecords.length > 0 && (
           <motion.div
             variants={itemVariants}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden"
+            className="space-y-3"
           >
-            {donationRecords.map((record) => (
-              <Link
-                key={record.id}
-                href={record.projectId ? `/project/${record.projectId}` : '#'}
-                className="group block relative px-6 py-4 md:px-8 md:py-5 border-b border-white/10 last:border-b-0 hover:bg-white/[0.08] active:bg-white/[0.12] transition-colors duration-150 ease-out cursor-pointer"
+            {/* Table header - desktop */}
+            <div className="hidden sm:grid sm:grid-cols-12 gap-4 px-4 py-3 text-xs font-medium text-white/50 uppercase tracking-wider border-b border-white/10">
+              <div className="sm:col-span-4">{t('list.project')}</div>
+              <div className="sm:col-span-3">{t('list.amount')}</div>
+              <div className="sm:col-span-3">{t('list.date')}</div>
+              <div className="sm:col-span-2 text-right">{t('list.tx')}</div>
+            </div>
+            {donationRecords.map((record, index) => (
+              <motion.div
+                key={record.txHash || `${record.projectId}-${record.timestamp}-${index}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: index * 0.03 }}
+                className="group relative bg-white/5 hover:bg-white/8 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden transition-all duration-200"
               >
-                <div className="flex items-center justify-between gap-4">
-                  {/* Left: Avatar and Donation Text */}
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
-                    {/* Avatar Placeholder */}
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-full flex-shrink-0" />
-                    {/* Donation Text */}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-base md:text-lg font-semibold text-white truncate">
-                        <span className="font-mono">{formatAddress(record.donorAddress)}</span> {t('donated')} {record.amount.toLocaleString()} {record.currency}
-                      </div>
-                    </div>
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-linear-to-b from-emerald-500/80 to-teal-500/80 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="grid grid-cols-1 sm:grid-cols-12 sm:items-center gap-3 sm:gap-4 px-4 py-4 sm:py-4 md:px-5">
+                  <div className="sm:col-span-4 min-w-0">
+                    {record.projectId ? (
+                      <Link
+                        href={`/project/${record.projectId}`}
+                        className="inline-flex items-center gap-2 text-white font-medium hover:text-emerald-300 transition-colors truncate max-w-full"
+                      >
+                        <span className="truncate">{record.projectId}</span>
+                        <svg className="w-4 h-4 shrink-0 text-white/40 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </Link>
+                    ) : (
+                      <span className="text-white/50">{t('list.noValue')}</span>
+                    )}
                   </div>
-                  {/* Right: Relative Time and Arrow */}
-                  <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
-                    <span className="text-sm md:text-base text-white/70 whitespace-nowrap">
-                      {record.relativeTime}
+                  <div className="sm:col-span-3 flex items-baseline gap-2">
+                    <span className="text-lg font-semibold text-white tabular-nums">
+                      {formatCurrency(record.amount)}
                     </span>
-                    <svg 
-                      className="w-5 h-5 md:w-6 md:h-6 text-white/40 flex-shrink-0 transition-transform duration-150 ease-out group-hover:translate-x-1" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                  </div>
+                  <div className="sm:col-span-3 text-sm text-white/70">
+                    {record.timestamp ? formatDate(record.timestamp) : record.timestamp || t('list.noValue')}
+                  </div>
+                  <div className="sm:col-span-2 flex sm:justify-end">
+                    {record.txHash ? (
+                      <a
+                        href={`${scanUrl}${record.txHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={t('list.viewOnExplorer')}
+                        className="inline-flex items-center gap-1.5 text-sm text-emerald-400 hover:text-emerald-300 font-mono transition-colors"
+                      >
+                        <span className="hidden sm:inline truncate max-w-[80px]">
+                          {record.txHash.length > 10 ? `${record.txHash.slice(0, 6)}…${record.txHash.slice(-6)}` : record.txHash}
+                        </span>
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    ) : (
+                      <span className="text-white/40">{t('list.noValue')}</span>
+                    )}
                   </div>
                 </div>
-              </Link>
+              </motion.div>
             ))}
           </motion.div>
         )}
@@ -322,7 +284,7 @@ const DonationRecords: React.FC = () => {
             </p>
             <Link
               href="/project"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 hover:from-emerald-700 hover:to-teal-700 transition-all duration-300"
+              className="inline-flex items-center justify-center rounded-full bg-linear-to-r from-emerald-600 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 hover:from-emerald-700 hover:to-teal-700 transition-all duration-300"
             >
               {t('empty.browseProjects')}
             </Link>

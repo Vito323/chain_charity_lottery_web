@@ -36,6 +36,16 @@ export interface UserReferrerPending {
   message: string,
 }
 
+
+export interface UserDonationRecord {
+  projectId: string;
+  amount: string;
+  token: string;
+  timestamp: string;
+  txHash: string;
+}
+
+
 export const userConnect = async (address: string) =>
   action<boolean>({
     url: `/user/connect/${address}`,
@@ -92,3 +102,10 @@ export const bindUserReferrerPending = async (address: string, referrer: string)
       referrer,
     },
   });
+
+
+  export const queryUserDonationRecord = async (address: string) =>
+    action<UserDonationRecord[]>({
+      url: `/user/donation/${address}`,
+      method: 'GET',
+    });

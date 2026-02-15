@@ -903,6 +903,14 @@
     "totalDonations": "总捐赠额",
     "loading": "加载捐赠记录...",
     "donated": "捐赠了",
+    "list": {
+      "project": "项目",
+      "amount": "金额",
+      "date": "日期",
+      "tx": "交易",
+      "noValue": "—",
+      "viewOnExplorer": "在浏览器中查看"
+    },
     "empty": {
       "title": "未找到捐赠记录",
       "description": "您还没有进行任何捐赠。开始为您关心的项目做出贡献吧！",
