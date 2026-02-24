@@ -173,7 +173,7 @@ const MyTickets: React.FC = () => {
   console.log(totalValue);
 
   return (
-    <section className="relative py-20 pt-62 md:py-32 md:pt-52">
+    <section className="relative py-20 pt-42 md:py-32 md:pt-52">
       {/* Background Elements */}
 
       <motion.div

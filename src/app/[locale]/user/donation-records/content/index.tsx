@@ -88,7 +88,7 @@ const DonationRecords: React.FC = () => {
   );
 
   return (
-    <section className="relative py-20 pt-72 md:py-32 md:pt-62">
+    <section className="relative py-20 pt-42 md:py-32 md:pt-62">
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-6 md:px-8"
         variants={containerVariants}

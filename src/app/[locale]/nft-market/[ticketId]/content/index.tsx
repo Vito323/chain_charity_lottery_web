@@ -403,7 +403,7 @@ const LotteryTicketDetail: React.FC<LotteryTicketDetailProps> = ({ ticketId, typ
 
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
-      <main className="pt-60 pb-20">
+      <main className="pt-60 md:pt-60 pb-20">
         <motion.div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           variants={containerVariants}

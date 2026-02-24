@@ -76,7 +76,7 @@ const Showcase = ({ uid }: ShowcaseProps) => {
   return (
     <>
       {/* Page Title Section - Stalwart 风格 */}
-      <section className="relative  pt-70 pb-10 md:pb-32 md:pt-80 bg-linear-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+      <section className="relative  pt-60 pb-10 md:pb-32 md:pt-80 bg-linear-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           {/* Animated Background Shapes */}

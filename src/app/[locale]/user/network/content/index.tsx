@@ -56,7 +56,7 @@ const NetworkDetail: React.FC = () => {
   };
 
   return (
-    <section className="relative py-12 pt-62 md:py-20 md:pt-52">
+    <section className="relative py-12 pt-42 md:py-20 md:pt-52">
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-6 md:px-8"
         variants={containerVariants}
