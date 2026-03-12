@@ -83,29 +83,34 @@ export const getRarityPercentageFromRank = (rank: number): number => {
  * Rarity configuration for UI styling
  * Contains color, gradient, and border color for each rarity type
  */
-export const rarityConfig: Record<RarityType, { color: string; bgGradient: string; borderColor: string }> = {
+export const rarityConfig: Record<RarityType, { color: string; textColor: string; bgGradient: string; borderColor: string }> = {
   common: {
     color: 'text-gray-400',
+    textColor: '#9ca3af',
     bgGradient: 'from-gray-500/10 to-gray-600/5',
     borderColor: '#95a5a6',
   },
   rare: {
     color: 'text-blue-400',
+    textColor: '#60a5fa',
     bgGradient: 'from-blue-500/10 to-blue-600/5',
     borderColor: '#3498db',
   },
   epic: {
     color: 'text-purple-400',
+    textColor: '#c084fc',
     bgGradient: 'from-purple-500/10 to-purple-600/5',
     borderColor: '#9b59b6',
   },
   legendary: {
     color: 'text-orange-400',
+    textColor: '#fb923c',
     bgGradient: 'from-orange-500/10 to-orange-600/5',
     borderColor: '#e67e22',
   },
   mythic: {
     color: 'text-yellow-400',
+    textColor: '#facc15',
     bgGradient: 'from-yellow-500/10 to-yellow-600/5',
     borderColor: '#f1c40f',
   },

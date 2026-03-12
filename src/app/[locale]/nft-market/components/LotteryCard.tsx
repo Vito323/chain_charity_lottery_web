@@ -31,8 +31,6 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
   const rarity = rankToRarity(ticket.rank);
   const rarityStyle = rarityConfig[rarity];
 
-  console.log(rarity);
-  
   // 调用 renderTicket 获取 SVG
   useEffect(() => {
     const fetchSvg = async () => {
@@ -167,49 +165,44 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
         {/* Rarity Badge */}
         <div className="mb-3 md:mb-4">
           <span
-            className={`inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs md:text-sm font-semibold ${rarityStyle.color} bg-linear-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor}`}
+            className={`inline-flex items-center px-2 md:px-3 py-0.5 md:py-1 rounded-full text-xs md:text-sm font-semibold bg-linear-to-r ${rarityStyle.bgGradient}`}
+            style={{ color: rarityStyle.textColor, borderColor: rarityStyle.borderColor, borderWidth: '1px', borderStyle: 'solid' }}
           >
             {tCommon(`rarity.${rarity}`)}
           </span>
         </div>
 
-        {/* Content based on type */}
+        {/* Content based on type - use style to force light text (override global body color) */}
         {type === 'new' ? (
-          <div className="space-y-2 md:space-y-3">
-            {/* Basic Win Rate */}
-            {/* <div className="flex items-center justify-between text-xs md:text-sm">
-              <span className="text-white/60">{t('card.basicWinRate')}</span>
-              <span className="text-white font-semibold">{basicWinRate}</span>
-            </div> */}
-
+          <div className="space-y-2 md:space-y-3" style={{ color: '#fff' }}>
             {/* Max Prize */}
             <div className="flex items-center justify-between text-xs md:text-sm">
-              <span className="text-white/60">{t('card.maxPrize')}</span>
-              <span className="text-white font-semibold">{maxPrize}</span>
+              <span style={{ color: 'rgba(255,255,255,0.6)' }}>{t('card.maxPrize')}</span>
+              <span className="font-semibold" style={{ color: '#fff' }}>{maxPrize}</span>
             </div>
 
             {/* Redemption Cost */}
             <div className="flex items-center justify-between pt-2 border-t border-white/10">
-              <span className="text-white/60 text-xs md:text-sm">{t('card.redemptionCost')}</span>
-              <span className="text-white font-bold text-sm md:text-base">
+              <span className="text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>{t('card.redemptionCost')}</span>
+              <span className="font-bold text-sm md:text-base" style={{ color: '#fff' }}>
                 {parseFloat(redemptionCost).toLocaleString()} {currency}
               </span>
             </div>
           </div>
         ) : (
-          <div className="space-y-2 md:space-y-3">
+          <div className="space-y-2 md:space-y-3" style={{ color: '#fff' }}>
             {/* Redemption Cost */}
             <div className="flex items-center justify-between text-xs md:text-sm">
-              <span className="text-white/60">{t('card.redemptionCost')}</span>
-              <span className="text-white font-semibold">
+              <span style={{ color: 'rgba(255,255,255,0.6)' }}>{t('card.redemptionCost')}</span>
+              <span className="font-semibold" style={{ color: '#fff' }}>
                 {parseFloat(redemptionCost).toLocaleString()} {currency}
               </span>
             </div>
 
-            {/* Sale Price - 目前使用 price 作为 salePrice，后续可根据实际需求调整 */}
+            {/* Sale Price */}
             <div className="flex items-center justify-between pt-2 border-t border-white/10">
-              <span className="text-white/60 text-xs md:text-sm">{t('card.salePrice')}</span>
-              <span className="text-white font-bold text-sm md:text-base">
+              <span className="text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>{t('card.salePrice')}</span>
+              <span className="font-bold text-sm md:text-base" style={{ color: '#fff' }}>
                 {parseFloat(redemptionCost).toLocaleString()} {currency}
               </span>
             </div>
@@ -224,8 +217,8 @@ const LotteryCard: React.FC<LotteryCardProps> = ({ ticket, type, animationDelay 
             localStorage.setItem(storageKey, JSON.stringify(ticket));
             router.push(`/nft-market/${ticket.id}?type=${type}`);
           }}  
-          className={`w-full mt-3 md:mt-4 py-2 md:py-2.5 rounded-xl cursor-pointer font-semibold text-xs md:text-sm lg:text-base bg-linear-to-r ${rarityStyle.bgGradient} border ${rarityStyle.borderColor} text-white transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98]`}
-          style={{ willChange: 'transform' }}
+          className={`w-full mt-3 md:mt-4 py-2 md:py-2.5 rounded-xl cursor-pointer font-semibold text-xs md:text-sm lg:text-base bg-linear-to-r ${rarityStyle.bgGradient} transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/20 active:scale-[0.98]`}
+          style={{ willChange: 'transform', color: '#fff', borderColor: rarityStyle.borderColor, borderWidth: '1px', borderStyle: 'solid' }}
         >
           {type === 'new' ? t('card.purchase') : t('card.buyNow')}
         </button>

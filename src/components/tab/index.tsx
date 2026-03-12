@@ -170,9 +170,9 @@ const Tabs = ({ tabBar, children, activeTab, onTabChange }: TabsProps) => {
           </div>
         </div>
 
-        {/* Tab Content */}
+        {/* Tab Content - pan-x pan-y allows vertical scroll + horizontal swipe for tab switch */}
         <div 
-          className="relative min-h-[400px] touch-pan-x select-none"
+          className="relative min-h-[400px] select-none [touch-action:pan-x_pan-y]"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}

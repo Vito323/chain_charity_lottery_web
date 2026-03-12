@@ -1,5 +1,14 @@
+/* Link wrapper - allows native scroll on touch, tap to navigate */
+.stalwart-project-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  touch-action: pan-y;
+}
+
 .stalwart-project-card {
   cursor: pointer;
+  touch-action: pan-y;
   background: radial-gradient(circle at top left, #1f2937 0%, #020617 55%, #020617 100%);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(148, 163, 184, 0.45);

@@ -8,7 +8,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/zh-cn";
 import "dayjs/locale/en";
 import { useTranslations, useLocale } from "next-intl";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { ProjectData } from "@/service/project";
 import { formatCurrency } from "@/utils/currency";
 import "./project-card.scss";
@@ -46,13 +46,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   animationDelay = 0,
   goal = 0,
 }) => {
-  const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('projects.card');
 
   const [, setCurrentProjectFundInfo] =
     React.useState<ProjectChainInfo | null>(null);
   const [isHovered, setIsHovered] = React.useState(false);
+  const [canHover, setCanHover] = React.useState(false);
 
   // Configure dayjs locale based on current locale
   React.useEffect(() => {
@@ -62,6 +62,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       dayjs.locale('en');
     }
   }, [locale]);
+
+  // Disable hover effects on touch devices to prevent scroll blocking
+  React.useEffect(() => {
+    setCanHover(window.matchMedia('(hover: hover)').matches);
+  }, []);
 
   // Cache project data to localStorage before navigation
   const cacheProjectData = React.useCallback(() => {
@@ -89,24 +94,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     PROGRESS_BASE > 0 ? (totalDonated / PROGRESS_BASE) * 100 : 0;
   const progress = Math.max(0, Math.min(100, rawProgress));
 
-  console.log('progress', progress);
-
-  const handleCardClick = () => {
-    cacheProjectData();
-    router.push(`/project/${id}`);
-  };
-
-  const handleButtonClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleLinkClick = () => {
     cacheProjectData();
   };
-
-
 
   return (
+    <Link
+      href={`/project/${id}`}
+      onClick={handleLinkClick}
+      className="stalwart-project-card-link"
+      style={{ touchAction: "pan-y" }}
+    >
     <motion.div
       className="stalwart-project-card"
-      onClick={handleCardClick}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       initial={{ opacity: 0, y: 30 }}
@@ -116,10 +116,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         delay: animationDelay,
         ease: "easeOut",
       }}
-      whileHover={{
+      whileHover={canHover ? {
         y: -10,
         transition: { duration: 0.3 },
-      }}
+      } : undefined}
       style={{
         cursor: "pointer",
         position: "relative",
@@ -156,13 +156,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             animate={{ opacity: isHovered ? 1 : 1, scale: 1 }}
             transition={{ duration: 0.25 }}
           >
-            <Link
-              href={`/project/${id}`}
-              className="stalwart-donate-btn-inline"
-              onClick={handleButtonClick}
-            >
-              <span>{t('donateNow')}</span>
-            </Link>
+            <span className="stalwart-donate-btn-inline">
+              {t('donateNow')}
+            </span>
           </motion.div>
         </div>
 
@@ -204,6 +200,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
       </div>
     </motion.div>
+    </Link>
   );
 };
 
