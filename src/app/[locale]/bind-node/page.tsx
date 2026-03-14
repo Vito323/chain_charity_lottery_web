@@ -65,7 +65,10 @@ const BindNodePage = () => {
     queryUserReferrer(address)
       .then((res) => {
         if (res?.data && res.data !== "0x0") {
-          setShowAlreadyBoundModal(true);
+          // 如果已经绑定，直接跳转首页
+          router.replace("/");
+          return;
+          // setShowAlreadyBoundModal(true);
         }
       })
       .catch((e) => {
