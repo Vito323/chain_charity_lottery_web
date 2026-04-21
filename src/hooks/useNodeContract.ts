@@ -2,6 +2,7 @@
 
 import { ethers } from "ethers";
 import { useState, useCallback, useMemo } from "react";
+import { useAccount } from "wagmi";
 import { bsc } from "wagmi/chains";
 import StakeContractArtifact from "@/artifacts/node_contract.sol/CCStakeContract.json";
 import { USDT_ADDRESSES } from "@/hooks/useDonationTokenBalance";
@@ -62,6 +63,8 @@ function usdtAddressForConfiguredChain(): string {
 export const useNodeContract = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const contractAddress = process.env.NEXT_PUBLIC_NODE_CONTRACT_ADDRESS!;
+  const { connector, isConnected } = useAccount();
 
   // 1) 初始化只读合约实例（与 useDonationContract 风格一致）
   const contractInstance = useMemo(() => {
@@ -72,13 +75,12 @@ export const useNodeContract = () => {
     }
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const contractAddress = process.env.NEXT_PUBLIC_NODE_CONTRACT_ADDRESS!;
       return new ethers.Contract(contractAddress, contractABI, provider);
     } catch (e) {
       console.error("初始化质押合约失败:", e);
       return null;
     }
-  }, []);
+  }, [contractAddress]);
 
   // 2) 通用错误处理（仅用于写入交易）
   const handleWriteError = useCallback(
@@ -92,41 +94,36 @@ export const useNodeContract = () => {
     []
   );
 
-    // 获取Signer的辅助函数
-    const getSigner = useCallback(async () => {
-      if (typeof window === "undefined") {
-        throw new Error("服务端环境无法获取签名者");
-      }
-      if (!contractInstance) throw new Error("合约未初始化或钱包未连接");
-      const provider = contractInstance.runner
-        ?.provider as ethers.BrowserProvider;
-      if (!provider) throw new Error("未找到Provider");
-      const signer = await provider.getSigner();
-      if (!signer) throw new Error("未找到签名者");
-      return contractInstance.connect(signer);
-    }, [contractInstance]);
-
   // 3) Provider / Signer 获取辅助函数
-  const getBrowserProvider = useCallback((): ethers.BrowserProvider => {
+  const getBrowserProvider = useCallback(async (): Promise<ethers.BrowserProvider> => {
     if (typeof window === "undefined") {
       throw new Error("errors.contractUnavailable");
     }
-    if (!contractInstance) throw new Error("errors.contractUnavailable");
-    const provider = contractInstance.runner?.provider as ethers.BrowserProvider;
+
+    if (!isConnected) {
+      throw new Error("errors.walletNotConnected");
+    }
+
+    // 优先使用 wagmi 当前连接器 provider，确保钱包切换后调用目标一致
+    const injectedProvider = connector
+      ? ((await connector.getProvider()) as ethers.Eip1193Provider | undefined)
+      : undefined;
+    const provider = injectedProvider ?? window.ethereum;
     if (!provider) throw new Error("errors.walletNotConnected");
-    return provider;
-  }, [contractInstance]);
+    return new ethers.BrowserProvider(provider);
+  }, [connector, isConnected]);
 
   const getConnectedSigner = useCallback(async (): Promise<ethers.Signer> => {
-    const provider = getBrowserProvider();
+    const provider = await getBrowserProvider();
     const signer = await provider.getSigner();
     return signer;
   }, [getBrowserProvider]);
 
   const getSignerContract = useCallback(async () => {
+    if (!contractAddress) throw new Error("errors.contractUnavailable");
     const signer = await getConnectedSigner();
-    return contractInstance!.connect(signer) as ethers.Contract;
-  }, [contractInstance, getConnectedSigner]);
+    return new ethers.Contract(contractAddress, contractABI, signer) as ethers.Contract;
+  }, [contractAddress, getConnectedSigner]);
 
   const getCurrentUserAddress = useCallback(async (): Promise<string> => {
     const signer = await getConnectedSigner();
@@ -154,7 +151,7 @@ export const useNodeContract = () => {
         throw new Error("服务端环境无法处理授权");
       }
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = await getBrowserProvider();
       const signer = await provider.getSigner();
       const userAddress = await signer.getAddress();
 
@@ -197,7 +194,7 @@ export const useNodeContract = () => {
         console.log("授权额度充足，无需重新授权");
       }
     },
-    []
+    [getBrowserProvider]
   );
 
   // ==================== 写入通用执行器（先授权，再写链） ====================
@@ -214,7 +211,7 @@ export const useNodeContract = () => {
   const ensureErc20ApprovalsForWrite = useCallback(
     async (functionName: string, parameters: unknown[]) => {
       if (!contractInstance) throw new Error("errors.contractUnavailable");
-      const spender = String(contractInstance.target);
+      const spender = contractAddress;
 
       if (functionName === "stakeFor") {
         if (parameters.length < 3) return;
@@ -241,7 +238,7 @@ export const useNodeContract = () => {
         await checkAndApproveToken(usdtAddressForConfiguredChain(), spender, amt);
       }
     },
-    [checkAndApproveToken, contractInstance, getStakeTokenAddress]
+    [checkAndApproveToken, contractAddress, contractInstance, getStakeTokenAddress]
   );
 
   const runWrite = useCallback(
@@ -255,7 +252,6 @@ export const useNodeContract = () => {
       try {
         await ensureErc20ApprovalsForWrite(functionName, parameters);
         const c = await getSignerContract();
-        debugger
         const tx = await c.getFunction(functionName)(...parameters);
         await tx.wait();
         setIsLoading(false);
@@ -639,7 +635,7 @@ export const useNodeContract = () => {
   return {
     isLoading,
     error,
-    contractAddress: contractInstance?.target,
+    contractAddress,
 
     checkAndApproveToken,
     getPaymentToken,

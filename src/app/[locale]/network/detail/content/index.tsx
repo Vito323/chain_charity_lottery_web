@@ -135,7 +135,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
 
     // 链ID验证 - 在交易前检查当前链是否匹配
     const expectedChainId = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID);
-    
+
     if (chainId !== expectedChainId) {
       const currentChainInfo = chain || getChainById(chainId);
       const expectedChainInfo = getChainById(expectedChainId);
@@ -219,26 +219,8 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
         toast.error(tCommon(errorMsg as never));
         return;
       }
-
-      let errorMessage = tCommon("errors.purchaseFailed");
-
-      if (errorMsg === tCommon("errors.failedToFetchBalance")) {
-        errorMessage = tCommon("errors.failedToFetchBalance");
-      } else if (errorMsg === tCommon("errors.failedToGetPurchaseSignature")) {
-        errorMessage = tCommon("errors.failedToGetPurchaseSignature");
-      } else if (errorMsg === tCommon("errors.paymentTokenNotFound")) {
-        errorMessage = tCommon("errors.paymentTokenNotFound");
-      } else if (
-        errorMsg.toLowerCase().includes("user rejected") ||
-        errorMsg.toLowerCase().includes("user denied")
-      ) {
-        errorMessage = tCommon("wallet.transactionRejected");
-      } else if (
-        errorMsg.includes("insufficient funds") ||
-        errorMsg.includes("insufficient balance")
-      ) {
-        errorMessage = tCommon("errors.insufficientFunds");
-      } else if (
+      let errorMessage = errorMsg;
+      if (
         errorMsg.includes("Failed to fetch balance") ||
         errorMsg.includes("获取余额失败")
       ) {
@@ -258,7 +240,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
         errorMessage =
           bracketIndex > -1 ? errorMessage.substring(0, bracketIndex).trim() : errorMessage;
       }
-
       toast.error(errorMessage);
     } finally {
       setIsProcessing(false);
@@ -319,12 +300,10 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
           <motion.section variants={itemVariants} className="relative">
             <div className="relative rounded-xl sm:rounded-2xl border border-white/10 bg-linear-to-br from-slate-900/90 via-slate-950/95 to-slate-900/90 p-4 sm:p-5 md:p-6 shadow-xl overflow-hidden">
               {/* Background gradient effects */}
-              <div className={`pointer-events-none absolute -top-20 -right-20 w-64 h-64 blur-3xl opacity-30 ${
-                isStandard ? "bg-emerald-500/20" : isSuper ? "bg-blue-500/20" : "bg-purple-500/20"
-              }`} />
-              <div className={`pointer-events-none absolute -bottom-20 -left-20 w-64 h-64 blur-3xl opacity-30 ${
-                isStandard ? "bg-teal-500/20" : isSuper ? "bg-cyan-500/20" : "bg-pink-500/20"
-              }`} />
+              <div className={`pointer-events-none absolute -top-20 -right-20 w-64 h-64 blur-3xl opacity-30 ${isStandard ? "bg-emerald-500/20" : isSuper ? "bg-blue-500/20" : "bg-purple-500/20"
+                }`} />
+              <div className={`pointer-events-none absolute -bottom-20 -left-20 w-64 h-64 blur-3xl opacity-30 ${isStandard ? "bg-teal-500/20" : isSuper ? "bg-cyan-500/20" : "bg-pink-500/20"
+                }`} />
 
               <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 {/* Investment Returns Section */}
@@ -362,13 +341,12 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
               onClick={handlePurchaseNode}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`w-full cursor-pointer sm:w-auto inline-flex items-center justify-center rounded-full px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base font-semibold text-white shadow-lg transition-all duration-300 ${
-                isStandard
+              className={`w-full cursor-pointer sm:w-auto inline-flex items-center justify-center rounded-full px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base font-semibold text-white shadow-lg transition-all duration-300 ${isStandard
                   ? "bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-emerald-500/30"
                   : isSuper
-                  ? "bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-blue-500/30"
-                  : "bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-purple-500/30"
-              }`}
+                    ? "bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-blue-500/30"
+                    : "bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-purple-500/30"
+                }`}
             >
               {isConnected ? t("purchase.title") : t("purchase.connectWallet")}
             </motion.button>
