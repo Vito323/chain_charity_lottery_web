@@ -50,7 +50,17 @@
       "failedToFetchBalance": "Failed to fetch balance",
       "failedToGetPurchaseSignature": "Failed to get purchase signature",
       "purchaseFailed": "Purchase failed, please try again",
-      "paymentTokenNotFound": "Payment token address not found"
+      "paymentTokenNotFound": "Payment token address not found",
+      "contractUnavailable": "Contract unavailable. Refresh the page or check your network settings.",
+      "stakeTokenUnavailable": "Could not read staking token address; approval cannot proceed.",
+      "invalidDigestHex": "Invalid digest format",
+      "purchaseParamsIncomplete": "Purchase parameters are incomplete. Please try again.",
+      "purchaseDeadlineExpired": "Purchase authorization has expired. Please start again.",
+      "invalidSignatureFormat": "Invalid signature format",
+      "walletAddressMismatch": "Wallet account changed. Please reconnect and try again.",
+      "purchaseReceiverMismatch": "Purchase payload does not match current wallet. Please retry.",
+      "notNodeOwner": "Current wallet is not the owner of this node.",
+      "nodeContractTxFailed": "On-chain transaction failed. Please try again later."
     },
     "terms": {
       "accept": "I have read and accepted the",

@@ -71,16 +71,38 @@ const MyNodesList: React.FC = () => {
         }
       };
 
+      const parseNum = (v: unknown): number => {
+        if (v == null) return 0;
+        if (typeof v === 'number' && !Number.isNaN(v)) return v;
+        const x = parseFloat(String(v));
+        return Number.isFinite(x) ? x : 0;
+      };
+
       return userNodeList.map((n) => {
-        const rank = String(n.rank);
-        const accumulated = parseFloat(String(n.earnings ?? '0')) || 0;
+        const rank = String(n.node?.rank ?? n.rank ?? '2');
+        const metaPrice = parseNum(n.node?.price);
+        const fallbackPrice = priceByRank.get(rank) ?? 0;
+        const purchaseUsd = metaPrice > 0 ? metaPrice : fallbackPrice;
+        const status =
+          typeof n.status === 'number' && !Number.isNaN(n.status)
+            ? n.status
+            : parseInt(String(n.status ?? 0), 10) || 0;
+        const timestampSec =
+          typeof n.timestamp === 'number' && !Number.isNaN(n.timestamp)
+            ? n.timestamp
+            : parseInt(String(n.timestamp ?? 0), 10) || 0;
+
         return {
           id: String(n.id),
           nodeType: rankToNodeType(rank),
+          status,
           purchaseCost: {
-            usdt: priceByRank.get(rank) ?? 0,
+            usdt: purchaseUsd,
           },
-          accumulatedEarnings: accumulated,
+          accumulatedEarnings: parseNum(n.earnings),
+          timestampSec,
+          stake: parseNum(n.node?.stake),
+          reward: parseNum(n.node?.reward),
         };
       });
     },

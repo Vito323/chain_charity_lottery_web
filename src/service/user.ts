@@ -9,14 +9,35 @@ export interface UserToken {
 }
 
 
+/** 节点元信息（与用户节点接口嵌套 `node` 对齐） */
+export interface UserNodeMeta {
+  name?: string;
+  rank?: string;
+  description?: string;
+  stake?: string | number;
+  supply?: number;
+  price?: string | number;
+  reward?: string | number;
+  createdAt?: string | null;
+}
+
 export interface UserNode {
-id: string;
-level: number;
-earnings: string; // 昨日收益
-name: string;
-rank: string; // 0/1/2分别对应创世/超级/普通
-description: string;
-status: number;
+  id: string;
+  level?: number;
+  /** 节点收益（与 App 列表一致） */
+  earnings?: string | number;
+  staked?: string | number;
+  /** 质押时间（秒） */
+  timestamp?: number;
+  status?: number;
+  txHash?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  node?: UserNodeMeta;
+  /** 兼容旧接口：顶层 rank / 文案 */
+  name?: string;
+  rank?: string;
+  description?: string;
 }
 
 
@@ -45,6 +66,30 @@ export interface UserDonationRecord {
   txHash: string;
 }
 
+
+export interface UserLotteryRecord {
+  id: number;
+  lotteryDrawId: number;
+  lotteryDraw: {
+    id: number;
+    dna: string;
+    threshold: string;
+    total: string;
+    winnerCount: number;
+    createdAt: string;
+  };
+  ticket: {
+    id: number;
+    dna: string;
+    colors: string;
+    numbers: string;
+    series: {
+      rank: number;
+    }
+  };
+  score: number;
+  reward: string;
+}
 
 export const userConnect = async (address: string) =>
   action<boolean>({
@@ -109,3 +154,18 @@ export const bindUserReferrerPending = async (address: string, referrer: string)
       url: `/user/donation/${address}`,
       method: 'GET',
     });
+
+
+    export const queryUserLotteryRecord = async (address: string, page?: number, pageSize?: number) =>
+      action<{
+        records: UserLotteryRecord[];
+        count: number;
+        page: number;
+      }>({
+        url: `/user/lottery-record/${address}`,
+        method: 'GET',
+        params: {
+          page,
+          pageSize,
+        },
+      });

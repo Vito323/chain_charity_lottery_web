@@ -50,7 +50,17 @@
       "failedToFetchBalance": "获取余额失败",
       "failedToGetPurchaseSignature": "获取购买签名失败",
       "purchaseFailed": "购买失败，请重试",
-      "paymentTokenNotFound": "支付代币地址未找到"
+      "paymentTokenNotFound": "支付代币地址未找到",
+      "contractUnavailable": "合约不可用，请刷新页面或检查网络配置",
+      "stakeTokenUnavailable": "无法读取质押代币地址，暂时无法授权",
+      "invalidDigestHex": "摘要格式无效",
+      "purchaseParamsIncomplete": "购买参数不完整，请重试",
+      "purchaseDeadlineExpired": "购买授权已过期，请重新发起购买",
+      "invalidSignatureFormat": "签名格式无效",
+      "walletAddressMismatch": "钱包账户已变化，请重新连接后重试",
+      "purchaseReceiverMismatch": "购买签名中的接收地址与当前钱包不一致，请重试",
+      "notNodeOwner": "当前钱包不是该节点所有者",
+      "nodeContractTxFailed": "链上交易失败，请稍后重试"
     },
     "terms": {
       "accept": "我已阅读并接受",

@@ -319,6 +319,10 @@
       },
       "cumulativeWinnings": "累计中奖",
       "loading": "加载中奖记录中...",
+      "pagination": {
+        "previous": "上一页",
+        "next": "下一页"
+      },
       "empty": {
         "title": "未找到中奖记录",
         "description": "您还没有中过任何奖品。继续尝试，祝您下次开奖好运！",
@@ -526,6 +530,10 @@
       "viewDetails": "查看详情"
     },
     "myNodes": {
+      "currency": {
+        "usdt": "USDT",
+        "cct": "CCT"
+      },
       "badge": "我的节点持仓",
       "title": "节点",
       "titleHighlight": "投资组合",
@@ -539,15 +547,37 @@
         "acrossAllNodes": "所有节点总计",
         "yesterdayEarnings": "昨日收益",
         "totalDailyReturn": "每日总回报",
-        "accumulatedEarnings": "累计收益",
+        "accumulatedEarnings": "节点累计收益",
         "totalReturnsToDate": "累计总回报"
       },
       "loading": "加载节点持仓中...",
       "table": {
         "node": "节点",
         "purchaseCost": "购买成本",
+        "nodeCost": "节点成本",
+        "nodeEarnings": "节点收益",
         "yesterdayEarnings": "昨日收益",
         "accumulatedEarnings": "累计收益"
+      },
+      "card": {
+        "pendingActivation": "待激活",
+        "nodeCost": "节点成本",
+        "nodeEarnings": "节点收益",
+        "stakeTime": "质押时间",
+        "stakeAmount": "质押数量",
+        "currentReward": "当前奖励",
+        "currentRelease": "当前释放",
+        "nextUnlock": "下一轮解锁时间",
+        "withdraw": "提现",
+        "hintButtonAria": "查看该字段说明",
+        "hintPopoverTitle": "说明",
+        "hints": {
+          "stakeTime": "质押生效的起算时间；当前奖励与 CCT 释放均从该时刻起按自然月推进估算。",
+          "stakeAmount": "锁定的 CCT 总数量。",
+          "currentReward": "在当前 6 个自然月解锁周期内，按时间推进估算的累计 USDT 奖励（展示保留两位小数）；周期届满后进入下一轮。",
+          "currentRelease": "自质押起已累计释放的CCT数量，每 6 个自然月为一个完整解锁周期。",
+          "nextUnlock": "以质押时刻为起点，每满 6 个自然月结束一个解锁周期。"
+        }
       },
       "empty": {
         "title": "未找到节点持仓",

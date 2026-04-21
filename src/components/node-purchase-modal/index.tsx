@@ -63,7 +63,6 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
   // 当Modal关闭时重置所有状态
   useEffect(() => {
     if (!isOpen) {
-      setAcceptedTerms(false);
       setShowServiceAgreement(false);
       setShowPrivacyPolicy(false);
     }
@@ -97,6 +96,7 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
   return (
     <AnimatePresence>
       <motion.div
+        key="node-purchase-modal-container"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -272,11 +272,13 @@ const NodePurchaseModal: React.FC<NodePurchaseModalProps> = ({
         </motion.div>
       </motion.div>
       <ServiceAgreementModal
+        key="service-agreement-modal"
         show={showServiceAgreement}
         onClose={() => setShowServiceAgreement(false)}
         mounted={mounted}
       />
       <PrivacyPolicyModal
+        key="privacy-policy-modal"
         show={showPrivacyPolicy}
         onClose={() => setShowPrivacyPolicy(false)}
         mounted={mounted}

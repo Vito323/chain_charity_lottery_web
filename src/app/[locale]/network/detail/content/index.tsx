@@ -13,8 +13,10 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import NodePurchaseModal from "@/components/node-purchase-modal";
 import NodePurchaseSuccessModal from "@/components/node-purchase-success-modal";
 import { useNodeDetail } from "./hooks/useNodeDetail";
-import { useNodeContract, NodeType } from "@/hooks/useNodeContract";
-import { pendingNode } from "@/service/node";
+import { isAddress, getAddress } from "ethers";
+import { useNodeContract } from "@/hooks/useNodeContract";
+import { pendingNode, type PendingNode } from "@/service/node";
+import { isCommonMessageKey, userApiBalanceToWei } from "@/lib/contractErrorKeys";
 import { userToken } from "@/service/user";
 import { containerVariants, itemVariants } from "./utils/animations";
 import { getSecurityMeasures } from "./utils/securityMeasures";
@@ -27,6 +29,35 @@ import SecurityMeasures from "./components/SecurityMeasures";
 import { USDT_ADDRESSES } from "@/hooks/useDonationTokenBalance";
 import { bsc } from "wagmi/chains";
 import { getChainById } from "@/lib/chain-config";
+
+function assertValidPurchasePending(p: PendingNode): void {
+  if (!p?.nodeId?.trim()) {
+    throw new Error("errors.purchaseParamsIncomplete");
+  }
+  if (!p.received?.trim() || !isAddress(p.received.trim())) {
+    throw new Error("errors.purchaseParamsIncomplete");
+  }
+  const sig = String(p.signature ?? "").trim();
+  if (!sig.startsWith("0x") || sig.length < 130) {
+    throw new Error("errors.invalidSignatureFormat");
+  }
+  for (const k of ["nonce", "deadline", "amount", "stakeAmount"] as const) {
+    const v = p[k];
+    if (v === undefined || v === null || String(v).trim() === "") {
+      throw new Error("errors.purchaseParamsIncomplete");
+    }
+    try {
+      BigInt(String(v));
+    } catch {
+      throw new Error("errors.purchaseParamsIncomplete");
+    }
+  }
+  const deadline = BigInt(String(p.deadline));
+  const now = BigInt(Math.floor(Date.now() / 1000));
+  if (deadline <= now) {
+    throw new Error("errors.purchaseDeadlineExpired");
+  }
+}
 
 interface NodeDetailProps {
   rank: string;
@@ -41,7 +72,7 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
   const { isConnected, address, chain } = useAccount();
   const chainId = useChainId();
   const { openConnectModal } = useConnectModal();
-  const { purchaseNode, getPaymentToken, getPaymentTokenDecimals } = useNodeContract();
+  const { purchase, getPaymentToken } = useNodeContract();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -86,13 +117,6 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
     setShowPurchaseModal(true);
   };
 
-  // 将nodeType转换为NodeType枚举
-  const nodeTypeEnum = React.useMemo(() => {
-    if (currentNode.id === 'genesis') return NodeType.Genesis;
-    if (currentNode.id === 'super') return NodeType.Super;
-    return NodeType.Standard;
-  }, [currentNode.id]);
-
   // 处理确认购买
   const handleConfirmPurchase = async (quantity: number, acceptedTerms: boolean) => {
     if (!isConnected || !acceptedTerms || isProcessing) {
@@ -132,45 +156,42 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
     setIsProcessing(true);
 
     try {
-      // 1. 获取支付代币地址和小数位
-      const paymentTokenAddress = await getPaymentToken();
-
-      debugger;
-      // 2. 检查USDT余额
-      const totalPrice = nodePrice * quantity;
-      const balanceResponse = await userToken(address, paymentTokenAddress || USDT_ADDRESSES[bsc.id]);
-      
-      if (!balanceResponse?.data) {
-        throw new Error(tCommon('errors.failedToFetchBalance'));
-      }
-
-      const usdtBalance = parseFloat(balanceResponse.data.balance);
-      if (usdtBalance < totalPrice) {
-        console.warn('Insufficient balance:', {
-          balance: usdtBalance,
-          required: totalPrice,
-          shortage: totalPrice - usdtBalance,
-        });
-        throw new Error('insufficient balance');
-      }
-
-      // 3. 调用 pendingNode 接口获取签名信息
+      // 1. 先取服务端签名与链上参数（金额以接口为准，与合约 purchase 一致）
       const pendingResponse = await pendingNode(nodeId, address);
       if (!pendingResponse.ok || !pendingResponse.data) {
-        throw new Error(tCommon('errors.failedToGetPurchaseSignature'));
+        throw new Error(tCommon("errors.failedToGetPurchaseSignature"));
       }
 
       const pendingData = pendingResponse.data;
+      assertValidPurchasePending(pendingData);
 
-      // 4. 调用 purchaseNode 方法
-      const txHash = await purchaseNode(
-        nodeTypeEnum,
-        pendingData.nodeId,
-        pendingData.referrer,
-        pendingData.nonce,
-        pendingData.deadline,
-        pendingData.signature
+      // 2. 校验 USDT 余额是否覆盖本次购买应付 amount（wei）
+      const paymentTokenAddress = await getPaymentToken();
+      const balanceResponse = await userToken(
+        address,
+        paymentTokenAddress || USDT_ADDRESSES[bsc.id]
       );
+
+      if (!balanceResponse?.data) {
+        throw new Error(tCommon("errors.failedToFetchBalance"));
+      }
+
+      const decimals = balanceResponse.data.decimals ?? 18;
+      const balanceWei = userApiBalanceToWei(balanceResponse.data.balance, decimals);
+      const payWei = BigInt(String(pendingData.amount));
+      if (balanceWei < payWei) {
+        throw new Error("errors.insufficientFunds");
+      }
+
+      const txHash = await purchase({
+        nodeId: pendingData.nodeId,
+        received: pendingData.received,
+        nonce: pendingData.nonce,
+        deadline: pendingData.deadline,
+        amount: String(pendingData.amount),
+        stakeAmount: String(pendingData.stakeAmount),
+        signature: pendingData.signature,
+      });
 
       console.log('Purchase successful, transaction hash:', txHash);
 
@@ -188,40 +209,54 @@ const NodeDetail: React.FC<NodeDetailProps> = ({ rank }) => {
         nodeCount: mockNodeCount,
       });
       setShowSuccessModal(true);
-    } catch (error: any) {
-      console.error('Purchase failed:', error);
+    } catch (error: unknown) {
+      console.error("Purchase failed:", error);
 
-      // 处理错误信息 - 优先使用多语言配置
-      let errorMessage = tCommon('errors.purchaseFailed');
-      const errorMsg = error?.message || '';
-      
-      // 检查是否是已设置的多语言错误信息（直接匹配）
-      if (errorMsg === tCommon('errors.failedToFetchBalance')) {
-        errorMessage = tCommon('errors.failedToFetchBalance');
-      } else if (errorMsg === tCommon('errors.failedToGetPurchaseSignature')) {
-        errorMessage = tCommon('errors.failedToGetPurchaseSignature');
-      } else if (errorMsg === tCommon('errors.paymentTokenNotFound')) {
-        errorMessage = tCommon('errors.paymentTokenNotFound');
-      } else if (errorMsg.includes('user rejected') || errorMsg.includes('User rejected')) {
-        errorMessage = tCommon('wallet.transactionRejected');
-      } else if (errorMsg.includes('insufficient funds') || errorMsg.includes('insufficient balance')) {
-        errorMessage = tCommon('errors.insufficientFunds');
-      } else if (errorMsg.includes('Failed to fetch balance') || errorMsg.includes('获取余额失败')) {
-        errorMessage = tCommon('errors.failedToFetchBalance');
-      } else if (errorMsg.includes('Failed to get purchase signature') || errorMsg.includes('获取购买签名失败')) {
-        errorMessage = tCommon('errors.failedToGetPurchaseSignature');
-      } else if (errorMsg.includes('Payment token address not found') || errorMsg.includes('支付代币地址未找到')) {
-        errorMessage = tCommon('errors.paymentTokenNotFound');
+      const errorMsg = String((error as Error)?.message ?? "").trim();
+
+      // 合约 / Hook 抛出的 `errors.*` `wallet.*` 键，直接走 common 多语言
+      if (isCommonMessageKey(errorMsg)) {
+        toast.error(tCommon(errorMsg as never));
+        return;
+      }
+
+      let errorMessage = tCommon("errors.purchaseFailed");
+
+      if (errorMsg === tCommon("errors.failedToFetchBalance")) {
+        errorMessage = tCommon("errors.failedToFetchBalance");
+      } else if (errorMsg === tCommon("errors.failedToGetPurchaseSignature")) {
+        errorMessage = tCommon("errors.failedToGetPurchaseSignature");
+      } else if (errorMsg === tCommon("errors.paymentTokenNotFound")) {
+        errorMessage = tCommon("errors.paymentTokenNotFound");
+      } else if (
+        errorMsg.toLowerCase().includes("user rejected") ||
+        errorMsg.toLowerCase().includes("user denied")
+      ) {
+        errorMessage = tCommon("wallet.transactionRejected");
+      } else if (
+        errorMsg.includes("insufficient funds") ||
+        errorMsg.includes("insufficient balance")
+      ) {
+        errorMessage = tCommon("errors.insufficientFunds");
+      } else if (
+        errorMsg.includes("Failed to fetch balance") ||
+        errorMsg.includes("获取余额失败")
+      ) {
+        errorMessage = tCommon("errors.failedToFetchBalance");
+      } else if (
+        errorMsg.includes("Failed to get purchase signature") ||
+        errorMsg.includes("获取购买签名失败")
+      ) {
+        errorMessage = tCommon("errors.failedToGetPurchaseSignature");
+      } else if (
+        errorMsg.includes("Payment token address not found") ||
+        errorMsg.includes("支付代币地址未找到")
+      ) {
+        errorMessage = tCommon("errors.paymentTokenNotFound");
       } else if (errorMsg) {
-        // 如果错误信息是多语言配置中的键，尝试使用它
-        const messageKey = errorMsg.trim();
-        if (messageKey.startsWith('errors.') || messageKey.startsWith('wallet.') || messageKey.startsWith('validation.')) {
-          const translated = tCommon(messageKey as any);
-          errorMessage = translated !== messageKey ? translated : errorMsg;
-        } else {
-          const bracketIndex = errorMessage.indexOf('(');
-          errorMessage = bracketIndex > -1 ? errorMessage.substring(0, bracketIndex).trim() : errorMessage;
-        }
+        const bracketIndex = errorMessage.indexOf("(");
+        errorMessage =
+          bracketIndex > -1 ? errorMessage.substring(0, bracketIndex).trim() : errorMessage;
       }
 
       toast.error(errorMessage);

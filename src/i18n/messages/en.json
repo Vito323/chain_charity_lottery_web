@@ -397,6 +397,10 @@
       },
       "cumulativeWinnings": "Cumulative Winnings",
       "loading": "Loading winning records...",
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
       "empty": {
         "title": "No Winning Records Found",
         "description": "You haven't won any prizes yet. Keep trying and good luck on your next draw!",
@@ -604,6 +608,10 @@
       "viewDetails": "View Details"
     },
     "myNodes": {
+      "currency": {
+        "usdt": "USDT",
+        "cct": "CCT"
+      },
       "badge": "My Node Holdings",
       "title": "Node",
       "titleHighlight": "Portfolio",
@@ -617,15 +625,37 @@
         "acrossAllNodes": "Across all nodes",
         "yesterdayEarnings": "Yesterday's Earnings",
         "totalDailyReturn": "Total daily return",
-        "accumulatedEarnings": "Accumulated Earnings",
+        "accumulatedEarnings": "Accumulated Node Earnings",
         "totalReturnsToDate": "Total returns to date"
       },
       "loading": "Loading node holdings...",
       "table": {
         "node": "Node",
         "purchaseCost": "Purchase Cost",
+        "nodeCost": "Node cost",
+        "nodeEarnings": "Node earnings",
         "yesterdayEarnings": "Yesterday's Earnings",
         "accumulatedEarnings": "Accumulated Earnings"
+      },
+      "card": {
+        "pendingActivation": "Pending activation",
+        "nodeCost": "Node cost",
+        "nodeEarnings": "Node earnings",
+        "stakeTime": "Stake time",
+        "stakeAmount": "Staked amount",
+        "currentReward": "Current reward",
+        "currentRelease": "Current release",
+        "nextUnlock": "Next unlock",
+        "withdraw": "Withdraw",
+        "hintButtonAria": "Show explanation for this field",
+        "hintPopoverTitle": "Description",
+        "hints": {
+          "stakeTime": "The time your stake became active. Reward accrual and CCT release are calculated from this moment using calendar months.",
+          "stakeAmount": "Total CCT locked for this node.",
+          "currentReward": "Estimated cumulative USDT rewards for the current 6 calendar-month unlock period (two decimals); a new period begins after each cycle.",
+          "currentRelease": "CCT released since staking; each full cycle is 6 calendar months.",
+          "nextUnlock": "From the stake time, each full cycle ends after 6 calendar months."
+        }
       },
       "empty": {
         "title": "No Node Holdings Found",

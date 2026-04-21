@@ -2,14 +2,17 @@ import { action } from "./provider";
 
 
 
+
 export interface PendingNode {
-  nodeType: number,
-  nodeId: string,
-  referrer: string,
-  nonce: number,
-  deadline: number,
-  signature: string,
+  nodeId: string;
+  received: string;
+  nonce: number
+  deadline: number
+  amount: string
+  stakeAmount: string
+  signature: string;
 }
+
 
 
 export interface NodeData {

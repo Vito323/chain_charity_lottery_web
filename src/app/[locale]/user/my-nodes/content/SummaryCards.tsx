@@ -3,7 +3,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { formatCurrency } from '@/utils/currency';
 import { NodeHolding } from './types';
 
 interface SummaryCardsProps {
@@ -14,9 +13,11 @@ interface SummaryCardsProps {
 const SummaryCards: React.FC<SummaryCardsProps> = ({ variants, nodeHoldings }) => {
   const t = useTranslations('network.myNodes');
 
-  // Calculate totals
+  /** 与 App `MeNodeView` 一致：总成本为所有节点 `node.price` 之和；累计收益仅统计 `status != 0` */
   const totalPurchaseCost = nodeHoldings.reduce((sum, node) => sum + node.purchaseCost.usdt, 0);
-  const totalAccumulatedEarnings = nodeHoldings.reduce((sum, node) => sum + node.accumulatedEarnings, 0);
+  const totalAccumulatedEarnings = nodeHoldings
+    .filter((node) => node.status !== 0)
+    .reduce((sum, node) => sum + node.accumulatedEarnings, 0);
 
   return (
     <motion.div
@@ -32,7 +33,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ variants, nodeHoldings }) =
       >
         <div className="text-sm text-white/60 mb-2">{t('summary.totalPurchaseCost')}</div>
         <div className="text-2xl md:text-3xl font-bold text-white mb-1">
-          {formatCurrency(totalPurchaseCost)}
+          {totalPurchaseCost.toFixed(2)} {t('currency.usdt')}
         </div>
         <div className="text-xs text-white/50">{t('summary.acrossAllNodes')}</div>
       </motion.div>
@@ -44,7 +45,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ variants, nodeHoldings }) =
       >
         <div className="text-sm text-white/60 mb-2">{t('summary.accumulatedEarnings')}</div>
         <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">
-          +{formatCurrency(totalAccumulatedEarnings)}
+          {totalAccumulatedEarnings.toFixed(2)} {t('currency.usdt')}
         </div>
         <div className="text-xs text-white/50">{t('summary.totalReturnsToDate')}</div>
       </motion.div>

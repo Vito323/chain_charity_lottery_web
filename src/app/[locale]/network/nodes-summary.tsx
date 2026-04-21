@@ -18,39 +18,15 @@ const containerVariants = {
 };
 
 
+const nodeRank = (n: UserNode) => String(n.node?.rank ?? n.rank ?? '2');
+
 /** rank "0"=genesis, "1"=super, "2"=standard */
 const countByRank = (nodes: UserNode[], rank: string) =>
-  nodes.filter((n) => String(n.rank) === rank).length;
+  nodes.filter((n) => nodeRank(n) === rank).length;
 
 /** Sum yesterday earnings from all nodes (earnings from API) */
 const sumEarnings = (nodes: UserNode[]): number =>
   nodes.reduce((acc, n) => acc + (parseFloat(String(n.earnings ?? '0')) || 0), 0);
-
-/** Skeleton for the data card: labels real, numbers/counts as skeleton bars */
-const DataCardSkeleton: React.FC<{ t: (key: string) => string }> = ({ t }) => (
-  <div className="relative rounded-2xl border border-dashed border-white/25 bg-white/5 px-5 py-4 sm:px-6 sm:py-5">
-    <div className="flex flex-col gap-3">
-      <span className="text-xs uppercase tracking-wide text-white/60">
-        {t('noNodes.cumulativeEarnings')}
-      </span>
-      <div className="h-9 sm:h-10 w-28 sm:w-36 bg-white/10 rounded-lg animate-pulse" />
-      <div className="mt-4 grid grid-cols-3 gap-2 text-xs sm:text-sm text-white/70">
-        <div className="flex flex-col gap-1">
-          <span className="text-white/50">{t('noNodes.genesisNodes')}</span>
-          <div className="h-5 w-6 bg-white/10 rounded animate-pulse" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-white/50">{t('noNodes.superNodes')}</span>
-          <div className="h-5 w-6 bg-white/10 rounded animate-pulse" />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-white/50">{t('noNodes.standardNodes')}</span>
-          <div className="h-5 w-6 bg-white/10 rounded animate-pulse" />
-        </div>
-      </div>
-    </div>
-  </div>
-);
 
 export interface MyNodesSummaryProps {
   /** Optional override: when provided, skip fetching and use this for hasNodes (e.g. for testing) */
@@ -138,7 +114,10 @@ const MyNodesSummary: React.FC<MyNodesSummaryProps> = ({ hasNodes: hasNodesProp 
               {t('noNodes.description')}
             </p>
           </div>
-          <DataCardSkeleton t={t} />
+          <div className="relative rounded-2xl border border-dashed border-white/25 bg-white/5 px-5 py-10 sm:px-6 sm:py-12 flex flex-col items-center justify-center text-center">
+            <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mb-4" />
+            <p className="text-sm text-white/80">{tCommon('status.loading')}</p>
+          </div>
         </div>
       ) : error ? (
         <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">

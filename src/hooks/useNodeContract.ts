@@ -2,625 +2,681 @@
 
 import { ethers } from "ethers";
 import { useState, useCallback, useMemo } from "react";
-// 导入 ABI 文件
-import NodeContractArtifact from "../artifacts/node_contract.sol/CCNodeContract.json";
+import { bsc } from "wagmi/chains";
+import StakeContractArtifact from "@/artifacts/node_contract.sol/CCStakeContract.json";
+import { USDT_ADDRESSES } from "@/hooks/useDonationTokenBalance";
+import { mapEthersWriteErrorToCommonKey } from "@/lib/contractErrorKeys";
 
-// 从 ABI 文件中获取合约地址和 ABI
-const contractABI = NodeContractArtifact.abi;
+const contractABI = StakeContractArtifact.abi;
 
-// 节点类型枚举
-export enum NodeType {
-  Genesis = 0,
-  Super = 1,
-  Standard = 2,
+const ERC20_ABI = [
+  "function allowance(address owner, address spender) external view returns (uint256)",
+  "function approve(address spender, uint256 amount) external returns (bool)",
+] as const;
+
+/** 与 Flutter `NodeStakeInfo` / 合约 `nodeStake` 一致 */
+export interface NodeStakeInfo {
+  owner: string;
+  stake: string;
+  releasable: string;
+  firstStakeAt: string;
+  usdtRewards: string;
 }
 
-// 节点信息接口
-export interface NodeInfo {
-  nodeOwner: string;
-  nodeTypeValue: number;
-  lockedAmount: string;
-  unlockedAmount: string;
-  purchaseTime: number;
+/** 与 Flutter `Eip712DomainInfo` / 合约 `eip712Domain` 一致 */
+export interface Eip712DomainInfo {
+  fields: string;
+  name: string;
+  version: string;
+  chainId: string;
+  verifyingContract: string;
+  salt: string;
+  extensions: string[];
 }
 
-// 节点详情接口
-export interface NodeDetail {
-  maxSupply: string;
-  currentSupply: string;
-  price: string;
-  reward: string;
+function normalizeAddress(addr: string): string {
+  const s = addr.trim();
+  return s.startsWith("0x") ? s : `0x${s}`;
 }
 
-// 节点供应信息接口
-export interface NodeSupplyInfo {
-  maxSupply: string;
-  currentSupply: string;
-  remainingSupply: string;
+function parseAmountWeiString(s: string): bigint {
+  return BigInt(s.trim());
 }
 
-// 质押锁定信息接口
-export interface StakeLockInfo {
-  totalAmount: string;
-  firstPhaseAmount: string;
-  secondPhaseAmount: string;
-  firstPhaseUnlockTime: number;
-  secondPhaseUnlockTime: number;
-  firstPhaseUnlocked: string;
-  secondPhaseUnlocked: string;
-  firstPhaseUnlockable: string;
-  secondPhaseUnlockable: string;
-  firstPhaseForceUnlocked: boolean;
-  secondPhaseForceUnlocked: boolean;
+function digestHexToBytes32(digestHex: string): Uint8Array {
+  let s = digestHex.trim();
+  if (s.startsWith("0x")) s = s.slice(2);
+  if (s.length !== 64) {
+    throw new Error("errors.invalidDigestHex");
+  }
+  return ethers.getBytes(`0x${s}`);
 }
 
-// 用户质押锁定信息接口
-export interface UserStakeLockInfo {
-  nodeIds: string[];
-  totalAmounts: string[];
-  firstPhaseUnlockable: string[];
-  secondPhaseUnlockable: string[];
+function usdtAddressForConfiguredChain(): string {
+  const chainId = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID);
+  const fromMap = USDT_ADDRESSES[chainId as keyof typeof USDT_ADDRESSES];
+  if (fromMap) return fromMap;
+  return USDT_ADDRESSES[bsc.id];
 }
 
 export const useNodeContract = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 1. 初始化合约实例的辅助函数 (使用 useMemo 避免重复创建)
+  // 1) 初始化只读合约实例（与 useDonationContract 风格一致）
   const contractInstance = useMemo(() => {
-    // 检查是否在浏览器环境中
-    if (typeof window === "undefined") {
-      return null;
-    }
-
+    if (typeof window === "undefined") return null;
     if (typeof window.ethereum === "undefined") {
       console.warn("MetaMask 未安装或未检测到");
       return null;
     }
-
     try {
-      // MetaMask Provider
       const provider = new ethers.BrowserProvider(window.ethereum);
-
-      const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID!;
       const contractAddress = process.env.NEXT_PUBLIC_NODE_CONTRACT_ADDRESS!;
-
-      console.log(`使用节点合约地址: ${contractAddress} (链ID: ${chainId})`);
-
-      // 创建只读合约实例
       return new ethers.Contract(contractAddress, contractABI, provider);
     } catch (e) {
-      console.error("初始化节点合约失败:", e);
+      console.error("初始化质押合约失败:", e);
       return null;
     }
-  }, []); // 依赖项为空数组，只在组件初次渲染时创建
-
-  // 通用错误处理函数
-  const handleError = useCallback((e: unknown, defaultMessage: string) => {
-    console.error("Contract error:", e);
-    const error = e as Error;
-    const errorMessage = error.message?.includes("user rejected")
-      ? "用户拒绝了交易"
-      : error.message?.includes("insufficient funds")
-      ? "余额不足"
-      : defaultMessage;
-    setError(errorMessage);
-    setIsLoading(false);
-    throw e;
   }, []);
 
-  // 获取Signer的辅助函数
-  const getSigner = useCallback(async () => {
+  // 2) 通用错误处理（仅用于写入交易）
+  const handleWriteError = useCallback(
+    (e: unknown, fallbackKey: string): never => {
+      console.error("StakeContract write error:", e);
+      const key = mapEthersWriteErrorToCommonKey(e) ?? fallbackKey;
+      setError(key);
+      setIsLoading(false);
+      throw new Error(key);
+    },
+    []
+  );
+
+    // 获取Signer的辅助函数
+    const getSigner = useCallback(async () => {
+      if (typeof window === "undefined") {
+        throw new Error("服务端环境无法获取签名者");
+      }
+      if (!contractInstance) throw new Error("合约未初始化或钱包未连接");
+      const provider = contractInstance.runner
+        ?.provider as ethers.BrowserProvider;
+      if (!provider) throw new Error("未找到Provider");
+      const signer = await provider.getSigner();
+      if (!signer) throw new Error("未找到签名者");
+      return contractInstance.connect(signer);
+    }, [contractInstance]);
+
+  // 3) Provider / Signer 获取辅助函数
+  const getBrowserProvider = useCallback((): ethers.BrowserProvider => {
     if (typeof window === "undefined") {
-      throw new Error("服务端环境无法获取签名者");
+      throw new Error("errors.contractUnavailable");
     }
-    if (!contractInstance) throw new Error("合约未初始化或钱包未连接");
-    const provider = contractInstance.runner
-      ?.provider as ethers.BrowserProvider;
-    if (!provider) throw new Error("未找到Provider");
-    const signer = await provider.getSigner();
-    if (!signer) throw new Error("未找到签名者");
-    return contractInstance.connect(signer);
+    if (!contractInstance) throw new Error("errors.contractUnavailable");
+    const provider = contractInstance.runner?.provider as ethers.BrowserProvider;
+    if (!provider) throw new Error("errors.walletNotConnected");
+    return provider;
   }, [contractInstance]);
 
-  // 获取当前用户地址的辅助函数
+  const getConnectedSigner = useCallback(async (): Promise<ethers.Signer> => {
+    const provider = getBrowserProvider();
+    const signer = await provider.getSigner();
+    return signer;
+  }, [getBrowserProvider]);
+
+  const getSignerContract = useCallback(async () => {
+    const signer = await getConnectedSigner();
+    return contractInstance!.connect(signer) as ethers.Contract;
+  }, [contractInstance, getConnectedSigner]);
+
   const getCurrentUserAddress = useCallback(async (): Promise<string> => {
-    if (typeof window === "undefined") {
-      throw new Error("服务端环境无法获取用户地址");
+    const signer = await getConnectedSigner();
+    return signer.getAddress();
+  }, [getConnectedSigner]);
+
+  /** 购买流程校验余额用：与 Flutter `purchase` 的 USDT 支付侧一致 */
+  const getPaymentToken = useCallback(async (): Promise<string> => {
+    return usdtAddressForConfiguredChain();
+  }, []);
+
+  const getPaymentTokenDecimals = useCallback(async (): Promise<number> => {
+    return 18;
+  }, []);
+
+  // 检查并处理 ERC20 代币授权
+  const checkAndApproveToken = useCallback(
+    async (
+      tokenAddress: string,
+      spenderAddress: string,
+      amount: bigint,
+      tokenDecimals: number = 18
+    ): Promise<void> => {
+      if (typeof window === "undefined") {
+        throw new Error("服务端环境无法处理授权");
+      }
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const userAddress = await signer.getAddress();
+
+      // ERC20 标准 ABI (仅包含 allowance 和 approve 函数)
+      const erc20ABI = [
+        "function allowance(address owner, address spender) external view returns (uint256)",
+        "function approve(address spender, uint256 amount) external returns (bool)",
+      ];
+
+      const tokenContract = new ethers.Contract(
+        tokenAddress,
+        erc20ABI,
+        signer
+      );
+
+      // 检查当前授权额度
+      const currentAllowance = await tokenContract.allowance(
+        userAddress,
+        spenderAddress
+      );
+
+      // 如果授权不足，请求授权
+      if (currentAllowance < amount) {
+        // 使用确定的金额值进行授权
+        const approveAmount = amount > ethers.MaxUint256 
+          ? ethers.MaxUint256 
+          : amount;
+        
+        console.log(
+          `授权不足，当前授权: ${ethers.formatUnits(currentAllowance, tokenDecimals)}, 需要: ${ethers.formatUnits(amount, tokenDecimals)}, 将授权: ${ethers.formatUnits(approveAmount, tokenDecimals)}`
+        );
+
+        const approveTx = await tokenContract.approve(
+          spenderAddress,
+          approveAmount
+        );
+        await approveTx.wait();
+        console.log("代币授权成功");
+      } else {
+        console.log("授权额度充足，无需重新授权");
+      }
+    },
+    []
+  );
+
+  // ==================== 写入通用执行器（先授权，再写链） ====================
+  const getStakeTokenAddress = useCallback(async (): Promise<string> => {
+    if (!contractInstance) return "";
+    try {
+      const addr = (await contractInstance.stakeToken()) as string;
+      return addr && addr !== ethers.ZeroAddress ? normalizeAddress(addr) : "";
+    } catch {
+      return "";
     }
-    if (!contractInstance) throw new Error("合约未初始化或钱包未连接");
-    const provider = contractInstance.runner
-      ?.provider as ethers.BrowserProvider;
-    if (!provider) throw new Error("未找到Provider");
-    const signer = await provider.getSigner();
-    if (!signer) throw new Error("未找到签名者");
-    return await signer.getAddress();
   }, [contractInstance]);
 
-  // ==================== 只读函数 (View Functions) ====================
+  const ensureErc20ApprovalsForWrite = useCallback(
+    async (functionName: string, parameters: unknown[]) => {
+      if (!contractInstance) throw new Error("errors.contractUnavailable");
+      const spender = String(contractInstance.target);
 
-  // 获取节点信息
-  const getNodeInfo = useCallback(
-    async (nodeId: string): Promise<NodeInfo | null> => {
-      if (!contractInstance) return null;
-      try {
-        const result = await contractInstance.getNodeInfo(nodeId);
-        return {
-          nodeOwner: result.nodeOwner,
-          nodeTypeValue: Number(result.nodeTypeValue),
-          lockedAmount: result.lockedAmount.toString(),
-          unlockedAmount: result.unlockedAmount.toString(),
-          purchaseTime: Number(result.purchaseTime),
-        };
-      } catch (e: any) {
-        handleError(e, "获取节点信息失败");
-        return null;
+      if (functionName === "stakeFor") {
+        if (parameters.length < 3) return;
+        const amt = BigInt(String(parameters[2]));
+        if (amt <= BigInt(0)) return;
+        const stake = await getStakeTokenAddress();
+        if (!stake) throw new Error("errors.stakeTokenUnavailable");
+        await checkAndApproveToken(stake, spender, amt);
+        return;
+      }
+
+      if (functionName === "purchase") {
+        if (parameters.length < 6) return;
+        const payAmt = BigInt(String(parameters[4]));
+        if (payAmt <= BigInt(0)) return;
+        await checkAndApproveToken(usdtAddressForConfiguredChain(), spender, payAmt);
+        return;
+      }
+
+      if (functionName === "depositRewardUsdt") {
+        if (parameters.length < 1) return;
+        const amt = BigInt(String(parameters[0]));
+        if (amt <= BigInt(0)) return;
+        await checkAndApproveToken(usdtAddressForConfiguredChain(), spender, amt);
       }
     },
-    [contractInstance, handleError]
+    [checkAndApproveToken, contractInstance, getStakeTokenAddress]
   );
 
-  // 获取节点详情
-  const getNodeDetail = useCallback(
-    async (nodeType: NodeType): Promise<NodeDetail | null> => {
-      if (!contractInstance) return null;
-      try {
-        const result = await contractInstance.getNodeDetail(nodeType);
-        return {
-          maxSupply: result.maxSupply.toString(),
-          currentSupply: result.currentSupply.toString(),
-          price: result.price.toString(),
-          reward: result.reward.toString(),
-        };
-      } catch (e: any) {
-        handleError(e, "获取节点详情失败");
-        return null;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取节点价格
-  const getNodePrice = useCallback(
-    async (nodeType: NodeType): Promise<string> => {
-      if (!contractInstance) return "0";
-      try {
-        const result = await contractInstance.getNodePrice(nodeType);
-        return result.toString();
-      } catch (e: any) {
-        handleError(e, "获取节点价格失败");
-        return "0";
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取节点奖励
-  const getNodeReward = useCallback(
-    async (nodeType: NodeType): Promise<string> => {
-      if (!contractInstance) return "0";
-      try {
-        const result = await contractInstance.getNodeReward(nodeType);
-        return result.toString();
-      } catch (e: any) {
-        handleError(e, "获取节点奖励失败");
-        return "0";
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取节点供应信息
-  const getNodeSupplyInfo = useCallback(
-    async (nodeType: NodeType): Promise<NodeSupplyInfo | null> => {
-      if (!contractInstance) return null;
-      try {
-        const result = await contractInstance.getNodeSupplyInfo(nodeType);
-        return {
-          maxSupply: result.maxSupply.toString(),
-          currentSupply: result.currentSupply.toString(),
-          remainingSupply: result.remainingSupply.toString(),
-        };
-      } catch (e: any) {
-        handleError(e, "获取节点供应信息失败");
-        return null;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取节点所有者
-  const getNodeOwner = useCallback(
-    async (nodeId: string): Promise<string> => {
-      if (!contractInstance) return "";
-      try {
-        const result = await contractInstance.getNodeOwner(nodeId);
-        return result;
-      } catch (e: any) {
-        handleError(e, "获取节点所有者失败");
-        return "";
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取节点类型
-  const getNodeType = useCallback(
-    async (nodeId: string): Promise<number> => {
-      if (!contractInstance) return -1;
-      try {
-        const result = await contractInstance.getNodeType(nodeId);
-        return Number(result);
-      } catch (e: any) {
-        handleError(e, "获取节点类型失败");
-        return -1;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 检查节点是否激活
-  const isNodeActive = useCallback(
-    async (nodeId: string): Promise<boolean> => {
-      if (!contractInstance) return false;
-      try {
-        const result = await contractInstance.isNodeActive(nodeId);
-        return result;
-      } catch (e: any) {
-        handleError(e, "检查节点状态失败");
-        return false;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取用户节点列表
-  const getUserNodes = useCallback(
-    async (userAddress: string): Promise<string[]> => {
-      if (!contractInstance) return [];
-      try {
-        const result = await contractInstance.getUserNodes(userAddress);
-        return result;
-      } catch (e: any) {
-        handleError(e, "获取用户节点列表失败");
-        return [];
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取当前用户的节点列表
-  const getCurrentUserNodes = useCallback(async (): Promise<string[]> => {
-    if (!contractInstance) return [];
-    try {
-      const userAddress = await getCurrentUserAddress();
-      const result = await contractInstance.getUserNodes(userAddress);
-      return result;
-    } catch (e: any) {
-      handleError(e, "获取当前用户节点列表失败");
-      return [];
-    }
-  }, [contractInstance, handleError, getCurrentUserAddress]);
-
-  // 获取用户节点数量
-  const getUserNodeCount = useCallback(
-    async (userAddress: string): Promise<number> => {
-      if (!contractInstance) return 0;
-      try {
-        const result = await contractInstance.getUserNodeCount(userAddress);
-        return Number(result);
-      } catch (e: any) {
-        handleError(e, "获取用户节点数量失败");
-        return 0;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取当前用户的节点数量
-  const getCurrentUserNodeCount = useCallback(async (): Promise<number> => {
-    if (!contractInstance) return 0;
-    try {
-      const userAddress = await getCurrentUserAddress();
-      const result = await contractInstance.getUserNodeCount(userAddress);
-      return Number(result);
-    } catch (e: any) {
-      handleError(e, "获取当前用户节点数量失败");
-      return 0;
-    }
-  }, [contractInstance, handleError, getCurrentUserAddress]);
-
-  // 检查用户是否已购买节点
-  const hasPurchasedNode = useCallback(
-    async (userAddress: string): Promise<boolean> => {
-      if (!contractInstance) return false;
-      try {
-        const result = await contractInstance.hasPurchasedNode(userAddress);
-        return result;
-      } catch (e: any) {
-        handleError(e, "检查用户购买状态失败");
-        return false;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 检查当前用户是否已购买节点
-  const currentUserHasPurchasedNode = useCallback(async (): Promise<boolean> => {
-    if (!contractInstance) return false;
-    try {
-      const userAddress = await getCurrentUserAddress();
-      const result = await contractInstance.hasPurchasedNode(userAddress);
-      return result;
-    } catch (e: any) {
-      handleError(e, "检查当前用户购买状态失败");
-      return false;
-    }
-  }, [contractInstance, handleError, getCurrentUserAddress]);
-
-  // 获取质押锁定信息
-  const getStakeLockInfo = useCallback(
-    async (nodeId: string): Promise<StakeLockInfo | null> => {
-      if (!contractInstance) return null;
-      try {
-        const result = await contractInstance.getStakeLockInfo(nodeId);
-        return {
-          totalAmount: result.totalAmount.toString(),
-          firstPhaseAmount: result.firstPhaseAmount.toString(),
-          secondPhaseAmount: result.secondPhaseAmount.toString(),
-          firstPhaseUnlockTime: Number(result.firstPhaseUnlockTime),
-          secondPhaseUnlockTime: Number(result.secondPhaseUnlockTime),
-          firstPhaseUnlocked: result.firstPhaseUnlocked.toString(),
-          secondPhaseUnlocked: result.secondPhaseUnlocked.toString(),
-          firstPhaseUnlockable: result.firstPhaseUnlockable.toString(),
-          secondPhaseUnlockable: result.secondPhaseUnlockable.toString(),
-          firstPhaseForceUnlocked: result.firstPhaseForceUnlocked,
-          secondPhaseForceUnlocked: result.secondPhaseForceUnlocked,
-        };
-      } catch (e: any) {
-        handleError(e, "获取质押锁定信息失败");
-        return null;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取用户质押锁定信息
-  const getUserStakeLockInfo = useCallback(
-    async (userAddress: string): Promise<UserStakeLockInfo | null> => {
-      if (!contractInstance) return null;
-      try {
-        const result = await contractInstance.getUserStakeLockInfo(userAddress);
-        return {
-          nodeIds: result.nodeIds,
-          totalAmounts: result.totalAmounts.map((v: bigint) => v.toString()),
-          firstPhaseUnlockable: result.firstPhaseUnlockable.map((v: bigint) =>
-            v.toString()
-          ),
-          secondPhaseUnlockable: result.secondPhaseUnlockable.map((v: bigint) =>
-            v.toString()
-          ),
-        };
-      } catch (e: any) {
-        handleError(e, "获取用户质押锁定信息失败");
-        return null;
-      }
-    },
-    [contractInstance, handleError]
-  );
-
-  // 获取当前用户的质押锁定信息
-  const getCurrentUserStakeLockInfo = useCallback(
-    async (): Promise<UserStakeLockInfo | null> => {
-      if (!contractInstance) return null;
-      try {
-        const userAddress = await getCurrentUserAddress();
-        const result = await contractInstance.getUserStakeLockInfo(userAddress);
-        return {
-          nodeIds: result.nodeIds,
-          totalAmounts: result.totalAmounts.map((v: bigint) => v.toString()),
-          firstPhaseUnlockable: result.firstPhaseUnlockable.map((v: bigint) =>
-            v.toString()
-          ),
-          secondPhaseUnlockable: result.secondPhaseUnlockable.map((v: bigint) =>
-            v.toString()
-          ),
-        };
-      } catch (e: any) {
-        handleError(e, "获取当前用户质押锁定信息失败");
-        return null;
-      }
-    },
-    [contractInstance, handleError, getCurrentUserAddress]
-  );
-
-  // 获取支付代币地址
-  const getPaymentToken = useCallback(async (): Promise<string> => {
-    if (!contractInstance) return "";
-    try {
-      const result = await contractInstance.getPaymentToken();
-      return result;
-    } catch (e: any) {
-      handleError(e, "获取支付代币地址失败");
-      return "";
-    }
-  }, [contractInstance, handleError]);
-
-  // 获取支付代币小数位
-  const getPaymentTokenDecimals = useCallback(async (): Promise<number> => {
-    if (!contractInstance) return 0;
-    try {
-      const result = await contractInstance.getPaymentTokenDecimals();
-      return Number(result);
-    } catch (e: any) {
-      handleError(e, "获取支付代币小数位失败");
-      return 0;
-    }
-  }, [contractInstance, handleError]);
-
-  // 获取质押代币地址
-  const getStakeToken = useCallback(async (): Promise<string> => {
-    if (!contractInstance) return "";
-    try {
-      const result = await contractInstance.getStakeToken();
-      return result;
-    } catch (e: any) {
-      handleError(e, "获取质押代币地址失败");
-      return "";
-    }
-  }, [contractInstance, handleError]);
-
-  // 获取质押代币小数位
-  const getStakeTokenDecimals = useCallback(async (): Promise<number> => {
-    if (!contractInstance) return 0;
-    try {
-      const result = await contractInstance.getStakeTokenDecimals();
-      return Number(result);
-    } catch (e: any) {
-      handleError(e, "获取质押代币小数位失败");
-      return 0;
-    }
-  }, [contractInstance, handleError]);
-
-  // 获取第一阶段锁定时长
-  const getFirstPhaseLockDuration = useCallback(async (): Promise<number> => {
-    if (!contractInstance) return 0;
-    try {
-      const result = await contractInstance.FIRST_PHASE_LOCK_DURATION();
-      return Number(result);
-    } catch (e: any) {
-      handleError(e, "获取第一阶段锁定时长失败");
-      return 0;
-    }
-  }, [contractInstance, handleError]);
-
-  // 获取第一阶段百分比
-  const getFirstPhasePercentage = useCallback(async (): Promise<number> => {
-    if (!contractInstance) return 0;
-    try {
-      const result = await contractInstance.FIRST_PHASE_PERCENTAGE();
-      return Number(result);
-    } catch (e: any) {
-      handleError(e, "获取第一阶段百分比失败");
-      return 0;
-    }
-  }, [contractInstance, handleError]);
-
-  // 获取第二阶段锁定时长
-  const getSecondPhaseLockDuration = useCallback(async (): Promise<number> => {
-    if (!contractInstance) return 0;
-    try {
-      const result = await contractInstance.SECOND_PHASE_LOCK_DURATION();
-      return Number(result);
-    } catch (e: any) {
-      handleError(e, "获取第二阶段锁定时长失败");
-      return 0;
-    }
-  }, [contractInstance, handleError]);
-
-  // ==================== 写入函数 (Write Functions) ====================
-
-  // 购买节点
-  const purchaseNode = useCallback(
+  const runWrite = useCallback(
     async (
-      nodeType: NodeType,
-      nodeId: string,
-      referrer: string,
-      nonce: number,
-      deadline: number,
-      signature: string
+      functionName: string,
+      parameters: unknown[],
+      fallbackKey: string
     ): Promise<string> => {
       setIsLoading(true);
       setError(null);
       try {
-        const contractWithSigner = await getSigner();
-        const tx = await (contractWithSigner as any).purchaseNode(
-          nodeType,
-          nodeId,
-          referrer,
-          nonce,
-          deadline,
-          signature
-        );
-        console.log("购买节点交易已发送，等待确认:", tx.hash);
+        await ensureErc20ApprovalsForWrite(functionName, parameters);
+        const c = await getSignerContract();
+        debugger
+        const tx = await c.getFunction(functionName)(...parameters);
         await tx.wait();
-        console.log("购买节点交易已确认");
         setIsLoading(false);
-        return tx.hash;
-      } catch (e: unknown) {
-        console.error("购买节点失败，详细错误:", e);
-        handleError(e, "购买节点失败");
-        throw e;
+        return tx.hash as string;
+      } catch (e) {
+        return handleWriteError(e, fallbackKey);
       }
     },
-    [getSigner, handleError]
+    [ensureErc20ApprovalsForWrite, getSignerContract, handleWriteError]
   );
 
-  // 解锁质押
-  const unlockStake = useCallback(
-    async (nodeId: string, phase: number): Promise<string> => {
-      setIsLoading(true);
-      setError(null);
+  // ==================== 只读（与 Flutter 一致：失败返回空/零，不打断 UI） ====================
+
+  const getUserNodeIds = useCallback(
+    async (userAddress: string): Promise<string[]> => {
+      if (!contractInstance) return [];
       try {
-        const contractWithSigner = await getSigner();
-        const tx = await (contractWithSigner as any).unlockStake(nodeId, phase);
-        console.log("解锁质押交易已发送，等待确认:", tx.hash);
-        await tx.wait();
-        console.log("解锁质押交易已确认");
-        setIsLoading(false);
-        return tx.hash;
-      } catch (e: unknown) {
-        console.error("解锁质押失败，详细错误:", e);
-        handleError(e, "解锁质押失败");
-        throw e;
+        return await contractInstance.getUserNodeIds(normalizeAddress(userAddress));
+      } catch (e) {
+        console.error("[StakeContract] getUserNodeIds", e);
+        return [];
       }
     },
-    [getSigner, handleError]
+    [contractInstance]
+  );
+
+  const getCurrentUserNodeIds = useCallback(async (): Promise<string[]> => {
+    try {
+      const addr = await getCurrentUserAddress();
+      return getUserNodeIds(addr);
+    } catch {
+      return [];
+    }
+  }, [getCurrentUserAddress, getUserNodeIds]);
+
+  const getLockedBalance = useCallback(
+    async (nodeId: string): Promise<string> => {
+      if (!contractInstance) return "0";
+      try {
+        const v = await contractInstance.lockedBalance(nodeId);
+        return (v as bigint).toString();
+      } catch (e) {
+        console.error("[StakeContract] lockedBalance", e);
+        return "0";
+      }
+    },
+    [contractInstance]
+  );
+
+  const getMasterContract = useCallback(async (): Promise<string> => {
+    if (!contractInstance) return "";
+    try {
+      const v = await contractInstance.masterContract();
+      return normalizeAddress(String(v));
+    } catch (e) {
+      console.error("[StakeContract] masterContract", e);
+      return "";
+    }
+  }, [contractInstance]);
+
+  const getNodeStake = useCallback(
+    async (nodeId: string): Promise<NodeStakeInfo | null> => {
+      if (!contractInstance) return null;
+      try {
+        const r = await contractInstance.nodeStake(nodeId);
+        const owner = (r.owner ?? r[0]) as string;
+        const stake = (r.stake ?? r[1]) as bigint;
+        const releasable = (r.releasable ?? r[2]) as bigint;
+        const firstStakeAt = (r.firstStakeAt ?? r[3]) as bigint;
+        const usdtRewards = (r.usdtRewards ?? r[4]) as bigint;
+        return {
+          owner: normalizeAddress(String(owner)),
+          stake: stake.toString(),
+          releasable: releasable.toString(),
+          firstStakeAt: firstStakeAt.toString(),
+          usdtRewards: usdtRewards.toString(),
+        };
+      } catch (e) {
+        console.error("[StakeContract] nodeStake", e);
+        return null;
+      }
+    },
+    [contractInstance]
+  );
+
+  const isOperator = useCallback(
+    async (account: string): Promise<boolean> => {
+      if (!contractInstance) return false;
+      try {
+        return await contractInstance.operators(normalizeAddress(account));
+      } catch (e) {
+        console.error("[StakeContract] operators", e);
+        return false;
+      }
+    },
+    [contractInstance]
+  );
+
+  const getOwner = useCallback(async (): Promise<string> => {
+    if (!contractInstance) return "";
+    try {
+      const v = await contractInstance.owner();
+      return normalizeAddress(String(v));
+    } catch (e) {
+      console.error("[StakeContract] owner", e);
+      return "";
+    }
+  }, [contractInstance]);
+
+  const getRewardToken = useCallback(async (): Promise<string> => {
+    if (!contractInstance) return "";
+    try {
+      const v = await contractInstance.rewardToken();
+      return normalizeAddress(String(v));
+    } catch (e) {
+      console.error("[StakeContract] rewardToken", e);
+      return "";
+    }
+  }, [contractInstance]);
+
+  const getServerSigner = useCallback(async (): Promise<string> => {
+    if (!contractInstance) return "";
+    try {
+      const v = await contractInstance.serverSigner();
+      return normalizeAddress(String(v));
+    } catch (e) {
+      console.error("[StakeContract] serverSigner", e);
+      return "";
+    }
+  }, [contractInstance]);
+
+  const getStakeToken = useCallback(async (): Promise<string> => {
+    return getStakeTokenAddress();
+  }, [getStakeTokenAddress]);
+
+  const getTotalPendingUsdtRewards = useCallback(async (): Promise<string> => {
+    if (!contractInstance) return "0";
+    try {
+      const v = await contractInstance.totalPendingUsdtRewards();
+      return (v as bigint).toString();
+    } catch (e) {
+      console.error("[StakeContract] totalPendingUsdtRewards", e);
+      return "0";
+    }
+  }, [contractInstance]);
+
+  const getUserNonce = useCallback(
+    async (user: string): Promise<string> => {
+      if (!contractInstance) return "0";
+      try {
+        const v = await contractInstance.userNonces(normalizeAddress(user));
+        return (v as bigint).toString();
+      } catch (e) {
+        console.error("[StakeContract] userNonces", e);
+        return "0";
+      }
+    },
+    [contractInstance]
+  );
+
+  const getCurrentUserNonce = useCallback(async (): Promise<string> => {
+    try {
+      const addr = await getCurrentUserAddress();
+      return getUserNonce(addr);
+    } catch {
+      return "0";
+    }
+  }, [getCurrentUserAddress, getUserNonce]);
+
+  const isPurchaseDigestUsed = useCallback(
+    async (digestHex: string): Promise<boolean> => {
+      if (!contractInstance) return false;
+      try {
+        const digest = digestHexToBytes32(digestHex);
+        return await contractInstance.usedPurchaseDigests(digest);
+      } catch (e) {
+        console.error("[StakeContract] usedPurchaseDigests", e);
+        return false;
+      }
+    },
+    [contractInstance]
+  );
+
+  const getEip712Domain = useCallback(async (): Promise<Eip712DomainInfo | null> => {
+    if (!contractInstance) return null;
+    try {
+      const r = await contractInstance.eip712Domain();
+      const fieldsRaw = r.fields ?? r[0];
+      const name = String(r.name ?? r[1]);
+      const version = String(r.version ?? r[2]);
+      const chainId = (r.chainId ?? r[3]) as bigint;
+      const verifyingContract = String(r.verifyingContract ?? r[4]);
+      const saltRaw = r.salt ?? r[5];
+      const extRaw = r.extensions ?? r[6];
+      const fields =
+        typeof fieldsRaw === "string"
+          ? fieldsRaw
+          : ethers.hexlify(fieldsRaw as Uint8Array);
+      const salt =
+        typeof saltRaw === "string"
+          ? saltRaw
+          : ethers.hexlify(saltRaw as Uint8Array);
+      const ext = (extRaw as bigint[]) ?? [];
+      return {
+        fields,
+        name,
+        version,
+        chainId: chainId.toString(),
+        verifyingContract: normalizeAddress(verifyingContract),
+        salt,
+        extensions: ext.map((x) => x.toString()),
+      };
+    } catch (e) {
+      console.error("[StakeContract] eip712Domain", e);
+      return null;
+    }
+  }, [contractInstance]);
+
+  // ==================== 写入（与 Flutter `NodeContractNotifier` 一致） ====================
+
+  const depositRewardUsdt = useCallback(
+    async (amount: string) =>
+      runWrite("depositRewardUsdt", [parseAmountWeiString(amount)], "errors.nodeContractTxFailed"),
+    [runWrite]
+  );
+
+  const grantUsdtReward = useCallback(
+    async (nodeId: string, amount: string) =>
+      runWrite(
+        "grantUsdtReward",
+        [nodeId, parseAmountWeiString(amount)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const setFirstStakeAt = useCallback(
+    async (nodeId: string, timestamp: string) =>
+      runWrite(
+        "setFirstStakeAt",
+        [nodeId, parseAmountWeiString(timestamp)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const setMasterContract = useCallback(
+    async (masterContract: string) =>
+      runWrite(
+        "setMasterContract",
+        [normalizeAddress(masterContract)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const setOperator = useCallback(
+    async (account: string, active: boolean) =>
+      runWrite(
+        "setOperator",
+        [normalizeAddress(account), active],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const stakeFor = useCallback(
+    async (beneficiary: string, nodeId: string, amount: string) =>
+      runWrite(
+        "stakeFor",
+        [normalizeAddress(beneficiary), nodeId, parseAmountWeiString(amount)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const syncRewardTokenFromMaster = useCallback(
+    async () =>
+      runWrite("syncRewardTokenFromMaster", [], "errors.nodeContractTxFailed"),
+    [runWrite]
+  );
+
+  const syncStakeTokenFromMaster = useCallback(
+    async () =>
+      runWrite("syncStakeTokenFromMaster", [], "errors.nodeContractTxFailed"),
+    [runWrite]
+  );
+
+  const transferNode = useCallback(
+    async (nodeId: string, newOwner: string) =>
+      runWrite(
+        "transferNode",
+        [nodeId, normalizeAddress(newOwner)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const transferOwnership = useCallback(
+    async (newOwner: string) =>
+      runWrite(
+        "transferOwnership",
+        [normalizeAddress(newOwner)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const setServerSigner = useCallback(
+    async (serverSignerAddr: string) =>
+      runWrite(
+        "setServerSigner",
+        [normalizeAddress(serverSignerAddr)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const unlockBatch = useCallback(
+    async (nodeId: string, amount: string) =>
+      runWrite(
+        "unlockBatch",
+        [nodeId, parseAmountWeiString(amount)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const withdraw = useCallback(
+    async (nodeId: string, amount: string) =>
+      runWrite("withdraw", [nodeId, parseAmountWeiString(amount)], "errors.nodeContractTxFailed"),
+    [runWrite]
+  );
+
+  const emergencyWithdrawDefaultToken = useCallback(
+    async (recipient: string) =>
+      runWrite(
+        "emergencyWithdrawDefaultToken",
+        [normalizeAddress(recipient)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const emergencyWithdrawERC20Token = useCallback(
+    async (token: string, recipient: string) =>
+      runWrite(
+        "emergencyWithdrawERC20Token",
+        [normalizeAddress(token), normalizeAddress(recipient)],
+        "errors.nodeContractTxFailed"
+      ),
+    [runWrite]
+  );
+
+  const purchase = useCallback(
+    async (args: {
+      nodeId: string;
+      received: string;
+      nonce: number;
+      deadline: number;
+      amount: string;
+      stakeAmount: string;
+      signature: string;
+    }) =>
+      runWrite(
+        "purchase",
+        [
+          args.nodeId,
+          args.received,
+          args.nonce,
+          args.deadline,
+          parseAmountWeiString(args.amount),
+          parseAmountWeiString(args.stakeAmount),
+          args.signature,
+        ],
+        "errors.purchaseFailed"
+      ),
+    [runWrite]
   );
 
   return {
-    // 状态
     isLoading,
     error,
     contractAddress: contractInstance?.target,
 
-    // 只读函数 - 节点信息
-    getNodeInfo,
-    getNodeDetail,
-    getNodePrice,
-    getNodeReward,
-    getNodeSupplyInfo,
-    getNodeOwner,
-    getNodeType,
-    isNodeActive,
-
-    // 只读函数 - 用户节点
-    getUserNodes,
-    getCurrentUserNodes,
-    getUserNodeCount,
-    getCurrentUserNodeCount,
-    hasPurchasedNode,
-    currentUserHasPurchasedNode,
-
-    // 只读函数 - 质押信息
-    getStakeLockInfo,
-    getUserStakeLockInfo,
-    getCurrentUserStakeLockInfo,
-
-    // 只读函数 - 代币信息
+    checkAndApproveToken,
     getPaymentToken,
     getPaymentTokenDecimals,
+
+    getUserNodeIds,
+    getCurrentUserNodeIds,
+    getLockedBalance,
+    getMasterContract,
+    getNodeStake,
+    isOperator,
+    getOwner,
+    getRewardToken,
+    getServerSigner,
     getStakeToken,
-    getStakeTokenDecimals,
+    getTotalPendingUsdtRewards,
+    getUserNonce,
+    getCurrentUserNonce,
+    isPurchaseDigestUsed,
+    getEip712Domain,
+    getCurrentUserAddress,
 
-    // 只读函数 - 锁定配置
-    getFirstPhaseLockDuration,
-    getFirstPhasePercentage,
-    getSecondPhaseLockDuration,
-
-    // 写入函数 - 节点操作
-    purchaseNode,
-    unlockStake,
+    depositRewardUsdt,
+    grantUsdtReward,
+    setFirstStakeAt,
+    setMasterContract,
+    setOperator,
+    stakeFor,
+    syncRewardTokenFromMaster,
+    syncStakeTokenFromMaster,
+    transferNode,
+    transferOwnership,
+    setServerSigner,
+    unlockBatch,
+    withdraw,
+    emergencyWithdrawDefaultToken,
+    emergencyWithdrawERC20Token,
+    purchase,
   };
 };
-

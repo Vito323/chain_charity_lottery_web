@@ -1,60 +1,43 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import WinningRecordCard, { WinningRecord } from '../components/WinningRecordCard';
 import ConnectButton from '@/components/custom-connect-button/ConnectButton';
+import { queryUserLotteryRecord, type UserLotteryRecord } from '@/service/user';
+import { rankToRarity } from '@/utils/lottery';
 
-// Mock data based on the image
-const defaultWinningRecords: WinningRecord[] = [
-  // {
-  //   id: '1',
-  //   ticketImage: '/images/placeholder-all.png',
-  //   drawNumber: '386',
-  //   winningType: 'lottery',
-  //   prizeAmount: 818266,
-  //   prizeCurrency: 'CCT',
-  //   winningTime: '2025-08-08 18:18',
-  // },
-  // {
-  //   id: '2',
-  //   ticketImage: '/images/placeholder-all.png',
-  //   drawNumber: '385',
-  //   winningType: 'lottery',
-  //   prizeAmount: 25656,
-  //   prizeCurrency: 'CCT',
-  //   winningTime: '2025-08-08 18:18',
-  // },
-  // {
-  //   id: '3',
-  //   ticketImage: '/images/placeholder-all.png',
-  //   drawNumber: '366',
-  //   winningType: 'follow',
-  //   prizeAmount: 118266,
-  //   prizeCurrency: 'CCT',
-  //   winningTime: '2025-08-08 18:18',
-  // },
-  // {
-  //   id: '4',
-  //   ticketImage: '/images/placeholder-all.png',
-  //   drawNumber: '356',
-  //   winningType: 'follow',
-  //   prizeAmount: 95818266,
-  //   prizeCurrency: 'CCT',
-  //   winningTime: '2025-08-08 18:18',
-  // },
-];
+const DEFAULT_PAGE_SIZE = 12;
+const MOBILE_PAGE_SIZE = 6;
+
+const mapLotteryRecordToCardRecord = (record: UserLotteryRecord): WinningRecord => {
+  const rewardValue = Number(record.reward);
+  return {
+    id: String(record.lotteryDrawId ?? record.id),
+    ticketImage: '/images/placeholder-all.png',
+    ticketDna: record.ticket?.dna || '',
+    rarity: rankToRarity(record.ticket?.series?.rank ?? 1),
+    drawNumber: String(record.lotteryDrawId ?? record.lotteryDraw?.id ?? record.id),
+    winningType: 'lottery',
+    prizeAmount: Number.isFinite(rewardValue) ? rewardValue : 0,
+    prizeCurrency: 'USDT',
+    winningTime: record.lotteryDraw?.createdAt || '',
+  };
+};
 
 const WinningRecords: React.FC = () => {
   const t = useTranslations('lottery.winningRecords');
   const tCommon = useTranslations('common');
-  const { isConnected } = useAccount();
-  const [winningRecords] = useState<WinningRecord[]>(defaultWinningRecords);
-  const [isLoading] = useState(false);
-  const [error] = useState<string | null>(null);
+  const { isConnected, address } = useAccount();
+  const [winningRecords, setWinningRecords] = useState<WinningRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -79,8 +62,57 @@ const WinningRecords: React.FC = () => {
     },
   };
 
-  // For display, using the value from image: 3,657,890 USDT
-  const displayTotalUSDT = 3657890;
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(max-width: 640px)');
+    const syncPageSize = () => {
+      setPageSize(mediaQuery.matches ? MOBILE_PAGE_SIZE : DEFAULT_PAGE_SIZE);
+      setPage(1);
+    };
+    syncPageSize();
+    mediaQuery.addEventListener('change', syncPageSize);
+    return () => mediaQuery.removeEventListener('change', syncPageSize);
+  }, []);
+
+  useEffect(() => {
+    if (!isConnected || !address) {
+      setWinningRecords([]);
+      setTotalCount(0);
+      setError(null);
+      return;
+    }
+    let cancelled = false;
+    setIsLoading(true);
+    setError(null);
+    queryUserLotteryRecord(address, page, pageSize)
+      .then((res) => {
+        if (cancelled) return;
+        const records = res?.ok && Array.isArray(res?.data?.records) ? res.data.records : [];
+        const loadedCount = (page - 1) * pageSize + records.length;
+        const apiCount = Number(res?.data?.count);
+        const inferredCount = records.length === pageSize ? loadedCount + 1 : loadedCount;
+        setWinningRecords(records.map(mapLotteryRecordToCardRecord));
+        setTotalCount(
+          Number.isFinite(apiCount) && apiCount > 0
+            ? Math.max(apiCount, loadedCount)
+            : inferredCount
+        );
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err?.message ?? tCommon('errors.failedToLoadWinningRecords'));
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [address, isConnected, page, pageSize, tCommon]);
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const canGoPrev = page > 1;
+  const canGoNext = page < totalPages;
 
   return (
     <section className="relative py-20 pt-32 md:py-32 md:pt-52">
@@ -89,7 +121,7 @@ const WinningRecords: React.FC = () => {
       <motion.div
         className="relative z-10 max-w-7xl mx-auto px-6 md:px-8"
         variants={containerVariants}
-        initial="hidden"
+        initial="visible"
         animate="visible"
       >
         {/* Section Header */}
@@ -106,7 +138,7 @@ const WinningRecords: React.FC = () => {
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            {t('title')} <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
+            {t('title')} <span className="bg-linear-to-r from-purple-300 via-pink-300 to-fuchsia-300 bg-clip-text text-transparent">{t('titleHighlight')}</span>
           </h2>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
             {t('subtitle')}
@@ -134,32 +166,8 @@ const WinningRecords: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Cumulative Winnings */}
-        {winningRecords.length > 0 && (
-          <motion.div
-            variants={itemVariants}
-            className="mb-12 md:mb-16"
-          >
-            <div className="bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 md:p-8">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="text-white/70 text-sm md:text-base">
-                  {t('cumulativeWinnings')}
-                </div>
-                <div className="flex items-baseline gap-2">
-                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-                    {displayTotalUSDT.toLocaleString()}
-                  </div>
-                  <div className="text-white/60 text-sm md:text-base">
-                    USDT
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
         {/* Loading State */}
-        {isLoading && (
+        {isConnected && isLoading && (
           <motion.div
             className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -172,7 +180,7 @@ const WinningRecords: React.FC = () => {
         )}
 
         {/* Error State */}
-        {error && (
+        {isConnected && error && (
           <motion.div
             className="text-center py-20 bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-3xl"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -192,23 +200,52 @@ const WinningRecords: React.FC = () => {
         )}
 
         {/* Winning Records Grid */}
-        {!isLoading && !error && winningRecords.length > 0 && (
-          <motion.div
-            variants={itemVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
-          >
-            {winningRecords.map((record, index) => (
-              <WinningRecordCard
-                key={record.id}
-                record={record}
-                animationDelay={index * 0.1}
-              />
-            ))}
-          </motion.div>
+        {isConnected && !isLoading && !error && winningRecords.length > 0 && (
+          <>
+            <motion.div
+              variants={itemVariants}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+            >
+              {winningRecords.map((record, index) => (
+                <WinningRecordCard
+                  key={`${record.id}-${index}`}
+                  record={record}
+                  animationDelay={index * 0.1}
+                />
+              ))}
+            </motion.div>
+
+            {(canGoPrev || canGoNext) && (
+              <motion.div
+                variants={itemVariants}
+                className="mt-8 flex items-center justify-center gap-3 sm:gap-4"
+              >
+                <button
+                  type="button"
+                  disabled={!canGoPrev}
+                  onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-white/15 bg-white/5 text-white text-sm sm:text-base disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+                >
+                  {t('pagination.previous')}
+                </button>
+                <span className="text-white/70 text-sm sm:text-base min-w-[80px] text-center">
+                  {page} / {totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={!canGoNext}
+                  onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-white/15 bg-white/5 text-white text-sm sm:text-base disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+                >
+                  {t('pagination.next')}
+                </button>
+              </motion.div>
+            )}
+          </>
         )}
 
         {/* Empty State */}
-        {!isLoading && !error && winningRecords.length === 0 && (
+        {isConnected && !isLoading && !error && winningRecords.length === 0 && (
           <motion.div
             className="text-center py-20 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -236,7 +273,7 @@ const WinningRecords: React.FC = () => {
         )}
 
         {/* Navigation Buttons */}
-        <motion.div
+        {/* <motion.div
           variants={itemVariants}
           className="mt-12 md:mt-16 flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
         >
@@ -262,7 +299,7 @@ const WinningRecords: React.FC = () => {
               <span>{t('navigation.donationRecords')}</span>
             </div>
           </Link>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </section>
   );

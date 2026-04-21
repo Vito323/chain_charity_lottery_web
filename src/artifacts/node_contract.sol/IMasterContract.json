@@ -1,34 +1,8 @@
 {
   "_format": "hh3-artifact-1",
   "contractName": "IMasterContract",
-  "sourceName": "contracts/CCNodeContract.sol",
+  "sourceName": "contracts/CCStakeContract.sol",
   "abi": [
-    {
-      "inputs": [],
-      "name": "BASIS_POINTS_DIVISOR",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "PRECISION",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
     {
       "inputs": [
         {
@@ -73,38 +47,12 @@
     },
     {
       "inputs": [],
-      "name": "donationBasisPoints",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "donationToken",
       "outputs": [
         {
           "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "donationTokenDecimals",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
         }
       ],
       "stateMutability": "view",
@@ -122,58 +70,6 @@
       ],
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "ecosystemTokenDecimals",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "incentiveBasisPoints",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "operatingBasisPoints",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "total",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
     }
   ],
   "bytecode": "0x",
@@ -181,6 +77,6 @@
   "linkReferences": {},
   "deployedLinkReferences": {},
   "immutableReferences": {},
-  "inputSourceName": "project/contracts/CCNodeContract.sol",
-  "buildInfoId": "solc-0_8_28-df774eb3501edaf4e4db6343cca14617bf35851c"
+  "inputSourceName": "project/contracts/CCStakeContract.sol",
+  "buildInfoId": "solc-0_8_28-dae3a3dc79a69ffd1469d92cb622f0535bc8168f"
 }
