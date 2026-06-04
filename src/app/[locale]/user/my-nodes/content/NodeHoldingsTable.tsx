@@ -3,6 +3,8 @@
 import React, { useCallback, useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
+import { nodeBindingsHref } from '@/constants/userRoutes';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import 'dayjs/locale/en';
@@ -19,6 +21,9 @@ interface NodeHoldingsTableProps {
   variants: Variants;
   nodeHoldings: NodeHolding[];
 }
+
+const PRIMARY_BUTTON_CLASS =
+  'w-full py-3 rounded-xl text-sm font-semibold bg-linear-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/30 transition-all duration-300 cursor-pointer';
 
 const fmt2 = (n: number) => n.toFixed(2);
 
@@ -39,6 +44,13 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
         .format(dateTimePattern);
     },
     [dateTimePattern, isZh]
+  );
+
+  const renderNodeIdBlock = (nodeId: string) => (
+    <div className="mt-2">
+      <div className="text-white/60 text-xs mb-1">{t('card.nodeId')}</div>
+      <div className="text-white font-medium text-sm tabular-nums break-all">{nodeId}</div>
+    </div>
   );
 
   const toggleExpanded = (id: string) => {
@@ -97,10 +109,17 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
         {rowWithHint('currentReward', `${fmt2(accruedUsd)} ${t('currency.usdt')}`, 'currentReward')}
         {rowWithHint('currentRelease', `${fmt2(releasedCct)} ${t('currency.cct')}`, 'currentRelease')}
         {rowWithHint('nextUnlock', nextReleaseText, 'nextUnlock')}
+        <Link
+          href={nodeBindingsHref(node.id)}
+          className={`${PRIMARY_BUTTON_CLASS} mt-2 block text-center`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {t('card.viewBindings')}
+        </Link>
         <button
           type="button"
           disabled
-          className="w-full mt-2 py-3 rounded-xl text-sm font-semibold bg-white/10 text-white/35 cursor-not-allowed border border-white/10"
+          className="w-full py-3 rounded-xl text-sm font-semibold bg-white/10 text-white/35 cursor-not-allowed border border-white/10"
         >
           {t('card.withdraw')}
         </button>
@@ -111,7 +130,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
   return (
     <motion.div
       variants={variants}
-      initial="hidden"
+      initial="visible"
       animate="visible"
       className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden"
     >
@@ -128,6 +147,9 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
               </th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
                 {t('table.nodeEarnings')}
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-white/80 uppercase tracking-wider">
+                {t('table.nodeId')}
               </th>
               <th className="px-6 py-4 w-10" aria-hidden />
             </tr>
@@ -167,6 +189,11 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                         {fmt2(node.accumulatedEarnings)} {t('currency.usdt')}
                       </div>
                     </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-white tabular-nums break-all">
+                        {node.id}
+                      </div>
+                    </td>
                     <td className="px-6 py-4 text-white/50">
                       {active ? (
                         <span className="text-lg leading-none" aria-hidden>
@@ -177,7 +204,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                   </motion.tr>
                   {active && expanded && (
                     <tr className="bg-white/3">
-                      <td colSpan={4} className="px-6 py-4">
+                      <td colSpan={5} className="px-6 py-4">
                         {renderExpandedBody(node)}
                       </td>
                     </tr>
@@ -238,6 +265,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                       {fmt2(node.accumulatedEarnings)} {t('currency.usdt')}
                     </div>
                   </div>
+                  {renderNodeIdBlock(node.id)}
                 </div>
               </button>
               {active && expanded && renderExpandedBody(node)}

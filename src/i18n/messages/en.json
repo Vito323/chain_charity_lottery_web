@@ -634,6 +634,7 @@
         "purchaseCost": "Purchase Cost",
         "nodeCost": "Node cost",
         "nodeEarnings": "Node earnings",
+        "nodeId": "Node ID",
         "yesterdayEarnings": "Yesterday's Earnings",
         "accumulatedEarnings": "Accumulated Earnings"
       },
@@ -641,6 +642,8 @@
         "pendingActivation": "Pending activation",
         "nodeCost": "Node cost",
         "nodeEarnings": "Node earnings",
+        "nodeId": "Node ID",
+        "viewBindings": "View bindings",
         "stakeTime": "Stake time",
         "stakeAmount": "Staked amount",
         "currentReward": "Current reward",
@@ -1023,6 +1026,51 @@
       "title": "No Donation Records Found",
       "description": "You haven't made any donations yet. Start contributing to projects you care about!",
       "browseProjects": "Browse Projects"
+    }
+  },
+  "userBindRelations": {
+    "pageTitle": "Binding relations",
+    "badge": "Binding relations",
+    "title": "My",
+    "titleHighlight": "binding relations",
+    "subtitle": "View your referrer and referrer node information.",
+    "referrer": "Referrer",
+    "referrerNode": "Referrer node",
+    "unbound": "Not bound",
+    "none": "N/A",
+    "connectTitle": "Connect Your Wallet",
+    "connectDescription": "Connect your wallet to view your binding relations.",
+    "refresh": "Refresh",
+    "pullToRefresh": "Pull to refresh",
+    "loading": "Loading binding relations...",
+    "noNodes": {
+      "title": "No nodes yet",
+      "description": "Purchase a node to load binding relations via your node.",
+      "browseNodeTiers": "Browse node tiers"
+    }
+  },
+  "nodeBindings": {
+    "pageTitle": "Binding Relations",
+    "badge": "Binding relations",
+    "title": "Node",
+    "titleHighlight": "binding relations",
+    "subtitle": "View users bound under a selected node and their referrer relationships.",
+    "connectTitle": "Connect Your Wallet",
+    "connectDescription": "Connect your wallet to view node binding relations.",
+    "selectNode": "Select node",
+    "nodeIdLabel": "Node ID",
+    "loading": "Loading binding relations...",
+    "refresh": "Refresh",
+    "pullToRefresh": "Pull to refresh",
+    "userWallet": "User wallet",
+    "referrerWallet": "Referrer wallet",
+    "unbound": "Unbound",
+    "none": "None",
+    "emptyBindings": "No binding relations yet",
+    "noNodes": {
+      "title": "No nodes yet",
+      "description": "You do not hold any nodes yet. Purchase a node to view binding relations.",
+      "browseNodeTiers": "Browse node tiers"
     }
   },
   "notFound": {

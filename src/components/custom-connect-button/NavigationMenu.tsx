@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useDisconnect } from "wagmi";
+import { BIND_RELATIONS_PATH } from '@/constants/userRoutes';
 
 interface NavigationMenuProps {
   onCloseDropdown: () => void;
@@ -34,6 +35,13 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ onCloseDropdown 
           {tCommon('wallet.userCenter')}
         </button> */}
         
+        <button
+          className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
+          onClick={() => handleNavigation(BIND_RELATIONS_PATH)}
+        >
+          {tCommon('wallet.bindRelations')}
+        </button>
+
         <button 
           className="block w-full px-5 py-4 bg-transparent border-0 text-left text-base text-white cursor-pointer transition-all duration-200 ease-out font-inherit font-medium relative box-border active:bg-gradient-to-r active:from-purple-600/20 active:to-pink-600/10 md:px-5 md:py-3.5 md:text-sm md:hover:bg-gradient-to-r md:hover:from-purple-600/10 md:hover:to-pink-600/5 md:hover:text-purple-300"
           onClick={() => handleNavigation("/user/network?tab=nodes")}

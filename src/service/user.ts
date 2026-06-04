@@ -118,8 +118,14 @@ export const userToken = async (address: string, token: string) =>
 
 
 export const queryUserReferrer = async (address: string) =>
-  action<string>({
+  action<unknown>({
     url: `/user/referrer/${address}`,
+    method: 'GET',
+  });
+
+export const queryUserReferrerNode = async (address: string) =>
+  action<unknown>({
+    url: `/user/referrer-node/${address}`,
     method: 'GET',
   });
 

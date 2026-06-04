@@ -556,6 +556,7 @@
         "purchaseCost": "购买成本",
         "nodeCost": "节点成本",
         "nodeEarnings": "节点收益",
+        "nodeId": "节点ID",
         "yesterdayEarnings": "昨日收益",
         "accumulatedEarnings": "累计收益"
       },
@@ -563,6 +564,8 @@
         "pendingActivation": "待激活",
         "nodeCost": "节点成本",
         "nodeEarnings": "节点收益",
+        "nodeId": "节点ID",
+        "viewBindings": "查看绑定",
         "stakeTime": "质押时间",
         "stakeAmount": "质押数量",
         "currentReward": "当前奖励",
@@ -945,6 +948,51 @@
       "title": "未找到捐赠记录",
       "description": "您还没有进行任何捐赠。开始为您关心的项目做出贡献吧！",
       "browseProjects": "浏览项目"
+    }
+  },
+  "userBindRelations": {
+    "pageTitle": "绑定关系",
+    "badge": "绑定关系",
+    "title": "我的",
+    "titleHighlight": "绑定关系",
+    "subtitle": "查看您的推荐人与推荐节点信息。",
+    "referrer": "推荐人",
+    "referrerNode": "推荐节点",
+    "unbound": "未绑定",
+    "none": "暂无",
+    "connectTitle": "连接您的钱包",
+    "connectDescription": "连接您的钱包以查看绑定关系。",
+    "refresh": "刷新",
+    "pullToRefresh": "下拉刷新",
+    "loading": "加载绑定关系中...",
+    "noNodes": {
+      "title": "暂无节点",
+      "description": "购买节点后即可通过节点加载绑定关系。",
+      "browseNodeTiers": "浏览节点层级"
+    }
+  },
+  "nodeBindings": {
+    "pageTitle": "绑定关系",
+    "badge": "绑定关系",
+    "title": "节点",
+    "titleHighlight": "绑定关系",
+    "subtitle": "查看选定节点下的用户绑定与推荐人关系。",
+    "connectTitle": "连接您的钱包",
+    "connectDescription": "连接您的钱包以查看节点绑定关系。",
+    "selectNode": "选择节点",
+    "nodeIdLabel": "节点ID",
+    "loading": "加载绑定关系中...",
+    "refresh": "刷新",
+    "pullToRefresh": "下拉刷新",
+    "userWallet": "用户钱包地址",
+    "referrerWallet": "推荐人钱包地址",
+    "unbound": "未绑定",
+    "none": "无",
+    "emptyBindings": "暂无绑定关系",
+    "noNodes": {
+      "title": "暂无节点",
+      "description": "您还没有持有节点，购买节点后可查看绑定关系。",
+      "browseNodeTiers": "浏览节点层级"
     }
   },
   "notFound": {
