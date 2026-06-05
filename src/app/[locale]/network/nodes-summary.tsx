@@ -190,7 +190,7 @@ const MyNodesSummary: React.FC<MyNodesSummaryProps> = ({ hasNodes: hasNodesProp 
               {t('portfolio.cumulativeEarnings')}
             </span>
             <div className="mt-3 text-3xl sm:text-4xl font-bold text-white">
-              {formatCurrency(cumulativeEarnings, '')}
+              {formatCurrency(cumulativeEarnings, '', 4)}
             </div>
             <div className="mt-4 grid grid-cols-3 gap-2 text-xs sm:text-sm text-white/80">
               <div className="flex flex-col">

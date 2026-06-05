@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { formatCurrency } from '@/utils/currency';
 import { NodeHolding } from './types';
 
 interface SummaryCardsProps {
@@ -45,7 +46,7 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ variants, nodeHoldings }) =
       >
         <div className="text-sm text-white/60 mb-2">{t('summary.accumulatedEarnings')}</div>
         <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">
-          {totalAccumulatedEarnings.toFixed(2)} {t('currency.usdt')}
+          {formatCurrency(totalAccumulatedEarnings, '', 4)} {t('currency.usdt')}
         </div>
         <div className="text-xs text-white/50">{t('summary.totalReturnsToDate')}</div>
       </motion.div>

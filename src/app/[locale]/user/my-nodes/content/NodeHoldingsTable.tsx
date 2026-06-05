@@ -16,6 +16,7 @@ import {
   nextReleaseAt,
 } from '@/lib/nodeStakeAccrual';
 import { NodeTermHint } from './NodeTermHint';
+import { formatCurrency } from '@/utils/currency';
 
 interface NodeHoldingsTableProps {
   variants: Variants;
@@ -186,7 +187,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-bold text-white tabular-nums">
-                        {fmt2(node.accumulatedEarnings)} {t('currency.usdt')}
+                        {formatCurrency(node.accumulatedEarnings, '', 4)} {t('currency.usdt')}
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -262,7 +263,7 @@ const NodeHoldingsTable: React.FC<NodeHoldingsTableProps> = ({ variants, nodeHol
                   <div>
                     <div className="text-white/60 text-xs mb-1">{t('card.nodeEarnings')}</div>
                     <div className="text-white font-bold tabular-nums">
-                      {fmt2(node.accumulatedEarnings)} {t('currency.usdt')}
+                      {formatCurrency(node.accumulatedEarnings, '', 4)} {t('currency.usdt')}
                     </div>
                   </div>
                   {renderNodeIdBlock(node.id)}
